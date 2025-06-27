@@ -1,0 +1,21 @@
+@import '../base/mixins';
+@import '../base/variables';
+
+.button {
+    @include button-set ($default-button-color, $all-button-radius, $border);
+    cursor: pointer;
+    color : $primary_font;
+    padding: 10px 20px;
+    white-space: nowrap;
+    font-size: 18px;
+
+    &:hover {
+        @include button-hover($default-button-hover-color, $all-button-radius);
+
+    }
+}
+
+.button_POSITIVE {
+    @include postitve-button-set($positive-button-color, $rad)
+}
+
