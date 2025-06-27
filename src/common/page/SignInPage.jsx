@@ -17,17 +17,15 @@ function SignInPage() {
       });
 
       if (res.data.success) {
-        const { accessToken, refreshToken, role, id } = res.data.data;
+        const { accessToken, refreshToken, role, id, recoveryTarget } = res.data.data;
 
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('userRole', role);
         localStorage.setItem('userId', id);
+        localStorage.setItem('recovery', recoveryTarget);
 
         switch (role) {
-          case 'USER':
-            navigate('/user/main');
-            break;
           case 'ADMIN':
             navigate('/admin/main');
             break;
@@ -37,7 +35,7 @@ function SignInPage() {
           case 'HUB':
             navigate('/hub/main');
             break;
-          default:
+          default: // USER
             navigate('/');
         }
       }
@@ -62,17 +60,20 @@ function SignInPage() {
     <div className="container">
       <h2 className="title">로그인</h2>
 
+      {/* 소셜 로그인 UI */}
+      <div className="socialLogin">
+        <h3 className="socialTitle">소셜 로그인하기</h3>
+        <button className="socialBtn kakao">kakao로 계속하기</button>
+        <button className="socialBtn google">Google로 계속하기</button>
+        <button className="socialBtn naver">Naver로 계속하기</button>
+      </div>
+
+      <hr className="divider" />
+
+      {/* 일반 로그인 폼 */}
       <div className="inputBox">
         <label htmlFor="id">ID</label>
         <div className="idRow">
-          <input
-            id="id"
-            type="text"
-            placeholder="아이디를 입력해 주세요."
-            value={id}
-            onChange={e => setId(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
           <label className="rememberMe">
             <input
               type="checkbox"
@@ -81,6 +82,14 @@ function SignInPage() {
             />
             로그인 정보 저장
           </label>
+          <input
+            id="id"
+            type="text"
+            placeholder="아이디를 입력해 주세요."
+            value={id}
+            onChange={e => setId(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
         </div>
 
         <label htmlFor="password">Password</label>
@@ -97,7 +106,7 @@ function SignInPage() {
           <button className="findId" onClick={handleFindId}>
             아이디 찾기
           </button>
-          <span> | </span>
+          <span> / </span>
           <button className="findPw" onClick={handleFindPw}>
             비밀번호 찾기
           </button>
@@ -119,5 +128,3 @@ function SignInPage() {
     </div>
   );
 }
-
-export default SignInPage;

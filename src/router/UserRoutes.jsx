@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-import UserHeader from '../common/headerfooter/UserHeader';
 import RoleRoute from './RoleRoute';
 
 // public 페이지
