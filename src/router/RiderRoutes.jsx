@@ -8,6 +8,8 @@ import DelivaryHistoryPage from '../app/rider/DelivaryHistoryPage';
 import RequestListPage from '../app/rider/RequestListPage';
 import AcceptedListPage from '../app/rider/AcceptedListPage';
 
+import RiderHeader from '../common/headerfooter/RiderHeader';
+
 function RiderRoutes() {
   return (
     <>

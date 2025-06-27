@@ -7,6 +7,8 @@ import OrderDetailPage from '../app/hub/OrderDetailPage';
 import HubHistoryPage from '../app/hub/HubHistoryPage';
 import HubInfoPage from '../app/hub/HubInfoPage';
 
+import HubHeader from '../common/headerfooter/HubHeader';
+
 function HubRoutes() {
   return (
     <>

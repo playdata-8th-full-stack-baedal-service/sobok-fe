@@ -12,6 +12,8 @@ import RecipeRegistPage from '../app/admin/RecipeRegistPage';
 import RiderDetailModal from '../app/admin/RiderDetailModal';
 import RiderListPage from '../app/admin/RiderListPage';
 
+import AdminHeader from '../common/headerfooter/AdminHeader';
+
 function AdminRoutes() {
   return (
     <>

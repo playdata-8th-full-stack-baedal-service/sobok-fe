@@ -4,9 +4,11 @@ import { Routes, Route } from 'react-router-dom';
 import SignInPage from '../common/page/SignInPage';
 import FindIDPage from '../common/page/FindIDPage';
 import FindPWPage from '../common/page/FindPWPage';
-import SignUpOption from '../common/page/SignUpOption';
-import SignUpComplete from '../common/page/SignUpComplete';
-import PersonalInfoCertifi from '../common/page/PersonalInfoCertifi';
+import SignUpOption from '../common/page/SignUpOptionPage';
+import SignUpComplete from '../common/page/SignUpCompletePage';
+import PersonalInfoCertifi from '../common/page/PersonalInfoCerifiPage';
+
+import UserHeader from '../common/headerfooter/UserHeader';
 
 function AuthRoutes() {
   return (
