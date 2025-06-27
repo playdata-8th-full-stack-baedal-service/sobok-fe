@@ -10,14 +10,17 @@ import PersonalInfoCertifi from '../common/page/PersonalInfoCertifi';
 
 function AuthRoutes() {
   return (
-    <Routes>
-      <Route path="signin" element={<SignInPage />} />
-      <Route path="find-id" element={<FindIDPage />} />
-      <Route path="find-password" element={<FindPWPage />} />
-      <Route path="signup" element={<SignUpOption />} />
-      <Route path="signup/complete" element={<SignUpComplete />} />
-      <Route path="signup/personal" element={<PersonalInfoCertifi />} />
-    </Routes>
+    <>
+      <UserHeader />
+      <Routes>
+        <Route path="signin" element={<SignInPage />} />
+        <Route path="find-id" element={<FindIDPage />} />
+        <Route path="find-password" element={<FindPWPage />} />
+        <Route path="signup" element={<SignUpOption />} />
+        <Route path="signup/complete" element={<SignUpComplete />} />
+        <Route path="signup/personal" element={<PersonalInfoCertifi />} />
+      </Routes>
+    </>
   );
 }
 

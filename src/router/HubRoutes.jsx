@@ -9,12 +9,15 @@ import HubInfoPage from '../app/hub/HubInfoPage';
 
 function HubRoutes() {
   return (
-    <Routes>
-      <Route path="/" element={<MainPage />} />
-      <Route path="/order-detail" element={<OrderDetailPage />} />
-      <Route path="/history" element={<HubHistoryPage />} />
-      <Route path="/info" element={<HubInfoPage />} />
-    </Routes>
+    <>
+      <HubHeader />
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/order-detail" element={<OrderDetailPage />} />
+        <Route path="/history" element={<HubHistoryPage />} />
+        <Route path="/info" element={<HubInfoPage />} />
+      </Routes>
+    </>
   );
 }
 

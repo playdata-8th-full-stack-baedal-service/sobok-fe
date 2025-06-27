@@ -10,13 +10,16 @@ import AcceptedListPage from '../app/rider/AcceptedListPage';
 
 function RiderRoutes() {
   return (
-    <Routes>
-      <Route path="/" element={<MainPage />} />
-      <Route path="/info" element={<RiderInfoPage />} />
-      <Route path="/history" element={<DelivaryHistoryPage />} />
-      <Route path="/request-list" element={<RequestListPage />} />
-      <Route path="/accepted-list" element={<AcceptedListPage />} />
-    </Routes>
+    <>
+      <RiderHeader />
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/info" element={<RiderInfoPage />} />
+        <Route path="/history" element={<DelivaryHistoryPage />} />
+        <Route path="/request-list" element={<RequestListPage />} />
+        <Route path="/accepted-list" element={<AcceptedListPage />} />
+      </Routes>
+    </>
   );
 }
 
