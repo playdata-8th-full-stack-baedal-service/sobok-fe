@@ -1,8 +1,7 @@
-@import '../base/mixins';
-@import '../base/variables';
+@use '../base/index' as *;
 
 .button {
-  @include button-set($default-button-color, $all-button-radius, $border){
+  @include button-set($default-button-color, $all-button-radius){
     
   };
   cursor: pointer;
@@ -12,10 +11,6 @@
   font-size: $d-button-text;
   letter-spacing: $letter-spacing;
 
-  @include respinsive('m') {
-
-  }
-
   &:hover {
     @include button-hover($default-button-hover-color, $all-button-radius);
     color: rgb(255, 255, 255);
@@ -23,7 +18,7 @@
 }
 
 .button_POSITIVE {
-  @include postitve-button-set($positive-button-color, $all-button-radius);
+  @include positive-button-set($positive-button-color, $all-button-radius);
   white-space: nowrap;
   padding: 10px 20px;
   color: $primary_font;

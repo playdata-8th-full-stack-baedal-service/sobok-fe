@@ -36,9 +36,14 @@ axiosInstance.interceptors.response.use(
         });
         const newAccessToken = res.data.accessToken;
         localStorage.setItem('ACCESS_TOKEN', newAccessToken);
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return await axios(originalRequest);
+        originalRequest.headers = {
+          ...originalRequest.headers,
+          Authorization: `Bearer ${newAccessToken}`,
+        };
+        return axiosInstance(originalRequest);
       } catch (err) {
+        localStorage.clear();
+        window.location.href = '/login';
         return Promise.reject(err);
       }
     }

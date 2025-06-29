@@ -12,7 +12,7 @@
   @content;
 }
 
-@mixin postitve-button-set($color, $rad) {
+@mixin positive-button-set($color, $rad) {
   background-color: $color;
   border-radius: $rad;
   border: none;
@@ -40,7 +40,7 @@
   @content;
 }
 
-@mixin reponsive($screen) {
+@mixin responsive($screen) {
   @if ($screen == 't') {
     @media screen and (min-width: 768px) {
       @content;
@@ -84,18 +84,15 @@
 }
 
 @mixin flexbox($jc: center, $ai: center) {
-    display: flex;
-    justify-content: $jc;
-    align-items: $ai;
-}
+  display: flex;
+  justify-content: $jc;
+  align-items: $ai;
+  @content
+};
 
 @mixin flexbox-column($jc: center, $ai: center) {
-    display: flex;
-    justify-content: $jc;
-    align-items: $ai;
-    flex-direction: column;
+  display: flex;
+  justify-content: $jc;
+  align-items: $ai;
+  flex-direction: column;
 }
-
-
-
-

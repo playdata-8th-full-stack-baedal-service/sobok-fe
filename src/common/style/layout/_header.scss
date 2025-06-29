@@ -1,0 +1,10 @@
+@use '../base/index' as *;
+
+.Header {
+    @include flexbox(space-around, center);
+    gap : 40px;
+
+    .Right {
+        @include flexbox(space-between, center);
+    }
+}

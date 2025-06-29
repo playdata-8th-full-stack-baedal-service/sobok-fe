@@ -1,4 +1,6 @@
-@import './base/mixins';
-@import './base/variables';
+@use './base/index' as *;
 
-@import './components/button';
+@use './components/button';
+
+@use './layout/footer';
+@use './layout/header';

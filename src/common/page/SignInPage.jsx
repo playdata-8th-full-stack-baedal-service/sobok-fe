@@ -1,30 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../store/authSlice';
 
 function SignInPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const auth = useSelector(state => state.auth);
+
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSignIn = async () => {
-    try {
-      const res = await axios.post('/auth-service/auth/login', {
-        loginId: id,
-        password: password,
-      });
-
-      if (res.data.success) {
-        const { accessToken, refreshToken, role, id, recoveryTarget } = res.data.data;
-
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
-        localStorage.setItem('userRole', role);
-        localStorage.setItem('userId', id);
-        localStorage.setItem('recovery', recoveryTarget);
-
+  const handleSignIn = () => {
+    dispatch(loginUser({ id, password }))
+      .unwrap()
+      .then(({ role }) => {
         switch (role) {
           case 'ADMIN':
             navigate('/admin/main');
@@ -35,17 +26,13 @@ function SignInPage() {
           case 'HUB':
             navigate('/hub/main');
             break;
-          default: // USER
+          default:
             navigate('/');
         }
-      }
-    } catch (err) {
-      if (err.response && err.response.data) {
-        setErrorMessage(err.response.data.message);
-      } else {
-        setErrorMessage('로그인 요청에 실패했습니다.');
-      }
-    }
+      })
+      .catch(() => {
+        // 오류는 auth.error에서 자동 관리됨
+      });
   };
 
   const handleFindId = () => navigate('/find-id');
@@ -60,7 +47,6 @@ function SignInPage() {
     <div className="container">
       <h2 className="title">로그인</h2>
 
-      {/* 소셜 로그인 UI */}
       <div className="socialLogin">
         <h3 className="socialTitle">소셜 로그인하기</h3>
         <button className="socialBtn kakao">kakao로 계속하기</button>
@@ -70,7 +56,6 @@ function SignInPage() {
 
       <hr className="divider" />
 
-      {/* 일반 로그인 폼 */}
       <div className="inputBox">
         <label htmlFor="id">ID</label>
         <div className="idRow">
@@ -112,10 +97,10 @@ function SignInPage() {
           </button>
         </div>
 
-        {errorMessage && <p className="error">{errorMessage}</p>}
+        {auth.error && <p className="error">{auth.error}</p>}
 
-        <button className="signInButton" onClick={handleSignIn}>
-          SIGN IN
+        <button className="signInButton" onClick={handleSignIn} disabled={auth.loading}>
+          {auth.loading ? '로그인 중...' : 'SIGN IN'}
         </button>
       </div>
 
@@ -128,3 +113,5 @@ function SignInPage() {
     </div>
   );
 }
+
+export default SignInPage;
