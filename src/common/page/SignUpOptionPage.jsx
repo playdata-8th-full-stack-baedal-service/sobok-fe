@@ -3,7 +3,7 @@
 import React from 'react';
 
 function SignUpOptionPage() {
-  return <div>회원가입 옵션 선택 페이지입니다.</div>;
+  return <div><p>가입하시려는 회원의 유형을 </p></div>;
 }
 
 export default SignUpOptionPage;

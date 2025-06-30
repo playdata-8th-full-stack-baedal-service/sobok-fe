@@ -5,8 +5,10 @@ import App from './App';
 import store from './store/store';
 import './common/style/style.scss';
 
+import SignUpOptionPage from './common/page/SignUpOptionPage';
+
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <App />
+    <SignUpOptionPage />
   </Provider>
 );

@@ -4,19 +4,19 @@ function Footer() {
   return (
     <div className='Footer'>
       <div>
-        <img src="" />
+        <img src="#" />
       </div>
       <div>
         <p />
       </div>
       <div>
-        <img src="" />
+        <img src="#" />
       </div>
       <div>
-        <img src="" />
+        <img src="#" />
       </div>
       <div>
-        <img src="" />
+        <img src="#" />
       </div>
     </div>
   );
