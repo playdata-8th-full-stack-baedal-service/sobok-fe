@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../store/authSlice';
+import { loginUser } from '../../store/authSlice';
 
 function SignInPage() {
   const navigate = useNavigate();

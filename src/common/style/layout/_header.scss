@@ -3,6 +3,7 @@
 .Header {
     @include flexbox(space-around, center);
     gap : 40px;
+    border-bottom: 1px solid $border;
 
     .Right {
         @include flexbox(space-between, center);
