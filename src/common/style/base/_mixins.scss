@@ -1,0 +1,98 @@
+@mixin button-set($color, $rad) {
+  background-color: $color;
+  border-radius: $rad;
+  border: none;
+  @content;
+}
+
+@mixin button-hover($color, $rad) {
+  background-color: $color;
+  border-radius: $rad;
+  cursor: pointer;
+  @content;
+}
+
+@mixin positive-button-set($color, $rad) {
+  background-color: $color;
+  border-radius: $rad;
+  border: none;
+  @content;
+}
+
+@mixin positive-button-hover($color, $rad) {
+  background-color: $color;
+  border-radius: $rad;
+  cursor: pointer;
+  @content;
+}
+
+@mixin negative-button-set($color, $rad) {
+  background-color: $color;
+  border-radius: $rad;
+  border: none;
+  @content;
+}
+
+@mixin negative-button-hover($color, $rad) {
+  background-color: $color;
+  border-radius: $rad;
+  cursor: pointer;
+  @content;
+}
+
+@mixin responsive($screen) {
+  @if ($screen == 't') {
+    @media screen and (min-width: 768px) {
+      @content;
+    }
+  }
+  @if ($screen == 'd') {
+    @media screen and (min-width: 1200px) {
+      @content;
+    }
+  }
+  @if ($screen == 'm') {
+    @media screen and (min-width: 480px) {
+      @content;
+    }
+  }
+}
+
+@mixin pos-center-x($type: absolute) {
+  @if ($type==fixed or $type==absolute) {
+    position: $type;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@mixin pos-center-y($type: absolute) {
+  @if ($type==fixed or $type==absolute) {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+@mixin pos-center($type: absolute) {
+  @if ($type==fixed or $type==absolute) {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@mixin flexbox($jc: center, $ai: center) {
+  display: flex;
+  justify-content: $jc;
+  align-items: $ai;
+  @content
+};
+
+@mixin flexbox-column($jc: center, $ai: center) {
+  display: flex;
+  justify-content: $jc;
+  align-items: $ai;
+  flex-direction: column;
+}

@@ -1,0 +1,48 @@
+@use '../base/index' as *;
+
+.button {
+  @include button-set($default-button-color, $all-button-radius){
+    
+  };
+  cursor: pointer;
+  color: $primary_font;
+  padding: 10px 20px;
+  white-space: nowrap;
+  font-size: $d-button-text;
+  letter-spacing: $letter-spacing;
+
+  &:hover {
+    @include button-hover($default-button-hover-color, $all-button-radius);
+    color: rgb(255, 255, 255);
+  }
+}
+
+.button_POSITIVE {
+  @include positive-button-set($positive-button-color, $all-button-radius);
+  white-space: nowrap;
+  padding: 10px 20px;
+  color: $primary_font;
+  font-size: $d-button-text;
+  letter-spacing: $letter-spacing;
+  cursor: pointer;
+
+  &:hover {
+    @include positive-button-hover($positive-button-hover-color, $all-button-radius);
+  }
+}
+
+.button_NEGATIVE {
+    @include negative-button-set($negative-button-color, $all-button-radius);
+    white-space: nowrap;
+    padding: 10px 20px;
+    color: $primary_font;
+    font-size: $d-button-text;
+    letter-spacing: $letter-spacing;
+    cursor: pointer;
+
+    &:hover {
+        @include negative-button-hover($negative-button-hover-color, $all-button-radius);
+    }
+}
+
+
