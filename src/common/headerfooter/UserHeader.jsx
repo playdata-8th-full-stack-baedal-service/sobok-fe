@@ -1,5 +1,3 @@
-// UserHeader.jsx
-
 import React from 'react';
 
 function UserHeader() {

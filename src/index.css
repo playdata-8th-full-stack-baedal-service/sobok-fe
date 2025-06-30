@@ -9,7 +9,7 @@
 body {
   min-height: 100vh;
 }
-
+/* 
 @font-face {
     font-family: 'BagelFatOne-Regular';
     src: url('/BagelFatOne-Regular.ttf');
@@ -19,4 +19,4 @@ body {
 
 body {
   font-family: 'BagelFatOne-Regular', sans-serif;
-}
+} */
