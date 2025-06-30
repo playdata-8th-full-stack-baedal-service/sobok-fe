@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { build } from 'vite';
 import axiosInstance from '../services/axios-config';
 
 export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, password }, thunkAPI) => {
