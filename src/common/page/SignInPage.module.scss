@@ -1,0 +1,157 @@
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.socialLogin {
+  margin-bottom: 20px;
+}
+
+.socialTitle {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.socialBtn {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  border: 1px solid #000000;
+  border-radius: 999px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 14px;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.socialBtn img {
+  width: 20px;
+  height: 20px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 30px 0;
+}
+
+.inputBox {
+  text-align: left;
+   .inputGroup input::selection {
+    background-color: #d9d9d9;
+    color: #333;
+}
+}
+
+// ID
+.inputHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  margin-left: 17px;
+}
+
+.rememberMe {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.inputGroup {
+  margin-bottom: 12px;
+}
+
+// Password
+.label {
+  display: block;
+  margin-bottom: 10px;
+  margin-left: 17px;
+}
+
+
+input[type='text'],
+input[type='password'] {
+  width: 100%;
+  padding: 10px 20px;
+  border: 1px solid #000000;
+  border-radius: 50px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.passwordInputWrapper {
+  position: relative;
+}
+
+.passwordInputWrapper button {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #d5d2d2;
+}
+
+.helperLinks {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+  gap: 1px;
+}
+
+.helperLinks span {
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.helperLinks button {
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.error {
+  height: 14px;
+  font-size: 12px;
+  color: red;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.signInButton {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #000;
+  border-radius: 50px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.signupLink {
+  margin-top: 1px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.signupLink button {
+  background: none;
+  border: none;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+}

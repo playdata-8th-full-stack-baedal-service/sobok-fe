@@ -9,6 +9,6 @@ import SignUpOptionPage from './common/page/SignUpOptionPage';
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <SignUpOptionPage />
+    <App />
   </Provider>
 );
