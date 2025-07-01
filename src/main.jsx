@@ -4,11 +4,10 @@ import { Provider } from 'react-redux';
 import App from './App';
 import store from './store/store';
 import './common/style/style.scss';
-
-import SignUpOptionPage from './common/page/SignUpOptionPage';
+import UserSignUp from './app/user/UserSignUp';
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <SignUpOptionPage />
+    <UserSignUp />
   </Provider>
 );
