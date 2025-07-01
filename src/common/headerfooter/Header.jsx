@@ -9,7 +9,7 @@ function Header({ lefttitle, title, rightone, righttwo, rightthree }) {
       <div className="Right">
         {rightone && <div>{rightone}</div>}
         {righttwo && <div>{righttwo}</div>}
-        {rightthree && <div>{rightthree}</div>}
+        {rightthree && <div >{rightthree}</div>}
       </div>
     </header>
   );

@@ -1,0 +1,418 @@
+// RiderSignUp.module.scss
+.riderSignup {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 28px;
+    font-weight: 700;
+    color: rgb(0, 0, 0);
+    border-bottom: 3px solid rgb(0, 123, 255);
+    padding-bottom: 10px;
+  }
+
+  .signupForm {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .formGroup {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      label {
+        font-size: 14px;
+        font-weight: 600;
+        color: rgb(0, 0, 0);
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        // 필수 항목 표시 (이메일 제외)
+        &:not([for="email"])::after {
+          content: "*";
+          color: rgb(255, 0, 0);
+          font-weight: bold;
+        }
+      }
+
+      // 기본 input 스타일 - 모든 input에 공통 적용
+      input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid rgb(0, 0, 0);
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background-color: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        box-sizing: border-box;
+        height: 48px; // 고정 높이로 모든 input 크기 통일
+
+        &:focus {
+          outline: none;
+          border-color: rgb(0, 123, 255);
+          box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        &::placeholder {
+          color: rgb(173, 181, 189);
+        }
+
+        // 유효성 검사 실패시 빨간 테두리
+        &.invalid {
+          border-color: rgb(255, 0, 0);
+        }
+
+        // 유효성 검사 성공시 초록 테두리
+        &.valid {
+          border-color: rgb(40, 167, 69);
+        }
+      }
+
+      .inputWrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        input {
+          flex: 1;
+          // 공통 input 스타일 상속
+        }
+
+        .verifyButton,
+        .duplicateButton {
+          padding: 12px 20px;
+          background-color: rgb(0, 123, 255);
+          color: rgb(255, 255, 255);
+          border: none;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          white-space: nowrap;
+          transition: all 0.3s ease;
+          min-width: 100px;
+          height: 48px; // input과 동일한 높이
+          box-sizing: border-box;
+
+          &:hover {
+            background-color: rgb(0, 86, 179);
+            transform: translateY(-1px);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+
+          &:disabled {
+            background-color: rgb(108, 117, 125);
+            cursor: not-allowed;
+            transform: none;
+          }
+        }
+
+        .duplicateButton {
+          background-color: rgb(40, 167, 69);
+
+          &:hover {
+            background-color: rgb(30, 126, 52);
+          }
+        }
+      }
+
+      .passwordGroup {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .passwordInput {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          width: 100%;
+
+          input {
+            // 공통 input 스타일 상속
+          }
+        }
+      }
+
+      .phoneGroup {
+        .phoneInputs {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+
+          .phoneVerify {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            input {
+              flex: 1;
+              // 공통 input 스타일 상속
+            }
+
+            .verifyButton {
+              padding: 12px 20px;
+              background-color: rgb(0, 123, 255);
+              color: rgb(255, 255, 255);
+              border: none;
+              border-radius: 8px;
+              font-size: 14px;
+              font-weight: 600;
+              cursor: pointer;
+              white-space: nowrap;
+              transition: all 0.3s ease;
+              min-width: 100px;
+              height: 48px; // input과 동일한 높이
+              box-sizing: border-box;
+
+              &:hover {
+                background-color: rgb(0, 86, 179);
+                transform: translateY(-1px);
+              }
+
+              &:active {
+                transform: translateY(0);
+              }
+
+              &:disabled {
+                background-color: rgb(108, 117, 125);
+                cursor: not-allowed;
+                transform: none;
+              }
+            }
+          }
+
+          .codeVerify {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            input {
+              flex: 1;
+              // 공통 input 스타일 상속
+            }
+
+            .verifyButton {
+              padding: 12px 20px;
+              background-color: rgb(0, 123, 255);
+              color: rgb(255, 255, 255);
+              border: none;
+              border-radius: 8px;
+              font-size: 14px;
+              font-weight: 600;
+              cursor: pointer;
+              white-space: nowrap;
+              transition: all 0.3s ease;
+              min-width: 100px;
+              height: 48px; // input과 동일한 높이
+              box-sizing: border-box;
+
+              &:hover {
+                background-color: rgb(0, 86, 179);
+                transform: translateY(-1px);
+              }
+
+              &:active {
+                transform: translateY(0);
+              }
+
+              &:disabled {
+                background-color: rgb(108, 117, 125);
+                cursor: not-allowed;
+                transform: none;
+              }
+            }
+          }
+        }
+      }
+
+      .validationMessage {
+        font-size: 12px;
+        font-weight: 500;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        &.valid {
+          color: rgb(40, 167, 69);
+        }
+
+        &.invalid {
+          color: rgb(220, 53, 69);
+        }
+
+        &.pending {
+          color: rgb(255, 193, 7);
+        }
+
+        .icon {
+          font-weight: bold;
+        }
+      }
+    }
+
+    .submitButton {
+      margin-top: 20px;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, rgb(0, 123, 255), rgb(0, 86, 179));
+      color: rgb(255, 255, 255);
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+      height: 56px; // 제출 버튼은 조금 더 크게
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      &:disabled {
+        background: rgb(108, 117, 125);
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+    }
+
+    .errorMessage {
+      background-color: rgb(248, 215, 218);
+      color: rgb(114, 28, 36);
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid rgb(245, 198, 203);
+      font-size: 14px;
+      margin-top: 16px;
+      text-align: center;
+    }
+  }
+}
+
+// 반응형 디자인
+@media (max-width: 768px) {
+  .riderSignup {
+    margin: 0 10px;
+    padding: 30px 15px;
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+
+    .signupForm {
+      gap: 20px;
+
+      .formGroup {
+        .inputWrapper {
+          flex-direction: column;
+          align-items: stretch;
+
+          input {
+            width: 100%;
+          }
+
+          .verifyButton,
+          .duplicateButton {
+            width: 100%;
+            min-width: unset;
+          }
+        }
+
+        .phoneGroup {
+          .phoneInputs {
+            .phoneVerify,
+            .codeVerify {
+              flex-direction: column;
+
+              input {
+                margin-bottom: 8px;
+              }
+
+              .verifyButton {
+                width: 100%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// 애니메이션 효과
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.riderSignup {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.formGroup {
+  animation: fadeInUp 0.4s ease-out;
+  animation-fill-mode: both;
+
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.1}s;
+    }
+  }
+}
+
+// 포커스 상태 개선
+input:focus {
+  position: relative;
+  z-index: 1;
+}
+
+// 버튼 로딩 효과
+.submitButton:disabled {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid rgb(255, 255, 255);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

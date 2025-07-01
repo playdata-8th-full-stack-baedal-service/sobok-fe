@@ -7,7 +7,7 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
       loginId: id,
       password,
     });
-    if (response.data.success) {
+    if (response.data.data.success) {
       const { accessToken, refreshToken, role, id: userId, recoveryTarget } = response.data.data;
       localStorage.setItem('ACCESS_TOKEN', accessToken);
       localStorage.setItem('REFRESH_TOKEN', refreshToken);
@@ -18,22 +18,21 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
     }
     return thunkAPI.rejectWithValue('로그인 실패');
   } catch (error) {
-    const message = error.response?.data?.message || '로그인 요청에 실패하였습니다.';
+    const message = error.response?.data?.data?.message || '로그인 요청에 실패하였습니다.';
     return thunkAPI.rejectWithValue(message);
   }
 });
 
 export const signUpUser = createAsyncThunk('auth/signUpUser', async (userData, thunkAPI) => {
   try {
-    // FormData가 아니라 userData로 수정
+    
     const response = await axiosInstance.post('/auth-service/auth/user-signup', userData);
-    if (response.data.success) {
+    if (response.data.data.success) {
       return response.data.data;
     }
     return thunkAPI.rejectWithValue('회원가입 실패');
   } catch (error) {
-    // error.response?.date?.message -> error.response?.data?.message로 수정
-    const message = error.response?.data?.message || '회원가입 요청에 실패하였습니다.';
+    const message = error.response?.data?.data?.message || '회원가입 요청에 실패하였습니다.';
     return thunkAPI.rejectWithValue(message);
   }
 });

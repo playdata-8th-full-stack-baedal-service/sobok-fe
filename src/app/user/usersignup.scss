@@ -6,9 +6,48 @@ input {
   border-radius: 20px !important;
 }
 
+.container-top {
+  display: flex;
+  align-items: center;
+}
+
+.input-with-button {
+  display: flex;
+  white-space: nowrap;
+  border-radius: 30px;
+}
+
 select {
   border-radius: 20px !important;
 }
+
+.phone-auth {
+  margin-top: 10px;
+
+  .input-with-button {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    input {
+      flex: 1;
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    .auth-btn {
+      padding: 8px 12px;
+      font-size: 14px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: not-allowed; // 비활성화 상태이므로
+      opacity: 0.6;
+    }
+  }
+}
+
 
 .signup-container {
   max-width: 500px;
