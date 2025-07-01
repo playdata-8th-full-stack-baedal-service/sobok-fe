@@ -1,0 +1,22 @@
+@import './reset.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+}
+/* 
+@font-face {
+    font-family: 'BagelFatOne-Regular';
+    src: url('/BagelFatOne-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+  font-family: 'BagelFatOne-Regular', sans-serif;
+} */

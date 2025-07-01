@@ -1,0 +1,52 @@
+.userHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menuIcon {
+  cursor: pointer;
+}
+
+.logo {
+  cursor: pointer;
+}
+
+.navItems {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.iconBtn {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.dropdownWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 1px); 
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  z-index: 1000;
+  min-width: 160px;
+  padding: 4px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdownMenu li {
+  padding: 10px 16px;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  border-bottom: 1px solid #eee; 
+}
