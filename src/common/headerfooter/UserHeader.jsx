@@ -1,12 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../store/store';
+import axios from '../../services/axios-config';
 import Header from './Header';
 import styles from './UserHeader.module.scss';
 
 const UserHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isLoggedIn = !!localStorage.getItem('token');
+  const dispatch = useDispatch();
+  const isLoggedIn = !!localStorage.getItem('ACCESS_TOKEN');
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -17,10 +21,15 @@ const UserHeader = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      await axios.post('/auth-service/auth/logout');
+    } catch (err) {
+      console.error('서버 로그아웃 실패:', err);
+    } finally {
+      dispatch(logout());
+      navigate('/');
+    }
   };
 
   const toggleDropdown = () => {
@@ -46,7 +55,7 @@ const UserHeader = () => {
 
   const Logo = (
     <div className={styles.logo} onClick={() => safeNavigate('/')}>
-      <img src="/icons/logo.svg" alt="로고" />
+      \n <img src="/icons/logo.svg" alt="로고" />
     </div>
   );
 

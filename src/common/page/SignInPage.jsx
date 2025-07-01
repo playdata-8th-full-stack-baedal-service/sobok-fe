@@ -1,10 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { loginUser } from '../../store/authSlice';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import styles from './SignInPage.module.scss';
-import axiosInstance from '../../services/axios-config';
-import { AUTH } from '../../services/host-config';
 
 function SignInPage() {
   const navigate = useNavigate();
@@ -16,63 +15,34 @@ function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
-  const idInputRef = useRef(); // 아이디 입력창에 전체 선택 효과를 주기 위한 ref
+  const idInputRef = useRef();
 
   const handleSignIn = async () => {
-    setError(''); // 에러 초기화
-
+    setError('');
     try {
-      const response = await axiosInstance.post(`${AUTH}/login`, {
-        loginId: id,
-        password: password,
-      });
-
-      const { data } = response.data;
-
-      if (data.recoveryTarget) {
-        setError('해당 계정은 복구 대상입니다.');
-        return;
-      }
-
-      const { accessToken, refreshToken, role } = data;
-
-      // 토큰 저장
-      localStorage.setItem('ACCESS_TOKEN', accessToken);
-      localStorage.setItem('REFRESH_TOKEN', refreshToken);
-
-      // 역할에 따라 라우팅
-      switch (role) {
-        case 'ADMIN':
-          navigate('/admin/main');
-          break;
-        case 'RIDER':
-          navigate('/rider/main');
-          break;
-        case 'HUB':
-          navigate('/hub/main');
-          break;
-        default:
-          navigate('/');
+      const resultAction = await dispatch(loginUser({ id, password }));
+      if (loginUser.fulfilled.match(resultAction)) {
+        const role = resultAction.payload.role;
+        switch (role) {
+          case 'ADMIN':
+            navigate('/admin/main');
+            break;
+          case 'RIDER':
+            navigate('/rider/main');
+            break;
+          case 'HUB':
+            navigate('/hub/main');
+            break;
+          default:
+            navigate('/');
+        }
+      } else {
+        setError(resultAction.payload || '로그인에 실패했습니다.');
+        setPassword('');
+        idInputRef.current?.select();
       }
     } catch (err) {
-      console.log('로그인 에러 응답:', err?.response?.data);
-      const res = err?.response?.data;
-
-      if (res?.message === '존재하지 않는 아이디입니다.') {
-        setError('존재하지 않는 아이디입니다.');
-      } else if (res?.message === '비밀번호가 틀렸습니다.') {
-        setError('비밀번호가 틀렸습니다.');
-      } else if (res?.message === '존재하지 않는 사용자입니다.') {
-        setError('존재하지 않는 사용자입니다.');
-      } else if (res?.message === '토큰 생성 과정에서 오류가 발생했습니다.') {
-        setError('서버 오류로 로그인에 실패했습니다.');
-      } else {
-        setError('로그인에 실패했습니다.');
-      }
-
-      // 로그인 실패 시 패스워드 비우고, 아이디 전체 선택
-      setPassword('');
-      idInputRef.current?.select();
+      setError('로그인에 실패했습니다.');
     }
   };
 
@@ -80,7 +50,7 @@ function SignInPage() {
   const handleFindPw = () => navigate('/auth/find-password');
   const handleSignUp = () => navigate('/auth/signup');
   const handleKeyDown = e => {
-    if (e.key === 'Enter') handleSignIn(); // 엔터키로 로그인 트리거
+    if (e.key === 'Enter') handleSignIn();
   };
 
   return (
