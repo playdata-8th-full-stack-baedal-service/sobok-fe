@@ -1,6 +1,9 @@
 import { Routes, Route } from 'react-router-dom';
 import RoleRoute from './RoleRoute';
 
+// header
+import UserHeader from '../common/headerfooter/UserHeader';
+
 // public 페이지
 import MainPage from '../app/user/MainPage';
 // import ProductPage from '../app/user/ProductPage';
@@ -11,15 +14,15 @@ import MainPage from '../app/user/MainPage';
 
 // private 페이지 (USER 권한 필요)
 // import NewPostPage from '../app/user/private/NewPostPage';
-// import CartPage from '../app/user/private/CartPage';
+import CartPage from '../app/user/private/CartPage';
 // import CartModal from '../app/user/private/CartModal';
 // import PayPage from '../app/user/private/PayPage';
-// import UserInfoPage from '../app/user/private/UserInfoPage';
-// import MyPostListPage from '../app/user/private/MyPostListPage';
-// import MyOrderListPage from '../app/user/private/MyOrderListPage';
+import UserInfoPage from '../app/user/private/UserInfoPage';
+import MyPostListPage from '../app/user/private/MyPostListPage';
+import MyOrderListPage from '../app/user/private/MyOrderListPage';
 // import MyOrderDetailPage from '../app/user/private/MyOrderDetailPage';
-// import BookmarkRecipePage from '../app/user/private/BookmarkRecipePage';
-// import LikePostPage from '../app/user/private/LikePostPage';
+import BookmarkRecipePage from '../app/user/private/BookmarkRecipePage';
+import LikePostPage from '../app/user/private/LikePostPage';
 
 function UserRoutes() {
   return (
@@ -28,11 +31,11 @@ function UserRoutes() {
       <Routes>
         {/* 비회원도 접근 가능한 페이지 */}
         <Route path="main" element={<MainPage />} />
-        {/* <Route path="product" element={<ProductPage />} />
-        <Route path="search" element={<SearchPage />} />
-        <Route path="category" element={<CategoryPage />} />
-        <Route path="post-list" element={<PostListPage />} />
-        <Route path="post/:id" element={<PostDetailPage />} /> */}
+        {/* <Route path="product" element={<ProductPage />} /> */}
+        {/* <Route path="search" element={<SearchPage />} /> */}
+        {/* <Route path="category" element={<CategoryPage />} /> */}
+        {/* <Route path="post-list" element={<PostListPage />} /> */}
+        {/* <Route path="post/:id" element={<PostDetailPage />} /> */}
 
         {/* USER 권한 있어야 접근 가능한 페이지 */}
         {/* <Route
@@ -42,7 +45,7 @@ function UserRoutes() {
               <NewPostPage />
             </RoleRoute>
           }
-        />
+        /> */}
         <Route
           path="cart"
           element={
@@ -51,22 +54,22 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
-        <Route
+        {/* <Route
           path="cart-modal"
           element={
             <RoleRoute role="USER">
               <CartModal />
             </RoleRoute>
           }
-        />
-        <Route
+        /> */}
+        {/* <Route
           path="pay"
           element={
             <RoleRoute role="USER">
               <PayPage />
             </RoleRoute>
           }
-        />
+        /> */}
         <Route
           path="info"
           element={
@@ -91,14 +94,14 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
-        <Route
+        {/* <Route
           path="order/:id"
           element={
             <RoleRoute role="USER">
               <MyOrderDetailPage />
             </RoleRoute>
           }
-        />
+        /> */}
         <Route
           path="bookmarks"
           element={
@@ -114,7 +117,7 @@ function UserRoutes() {
               <LikePostPage />
             </RoleRoute>
           }
-        /> */}
+        />
       </Routes>
     </>
   );

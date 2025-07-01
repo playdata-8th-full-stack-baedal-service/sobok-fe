@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+import UserHeader from './common/headerfooter/UserHeader';
 import AuthRoutes from './router/AuthRoutes';
 import UserRoutes from './router/UserRoutes';
 // import AdminRoutes from './router/AdminRoutes';
@@ -17,7 +18,15 @@ function App() {
       <>
         <Routes>
           {/* 비회원도 접근 가능한 유저 메인페이지 */}
-          <Route path="/" element={<MainPage />} />
+          <Route
+            path="/"
+            element={
+              <>
+                <UserHeader />
+                <MainPage />
+              </>
+            }
+          />
 
           {/* 로그인, 회원가입, 아이디/비밀번호 찾기 등 */}
           <Route path="/auth/*" element={<AuthRoutes />} />
