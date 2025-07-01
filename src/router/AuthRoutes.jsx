@@ -9,6 +9,8 @@ import SignUpComplete from '../common/page/SignUpCompletePage';
 import PersonalInfoCertifi from '../common/page/PersonalInfoCerifiPage';
 
 import UserHeader from '../common/headerfooter/UserHeader';
+import UserSignUp from '../app/user/UserSignUp';
+import RiderSignUp from '../app/rider/RiderSignUp';
 
 function AuthRoutes() {
   return (
@@ -21,6 +23,8 @@ function AuthRoutes() {
         <Route path="signup" element={<SignUpOption />} />
         <Route path="signup/complete" element={<SignUpComplete />} />
         <Route path="signup/personal" element={<PersonalInfoCertifi />} />
+        <Route path="signup/usersignup" element={<UserSignUp />} />
+        <Route path="signup/ridersignup" element={<RiderSignUp />} />
       </Routes>
     </>
   );

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import signsupoption from './signupoptionPage.module.scss';
 
 function SignUpOptionPage() {
+  const nav = useNavigate();
 
   return (
     <div className={signsupoption.SignUpOption}>
@@ -10,11 +11,11 @@ function SignUpOptionPage() {
         <p>가입하시려는 회원의 유형을 선택해주세요.</p>
       </div>
       <div className={signsupoption.OptionBlock}>
-        <div>
+        <div onClick={() => nav('/auth/signup/usersignup')}>
           <img src="#" />
           <p>사용자 회원가입</p>
         </div>
-        <div>
+        <div onClick={() => nav('/auth/signup/ridersignup')}>
           <img src="#" />
           <p>배달원 회원가입</p>
         </div>
