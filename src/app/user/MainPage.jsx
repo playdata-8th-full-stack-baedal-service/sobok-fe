@@ -1,3 +1,4 @@
+// MainPage.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,8 +11,7 @@ function MainPage() {
 
   return (
     <div>
-      <header>메인페이지 입니다.</header>
-      <button onClick={handleLoginClick}>로그인</button>
+      <h2>메인페이지 입니다.</h2>
     </div>
   );
 }
