@@ -4,10 +4,10 @@ import { Routes, Route } from 'react-router-dom';
 import UserHeader from './common/headerfooter/UserHeader';
 import AuthRoutes from './router/AuthRoutes';
 import UserRoutes from './router/UserRoutes';
-// import AdminRoutes from './router/AdminRoutes';
-// import RiderRoutes from './router/RiderRoutes';
-// import HubRoutes from './router/HubRoutes';
-// import RoleRoute from './router/RoleRoute';
+import AdminRoutes from './router/AdminRoutes';
+import RiderRoutes from './router/RiderRoutes';
+import HubRoutes from './router/HubRoutes';
+import RoleRoute from './router/RoleRoute';
 
 import MainPage from './app/user/MainPage';
 import Footer from './common/headerfooter/Footer';
@@ -34,34 +34,34 @@ function App() {
         <Route path="/user/*" element={<UserRoutes />} />
 
         {/* 관리자 전용 */}
-        {/* <Route
+        <Route
           path="/admin/*"
           element={
             <RoleRoute role="ADMIN">
               <AdminRoutes />
             </RoleRoute>
           }
-        /> */}
+        />
 
         {/* 라이더 전용 */}
-        {/* <Route
+        <Route
           path="/rider/*"
           element={
             <RoleRoute role="RIDER">
               <RiderRoutes />
             </RoleRoute>
           }
-        /> */}
+        />
 
         {/* 허브 전용 */}
-        {/* <Route
+        <Route
           path="/hub/*"
           element={
             <RoleRoute role="HUB">
               <HubRoutes />
             </RoleRoute>
           }
-        /> */}
+        />
       </Routes>
       <Footer />
     </>

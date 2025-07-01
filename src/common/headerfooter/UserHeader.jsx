@@ -1,16 +1,27 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { logout } from '../../store/store';
+import { logout } from '../../store/authSlice';
 import axios from '../../services/axios-config';
 import Header from './Header';
 import styles from './UserHeader.module.scss';
+
+// 테스트용
+/*
+    localStorage.setItem('accessToken', 'temp-access-token');
+    localStorage.setItem('refreshToken', 'temp-refresh-token');
+    localStorage.setItem('userRole', 'USER');
+    localStorage.setItem('userId', '/user1');
+
+     window.history.pushState({}, '', '/user');
+     window.dispatchEvent(new PopStateEvent('popstate'));
+*/
 
 const UserHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const isLoggedIn = !!localStorage.getItem('ACCESS_TOKEN');
+  const isLoggedIn = !!localStorage.getItem('accessToken');
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -29,6 +40,7 @@ const UserHeader = () => {
     } finally {
       dispatch(logout());
       navigate('/');
+      alert('로그아웃 되었습니다.');
     }
   };
 

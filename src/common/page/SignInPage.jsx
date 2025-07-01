@@ -23,15 +23,16 @@ function SignInPage() {
       const resultAction = await dispatch(loginUser({ id, password }));
       if (loginUser.fulfilled.match(resultAction)) {
         const role = resultAction.payload.role;
+
         switch (role) {
           case 'ADMIN':
-            navigate('/admin/main');
+            navigate('/admin/');
             break;
           case 'RIDER':
-            navigate('/rider/main');
+            navigate('/rider/');
             break;
           case 'HUB':
-            navigate('/hub/main');
+            navigate('/hub/');
             break;
           default:
             navigate('/');

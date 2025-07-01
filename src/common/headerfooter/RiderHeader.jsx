@@ -1,9 +1,20 @@
 import React from 'react';
-import Header from '../Header';
+import Header from './Header';
 import { useDispatch } from 'react-redux';
-import { logout } from '@/store/authSlice';
+import { logout } from '../../store/authSlice';
 import { useNavigate } from 'react-router-dom';
-import axios from '@/services/ExAxiosConfig';
+import axios from '../../services/axios-config';
+
+// 테스트용
+/*
+    localStorage.setItem('accessToken', 'temp-access-token');
+    localStorage.setItem('refreshToken', 'temp-refresh-token');
+    localStorage.setItem('userRole', 'RIDER');
+    localStorage.setItem('userId', 'rider1');
+
+     window.history.pushState({}, '', '/rider');
+     window.dispatchEvent(new PopStateEvent('popstate'));
+*/
 
 const RiderHeader = () => {
   const dispatch = useDispatch();
@@ -16,19 +27,12 @@ const RiderHeader = () => {
       console.error('서버 로그아웃 실패:', err);
     } finally {
       dispatch(logout());
-      navigate('/signin');
+      navigate('/');
+      alert('로그아웃 되었습니다.');
     }
   };
 
-  return (
-    <Header
-      lefttitle={null}
-      title={<img src="/소복소복로고.svg" alt="로고" style={{ height: '32px' }} />}
-      rightone={<button onClick={handleLogout}>로그아웃</button>}
-      righttwo={null}
-      rightthree={null}
-    />
-  );
+  return <Header rightone={<button onClick={handleLogout}>로그아웃</button>} />;
 };
 
 export default RiderHeader;
