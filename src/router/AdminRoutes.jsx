@@ -19,16 +19,16 @@ function AdminRoutes() {
     <>
       <AdminHeader />
       <Routes>
-        {/* <Route path="/" element={<MainPage />} />
+        <Route path="/" element={<MainPage />} />
         <Route path="all-order" element={<AllOrderPage />} />
-        <Route path="hub-detail" element={<HubDetailModal />} />
+        {/* <Route path="hub-detail" element={<HubDetailModal />} /> */}
         <Route path="hub-register" element={<HubRegisterPage />} />
         <Route path="ingredient" element={<IngrediantPage />} />
         <Route path="menu-recommend" element={<MenuRecommendPage />} />
-        <Route path="order-detail" element={<OrderDetailModal />} />
+        {/* <Route path="order-detail" element={<OrderDetailModal />} /> */}
         <Route path="recipe-regist" element={<RecipeRegistPage />} />
-        <Route path="rider-detail" element={<RiderDetailModal />} />
-        <Route path="rider-list" element={<RiderListPage />} /> */}
+        {/* <Route path="rider-detail" element={<RiderDetailModal />} /> */}
+        <Route path="rider-list" element={<RiderListPage />} />
       </Routes>
     </>
   );
