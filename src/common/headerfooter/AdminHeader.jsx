@@ -16,7 +16,7 @@ import axios from '../../services/axios-config';
   window.dispatchEvent(new PopStateEvent('popstate'));
 */
 
-const HubHeader = () => {
+const AdminHeader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -41,4 +41,4 @@ const HubHeader = () => {
   return <Header rightthree={<button onClick={handleLogout}>로그아웃</button>} />;
 };
 
-export default RiderHeader;
+export default AdminHeader;
