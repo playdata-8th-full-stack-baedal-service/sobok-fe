@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearSignUpSuccess } from '../../store/authSlice';
-import './userSignUp.scss';
+import './UserSignUp.scss';
 
 function UserSignUp() {
   const dispatch = useDispatch();
