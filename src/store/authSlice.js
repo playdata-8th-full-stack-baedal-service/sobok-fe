@@ -7,21 +7,33 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
       loginId: id,
       password,
     });
-
     if (response.data.success) {
       const { accessToken, refreshToken, role, id: userId, recoveryTarget } = response.data.data;
-
       localStorage.setItem('ACCESS_TOKEN', accessToken);
       localStorage.setItem('REFRESH_TOKEN', refreshToken);
       localStorage.setItem('userRole', role);
       localStorage.setItem('userId', userId);
       localStorage.setItem('recovery', recoveryTarget);
-
       return { accessToken, refreshToken, role, userId, recoveryTarget };
     }
     return thunkAPI.rejectWithValue('로그인 실패');
   } catch (error) {
     const message = error.response?.data?.message || '로그인 요청에 실패하였습니다.';
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const signUpUser = createAsyncThunk('auth/signUpUser', async (userData, thunkAPI) => {
+  try {
+    // FormData가 아니라 userData로 수정
+    const response = await axiosInstance.post('/auth-service/auth/user-signup', userData);
+    if (response.data.success) {
+      return response.data.data;
+    }
+    return thunkAPI.rejectWithValue('회원가입 실패');
+  } catch (error) {
+    // error.response?.date?.message -> error.response?.data?.message로 수정
+    const message = error.response?.data?.message || '회원가입 요청에 실패하였습니다.';
     return thunkAPI.rejectWithValue(message);
   }
 });
@@ -36,6 +48,7 @@ const authSlice = createSlice({
     recoveryTarget: null,
     loading: false,
     error: null,
+    signUpSuccess: false,
   },
   reducers: {
     logout: state => {
@@ -46,6 +59,9 @@ const authSlice = createSlice({
       state.userId = null;
       state.recoveryTarget = null;
       state.error = null;
+    },
+    clearSignUpSuccess: state => {
+      state.signUpSuccess = false;
     },
   },
   extraReducers: builder => {
@@ -65,9 +81,23 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(signUpUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.signUpSuccess = false;
+      })
+      .addCase(signUpUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.signUpSuccess = true; // state. 추가
+      })
+      .addCase(signUpUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.signUpSuccess = false;
       });
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, clearSignUpSuccess } = authSlice.actions;
 export default authSlice.reducer;
