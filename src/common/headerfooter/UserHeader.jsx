@@ -63,7 +63,7 @@ const UserHeader = () => {
       <img
         src="/icons/cart.svg"
         alt="장바구니"
-        onClick={() => safeNavigate('/cart')}
+        onClick={() => safeNavigate('/user/cart')}
         className={styles.iconBtn}
       />
       <button onClick={handleLogout}>로그아웃</button>

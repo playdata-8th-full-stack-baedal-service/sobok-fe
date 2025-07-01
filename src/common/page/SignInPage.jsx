@@ -76,9 +76,9 @@ function SignInPage() {
     }
   };
 
-  const handleFindId = () => navigate('/find-id');
-  const handleFindPw = () => navigate('/find-password');
-  const handleSignUp = () => navigate('/signup');
+  const handleFindId = () => navigate('/auth/find-id');
+  const handleFindPw = () => navigate('/auth/find-password');
+  const handleSignUp = () => navigate('/auth/signup');
   const handleKeyDown = e => {
     if (e.key === 'Enter') handleSignIn(); // 엔터키로 로그인 트리거
   };
