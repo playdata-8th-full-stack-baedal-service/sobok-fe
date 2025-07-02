@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendSMSCode, verifySMSCode } from '../../store/smsAuthSlice'; // <- SMS 인증 관련 slice import
-import { signUpUser, clearSignUpSuccess } from '../../store/authSlice';
+import { sendSMSCode, verifySMSCode } from '../../../../store/smsAuthSlice'; // <- SMS 인증 관련 slice import
+import { signUpUser, clearSignUpSuccess } from '../../../../store/authSlice';
 import './UserSignUp.scss';
 
 function UserSignUp() {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearSignUpSuccess, riderSignUp } from '../../store/riderSlice';
-import { sendSMSCode, verifySMSCode } from '../../store/smsAuthSlice';
+import { clearSignUpSuccess, riderSignUp } from '../../../../store/riderSlice';
+import { sendSMSCode, verifySMSCode } from '../../../../store/smsAuthSlice';
 import styles from './RiderSignUp.module.scss';
 
 function RiderSignUp() {
@@ -227,9 +227,7 @@ function RiderSignUp() {
                     validation.passwordValid ? styles.valid : styles.invalid
                   }`}
                 >
-                  <span className={styles.icon}>
-                    {validation.passwordValid ? '✓' : '✗'}
-                  </span>
+                  <span className={styles.icon}>{validation.passwordValid ? '✓' : '✗'}</span>
                   {validation.passwordValid
                     ? '유효한 비밀번호입니다'
                     : '대문자, 특수문자, 숫자 포함 8자 이상 입력해주세요'}
@@ -253,9 +251,7 @@ function RiderSignUp() {
                     validation.passwordMatch ? styles.valid : styles.invalid
                   }`}
                 >
-                  <span className={styles.icon}>
-                    {validation.passwordMatch ? '✓' : '✗'}
-                  </span>
+                  <span className={styles.icon}>{validation.passwordMatch ? '✓' : '✗'}</span>
                   {validation.passwordMatch
                     ? '비밀번호가 일치합니다'
                     : '비밀번호가 일치하지 않습니다'}
@@ -309,11 +305,7 @@ function RiderSignUp() {
               </div>
             )}
 
-            {smsError && (
-              <div className={styles.errorMessage}>
-                인증 오류: {smsError}
-              </div>
-            )}
+            {smsError && <div className={styles.errorMessage}>인증 오류: {smsError}</div>}
           </div>
         </div>
 
