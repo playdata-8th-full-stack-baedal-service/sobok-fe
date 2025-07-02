@@ -18,10 +18,6 @@ function RiderSignUp() {
   });
 
   const [validation, setValidation] = useState({
-    loginIdChecked: false,
-    loginIdValid: false,
-    permissionNumberChecked: false,
-    permissionNumberValid: false,
     passwordMatch: false,
     passwordValid: false,
   });
@@ -42,10 +38,6 @@ function RiderSignUp() {
         permissionNumber: '',
       });
       setValidation({
-        loginIdChecked: false,
-        loginIdValid: false,
-        permissionNumberChecked: false,
-        permissionNumberValid: false,
         passwordMatch: false,
         passwordValid: false,
       });
@@ -65,11 +57,6 @@ function RiderSignUp() {
     let className = '';
 
     switch (fieldName) {
-      case 'loginId':
-        if (validation.loginIdChecked) {
-          className = validation.loginIdValid ? styles.valid : styles.invalid;
-        }
-        break;
       case 'password':
         if (form.password) {
           className = validation.passwordValid ? styles.valid : styles.invalid;
@@ -83,11 +70,6 @@ function RiderSignUp() {
       case 'phone':
         if (isPhoneVerified) {
           className = styles.valid;
-        }
-        break;
-      case 'permissionNumber':
-        if (validation.permissionNumberChecked) {
-          className = validation.permissionNumberValid ? styles.valid : styles.invalid;
         }
         break;
       default:
@@ -118,81 +100,6 @@ function RiderSignUp() {
         ...prev,
         passwordMatch: value === form.password,
       }));
-    }
-
-    // 아이디나 면허번호가 변경되면 중복확인 상태 초기화
-    if (name === 'loginId') {
-      setValidation(prev => ({
-        ...prev,
-        loginIdChecked: false,
-        loginIdValid: false,
-      }));
-    }
-
-    if (name === 'permissionNumber') {
-      setValidation(prev => ({
-        ...prev,
-        permissionNumberChecked: false,
-        permissionNumberValid: false,
-      }));
-    }
-  };
-
-  // 아이디 중복확인 (fetch → axios 변경)
-  const checkLoginId = async () => {
-    if (!form.loginId.trim()) {
-      alert('아이디를 입력해주세요.');
-      return;
-    }
-
-    try {
-      const response = await axios.post('/auth-service/auth/check-loginid', {
-        loginId: form.loginId
-      });
-
-      setValidation(prev => ({
-        ...prev,
-        loginIdChecked: true,
-        loginIdValid: response.data.available,
-      }));
-
-      if (response.data.available) {
-        alert('사용 가능한 아이디입니다.');
-      } else {
-        alert('이미 사용 중인 아이디입니다.');
-      }
-    } catch (error) {
-      console.error('아이디 중복확인 에러:', error);
-      alert(error.response?.data?.message || '아이디 중복확인 중 오류가 발생했습니다.');
-    }
-  };
-
-  // 면허번호 중복확인 (fetch → axios 변경)
-  const checkPermissionNumber = async () => {
-    if (!form.permissionNumber.trim()) {
-      alert('면허번호를 입력해주세요.');
-      return;
-    }
-
-    try {
-      const response = await axios.post('/auth-service/auth/check-permission', {
-        permissionNumber: form.permissionNumber
-      });
-
-      setValidation(prev => ({
-        ...prev,
-        permissionNumberChecked: true,
-        permissionNumberValid: response.data.available,
-      }));
-
-      if (response.data.available) {
-        alert('사용 가능한 면허번호입니다.');
-      } else {
-        alert('이미 등록된 면허번호입니다.');
-      }
-    } catch (error) {
-      console.error('면허번호 중복확인 에러:', error);
-      alert(error.response?.data?.message || '면허번호 중복확인 중 오류가 발생했습니다.');
     }
   };
 
@@ -243,12 +150,6 @@ function RiderSignUp() {
   const handleSubmit = e => {
     e.preventDefault();
 
-    // 유효성 검사
-    if (!validation.loginIdChecked || !validation.loginIdValid) {
-      alert('아이디 중복확인을 완료해주세요.');
-      return;
-    }
-
     if (!validation.passwordValid) {
       alert('비밀번호는 8자 이상이며, 대문자, 특수문자, 숫자를 포함해야 합니다.');
       return;
@@ -261,11 +162,6 @@ function RiderSignUp() {
 
     if (!isPhoneVerified) {
       alert('휴대폰 인증을 완료해주세요.');
-      return;
-    }
-
-    if (!validation.permissionNumberChecked || !validation.permissionNumberValid) {
-      alert('면허번호 중복확인을 완료해주세요.');
       return;
     }
 
@@ -286,22 +182,10 @@ function RiderSignUp() {
               placeholder="아이디를 입력하세요"
               value={form.loginId}
               onChange={handleChange}
-              className={getInputClassName('loginId')}
               required
               id="loginId"
             />
-            <button type="button" onClick={checkLoginId} className={styles.duplicateButton}>
-              중복확인
-            </button>
           </div>
-          {validation.loginIdChecked && (
-            <div
-              className={`${styles.validationMessage} ${validation.loginIdValid ? styles.valid : styles.invalid}`}
-            >
-              <span className={styles.icon}>{validation.loginIdValid ? '✓' : '✗'}</span>
-              {validation.loginIdValid ? '사용 가능한 아이디입니다' : '이미 사용 중인 아이디입니다'}
-            </div>
-          )}
         </div>
 
         <div className={styles.formGroup}>
@@ -420,28 +304,10 @@ function RiderSignUp() {
               placeholder="면허번호를 입력하세요"
               value={form.permissionNumber}
               onChange={handleChange}
-              className={getInputClassName('permissionNumber')}
               required
               id="permissionNumber"
             />
-            <button
-              type="button"
-              onClick={checkPermissionNumber}
-              className={styles.duplicateButton}
-            >
-              중복확인
-            </button>
           </div>
-          {validation.permissionNumberChecked && (
-            <div
-              className={`${styles.validationMessage} ${validation.permissionNumberValid ? styles.valid : styles.invalid}`}
-            >
-              <span className={styles.icon}>{validation.permissionNumberValid ? '✓' : '✗'}</span>
-              {validation.permissionNumberValid
-                ? '사용 가능한 면허번호입니다'
-                : '이미 등록된 면허번호입니다'}
-            </div>
-          )}
         </div>
 
         <button type="submit" disabled={loading} className={styles.submitButton}>

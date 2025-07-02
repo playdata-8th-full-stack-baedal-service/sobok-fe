@@ -40,6 +40,7 @@ const smsAuthSlice = createSlice({
     phoneNumber: '',
     isCodeSent: false,
     isVerified: false,
+    verificationDate: null,
   },
   reducers: {
     clearError(state) {
@@ -51,6 +52,7 @@ const smsAuthSlice = createSlice({
       state.phoneNumber = '';
       state.isCodeSent = false;
       state.isVerified = false;
+      state.verificationDate = null;
     },
     setPhoneNumber(state, action) {
       state.phoneNumber = action.payload;
@@ -79,6 +81,7 @@ const smsAuthSlice = createSlice({
       .addCase(verifySMSCode.fulfilled, (state, action) => {
         state.loading = false;
         state.isVerified = true;
+        state.verificationDate = new Date().toISOString();
       })
       .addCase(verifySMSCode.rejected, (state, action) => {
         state.loading = false;

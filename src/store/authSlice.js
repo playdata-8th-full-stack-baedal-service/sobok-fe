@@ -25,11 +25,12 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
 
 export const signUpUser = createAsyncThunk('auth/signUpUser', async (userData, thunkAPI) => {
   try {
-    
     const response = await axiosInstance.post('/auth-service/auth/user-signup', userData);
-    if (response.data.data.success) {
+    const { status, message } = response.data;
+    if (status === 200 || message?.includes('회원가입 성공')) {
       return response.data.data;
     }
+
     return thunkAPI.rejectWithValue('회원가입 실패');
   } catch (error) {
     const message = error.response?.data?.data?.message || '회원가입 요청에 실패하였습니다.';
@@ -81,7 +82,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(signUpUser.pending, (state) => {
+      .addCase(signUpUser.pending, state => {
         state.loading = true;
         state.error = null;
         state.signUpSuccess = false;
