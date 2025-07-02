@@ -29,7 +29,7 @@ function Header({ lefttitle, rightone, righttwo, rightthree }) {
       <div className={styles.Right}>
         {rightone && <div>{rightone}</div>}
         {righttwo && <div>{righttwo}</div>}
-        {rightthree && <div>{rightthree}</div>}
+        {rightthree && <div >{rightthree}</div>}
       </div>
     </header>
   );

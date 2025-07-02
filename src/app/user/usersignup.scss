@@ -6,9 +6,33 @@ input {
   border-radius: 20px !important;
 }
 
+.container-top {
+  display: flex;
+  align-items: center;
+}
+
+.input-with-button {
+  display: flex;
+  white-space: nowrap;
+  border-radius: 30px;
+}
+
 select {
   border-radius: 20px !important;
 }
+
+.phoneflex {
+  display: flex;
+}
+
+.certiButton {
+  border-radius: 20px;
+  border: 1px solid black;
+  color: black;
+  background-color: white;
+  white-space: nowrap;
+}
+
 
 .signup-container {
   max-width: 500px;
