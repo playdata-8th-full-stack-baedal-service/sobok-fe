@@ -33,7 +33,7 @@ axiosInstance.interceptors.response.use(
 
     if (errorStatus === 666) {
       try {
-        const res = await axios.post('', {
+        const res = await axios.post('/auth-service/auth/reissue', {
           refreshToken,
         });
         const newAccessToken = res.data.accessToken;
