@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../../store/authSlice';
+import { loginUser } from '../../../../store/authSlice';
 import { setToken } from '../../../../common/utils/token';
 
 export default function useSignInHandlers({ id, password, setError, setPassword, idInputRef }) {
