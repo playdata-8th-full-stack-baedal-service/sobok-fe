@@ -21,6 +21,18 @@ select {
   border-radius: 20px !important;
 }
 
+.phoneflex {
+  display: flex;
+}
+
+.certiButton {
+  border-radius: 20px;
+  border: 1px solid black;
+  color: black;
+  background-color: white;
+  white-space: nowrap;
+}
+
 
 .signup-container {
   max-width: 500px;

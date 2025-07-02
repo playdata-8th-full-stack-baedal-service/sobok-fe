@@ -4,9 +4,14 @@ import axiosInstance from '../services/axios-config';
 export const riderSignUp = createAsyncThunk('rider/riderSignUp', async (riderData, thunkAPI) => {
   try {
     const response = await axiosInstance.post('/auth-service/auth/rider-signup', riderData);
-    return response.data.data;
+    const { status, message } = response.data;
+    if(status === 200 || message?.includes("라이더 회원가입 성공")) {
+        return response.data.data;
+    }
+    return thunkAPI.rejectWithValue('라이더 회원가입 실패');
   } catch (error) {
-    return thunkAPI.rejectWithValue(error.response?.data.data || '서버 오류 발생');
+    const message = error.response?.data?.message || '라이더 회원가입 요청에 실패하였습니다.';
+    return thunkAPI.rejectWithValue(message)
   }
 });
 

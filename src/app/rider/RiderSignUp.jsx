@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearSignUpSuccess, riderSignUp } from '../../store/riderSlice';
-import axios from 'axios';
+import { sendSMSCode, verifySMSCode } from '../../store/smsAuthSlice';
 import styles from './RiderSignUp.module.scss';
 
 function RiderSignUp() {
   const dispatch = useDispatch();
   const { loading, error, signUpSuccess } = useSelector(state => state.rider);
+  const {
+    isVerified,
+    isCodeSent,
+    loading: smsLoading,
+    error: smsError,
+  } = useSelector(state => state.smsAuth);
 
   const [form, setForm] = useState({
     loginId: '',
@@ -20,10 +26,10 @@ function RiderSignUp() {
   const [validation, setValidation] = useState({
     passwordMatch: false,
     passwordValid: false,
+    permissionNumberValid: false,
   });
 
   const [verificationCode, setVerificationCode] = useState('');
-  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
 
   useEffect(() => {
     if (signUpSuccess) {
@@ -40,19 +46,23 @@ function RiderSignUp() {
       setValidation({
         passwordMatch: false,
         passwordValid: false,
+        permissionNumberValid: false,
       });
       setVerificationCode('');
-      setIsPhoneVerified(false);
     }
   }, [signUpSuccess, dispatch]);
 
-  // 비밀번호 유효성 검증 (대문자, 특수문자, 숫자 포함)
   const validatePassword = password => {
     const regex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$/;
     return regex.test(password);
   };
 
-  // input 클래스 결정 함수
+  const validatePermissionNumber = permissionNumber => {
+    // 숫자 12자리인지 체크
+    const regex = /^\d{12}$/;
+    return regex.test(permissionNumber);
+  };
+
   const getInputClassName = fieldName => {
     let className = '';
 
@@ -68,8 +78,13 @@ function RiderSignUp() {
         }
         break;
       case 'phone':
-        if (isPhoneVerified) {
+        if (isVerified) {
           className = styles.valid;
+        }
+        break;
+      case 'permissionNumber':
+        if (form.permissionNumber) {
+          className = validation.permissionNumberValid ? styles.valid : styles.invalid;
         }
         break;
       default:
@@ -81,12 +96,17 @@ function RiderSignUp() {
 
   const handleChange = e => {
     const { name, value } = e.target;
+
+    // 면허번호는 숫자만 입력 허용
+    if (name === 'permissionNumber') {
+      if (!/^\d*$/.test(value)) return; // 숫자 아닌 입력 무시
+    }
+
     setForm(prev => ({
       ...prev,
       [name]: value,
     }));
 
-    // 비밀번호 관련 유효성 검사
     if (name === 'password') {
       setValidation(prev => ({
         ...prev,
@@ -101,50 +121,31 @@ function RiderSignUp() {
         passwordMatch: value === form.password,
       }));
     }
+
+    if (name === 'permissionNumber') {
+      setValidation(prev => ({
+        ...prev,
+        permissionNumberValid: validatePermissionNumber(value),
+      }));
+    }
   };
 
-  // 휴대폰 인증 (fetch → axios 변경)
-  const sendVerificationCode = async () => {
+  const sendVerificationCode = () => {
     if (!form.phone.trim()) {
       alert('휴대폰 번호를 입력해주세요.');
       return;
     }
 
-    try {
-      const response = await axios.post('/auth-service/auth/send-verification', {
-        phone: form.phone
-      });
-
-      alert('인증번호가 발송되었습니다.');
-    } catch (error) {
-      console.error('인증번호 발송 에러:', error);
-      alert(error.response?.data?.message || '인증번호 발송 중 오류가 발생했습니다.');
-    }
+    dispatch(sendSMSCode(form.phone));
   };
 
-  // 인증번호 확인 (fetch → axios 변경)
-  const verifyCode = async () => {
+  const verifyCode = () => {
     if (!verificationCode.trim()) {
       alert('인증번호를 입력해주세요.');
       return;
     }
 
-    try {
-      const response = await axios.post('/auth-service/auth/verify-code', {
-        phone: form.phone,
-        code: verificationCode,
-      });
-
-      if (response.data.valid) {
-        setIsPhoneVerified(true);
-        alert('휴대폰 인증이 완료되었습니다.');
-      } else {
-        alert(response.data.message || '인증번호가 올바르지 않습니다.');
-      }
-    } catch (error) {
-      console.error('인증번호 확인 에러:', error);
-      alert(error.response?.data?.message || '인증번호 확인 중 오류가 발생했습니다.');
-    }
+    dispatch(verifySMSCode({ phoneNumber: form.phone, inputCode: verificationCode }));
   };
 
   const handleSubmit = e => {
@@ -160,12 +161,16 @@ function RiderSignUp() {
       return;
     }
 
-    if (!isPhoneVerified) {
+    if (!isVerified) {
       alert('휴대폰 인증을 완료해주세요.');
       return;
     }
 
-    // 회원가입 데이터 (passwordConfirm 제외)
+    if (!validation.permissionNumberValid) {
+      alert('면허번호는 숫자 12자리로 정확히 입력해주세요.');
+      return;
+    }
+
     const { passwordConfirm, ...signUpData } = form;
     dispatch(riderSignUp(signUpData));
   };
@@ -218,9 +223,13 @@ function RiderSignUp() {
               />
               {form.password && (
                 <div
-                  className={`${styles.validationMessage} ${validation.passwordValid ? styles.valid : styles.invalid}`}
+                  className={`${styles.validationMessage} ${
+                    validation.passwordValid ? styles.valid : styles.invalid
+                  }`}
                 >
-                  <span className={styles.icon}>{validation.passwordValid ? '✓' : '✗'}</span>
+                  <span className={styles.icon}>
+                    {validation.passwordValid ? '✓' : '✗'}
+                  </span>
                   {validation.passwordValid
                     ? '유효한 비밀번호입니다'
                     : '대문자, 특수문자, 숫자 포함 8자 이상 입력해주세요'}
@@ -240,9 +249,13 @@ function RiderSignUp() {
               />
               {form.passwordConfirm && (
                 <div
-                  className={`${styles.validationMessage} ${validation.passwordMatch ? styles.valid : styles.invalid}`}
+                  className={`${styles.validationMessage} ${
+                    validation.passwordMatch ? styles.valid : styles.invalid
+                  }`}
                 >
-                  <span className={styles.icon}>{validation.passwordMatch ? '✓' : '✗'}</span>
+                  <span className={styles.icon}>
+                    {validation.passwordMatch ? '✓' : '✗'}
+                  </span>
                   {validation.passwordMatch
                     ? '비밀번호가 일치합니다'
                     : '비밀번호가 일치하지 않습니다'}
@@ -270,8 +283,9 @@ function RiderSignUp() {
                   type="button"
                   onClick={sendVerificationCode}
                   className={styles.verifyButton}
+                  disabled={smsLoading}
                 >
-                  인증하기
+                  {smsLoading ? '전송 중...' : isCodeSent ? '재전송' : '인증하기'}
                 </button>
               </div>
 
@@ -283,14 +297,21 @@ function RiderSignUp() {
                   onChange={e => setVerificationCode(e.target.value)}
                 />
                 <button type="button" onClick={verifyCode} className={styles.verifyButton}>
-                  인증확인
+                  확인
                 </button>
               </div>
             </div>
-            {isPhoneVerified && (
+
+            {isVerified && (
               <div className={`${styles.validationMessage} ${styles.valid}`}>
                 <span className={styles.icon}>✓</span>
                 휴대폰 인증이 완료되었습니다
+              </div>
+            )}
+
+            {smsError && (
+              <div className={styles.errorMessage}>
+                인증 오류: {smsError}
               </div>
             )}
           </div>
@@ -301,12 +322,19 @@ function RiderSignUp() {
           <div className={styles.inputWrapper}>
             <input
               name="permissionNumber"
-              placeholder="면허번호를 입력하세요"
+              placeholder="면허번호를 입력하세요 (12자리 숫자)"
               value={form.permissionNumber}
               onChange={handleChange}
+              className={getInputClassName('permissionNumber')}
               required
               id="permissionNumber"
+              maxLength={12}
             />
+            {form.permissionNumber && !validation.permissionNumberValid && (
+              <div className={`${styles.validationMessage} ${styles.invalid}`}>
+                <span className={styles.icon}>✗</span> 면허번호는 숫자 12자리여야 합니다.
+              </div>
+            )}
           </div>
         </div>
 

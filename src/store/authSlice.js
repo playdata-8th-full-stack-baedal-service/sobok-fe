@@ -33,7 +33,7 @@ export const signUpUser = createAsyncThunk('auth/signUpUser', async (userData, t
 
     return thunkAPI.rejectWithValue('회원가입 실패');
   } catch (error) {
-    const message = error.response?.data?.data?.message || '회원가입 요청에 실패하였습니다.';
+    const message = error.response?.data?.message || '회원가입 요청에 실패하였습니다.';
     return thunkAPI.rejectWithValue(message);
   }
 });
