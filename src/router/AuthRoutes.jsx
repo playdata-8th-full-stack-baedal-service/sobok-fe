@@ -1,16 +1,16 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import SignInPage from '../common/page/SignInPage';
-import FindIDPage from '../common/page/FindIDPage';
-import FindPWPage from '../common/page/FindPWPage';
-import SignUpOption from '../common/page/SignUpOptionPage';
-import SignUpComplete from '../common/page/SignUpCompletePage';
-import PersonalInfoCertifi from '../common/page/PersonalInfoCerifiPage';
+import SignInPage from '../pages/auth/SignIn/SignInPage';
+import FindIDPage from '../pages/auth/FindID/FindIDPage';
+import FindPWPage from '../pages/auth/FindPW/FindPWPage';
+import SignUpOption from '../pages/auth/SignUpOption/SignUpOptionPage';
+import SignUpComplete from '../pages/auth/SignUpComplete/SignUpCompletePage';
+import PersonalInfoCertifi from '../pages/auth/PersonalInfoCertifi/PersonalInfoCerifiPage';
 
-import UserHeader from '../common/headerfooter/UserHeader';
-import UserSignUp from '../app/user/UserSignUp';
-import RiderSignUp from '../app/rider/RiderSignUp';
+import UserHeader from '../layout/headers/userHeader/UserHeader';
+import UserSignUp from '../pages/auth/SignUp/UserSignUp/UserSignUp';
+import RiderSignUp from '../pages/auth/SignUp/RiderSignUp/RiderSignUp';
 
 function AuthRoutes() {
   return (

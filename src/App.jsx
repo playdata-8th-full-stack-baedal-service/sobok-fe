@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import UserHeader from './common/headerfooter/UserHeader';
+import UserHeader from './layout/headers/userHeader/UserHeader';
 import AuthRoutes from './router/AuthRoutes';
 import UserRoutes from './router/UserRoutes';
 import AdminRoutes from './router/AdminRoutes';
@@ -9,8 +9,8 @@ import RiderRoutes from './router/RiderRoutes';
 import HubRoutes from './router/HubRoutes';
 import RoleRoute from './router/RoleRoute';
 
-import MainPage from './app/user/MainPage';
-import Footer from './common/headerfooter/Footer';
+import MainPage from './pages/user/All/Main/MainPage';
+import Footer from './layout/footer/Footer';
 
 function App() {
   return (
