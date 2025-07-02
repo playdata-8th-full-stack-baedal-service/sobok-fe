@@ -2,12 +2,12 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 // // 허브용 페이지 컴포넌트
-import MainPage from '../app/hub/MainPage';
-import OrderDetailPage from '../app/hub/OrderDetailPage';
-import HubHistoryPage from '../app/hub/HubHistoryPage';
-import HubInfoPage from '../app/hub/HubInfoPage';
+import MainPage from '../pages/hub/Main/MainPage';
+import OrderDetailPage from '../pages/hub/OrderDetail/OrderDetailPage';
+import HubHistoryPage from '../pages/hub/HubHistory/HubHistoryPage';
+import HubInfoPage from '../pages/hub/HubInfo/HubInfoPage';
 
-import HubHeader from '../common/headerfooter/HubHeader';
+import HubHeader from '../layout/headers/HubHeader';
 
 function HubRoutes() {
   return (
