@@ -7,7 +7,7 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
       loginId: id,
       password,
     });
-    if (response.data.data.success) {
+    if (response.data.success) {
       const { accessToken, refreshToken, role, id: userId, recoveryTarget } = response.data.data;
       localStorage.setItem('ACCESS_TOKEN', accessToken);
       localStorage.setItem('REFRESH_TOKEN', refreshToken);
