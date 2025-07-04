@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import signsupoption from './signupoptionPage.module.scss';
+import signsupoption from './SignUpOptionPage.module.scss';
 
 function SignUpOptionPage() {
   const nav = useNavigate();
