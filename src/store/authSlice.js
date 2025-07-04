@@ -105,17 +105,17 @@ export const checkLoginId = createAsyncThunk('auth/checkLoginId', async (loginId
   }
 });
 
-export const lookupUser = createAsyncThunk('auth/lookupUser', async ({password}, thunkAPI) => {
-  try {
-    const response = await axiosInstance.post('/auth-service/auth/get-info', {
-      password,
-    });
-    if (response.data.status === 200 || response.data.message === "성공적으로 정보가 조회되었습니다.") {
-      return response.data.data;
-    }
-    return thunkAPI.rejectWithValue()
-  }
-})
+// export const lookupUser = createAsyncThunk('auth/lookupUser', async ({password}, thunkAPI) => {
+//   try {
+//     const response = await axiosInstance.post('/auth-service/auth/get-info', {
+//       password,
+//     });
+//     if (response.data.status === 200 || response.data.message === "성공적으로 정보가 조회되었습니다.") {
+//       return response.data.data;
+//     }
+//     return thunkAPI.rejectWithValue()
+//   }
+// })
 
 const authSlice = createSlice({
   name: 'auth',
