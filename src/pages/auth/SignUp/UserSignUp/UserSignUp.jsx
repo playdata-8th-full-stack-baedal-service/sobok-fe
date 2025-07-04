@@ -9,7 +9,11 @@ import EmailSection from './components/signup/EmailSection';
 import AddressSection from './components/signup/AddressSection';
 import Button from './components/common/Button';
 import './UserSignUp.scss';
-import { clearEmailCheck, clearLoginIdCheck, clearNicknameCheck } from '../../../../store/authSlice';
+import {
+  clearEmailCheck,
+  clearLoginIdCheck,
+  clearNicknameCheck,
+} from '../../../../store/authSlice';
 
 function UserSignUp() {
   const dispatch = useDispatch();
@@ -143,7 +147,7 @@ function UserSignUp() {
   useEffect(() => {
     if (signUpSuccess) {
       alert('회원가입이 성공적으로 완료되었습니다.');
-      resetForm(); 
+      resetForm();
       dispatch(clearSignUpSuccess());
       dispatch(clearEmailCheck());
       dispatch(clearNicknameCheck());
