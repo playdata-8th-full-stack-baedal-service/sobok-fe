@@ -6,6 +6,7 @@ import store from './store/store';
 import './common/styles/style.scss';
 import { BrowserRouter } from 'react-router-dom';
 
+
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <Provider store={store}>

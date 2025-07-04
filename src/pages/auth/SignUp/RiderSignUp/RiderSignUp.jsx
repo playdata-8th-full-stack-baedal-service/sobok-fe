@@ -1,18 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearSignUpSuccess, riderSignUp } from '../../../../store/riderSlice';
-import { sendSMSCode, verifySMSCode } from '../../../../store/smsAuthSlice';
+import { clearSignUpSuccess, riderSignUp, checkPermission, clearPermissionCheck } from '@/store/riderSlice';
+import { sendSMSCode, verifySMSCode, clearSMSAuth } from '../../../../store/smsAuthSlice';
+import { checkLoginId, clearLoginIdCheck } from '../../../../store/authSlice';
 import styles from './RiderSignUp.module.scss';
 
 function RiderSignUp() {
   const dispatch = useDispatch();
   const { loading, error, signUpSuccess } = useSelector(state => state.rider);
   const {
+    permissionCheckLoading,
+    permissionCheckError,
+    permissionCheckSuccess,
+    permissionCheckMessage,
+  } = useSelector(state => state.rider);
+  const {
     isVerified,
     isCodeSent,
     loading: smsLoading,
     error: smsError,
   } = useSelector(state => state.smsAuth);
+  const {
+    loginIdCheckMessage,
+    loginIdCheckError,
+    loading: loginIdCheckLoading,
+  } = useSelector(state => state.auth);
 
   const [form, setForm] = useState({
     loginId: '',
@@ -35,6 +47,9 @@ function RiderSignUp() {
     if (signUpSuccess) {
       alert('회원가입 성공!');
       dispatch(clearSignUpSuccess());
+      dispatch(clearSMSAuth());
+      dispatch(clearLoginIdCheck());
+      dispatch(clearPermissionCheck());
       setForm({
         loginId: '',
         password: '',
@@ -58,7 +73,6 @@ function RiderSignUp() {
   };
 
   const validatePermissionNumber = permissionNumber => {
-    // 숫자 12자리인지 체크
     const regex = /^\d{12}$/;
     return regex.test(permissionNumber);
   };
@@ -67,6 +81,11 @@ function RiderSignUp() {
     let className = '';
 
     switch (fieldName) {
+      case 'loginId':
+        if (form.loginId && loginIdCheckMessage) {
+          className = loginIdCheckMessage.includes('사용 가능한') ? styles.valid : styles.invalid;
+        }
+        break;
       case 'password':
         if (form.password) {
           className = validation.passwordValid ? styles.valid : styles.invalid;
@@ -83,8 +102,8 @@ function RiderSignUp() {
         }
         break;
       case 'permissionNumber':
-        if (form.permissionNumber) {
-          className = validation.permissionNumberValid ? styles.valid : styles.invalid;
+        if (form.permissionNumber && permissionCheckMessage) {
+          className = permissionCheckMessage.includes('사용 가능한') ? styles.valid : styles.invalid;
         }
         break;
       default:
@@ -97,9 +116,8 @@ function RiderSignUp() {
   const handleChange = e => {
     const { name, value } = e.target;
 
-    // 면허번호는 숫자만 입력 허용
     if (name === 'permissionNumber') {
-      if (!/^\d*$/.test(value)) return; // 숫자 아닌 입력 무시
+      if (!/^\d*$/.test(value)) return;
     }
 
     setForm(prev => ({
@@ -130,12 +148,31 @@ function RiderSignUp() {
     }
   };
 
+  const checkLoginIdAvailability = () => {
+    if (!form.loginId.trim()) {
+      alert('아이디를 입력해주세요.');
+      return;
+    }
+    dispatch(checkLoginId(form.loginId));
+  };
+
+  const checkPermissionNumberAvailability = () => {
+    if (!form.permissionNumber.trim()) {
+      alert('면허번호를 입력해주세요.');
+      return;
+    }
+    if (!validatePermissionNumber(form.permissionNumber)) {
+      alert('면허번호는 숫자 12자리로 입력해주세요.');
+      return;
+    }
+    dispatch(checkPermission(form.permissionNumber));
+  };
+
   const sendVerificationCode = () => {
     if (!form.phone.trim()) {
       alert('휴대폰 번호를 입력해주세요.');
       return;
     }
-
     dispatch(sendSMSCode(form.phone));
   };
 
@@ -144,7 +181,6 @@ function RiderSignUp() {
       alert('인증번호를 입력해주세요.');
       return;
     }
-
     dispatch(verifySMSCode({ phoneNumber: form.phone, inputCode: verificationCode }));
   };
 
@@ -171,6 +207,16 @@ function RiderSignUp() {
       return;
     }
 
+    if (!loginIdCheckMessage || !loginIdCheckMessage.includes('사용 가능한')) {
+      alert('아이디 중복 확인을 완료해주세요.');
+      return;
+    }
+
+    if (!permissionCheckMessage || !permissionCheckMessage.includes('사용 가능한')) {
+      alert('면허번호 중복 확인을 완료해주세요.');
+      return;
+    }
+
     const { passwordConfirm, ...signUpData } = form;
     dispatch(riderSignUp(signUpData));
   };
@@ -189,8 +235,32 @@ function RiderSignUp() {
               onChange={handleChange}
               required
               id="loginId"
+              className={getInputClassName('loginId')}
             />
+            <button
+              type="button"
+              onClick={checkLoginIdAvailability}
+              className={styles.verifyButton}
+              disabled={loginIdCheckLoading}
+            >
+              {loginIdCheckLoading ? '확인 중...' : '중복확인'}
+            </button>
           </div>
+          {loginIdCheckMessage && (
+            <div
+              className={`${styles.validationMessage} ${
+                loginIdCheckMessage.includes('사용 가능한') ? styles.valid : styles.invalid
+              }`}
+            >
+              <span className={styles.icon}>
+                {loginIdCheckMessage.includes('사용 가능한') ? '✓' : '✗'}
+              </span>
+              {loginIdCheckMessage}
+            </div>
+          )}
+          {loginIdCheckError && (
+            <div className={styles.errorMessage}>{loginIdCheckError}</div>
+          )}
         </div>
 
         <div className={styles.formGroup}>
@@ -322,12 +392,30 @@ function RiderSignUp() {
               id="permissionNumber"
               maxLength={12}
             />
-            {form.permissionNumber && !validation.permissionNumberValid && (
-              <div className={`${styles.validationMessage} ${styles.invalid}`}>
-                <span className={styles.icon}>✗</span> 면허번호는 숫자 12자리여야 합니다.
-              </div>
-            )}
+            <button
+              type="button"
+              onClick={checkPermissionNumberAvailability}
+              className={styles.verifyButton}
+              disabled={permissionCheckLoading}
+            >
+              {permissionCheckLoading ? '확인 중...' : '중복확인'}
+            </button>
           </div>
+          {permissionCheckMessage && (
+            <div
+              className={`${styles.validationMessage} ${
+                permissionCheckMessage.includes('사용 가능한') ? styles.valid : styles.invalid
+              }`}
+            >
+              <span className={styles.icon}>
+                {permissionCheckMessage.includes('사용 가능한') ? '✓' : '✗'}
+              </span>
+              {permissionCheckMessage}
+            </div>
+          )}
+          {permissionCheckError && (
+            <div className={styles.errorMessage}>{permissionCheckError}</div>
+          )}
         </div>
 
         <button type="submit" disabled={loading} className={styles.submitButton}>
