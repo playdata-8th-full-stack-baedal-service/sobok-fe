@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosInstance from '../services/axios-config';
 
 export const sendSMSCode = createAsyncThunk(
@@ -33,6 +33,8 @@ export const verifySMSCode = createAsyncThunk(
     }
   }
 );
+
+export const clearSMSAuth = createAction('smsAuth/clearSMSAuth');
 
 const smsAuthSlice = createSlice({
   name: 'smsAuth',
@@ -86,6 +88,12 @@ const smsAuthSlice = createSlice({
         state.loading = false;
         state.isVerified = false;
         state.error = action.payload;
+      })
+      .addCase(clearSMSAuth, (state) => {
+        state.isVerified = false;
+        state.isCodeSent = false;
+        state.error = null;
+        state.loading = false;
       });
   },
 });
