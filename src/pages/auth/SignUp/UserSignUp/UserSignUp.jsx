@@ -1,15 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { signUpUser, clearSignUpSuccess } from '@/store/authSlice';
-import { clearSMSAuth } from '@/store/smsAuthSlice'; // SMS 인증 상태 초기화 액션 추가
+import { signUpUser, clearSignUpSuccess, clearEmailCheck, clearLoginIdCheck, clearNicknameCheck } from '@/store/authSlice';
+import { clearSMSAuth } from '@/store/smsAuthSlice';
 import ProfileSection from './components/signup/ProfileSection';
 import PasswordSection from './components/signup/PasswordSection';
 import PhoneVerification from './components/signup/PhoneVerification';
 import EmailSection from './components/signup/EmailSection';
 import AddressSection from './components/signup/AddressSection';
 import Button from './components/common/Button';
+import axios from 'axios';
+import { API_BASE_URL } from '@/services/host-config';
 import './UserSignUp.scss';
-import { clearEmailCheck, clearLoginIdCheck, clearNicknameCheck } from '../../../../store/authSlice';
 
 function UserSignUp() {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ function UserSignUp() {
     roadFull: '',
     addrDetail: '',
   });
-
+  const [selectedFile, setSelectedFile] = useState(null);
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [emailLocal, setEmailLocal] = useState('');
   const [emailDomain, setEmailDomain] = useState('gmail.com');
@@ -41,6 +42,10 @@ function UserSignUp() {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleFileSelect = file => {
+    setSelectedFile(file);
   };
 
   const handleDomainChange = selected => {
@@ -76,14 +81,13 @@ function UserSignUp() {
       roadFull: '',
       addrDetail: '',
     });
+    setSelectedFile(null);
     setPasswordConfirm('');
     setEmailLocal('');
     setEmailDomain('gmail.com');
     setCustomDomain('');
     setIsCustomDomain(false);
     setVerificationCode('');
-
-    // SMS 인증 상태 초기화 추가
     dispatch(clearSMSAuth());
   };
 
@@ -119,12 +123,70 @@ function UserSignUp() {
     return true;
   };
 
+  const getTempToken = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}auth-service/auth/temp-token`);
+      if (response.data.success && response.data.status === 200) {
+        return response.data.data;
+      }
+      throw new Error(response.data.message || '임시 토큰 발급 실패');
+    } catch (error) {
+      console.error('임시 토큰 발급 실패:', error);
+      throw error;
+    }
+  };
+
+  const getPresignedUrl = async (fileName, tempToken) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}api-service/api/presign`, {
+        params: {
+          fileName,
+          category: 'profile',
+        },
+        headers: {
+          'Authorization': `Bearer ${tempToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.data.success && response.data.data) {
+        return response.data.data;
+      }
+      throw new Error(response.data.message || 'Presigned URL 생성 실패');
+    } catch (error) {
+      console.error('Presigned URL 요청 실패:', error);
+      throw error;
+    }
+  };
+
+  const uploadToS3 = async (presignedUrl, file) => {
+    try {
+      const response = await fetch(presignedUrl, {
+        method: 'PUT',
+        body: file,
+        headers: { 
+          'Content-Type': file.type,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`S3 업로드 실패: ${response.status} ${response.statusText}`);
+      }
+
+      const uploadedUrl = presignedUrl.split('?')[0];
+      return uploadedUrl;
+    } catch (error) {
+      console.error('[uploadToS3] S3 업로드 오류:', error);
+      throw error;
+    }
+  };
+
   const handleSubmit = async e => {
     e.preventDefault();
 
     if (!validateForm()) return;
 
-    const completeFormData = {
+    let completeFormData = {
       ...formData,
       email: getFullEmail() || null,
       roadFull: formData.roadFull.trim() === '' ? null : formData.roadFull,
@@ -132,6 +194,17 @@ function UserSignUp() {
     };
 
     try {
+      // 프로필 사진이 선택된 경우 S3에 업로드
+      if (selectedFile) {
+        const tempToken = await getTempToken();
+        const presignedUrl = await getPresignedUrl(selectedFile.name, tempToken);
+        const uploadedUrl = await uploadToS3(presignedUrl, selectedFile);
+        completeFormData = {
+          ...completeFormData,
+          photo: uploadedUrl,
+        };
+      }
+
       await dispatch(signUpUser(completeFormData)).unwrap();
       alert('회원가입 요청 완료');
     } catch (err) {
@@ -143,7 +216,7 @@ function UserSignUp() {
   useEffect(() => {
     if (signUpSuccess) {
       alert('회원가입이 성공적으로 완료되었습니다.');
-      resetForm(); 
+      resetForm();
       dispatch(clearSignUpSuccess());
       dispatch(clearEmailCheck());
       dispatch(clearNicknameCheck());
@@ -157,7 +230,7 @@ function UserSignUp() {
         <h2>회원가입</h2>
       </div>
       <form onSubmit={handleSubmit} className="signup-form">
-        <ProfileSection formData={formData} onChange={handleInputChange} />
+        <ProfileSection formData={formData} onChange={handleInputChange} onFileSelect={handleFileSelect} />
 
         <PasswordSection
           password={formData.password}

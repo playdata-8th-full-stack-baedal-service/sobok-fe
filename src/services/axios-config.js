@@ -10,18 +10,31 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   config => {
-    const req = config;
+    // 인증이 필요 없는 공개 엔드포인트 목록
+    const publicEndpoints = [
+      '/auth-service/auth/user-signup',
+      '/auth-service/auth/temp-token',
+      '/auth-service/auth/check-email',
+      '/auth-service/auth/check-nickname',
+      '/auth-service/auth/check-id',
+    ];
 
+    // 공개 엔드포인트가 아닌 경우에만 Authorization 헤더 추가
+    const isPublicEndpoint = publicEndpoints.some(endpoint => config.url.includes(endpoint));
     const accessToken = localStorage.getItem('ACCESS_TOKEN');
 
-    if (accessToken) {
-      req.headers.Authorization = `Bearer ${accessToken}`;
+    if (!isPublicEndpoint && accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
-    return req;
+
+    console.log('[axiosInstance] 요청:', {
+      url: config.url,
+      headers: config.headers,
+    });
+
+    return config;
   },
-  error => {
-    return Promise.reject(error);
-  }
+  error => Promise.reject(error)
 );
 
 axiosInstance.interceptors.response.use(
@@ -33,7 +46,7 @@ axiosInstance.interceptors.response.use(
 
     if (errorStatus === 666) {
       try {
-        const res = await axios.post('/auth-service/auth/reissue', {
+        const res = await axios.post(`${API_BASE_URL}/auth-service/auth/reissue`, {
           refreshToken,
         });
         const newAccessToken = res.data.accessToken;
