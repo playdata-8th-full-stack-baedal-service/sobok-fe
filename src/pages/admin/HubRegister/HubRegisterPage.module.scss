@@ -1,0 +1,47 @@
+.HubRegisterPage {
+    width: 100vw;
+    padding: 20px 170px;
+    margin-top: 50px;
+    line-height: 40px;
+
+    .hubregistertitle {
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+
+
+
+
+    span {
+        color: red;
+    }
+}
+
+
+
+
+
+
+
+
+
+.phoneinput, .addrinput, .loginIdinput, .shopNameInput {
+    display: flex;
+    white-space: nowrap;
+    gap: 20px
+}
+
+.corretshopname {
+    color: green;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.notshopname {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
