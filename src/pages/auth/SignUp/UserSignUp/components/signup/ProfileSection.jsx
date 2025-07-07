@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios'; // axiosInstance 대신 axios 사용
-import { API_BASE_URL } from '@/services/host-config'; 
 import {
   checkNickName,
   clearNicknameCheck,
@@ -11,7 +9,7 @@ import {
 import FormInput from '../common/FormInput';
 import Button from '../common/Button';
 
-function ProfileSection({ formData, onChange }) {
+function ProfileSection({ formData, onChange, onFileSelect }) {
   const dispatch = useDispatch();
   const {
     loading,
@@ -21,7 +19,6 @@ function ProfileSection({ formData, onChange }) {
     loginIdCheckError,
   } = useSelector(state => state.auth);
 
-  const [imageUploading, setImageUploading] = useState(false);
   const [imagePreview, setImagePreview] = useState(formData.photo || '/photodefault.svg');
 
   // 사진 변경 시 미리보기 반영
@@ -63,80 +60,42 @@ function ProfileSection({ formData, onChange }) {
     onChange(e);
   };
 
-  const getPresignedUrl = async fileName => {
-    try {
-      console.log('요청 파라미터:', { fileName, category: 'profile' });
-      
-      // 회원가입 과정에서는 토큰이 없으므로 axios 사용
-      const response = await axios.get(`${API_BASE_URL}api-service/api/presign`, {
-        params: {
-          fileName,
-          category: 'profile',
-        },
-      });
-
-      console.log('응답 데이터:', response.data);
-
-      if (response.data.success && response.data.status === 200) {
-        return response.data.data;
-      }
-      throw new Error(response.data.message || 'Presigned URL 생성 실패');
-    } catch (error) {
-      console.error('Presigned URL 실패:', error);
-      console.error('에러 응답:', error.response?.data); 
-      throw error;
-    }
-  };
-
-  const uploadToS3 = async (presignedUrl, file) => {
-    try {
-      const response = await fetch(presignedUrl, {
-        method: 'PUT',
-        body: file,
-        headers: { 'Content-Type': file.type },
-      });
-
-      if (!response.ok) throw new Error('S3 업로드 실패');
-      return presignedUrl.split('?')[0];
-    } catch (error) {
-      console.error('S3 업로드 실패:', error);
-      throw error;
-    }
-  };
-
-  const handleFileSelect = async e => {
+  const handleFileSelect = e => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) {
+      console.log('[handleFileSelect] 파일 선택 안됨');
+      return;
+    }
+
+    console.log('[handleFileSelect] 선택된 파일:', {
+      name: file.name,
+      type: file.type,
+      size: file.size
+    });
 
     if (!file.type.startsWith('image/')) {
+      console.log('[handleFileSelect] 이미지 파일 아님:', file.type);
       alert('이미지 파일만 업로드 가능합니다.');
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
+      console.log('[handleFileSelect] 파일 크기 초과:', file.size);
       alert('파일 크기는 5MB 이하여야 합니다.');
       return;
     }
 
-    setImageUploading(true);
+    // 파일 미리보기 생성
+    const reader = new FileReader();
+    reader.onload = e => {
+      console.log('[handleFileSelect] 파일 미리보기 생성 완료');
+      setImagePreview(e.target.result);
+    };
+    reader.readAsDataURL(file);
 
-    try {
-      const reader = new FileReader();
-      reader.onload = e => setImagePreview(e.target.result);
-      reader.readAsDataURL(file);
-
-      const presignedUrl = await getPresignedUrl(file.name);
-      const uploadedUrl = await uploadToS3(presignedUrl, file);
-
-      onChange({ target: { name: 'photo', value: uploadedUrl } });
-      alert('프로필 이미지가 성공적으로 업로드되었습니다.');
-    } catch (error) {
-      alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
-      setImagePreview(formData.photo || '/photodefault.svg');
-    } finally {
-      setImageUploading(false);
-      e.target.value = '';
-    }
+    // 파일을 상위 컴포넌트로 전달
+    onFileSelect(file);
+    e.target.value = '';
   };
 
   return (
@@ -160,7 +119,6 @@ function ProfileSection({ formData, onChange }) {
             type="file"
             accept="image/*"
             onChange={handleFileSelect}
-            disabled={imageUploading}
             style={{ display: 'none' }}
             id="profile-image-input"
           />
@@ -168,11 +126,12 @@ function ProfileSection({ formData, onChange }) {
             <Button
               type="button"
               variant="secondary"
-              loading={imageUploading}
-              disabled={imageUploading}
-              onClick={() => document.getElementById('profile-image-input').click()}
+              onClick={() => {
+                console.log('[ProfileSection] 프로필 이미지 선택 버튼 클릭');
+                document.getElementById('profile-image-input').click();
+              }}
             >
-              {imageUploading ? '업로드 중...' : '프로필 이미지 선택'}
+              프로필 이미지 선택
             </Button>
           </label>
         </div>

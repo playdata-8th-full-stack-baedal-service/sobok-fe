@@ -127,6 +127,14 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
+        <Route
+          path="userinfo"
+          element={
+            <RoleRoute role="UESR">
+              <UserInfoPage />
+            </RoleRoute>
+          }
+        />
       </Routes>
     </>
   );
