@@ -11,6 +11,7 @@ import RoleRoute from './router/RoleRoute';
 
 import MainPage from './pages/user/All/Main/MainPage';
 import Footer from './layout/footer/Footer';
+import SuccessPage from './pages/user/Pay/toss/TossSuccess';
 
 function App() {
   return (
@@ -62,6 +63,8 @@ function App() {
             </RoleRoute>
           }
         />
+
+        <Route path="/tossSuccess" element={<SuccessPage />} />
       </Routes>
       <Footer />
     </>

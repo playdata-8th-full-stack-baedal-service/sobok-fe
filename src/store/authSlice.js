@@ -7,7 +7,7 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
       loginId: id,
       password,
     });
-    if (response.data.data.success) {
+    if (response.data.success) {
       const { accessToken, refreshToken, role, id: userId, recoveryTarget } = response.data.data;
       localStorage.setItem('ACCESS_TOKEN', accessToken);
       localStorage.setItem('REFRESH_TOKEN', refreshToken);
@@ -105,17 +105,24 @@ export const checkLoginId = createAsyncThunk('auth/checkLoginId', async (loginId
   }
 });
 
-// export const lookupUser = createAsyncThunk('auth/lookupUser', async ({password}, thunkAPI) => {
-//   try {
-//     const response = await axiosInstance.post('/auth-service/auth/get-info', {
-//       password,
-//     });
-//     if (response.data.status === 200 || response.data.message === "성공적으로 정보가 조회되었습니다.") {
-//       return response.data.data;
-//     }
-//     return thunkAPI.rejectWithValue()
-//   }
-// })
+export const lookupUser = createAsyncThunk('auth/lookupUser', async ({ password }, thunkAPI) => {
+  try {
+    const response = await axiosInstance.post('/auth-service/auth/get-info', {
+      password,
+    });
+    if (
+      response.data.success &&
+      response.data.status === 200 &&
+      response.data.message === '성공적으로 정보가 조회되었습니다.'
+    ) {
+      return response.data.data;
+    }
+    return thunkAPI.rejectWithValue('회원정보 조회 실패');
+  } catch (error) {
+    const message = error.response?.data?.message || '회원 조회에 실패했습니다.';
+    return thunkAPI.rejectWithValue(message);
+  }
+});
 
 const authSlice = createSlice({
   name: 'auth',
@@ -135,6 +142,9 @@ const authSlice = createSlice({
     nicknameCheckMessage: null,
     loginIdCheckMessage: null,
     loginIdCheckError: null,
+    userInfo: null,
+    userInfoLoading: false,
+    userInfoError: null,
   },
   reducers: {
     logout: state => {
@@ -145,6 +155,8 @@ const authSlice = createSlice({
       state.userId = null;
       state.recoveryTarget = null;
       state.error = null;
+      state.userInfo = null;
+      state.userInfoError = null;
     },
     clearSignUpSuccess: state => {
       state.signUpSuccess = false;
@@ -163,6 +175,10 @@ const authSlice = createSlice({
     clearLoginIdCheck: state => {
       state.loginIdCheckMessage = null;
       state.loginIdCheckError = null;
+    },
+    clearUserInfo: state => {
+      state.userInfo = null;
+      state.userInfoError = null;
     },
   },
   extraReducers: builder => {
@@ -211,6 +227,7 @@ const authSlice = createSlice({
         state.role = null;
         state.userId = null;
         state.recoveryTarget = null;
+        state.userInfo = null;
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
@@ -255,6 +272,18 @@ const authSlice = createSlice({
       .addCase(checkLoginId.rejected, (state, action) => {
         state.loading = false;
         state.loginIdCheckError = action.payload;
+      })
+      .addCase(lookupUser.pending, state => {
+        state.userInfoLoading = true;
+        state.userInfoError = null;
+      })
+      .addCase(lookupUser.fulfilled, (state, action) => {
+        state.userInfoLoading = false;
+        state.userInfo = action.payload;
+      })
+      .addCase(lookupUser.rejected, (state, action) => {
+        state.userInfoLoading = false;
+        state.userInfoError = action.payload;
       });
   },
 });
@@ -266,5 +295,6 @@ export const {
   clearEmailCheck,
   clearNicknameCheck,
   clearLoginIdCheck,
+  clearUserInfo,
 } = authSlice.actions;
 export default authSlice.reducer;

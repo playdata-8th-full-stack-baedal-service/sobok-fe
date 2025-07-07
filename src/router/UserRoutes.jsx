@@ -23,6 +23,7 @@ import MyOrderListPage from '../pages/user/UserOptions/MyOrderList/MyOrderListPa
 // import MyOrderDetailPage from '../pages/user/UserOptions/MyOrderDetail/MyOrderDetailPage';
 import BookmarkRecipePage from '../pages/user/UserOptions/BookmarkRecipe/BookmarkRecipePage';
 import LikePostPage from '../pages/user/UserOptions/LikePost/LikePostPage';
+import SuccessPage from '../pages/user/Pay/toss/TossSuccess';
 
 function UserRoutes() {
   return (
@@ -71,6 +72,14 @@ function UserRoutes() {
           }
         /> */}
         <Route
+          path="tossSuccess"
+          element={
+            <RoleRoute role="USER">
+              <SuccessPage />
+            </RoleRoute>
+          }
+        />
+        <Route
           path="info"
           element={
             <RoleRoute role="USER">
@@ -115,6 +124,14 @@ function UserRoutes() {
           element={
             <RoleRoute role="USER">
               <LikePostPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="userinfo"
+          element={
+            <RoleRoute role="UESR">
+              <UserInfoPage />
             </RoleRoute>
           }
         />
