@@ -2,27 +2,28 @@ import { Routes, Route } from 'react-router-dom';
 import RoleRoute from './RoleRoute';
 
 // header
-import UserHeader from '../common/headerfooter/UserHeader';
+import UserHeader from '../layout/headers/userHeader/UserHeader';
 
 // public 페이지
-import MainPage from '../app/user/MainPage';
-// import ProductPage from '../app/user/ProductPage';
-// import SearchPage from '../app/user/SearchPage';
-// import CategoryPage from '../app/user/CategoryPage';
-// import PostListPage from '../app/user/PostListPage';
-// import PostDetailPage from '../app/user/PostDetailPage';
+import MainPage from '../pages/user/All/Main/MainPage';
+// import ProductPage from '../pages/user/All/Product/ProductPage';
+// import SearchPage from '../pages/user/All/Search/SearchPage';
+// import CategoryPage from '../pages/user/All/Category/CategoryPage';
+// import PostListPage from '../pages/user/Post/PostList/PostListPage';
+// import PostDetailPage from '../pages/user/Post/PostDetail/PostDetailPage';
 
 // private 페이지 (USER 권한 필요)
-// import NewPostPage from '../app/user/private/NewPostPage';
-import CartPage from '../app/user/private/CartPage';
-// import CartModal from '../app/user/private/CartModal';
-// import PayPage from '../app/user/private/PayPage';
-import UserInfoPage from '../app/user/private/UserInfoPage';
-import MyPostListPage from '../app/user/private/MyPostListPage';
-import MyOrderListPage from '../app/user/private/MyOrderListPage';
-// import MyOrderDetailPage from '../app/user/private/MyOrderDetailPage';
-import BookmarkRecipePage from '../app/user/private/BookmarkRecipePage';
-import LikePostPage from '../app/user/private/LikePostPage';
+// import NewPostPage from '../pages/user/Post/Posting/NewPostPage';
+import CartPage from '../pages/user/Cart/CartPage/CartPage';
+// import CartModal from '../pages/user/Cart/CartModal/CartModal';
+// import PayPage from '../pages/user/Pay/PayPage';
+import UserInfoPage from '../pages/user/UserInfo/UserInfoPage';
+import MyPostListPage from '../pages/user/UserOptions/MyPostList/MyPostListPage';
+import MyOrderListPage from '../pages/user/UserOptions/MyOrderList/MyOrderListPage';
+// import MyOrderDetailPage from '../pages/user/UserOptions/MyOrderDetail/MyOrderDetailPage';
+import BookmarkRecipePage from '../pages/user/UserOptions/BookmarkRecipe/BookmarkRecipePage';
+import LikePostPage from '../pages/user/UserOptions/LikePost/LikePostPage';
+import SuccessPage from '../pages/user/Pay/toss/TossSuccess';
 
 function UserRoutes() {
   return (
@@ -30,7 +31,7 @@ function UserRoutes() {
       <UserHeader />
       <Routes>
         {/* 비회원도 접근 가능한 페이지 */}
-        <Route path="main" element={<MainPage />} />
+        <Route path="/main" element={<MainPage />} />
         {/* <Route path="product" element={<ProductPage />} /> */}
         {/* <Route path="search" element={<SearchPage />} /> */}
         {/* <Route path="category" element={<CategoryPage />} /> */}
@@ -70,6 +71,14 @@ function UserRoutes() {
             </RoleRoute>
           }
         /> */}
+        <Route
+          path="tossSuccess"
+          element={
+            <RoleRoute role="USER">
+              <SuccessPage />
+            </RoleRoute>
+          }
+        />
         <Route
           path="info"
           element={
@@ -115,6 +124,14 @@ function UserRoutes() {
           element={
             <RoleRoute role="USER">
               <LikePostPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="userinfo"
+          element={
+            <RoleRoute role="UESR">
+              <UserInfoPage />
             </RoleRoute>
           }
         />

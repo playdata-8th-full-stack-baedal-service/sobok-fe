@@ -1,0 +1,380 @@
+// UserSignup/UserSignUp.scss
+.required {
+  color: red;
+}
+
+.id-and-nick {
+  display: flex;
+  flex-direction: column;
+}
+
+.container-top {
+  display: flex;
+  justify-content: space-around;
+}
+
+.btn {
+  border-radius: 20px;
+  border: 1px solid transparent;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+  
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  &.btn-primary {
+    background-color: rgba(0, 0, 0);
+    color: white;
+    border: 1px solid rgba(0, 0, 0);
+    
+    &:hover:not(:disabled) {
+      background-color: rgb(255, 255, 255);
+      color: rgb(0, 0, 0);
+      border: 1px solid rgb(0, 0, 0);
+    }
+  }
+  
+  &.btn-secondary {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    
+    &:hover:not(:disabled) {
+      background-color: black;
+      color: white;
+    }
+  }
+}
+
+.form-group {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  
+  label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    
+    .required {
+      color: #d32f2f;
+    }
+  }
+  
+  input[type='text'],
+  input[type='password'],
+  input[type='file'],
+  select {
+    height: 38px;
+    padding: 6px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 20px !important;
+    transition: border-color 0.2s;
+    
+    &:focus {
+      outline: none;
+      border-color: rgb(210, 19, 19);
+      box-shadow: 0 0 4px rgb(210, 19, 19);
+    }
+  }
+  
+  input.input-error {
+    border-color: #d32f2f;
+  }
+  
+  .message {
+    margin-top: 4px;
+    font-size: 12px;
+    
+    &.error {
+      color: #d32f2f;
+    }
+    
+    &.success {
+      color: #388e3c;
+    }
+  }
+}
+
+.signup-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.signup-header {
+  text-align: center;
+  margin-bottom: 20px;
+  
+  h2 {
+    font-weight: 700;
+    color: #333;
+  }
+}
+
+.signup-form {
+  .container-top {
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  
+  .phoneflex {
+    display: flex;
+    gap: 8px;
+    
+    input {
+      flex: 1;
+    }
+  }
+  
+  .email-group {
+    .email-inputs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      
+      input[type='text'] {
+        flex: 1;
+      }
+      
+      span {
+        font-weight: 600;
+      }
+      
+      select {
+        width: 130px;
+      }
+    }
+    
+    .custom-domain-input {
+      margin-top: 6px;
+    }
+    
+    .email-preview {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #555;
+    }
+  }
+  
+  .address-group {
+    .address-search {
+      display: flex;
+      gap: 6px;
+      
+      input[type='text'] {
+        flex: 1;
+        cursor: pointer;
+        background: #f5f5f5;
+      }
+      
+      button {
+        width: 90px;
+        background: rgba(0, 0, 0);
+        border: none;
+        color: white;
+        font-weight: 600;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        
+        &:hover {
+          background: rgb(255, 255, 255);
+          color: rgb(0, 0, 0);
+          border: 1px solid rgb(0, 0, 0);
+        }
+      }
+    }
+    
+    input[name='addrDetail'] {
+      margin-top: 8px;
+    }
+  }
+  
+  button[type='submit'] {
+    width: 100%;
+    background-color: rgba(0, 0, 0);
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 12px 0;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    
+    &:disabled {
+      background-color: #a0a0a0;
+      cursor: not-allowed;
+    }
+    
+    &:hover:not(:disabled) {
+      background-color: rgb(255, 255, 255);
+      color: rgb(0, 0, 0);
+      border: 1px solid rgb(0, 0, 0);
+    }
+  }
+  
+  .error-message {
+    margin-top: 12px;
+    color: #d32f2f;
+    font-weight: 600;
+    text-align: center;
+  }
+}
+
+// 닉네임 중복확인 스타일
+.input-with-button {
+  .input-button-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    
+    input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+      }
+      
+      &.input-error {
+        border-color: #dc3545;
+      }
+    }
+    
+    button {
+      white-space: nowrap;
+      min-width: 80px;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+  }
+}
+
+// 이메일 중복확인 스타일 (추가)
+.email-group {
+  .email-inputs {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+    
+    input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+      }
+    }
+    
+    span {
+      font-size: 16px;
+      font-weight: 500;
+      color: #333;
+    }
+    
+    select {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      background-color: white;
+      
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+      }
+    }
+    
+    button {
+      white-space: nowrap;
+      min-width: 80px;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+  }
+  
+  .custom-domain-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 8px;
+    
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+  }
+  
+  .email-preview {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    padding: 4px 0;
+  }
+}
+
+// 성공/에러 메시지 스타일 (추가)
+.message {
+  font-size: 14px;
+  margin: 4px 0 0 0;
+  
+  &.success {
+    color: #28a745;
+  }
+  
+  &.error {
+    color: #dc3545;
+  }
+}
+
+// 반응형 스타일
+@media (max-width: 768px) {
+  .input-button-group {
+    flex-direction: column;
+    gap: 8px;
+    
+    input {
+      width: 100%;
+    }
+    
+    button {
+      width: 100%;
+    }
+  }
+  
+  .email-inputs {
+    flex-direction: column;
+    gap: 8px;
+    
+    input, select, button {
+      width: 100%;
+    }
+    
+    span {
+      display: none;
+    }
+  }
+}

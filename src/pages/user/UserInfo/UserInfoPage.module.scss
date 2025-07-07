@@ -1,0 +1,489 @@
+// UserInfoPage.module.scss
+
+// 변수 정의
+$primary-color: #2563eb;
+$primary-hover: #1d4ed8;
+$secondary-color: #6b7280;
+$success-color: #10b981;
+$error-color: #ef4444;
+$warning-color: #f59e0b;
+$background-color: #f9fafb;
+$white: #ffffff;
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-700: #374151;
+$gray-800: #1f2937;
+$gray-900: #111827;
+
+// 공통 믹스인
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin transition-all {
+  transition: all 0.2s ease-in-out;
+}
+
+@mixin button-base {
+  @include transition-all;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  text-align: center;
+  border-radius: 6px;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@mixin input-base {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid $gray-300;
+  border-radius: 6px;
+  font-size: 14px;
+  @include transition-all;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+  }
+}
+
+// 메인 컨테이너
+.userProfilePage {
+  min-height: 100vh;
+  background-color: $background-color;
+  padding: 2rem 0;
+  
+  .container {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+}
+
+// 모달 스타일
+.passwordModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  @include flex-center;
+  z-index: 50;
+  
+  .modalContent {
+    background: $white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 448px;
+    margin: 0 1rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    
+    .modalHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      
+      h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: $gray-800;
+        margin: 0;
+      }
+      
+      .closeBtn {
+        background: none;
+        border: none;
+        color: $gray-500;
+        cursor: pointer;
+        padding: 4px;
+        @include transition-all;
+        
+        &:hover {
+          color: $gray-700;
+        }
+      }
+    }
+    
+    .modalDescription {
+      color: $gray-600;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    
+    .formGroup {
+      margin-bottom: 1rem;
+      
+      label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $gray-700;
+        margin-bottom: 0.5rem;
+      }
+      
+      .inputWrapper {
+        position: relative;
+        
+        input {
+          @include input-base;
+          padding-right: 2.5rem;
+        }
+        
+        .togglePassword {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: none;
+          border: none;
+          color: $gray-500;
+          cursor: pointer;
+          @include transition-all;
+          
+          &:hover {
+            color: $gray-700;
+          }
+        }
+      }
+      
+      .errorMessage {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: $error-color;
+      }
+    }
+    
+    .submitBtn {
+      @include button-base;
+      width: 100%;
+      background-color: $primary-color;
+      color: $white;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      
+      &:hover:not(:disabled) {
+        background-color: $primary-hover;
+      }
+    }
+  }
+}
+
+// 로딩 스타일
+.loadingContainer {
+  min-height: 100vh;
+  @include flex-center;
+  
+  .loadingContent {
+    text-align: center;
+    
+    .spinner {
+      width: 3rem;
+      height: 3rem;
+      border: 2px solid $gray-200;
+      border-top: 2px solid $primary-color;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    
+    p {
+      color: $gray-600;
+    }
+  }
+}
+
+// 에러 스타일
+.errorContainer {
+  min-height: 100vh;
+  @include flex-center;
+  
+  .errorContent {
+    text-align: center;
+    
+    .errorIcon {
+      color: $error-color;
+      margin-bottom: 1rem;
+    }
+    
+    .errorMessage {
+      color: $error-color;
+      margin-bottom: 1rem;
+    }
+    
+    .retryBtn {
+      @include button-base;
+      background-color: $primary-color;
+      color: $white;
+      padding: 0.5rem 1rem;
+      
+      &:hover {
+        background-color: $primary-hover;
+      }
+    }
+  }
+}
+
+// 메인 콘텐츠 카드
+.profileCard {
+  background: $white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  
+  .cardHeader {
+    padding: 1.5rem;
+    border-bottom: 1px solid $gray-200;
+    
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $gray-800;
+      margin: 0;
+    }
+  }
+  
+  .cardBody {
+    padding: 1.5rem;
+  }
+  
+  .cardFooter {
+    padding: 1.5rem;
+    border-top: 1px solid $gray-200;
+  }
+}
+
+// 프로필 섹션
+.profileSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  
+  @media (min-width: 1024px) {
+    flex-direction: row;
+  }
+  
+  .profileImageSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    
+    .profileImage {
+      width: 8rem;
+      height: 8rem;
+      background-color: $gray-200;
+      border-radius: 50%;
+      @include flex-center;
+      overflow: hidden;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      .cameraIcon {
+        color: $gray-400;
+      }
+    }
+    
+    .profileLabel {
+      font-size: 0.875rem;
+      color: $gray-500;
+      text-align: center;
+    }
+  }
+  
+  .profileForm {
+    flex: 1;
+    
+    .formGrid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      
+      @media (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .formField {
+        label {
+          display: block;
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: $gray-700;
+          margin-bottom: 0.5rem;
+        }
+        
+        .fieldValue {
+          padding: 0.75rem;
+          background-color: $gray-100;
+          border-radius: 6px;
+          color: $gray-800;
+          font-size: 0.875rem;
+        }
+      }
+    }
+  }
+}
+
+// 주소 및 배송정보 섹션
+.infoSection {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .infoBlock {
+    .infoHeader {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      
+      .infoIcon {
+        color: $gray-600;
+      }
+      
+      h3 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: $gray-800;
+        margin: 0;
+      }
+    }
+    
+    .infoContent {
+      padding: 1rem;
+      background-color: $gray-50;
+      border-radius: 6px;
+      
+      p {
+        color: $gray-600;
+        margin: 0;
+        line-height: 1.5;
+        
+        &:not(:last-child) {
+          margin-bottom: 0.25rem;
+        }
+      }
+    }
+    
+    .deliveryAddresses {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      
+      .deliveryItem {
+        padding: 0.75rem;
+        border: 1px solid $gray-200;
+        border-radius: 6px;
+        background-color: $gray-50;
+        
+        .deliveryTitle {
+          font-weight: 500;
+          color: $gray-800;
+          margin-bottom: 0.25rem;
+        }
+        
+        .deliveryAddress {
+          color: $gray-600;
+          margin-bottom: 0.25rem;
+        }
+        
+        .deliveryContact {
+          font-size: 0.875rem;
+          color: $gray-500;
+        }
+      }
+    }
+  }
+}
+
+// 애니메이션
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// 반응형 디자인
+@media (max-width: 768px) {
+  .userProfilePage {
+    padding: 1rem 0;
+    
+    .container {
+      padding: 0 0.5rem;
+    }
+  }
+  
+  .profileCard {
+    .cardHeader,
+    .cardBody,
+    .cardFooter {
+      padding: 1rem;
+    }
+  }
+  
+  .profileSection {
+    gap: 1.5rem;
+  }
+  
+  .infoSection {
+    gap: 1.5rem;
+  }
+}
+
+// 다크 모드 지원 (선택사항)
+@media (prefers-color-scheme: dark) {
+  .userProfilePage {
+    background-color: #1f2937;
+    color: #f9fafb;
+    
+    .profileCard {
+      background-color: #374151;
+      color: #f9fafb;
+      
+      .cardHeader {
+        border-bottom-color: #4b5563;
+      }
+      
+      .cardFooter {
+        border-top-color: #4b5563;
+      }
+    }
+    
+    .fieldValue,
+    .infoContent {
+      background-color: #4b5563;
+      color: #f9fafb;
+    }
+    
+    .deliveryItem {
+      background-color: #4b5563;
+      border-color: #6b7280;
+    }
+  }
+}
