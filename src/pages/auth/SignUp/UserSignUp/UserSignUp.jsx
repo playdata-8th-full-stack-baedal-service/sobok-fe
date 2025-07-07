@@ -9,10 +9,10 @@ import {
 } from '@/store/authSlice';
 import { clearSMSAuth } from '@/store/smsAuthSlice';
 import ProfileSection from './components/signup/ProfileSection';
-import PasswordSection from './components/signup/PasswordSection';
-import PhoneVerification from './components/signup/PhoneVerification';
-import EmailSection from './components/signup/EmailSection';
-import AddressSection from './components/signup/AddressSection';
+import PasswordSection from '../../../../common/forms/PasswordSection';
+import PhoneVerification from '../../../../common/forms/PhoneVerification';
+import EmailSection from '../../../../common/forms/EmailSection';
+import AddressSection from '../../../../common/forms/AddressSection';
 import Button from './components/common/Button';
 import axios from 'axios';
 import { API_BASE_URL } from '@/services/host-config';

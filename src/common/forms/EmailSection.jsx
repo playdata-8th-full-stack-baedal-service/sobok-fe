@@ -1,8 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkEmail, clearEmailCheck } from '@/store/authSlice';
-import FormInput from '../common/FormInput';
-import Button from '../common/Button';
+import FormInput from '../../pages/auth/SignUp/UserSignUp/components/common/FormInput';
+import Button from '../../pages/auth/SignUp/UserSignUp/components/common/Button';
 
 function EmailSection({
   emailLocal,

@@ -15,7 +15,6 @@ import MainPage from '../pages/user/All/Main/MainPage';
 // private 페이지 (USER 권한 필요)
 // import NewPostPage from '../pages/user/Post/Posting/NewPostPage';
 import CartPage from '../pages/user/Cart/CartPage/CartPage';
-// import CartModal from '../pages/user/Cart/CartModal/CartModal';
 // import PayPage from '../pages/user/Pay/PayPage';
 import UserInfoPage from '../pages/user/UserInfo/UserInfoPage';
 import MyPostListPage from '../pages/user/UserOptions/MyPostList/MyPostListPage';
@@ -55,14 +54,6 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
-        {/* <Route
-          path="cart-modal"
-          element={
-            <RoleRoute role="USER">
-              <CartModal />
-            </RoleRoute>
-          }
-        /> */}
         {/* <Route
           path="pay"
           element={

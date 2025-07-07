@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import FormInput from '../common/FormInput';
+import FormInput from '../../pages/auth/SignUp/UserSignUp/components/common/FormInput';
 
 function AddressSection({ roadFull, addrDetail, onAddressChange }) {
   const openDaumPostcode = () => {

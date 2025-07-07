@@ -1,5 +1,5 @@
 import React from 'react';
-import FormInput from '../common/FormInput';
+import FormInput from '../../pages/auth/SignUp/UserSignUp/components/common/FormInput';
 
 function PasswordSection({ password, passwordConfirm, onPasswordChange, onPasswordConfirmChange }) {
   const isPasswordMatch = password === passwordConfirm;
