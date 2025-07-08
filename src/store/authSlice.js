@@ -26,8 +26,9 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
 export const signUpUser = createAsyncThunk('auth/signUpUser', async (userData, thunkAPI) => {
   try {
     const response = await axiosInstance.post('/auth-service/auth/user-signup', userData);
-    const { status, message } = response.data;
-    if (status === 200 || message?.includes('회원가입 성공')) {
+    const { status } = response.data;
+    console.log(response.data);
+    if (status === 200) {
       return response.data.data;
     }
 
@@ -111,9 +112,7 @@ export const lookupUser = createAsyncThunk('auth/lookupUser', async ({ password 
       password,
     });
     if (
-      response.data.success &&
-      response.data.status === 200 &&
-      response.data.message === '성공적으로 정보가 조회되었습니다.'
+      response.data.success
     ) {
       return response.data.data;
     }
