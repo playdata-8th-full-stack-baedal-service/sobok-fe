@@ -1,0 +1,26 @@
+.container {
+  text-align: center;
+  padding: 30px;
+}
+
+.label {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.userid {
+  font-size: 16px;
+  margin-bottom: 20px;
+
+  strong {
+    font-size: 22px;
+    font-weight: bold;
+  }
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}

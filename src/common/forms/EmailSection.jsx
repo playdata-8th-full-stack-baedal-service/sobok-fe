@@ -1,8 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkEmail, clearEmailCheck } from '@/store/authSlice';
-import FormInput from '../common/FormInput';
-import Button from '../common/Button';
+import Input from '../components/Input';
+import Button from '../components/Button';
 
 function EmailSection({
   emailLocal,
@@ -67,7 +67,7 @@ function EmailSection({
   };
 
   return (
-    <FormInput
+    <Input
       label="이메일 (선택)"
       className="email-group"
       success={emailCheckMessage}
@@ -88,13 +88,7 @@ function EmailSection({
             </option>
           ))}
         </select>
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={handleEmailCheck}
-          loading={loading}
-          disabled={!getFullEmail()}
-        >
+        <Button type="button" variant="BASIC" onClick={handleEmailCheck} loading={loading}>
           중복확인
         </Button>
       </div>
@@ -108,7 +102,7 @@ function EmailSection({
         />
       )}
       {getFullEmail() && <p className="email-preview">완성된 이메일: {getFullEmail()}</p>}
-    </FormInput>
+    </Input>
   );
 }
 

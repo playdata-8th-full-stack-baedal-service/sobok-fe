@@ -9,6 +9,7 @@ import RiderRoutes from './router/RiderRoutes';
 import HubRoutes from './router/HubRoutes';
 import RoleRoute from './router/RoleRoute';
 
+import ModalController from './common/modals/ModalController';
 import MainPage from './pages/user/All/Main/MainPage';
 import Footer from './layout/footer/Footer';
 import SuccessPage from './pages/user/Pay/toss/TossSuccess';
@@ -66,6 +67,7 @@ function App() {
 
       </Routes>
       <Footer />
+      <ModalController />
     </>
   );
 }

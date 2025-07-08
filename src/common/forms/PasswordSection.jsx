@@ -1,5 +1,5 @@
 import React from 'react';
-import FormInput from '../common/FormInput';
+import Input from '../components/Input';
 
 function PasswordSection({ password, passwordConfirm, onPasswordChange, onPasswordConfirmChange }) {
   const isPasswordMatch = password === passwordConfirm;
@@ -7,7 +7,7 @@ function PasswordSection({ password, passwordConfirm, onPasswordChange, onPasswo
 
   return (
     <>
-      <FormInput
+      <Input
         label="비밀번호"
         required
         type="password"
@@ -16,7 +16,7 @@ function PasswordSection({ password, passwordConfirm, onPasswordChange, onPasswo
         value={password}
         onChange={onPasswordChange}
       />
-      <FormInput
+      <Input
         label="비밀번호 확인"
         required
         type="password"

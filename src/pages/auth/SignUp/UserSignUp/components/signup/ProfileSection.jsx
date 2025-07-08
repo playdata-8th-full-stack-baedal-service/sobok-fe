@@ -6,8 +6,8 @@ import {
   checkLoginId,
   clearLoginIdCheck,
 } from '@/store/authSlice';
-import FormInput from '../common/FormInput';
-import Button from '../common/Button';
+import Input from '../../../../../../common/components/Input';
+import Button from '../../../../../../common/components/Button';
 
 function ProfileSection({ formData, onChange, onFileSelect }) {
   const dispatch = useDispatch();
@@ -70,7 +70,7 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
     console.log('[handleFileSelect] 선택된 파일:', {
       name: file.name,
       type: file.type,
-      size: file.size
+      size: file.size,
     });
 
     if (!file.type.startsWith('image/')) {
@@ -92,8 +92,6 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
       setImagePreview(e.target.result);
     };
     reader.readAsDataURL(file);
-
-    // 파일을 상위 컴포넌트로 전달
     onFileSelect(file);
     e.target.value = '';
   };
@@ -125,20 +123,21 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
           <label htmlFor="profile-image-input">
             <Button
               type="button"
-              variant="secondary"
+              variant="BASIC_SMALL"
+              className="profileimagebutton"
               onClick={() => {
                 console.log('[ProfileSection] 프로필 이미지 선택 버튼 클릭');
                 document.getElementById('profile-image-input').click();
               }}
             >
-              프로필 이미지 선택
+              이미지 선택
             </Button>
           </label>
         </div>
       </div>
 
       <div className="id-and-nick">
-        <FormInput
+        <Input
           label="아이디"
           required
           className="input-with-button"
@@ -154,19 +153,13 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
               onChange={handleLoginIdChange}
               className={loginIdCheckError ? 'input-error' : ''}
             />
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={handleLoginIdCheck}
-              loading={loading}
-              disabled={!formData.loginId.trim()}
-            >
+            <Button type="button" variant="BASIC" onClick={handleLoginIdCheck} loading={loading}>
               중복확인
             </Button>
           </div>
-        </FormInput>
+        </Input>
 
-        <FormInput
+        <Input
           label="닉네임"
           required
           className="input-with-button"
@@ -182,17 +175,11 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
               onChange={handleNicknameChange}
               className={nicknameCheckError ? 'input-error' : ''}
             />
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={handleNicknameCheck}
-              loading={loading}
-              disabled={!formData.nickname.trim()}
-            >
+            <Button type="button" variant="BASIC" onClick={handleNicknameCheck} loading={loading}>
               중복확인
             </Button>
           </div>
-        </FormInput>
+        </Input>
       </div>
     </div>
   );
