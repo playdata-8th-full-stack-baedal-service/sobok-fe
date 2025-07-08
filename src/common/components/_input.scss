@@ -1,0 +1,74 @@
+@use '../base/index' as *;
+
+.input_BASIC {
+  height: 30px;
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: rgb(210, 19, 19);
+    box-shadow: 0 0 4px rgb(210, 19, 19);
+  }
+
+  &.input-error {
+    border-color: #d32f2f;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+
+  label {
+    font-weight: 600;
+    margin-bottom: 6px;
+
+    .required {
+      color: #d32f2f;
+    }
+  }
+
+  .message {
+    margin-top: 4px;
+    font-size: 12px;
+
+    &.error {
+      color: #d32f2f;
+    }
+
+    &.success {
+      color: #388e3c;
+    }
+  }
+}
+
+
+input[type='text'],
+input[type='password'],
+input[type='file'],
+select {
+  height: 30px;
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  transition: border-color 0.2s;
+  align-items: center;
+
+  &:focus {
+    outline: none;
+    border-color: rgb(210, 19, 19);
+    box-shadow: 0 0 4px rgb(210, 19, 19);
+  }
+}
+
+input.input-error,
+select.input-error {
+  border-color: #d32f2f;
+}

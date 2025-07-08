@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import FormInput from '../../pages/auth/SignUp/UserSignUp/components/common/FormInput';
+import Input from '../components/Input';
+import Button from '../components/Button';
 
 function AddressSection({ roadFull, addrDetail, onAddressChange }) {
   const openDaumPostcode = () => {
@@ -28,12 +29,12 @@ function AddressSection({ roadFull, addrDetail, onAddressChange }) {
   }, []);
 
   return (
-    <FormInput label="주소 (선택)" className="address-group">
+    <Input label="주소 (선택)" className="address-group">
       <div className="address-search">
         <input type="text" value={roadFull} placeholder="주소검색 버튼을 클릭해주세요" readOnly />
-        <button type="button" onClick={openDaumPostcode}>
+        <Button type="button" variant="BASIC" onClick={openDaumPostcode}>
           주소검색
-        </button>
+        </Button>
       </div>
       <input
         type="text"
@@ -42,7 +43,7 @@ function AddressSection({ roadFull, addrDetail, onAddressChange }) {
         onChange={e => onAddressChange('addrDetail', e.target.value)}
         placeholder="상세주소를 입력하세요"
       />
-    </FormInput>
+    </Input>
   );
 }
 

@@ -13,15 +13,10 @@ import PasswordSection from '../../../../common/forms/PasswordSection';
 import PhoneVerification from '../../../../common/forms/PhoneVerification';
 import EmailSection from '../../../../common/forms/EmailSection';
 import AddressSection from '../../../../common/forms/AddressSection';
-import Button from './components/common/Button';
+import Button from '../../../../common/components/Button';
 import axios from 'axios';
 import { API_BASE_URL } from '@/services/host-config';
-import './UserSignUp.scss';
-import {
-  clearEmailCheck,
-  clearLoginIdCheck,
-  clearNicknameCheck,
-} from '../../../../store/authSlice';
+import styles from './UserSignUp.module.scss';
 
 function UserSignUp() {
   const dispatch = useDispatch();
@@ -205,7 +200,6 @@ function UserSignUp() {
     };
 
     try {
-      // 프로필 사진이 선택된 경우 S3에 업로드
       if (selectedFile) {
         const tempToken = await getTempToken();
         const presignedUrl = await getPresignedUrl(selectedFile.name, tempToken);
@@ -228,7 +222,6 @@ function UserSignUp() {
     if (signUpSuccess) {
       alert('회원가입이 성공적으로 완료되었습니다.');
       resetForm();
-      resetForm();
       dispatch(clearSignUpSuccess());
       dispatch(clearEmailCheck());
       dispatch(clearNicknameCheck());
@@ -237,56 +230,58 @@ function UserSignUp() {
   }, [signUpSuccess, dispatch]);
 
   return (
-    <div className="signup-container">
-      <div className="signup-header">
-        <h2>회원가입</h2>
-      </div>
-      <form onSubmit={handleSubmit} className="signup-form">
-        <ProfileSection
-          formData={formData}
-          onChange={handleInputChange}
-          onFileSelect={handleFileSelect}
-        />
-
-        <PasswordSection
-          password={formData.password}
-          passwordConfirm={passwordConfirm}
-          onPasswordChange={handleInputChange}
-          onPasswordConfirmChange={e => setPasswordConfirm(e.target.value)}
-        />
-
-        <PhoneVerification
-          phone={formData.phone}
-          verificationCode={verificationCode}
-          onPhoneChange={handleInputChange}
-          onVerificationCodeChange={e => setVerificationCode(e.target.value)}
-        />
-
-        <EmailSection
-          emailLocal={emailLocal}
-          emailDomain={emailDomain}
-          customDomain={customDomain}
-          isCustomDomain={isCustomDomain}
-          onEmailLocalChange={e => setEmailLocal(e.target.value)}
-          onDomainChange={handleDomainChange}
-          onCustomDomainChange={e => setCustomDomain(e.target.value)}
-          getFullEmail={getFullEmail}
-        />
-
-        <AddressSection
-          roadFull={formData.roadFull}
-          addrDetail={formData.addrDetail}
-          onAddressChange={handleAddressChange}
-        />
-
-        <div className="form-group">
-          <Button type="submit" loading={loading}>
-            회원가입
-          </Button>
+    <div className={styles['signup-wrap']}>
+      <div className={styles['signup-container']}>
+        <div className={styles['signup-header']}>
+          <h2>회원가입</h2>
         </div>
+        <form onSubmit={handleSubmit} className={styles['signup-form']}>
+          <ProfileSection
+            formData={formData}
+            onChange={handleInputChange}
+            onFileSelect={handleFileSelect}
+          />
 
-        {error && <div className="error-message">{error}</div>}
-      </form>
+          <PasswordSection
+            password={formData.password}
+            passwordConfirm={passwordConfirm}
+            onPasswordChange={handleInputChange}
+            onPasswordConfirmChange={e => setPasswordConfirm(e.target.value)}
+          />
+
+          <PhoneVerification
+            phone={formData.phone}
+            verificationCode={verificationCode}
+            onPhoneChange={handleInputChange}
+            onVerificationCodeChange={e => setVerificationCode(e.target.value)}
+          />
+
+          <EmailSection
+            emailLocal={emailLocal}
+            emailDomain={emailDomain}
+            customDomain={customDomain}
+            isCustomDomain={isCustomDomain}
+            onEmailLocalChange={e => setEmailLocal(e.target.value)}
+            onDomainChange={handleDomainChange}
+            onCustomDomainChange={e => setCustomDomain(e.target.value)}
+            getFullEmail={getFullEmail}
+          />
+
+          <AddressSection
+            roadFull={formData.roadFull}
+            addrDetail={formData.addrDetail}
+            onAddressChange={handleAddressChange}
+          />
+
+          <div className={styles['form-group']}>
+            <Button type="submit" loading={loading} variant="BASIC">
+              회원가입
+            </Button>
+          </div>
+
+          {error && <div className={styles['error-message']}>{error}</div>}
+        </form>
+      </div>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { openModal } from '../../../store/modalSlice';
 import ModalWrapper from '../../../common/modals/ModalWrapper';
 import PhoneVerification from '../../../common/forms/PhoneVerification';
 import styles from './FindIDModal.module.scss';
+import Button from '../../../common/components/Button';
 
 function FindIDModal({ onClose }) {
   const [phone, setPhone] = useState('');
@@ -52,9 +53,9 @@ function FindIDModal({ onClose }) {
         />
       </div>
 
-      <button className={styles.findidbutton} onClick={handleFindID}>
+      <Button type="button" variant="BASIC" onClick={handleFindID}>
         아이디 찾기
-      </button>
+      </Button>
     </ModalWrapper>
   );
 }

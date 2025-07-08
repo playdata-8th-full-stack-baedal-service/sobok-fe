@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Eye, EyeOff, User, Mail, Phone, X, MapPin, Package, Camera } from 'lucide-react';
+// import { Eye, EyeOff, User, Mail, Phone, X, MapPin, Package, Camera } from 'lucide-react';
 import { lookupUser, clearUserInfo } from '@/store/authSlice';
 import styles from './UserInfoPage.module.scss'; // CSS Modules 사용
 
@@ -27,7 +27,6 @@ function UserInfoPage() {
     // 컴포넌트 마운트 시 기존 사용자 정보 초기화
     dispatch(clearUserInfo());
   }, [dispatch]);
-  
 
   const handlePasswordSubmit = async e => {
     e.preventDefault();

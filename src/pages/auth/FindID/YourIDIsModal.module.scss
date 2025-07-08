@@ -1,25 +1,26 @@
 .container {
-  padding: 20px;
   text-align: center;
+  padding: 30px;
 }
 
 .label {
-  font-weight: bold;
+  font-size: 16px;
   margin-bottom: 10px;
 }
 
-.idList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.idList li {
+.userid {
   font-size: 16px;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
+
+  strong {
+    font-size: 22px;
+    font-weight: bold;
+  }
 }
 
-.error {
-  color: red;
-  font-weight: bold;
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
 }
