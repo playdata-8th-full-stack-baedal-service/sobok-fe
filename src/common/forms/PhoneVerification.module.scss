@@ -1,0 +1,46 @@
+.phoneWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.inputWithButton {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.inputButtonGroup {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 0px;
+}
+
+.inputButtonGroup input {
+  flex: 1;
+}
+
+.inputButtonGroup button {
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+@media (max-width: 768px) {
+  .containerTop {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inputButtonGroup {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inputButtonGroup input,
+  .inputButtonGroup button {
+    width: 100%;
+  }
+}

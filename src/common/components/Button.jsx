@@ -6,13 +6,12 @@ function Button({
   children,
   onClick,
   type = 'button',
-  variant = '', // 기본값 빈 문자열
-  className = '',
+  variant = '', // BASIC, PRIMARY 등
+  className = '', // wide 등
   loading,
   disabled,
   ...props
 }) {
-  // loading 속성이 DOM에 전달되지 않도록 제거
   const filteredProps = { ...props };
   if (loading !== undefined) {
     delete filteredProps.loading;
@@ -25,7 +24,7 @@ function Button({
       type={type}
       onClick={onClick}
       className={`${buttonClass} ${className}`}
-      disabled={loading || disabled} // loading 중일 땐 클릭 막기
+      disabled={loading || disabled}
       {...filteredProps}
     >
       {loading ? '로딩중...' : text || children}

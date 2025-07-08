@@ -69,8 +69,20 @@ function YourIDIsModal({ onClose, phone, verificationCode }) {
               <strong>{loginIds[0]}</strong> 입니다.
             </p>
             <div className={styles.buttonGroup}>
-              <Button text="로그인 하기" type="MODALBASIC" onClick={handleLogin} />
-              <Button text="홈화면 가기" type="MODALBASIC" onClick={handleGoHome} />
+              <Button
+                text="로그인 하기"
+                type="button"
+                variant="BASIC"
+                className="confirm"
+                onClick={handleLogin}
+              />
+              <Button
+                text="홈화면 가기"
+                type="button"
+                variant="BASIC"
+                className="confirm"
+                onClick={handleGoHome}
+              />
             </div>
           </>
         ) : (

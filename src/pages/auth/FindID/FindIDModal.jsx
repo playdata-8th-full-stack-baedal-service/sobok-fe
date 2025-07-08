@@ -41,19 +41,31 @@ function FindIDModal({ onClose }) {
     onClose();
   };
 
+  const handlePhoneChange = e => {
+    setPhone(e.target.value);
+  };
+
+  const handleCodeChange = e => {
+    setVerificationCode(e.target.value);
+  };
+
   return (
     <ModalWrapper title="아이디 찾기" onClose={handleCloseWithReset}>
-      <div className={styles.content}>
+      <div className={styles.container}>
         <PhoneVerification
           phone={phone}
           verificationCode={verificationCode}
-          onPhoneChange={e => setPhone(e.target.value)}
-          onVerificationCodeChange={e => setVerificationCode(e.target.value)}
-          wrapperClassName={styles.phoneVerification}
+          onPhoneChange={handlePhoneChange}
+          onVerificationCodeChange={handleCodeChange}
+          showLabel={false}
+          phonePlaceholder="전화번호를 입력하세요."
+          codePlaceholder="인증번호를 입력하세요."
+          sendButtonText="인증하기"
+          confirmButtonText="확인"
         />
       </div>
 
-      <Button type="button" variant="BASIC" onClick={handleFindID}>
+      <Button type="button" variant="BASIC" onClick={handleFindID} className="confirm">
         아이디 찾기
       </Button>
     </ModalWrapper>

@@ -34,6 +34,7 @@ function UserSignUp() {
     roadFull: '',
     addrDetail: '',
   });
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [emailLocal, setEmailLocal] = useState('');
@@ -274,7 +275,7 @@ function UserSignUp() {
           />
 
           <div className={styles['form-group']}>
-            <Button type="submit" loading={loading} variant="BASIC">
+            <Button type="submit" loading={loading} variant="BASIC" className="wide">
               회원가입
             </Button>
           </div>
