@@ -24,6 +24,7 @@ import MyOrderListPage from '../pages/user/UserOptions/MyOrderList/MyOrderListPa
 import BookmarkRecipePage from '../pages/user/UserOptions/BookmarkRecipe/BookmarkRecipePage';
 import LikePostPage from '../pages/user/UserOptions/LikePost/LikePostPage';
 import SuccessPage from '../pages/user/Pay/toss/TossSuccess';
+import PayPage from '../pages/user/Pay/PayPage';
 
 function UserRoutes() {
   return (
@@ -63,14 +64,14 @@ function UserRoutes() {
             </RoleRoute>
           }
         /> */}
-        {/* <Route
+        <Route
           path="pay"
           element={
             <RoleRoute role="USER">
               <PayPage />
             </RoleRoute>
           }
-        /> */}
+        />
         <Route
           path="tossSuccess"
           element={
@@ -135,6 +136,9 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
+
+
+        <Route path="/tossSuccess" element={<SuccessPage />} />
       </Routes>
     </>
   );

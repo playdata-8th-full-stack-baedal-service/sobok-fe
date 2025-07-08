@@ -64,7 +64,6 @@ function App() {
           }
         />
 
-        <Route path="/tossSuccess" element={<SuccessPage />} />
       </Routes>
       <Footer />
     </>
