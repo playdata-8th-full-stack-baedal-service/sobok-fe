@@ -97,6 +97,7 @@ function UserInfoPage() {
     }
   };
 
+
   const handlePasswordSubmit = async e => {
     e.preventDefault();
     if (!password.trim()) {

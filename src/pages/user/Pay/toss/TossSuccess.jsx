@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
 import axiosInstance from '../../../../services/axios-config';
 
 export default function SuccessPage() {
@@ -25,22 +26,18 @@ export default function SuccessPage() {
       console.log(response);
       if (!response.data.success) {
         // 결제 실패 비즈니스 로직을 구현하세요.
+        alert('결제 실패! 다시 시도해주세요');
       } else {
         // 결제 성공
         navigate(`/`);
       }
     }
     confirm();
-  }, []);
+  }, [navigate, searchParams]);
 
   return (
     <div className="result wrapper">
-      <div className="box_section">
-        <h2>결제 성공</h2>
-        <p>{`주문번호: ${searchParams.get('orderId')}`}</p>
-        <p>{`결제 금액: ${Number(searchParams.get('amount')).toLocaleString()}원`}</p>
-        <p>{`paymentKey: ${searchParams.get('paymentKey')}`}</p>
-      </div>
+      <CircularProgress />
     </div>
   );
 }

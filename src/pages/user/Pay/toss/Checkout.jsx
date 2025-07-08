@@ -1,33 +1,42 @@
-import { loadTossPayments, ANONYMOUS } from '@tosspayments/tosspayments-sdk';
-import { useEffect, useState } from 'react';
+import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
+import { useEffect, useState, useRef } from 'react';
+import PropTypes from 'prop-types';
 
 const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
 const customerKey = 'fuvcoqV8JaQDkDPczoS_S';
 
-export function CheckoutPage() {
-  const [amount, setAmount] = useState({
+// 랜덤 10자리 문자열 생성 함수
+const generateRandomString = () => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = 'Sobok-';
+  for (let i = 0; i < 10; i += 1) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+};
+
+export default function CheckoutPage({ orderer, shipping, ready }) {
+  const [amount] = useState({
     currency: 'KRW',
-    value: 50_000,
+    value: shipping.totalPrice,
   });
-  const [ready, setReady] = useState(false);
   const [widgets, setWidgets] = useState(null);
+  const buttonRef = useRef(null);
 
   useEffect(() => {
     async function fetchPaymentWidgets() {
       // ------  결제위젯 초기화 ------
       const tossPayments = await loadTossPayments(clientKey);
       // 회원 결제
-      const widgets = tossPayments.widgets({
+      const paymentWidgets = tossPayments.widgets({
         customerKey,
       });
-      // 비회원 결제
-      // const widgets = tossPayments.widgets({ customerKey: ANONYMOUS });
 
-      setWidgets(widgets);
+      setWidgets(paymentWidgets);
     }
 
     fetchPaymentWidgets();
-  }, [clientKey, customerKey]);
+  }, []);
 
   useEffect(() => {
     async function renderPaymentWidgets() {
@@ -49,12 +58,10 @@ export function CheckoutPage() {
           variantKey: 'AGREEMENT',
         }),
       ]);
-
-      setReady(true);
     }
 
     renderPaymentWidgets();
-  }, [widgets]);
+  }, [widgets, amount]);
 
   useEffect(() => {
     if (widgets == null) {
@@ -63,6 +70,12 @@ export function CheckoutPage() {
 
     widgets.setAmount(amount);
   }, [widgets, amount]);
+
+  useEffect(() => {
+    if (ready) {
+      buttonRef.current.click();
+    }
+  }, [ready]);
 
   return (
     <div className="wrapper">
@@ -73,21 +86,23 @@ export function CheckoutPage() {
         <div id="agreement" />
         {/* 결제하기 버튼 */}
         <button
+          type="button"
           className="button"
-          disabled={!ready}
+          style={{ display: 'none' }}
+          ref={buttonRef}
           onClick={async () => {
             try {
               // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
               // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
               // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
               await widgets.requestPayment({
-                orderId: 'NPMHc_zFrdU1oSlKr8hus',
-                orderName: '토스 티셔츠 외 2건',
-                successUrl: window.location.origin + '/tossSuccess',
-                failUrl: window.location.origin + '/user/tossFail',
-                customerEmail: 'customer123@gmail.com',
-                customerName: '김토스',
-                customerMobilePhone: '01012341234',
+                orderId: shipping.orderId,
+                orderName: `주문 번호:${shipping.orderId}`,
+                successUrl: `${window.location.origin}/user/tossSuccess`,
+                failUrl: `${window.location.origin}/user/tossFail`,
+                customerEmail: orderer.email,
+                customerName: orderer.nickname,
+                customerMobilePhone: orderer.phone,
               });
             } catch (error) {
               // 에러 처리하기
@@ -101,3 +116,26 @@ export function CheckoutPage() {
     </div>
   );
 }
+
+CheckoutPage.propTypes = {
+  orderer: PropTypes.shape({
+    userId: PropTypes.number,
+    nickname: PropTypes.string,
+    phone: PropTypes.string,
+    address: PropTypes.arrayOf(
+      PropTypes.shape({
+        roadFull: PropTypes.string,
+        addrDetail: PropTypes.string,
+      })
+    ),
+    email: PropTypes.string,
+  }).isRequired,
+  shipping: PropTypes.shape({
+    orderId: PropTypes.string,
+    riderRequest: PropTypes.string,
+    totalPrice: PropTypes.number,
+    userAddress: PropTypes.number,
+    cartCookIdList: PropTypes.arrayOf(PropTypes.number),
+  }).isRequired,
+  ready: PropTypes.bool.isRequired,
+};
