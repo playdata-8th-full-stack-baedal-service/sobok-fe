@@ -20,6 +20,15 @@ function UserInfoPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
 
+  // 비밀번호 변경 모달 상태
+  const [showPasswordChangeModal, setShowPasswordChangeModal] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordChangeError, setPasswordChangeError] = useState('');
+  const [passwordChangeLoading, setPasswordChangeLoading] = useState(false);
+
   // 회원탈퇴 모달 상태
   const [showWithdrawalModal, setShowWithdrawalModal] = useState(false);
   const [withdrawalPassword, setWithdrawalPassword] = useState('');
@@ -106,6 +115,116 @@ function UserInfoPage() {
 
   const handleCloseModal = () => {
     setShowPasswordModal(false);
+  };
+
+  // 비밀번호 변경 모달 열기
+  const handlePasswordChangeClick = () => {
+    setShowPasswordChangeModal(true);
+    setNewPassword('');
+    setConfirmPassword('');
+    setPasswordChangeError('');
+    setShowNewPassword(false);
+    setShowConfirmPassword(false);
+  };
+
+  // 비밀번호 변경 모달 닫기
+  const handleClosePasswordChangeModal = () => {
+    setShowPasswordChangeModal(false);
+    setNewPassword('');
+    setConfirmPassword('');
+    setPasswordChangeError('');
+    setShowNewPassword(false);
+    setShowConfirmPassword(false);
+  };
+
+  // 비밀번호 유효성 검사
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    if (password.length < minLength) {
+      return '비밀번호는 최소 8자 이상이어야 합니다.';
+    }
+    if (!hasUpperCase) {
+      return '비밀번호에 대문자가 포함되어야 합니다.';
+    }
+    if (!hasLowerCase) {
+      return '비밀번호에 소문자가 포함되어야 합니다.';
+    }
+    if (!hasNumbers) {
+      return '비밀번호에 숫자가 포함되어야 합니다.';
+    }
+    if (!hasSpecialChar) {
+      return '비밀번호에 특수문자가 포함되어야 합니다.';
+    }
+    return '';
+  };
+
+  // 비밀번호 변경 처리
+  const handlePasswordChangeSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!newPassword.trim()) {
+      setPasswordChangeError('새 비밀번호를 입력해주세요.');
+      return;
+    }
+
+    if (!confirmPassword.trim()) {
+      setPasswordChangeError('새 비밀번호 확인을 입력해주세요.');
+      return;
+    }
+
+    // 비밀번호 유효성 검사
+    const passwordValidationError = validatePassword(newPassword);
+    if (passwordValidationError) {
+      setPasswordChangeError(passwordValidationError);
+      return;
+    }
+
+    // 새 비밀번호와 확인 비밀번호 일치 여부 확인
+    if (newPassword !== confirmPassword) {
+      setPasswordChangeError('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    // 기존 비밀번호와 동일한지 확인 (여기서는 간단히 처리, 실제로는 서버에서 확인)
+    if (newPassword === password) {
+      setPasswordChangeError('기존 비밀번호와 동일한 비밀번호는 사용할 수 없습니다.');
+      return;
+    }
+
+    // 변경 확인 팝업
+    const confirmChange = window.confirm('비밀번호를 변경하시겠습니까?');
+    if (!confirmChange) {
+      return;
+    }
+
+    setPasswordChangeLoading(true);
+    setPasswordChangeError('');
+
+    try {
+      const response = await axiosInstance.patch('/auth-service/auth/edit-password', {
+        newPassword: newPassword,
+      });
+
+      if (response.data.success && response.data.status === 200) {
+        alert('비밀번호가 성공적으로 변경되었습니다.');
+        setShowPasswordChangeModal(false);
+      } else {
+        setPasswordChangeError(response.data.message || '비밀번호 변경에 실패했습니다.');
+      }
+    } catch (error) {
+      if (error.response?.data?.message) {
+        setPasswordChangeError(error.response.data.message);
+      } else {
+        setPasswordChangeError('비밀번호 변경 중 오류가 발생했습니다.');
+      }
+    } finally {
+      setPasswordChangeLoading(false);
+    }
   };
 
   // 회원탈퇴 버튼 클릭
@@ -375,6 +494,80 @@ function UserInfoPage() {
     );
   }
 
+  // 비밀번호 변경 모달
+  if (showPasswordChangeModal) {
+    return (
+      <div className={styles.passwordModal}>
+        <div className={styles.modalContent}>
+          <div className={styles.modalHeader}>
+            <h2>비밀번호 변경</h2>
+            <button onClick={handleClosePasswordChangeModal} className={styles.closeBtn}>
+              <X size={24} />
+            </button>
+          </div>
+
+          <p className={styles.modalDescription}>
+            새로운 비밀번호를 입력해주세요.
+          </p>
+
+          <form onSubmit={handlePasswordChangeSubmit}>
+            <div className={styles.formGroup}>
+              <label>새 비밀번호</label>
+              <div className={styles.inputWrapper}>
+                <input
+                  type={showNewPassword ? 'text' : 'password'}
+                  value={newPassword}
+                  onChange={e => setNewPassword(e.target.value)}
+                  placeholder="새 비밀번호를 입력하세요"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className={styles.togglePassword}
+                >
+                  {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>새 비밀번호 확인</label>
+              <div className={styles.inputWrapper}>
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  placeholder="새 비밀번호를 다시 입력하세요"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className={styles.togglePassword}
+                >
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+              {passwordChangeError && <p className={styles.errorMessage}>{passwordChangeError}</p>}
+            </div>
+
+            <div className={styles.passwordRequirements}>
+              <p>비밀번호 요구사항:</p>
+              <ul>
+                <li>최소 8자 이상</li>
+                <li>대문자, 소문자, 숫자, 특수문자 포함</li>
+                <li>기존 비밀번호와 다른 비밀번호</li>
+              </ul>
+            </div>
+
+            <button type="submit" disabled={passwordChangeLoading} className={styles.submitBtn}>
+              {passwordChangeLoading ? '변경 중...' : '변경'}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   // 회원탈퇴 모달
   if (showWithdrawalModal) {
     return (
@@ -469,7 +662,7 @@ function UserInfoPage() {
           {/* 헤더 */}
           <div className={styles.cardHeader}>
             <h1>회원정보 조회</h1>
-            <button onClick={() => nav('/')}>비밀번호 변경</button>
+            <button onClick={handlePasswordChangeClick}>비밀번호 변경</button>
           </div>
 
           {/* 개인 정보 섹션 */}
