@@ -30,10 +30,12 @@ function UserSignUp() {
   });
   const [selectedFile, setSelectedFile] = useState(null);
   const [passwordConfirm, setPasswordConfirm] = useState('');
+
   const [emailLocal, setEmailLocal] = useState('');
-  const [emailDomain, setEmailDomain] = useState('gmail.com');
   const [customDomain, setCustomDomain] = useState('');
   const [isCustomDomain, setIsCustomDomain] = useState(false);
+  const [emailDomain, setEmailDomain] = useState('gmail.com');
+
   const [verificationCode, setVerificationCode] = useState('');
 
   const handleInputChange = e => {
