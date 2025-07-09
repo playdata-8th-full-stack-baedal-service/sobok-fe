@@ -1,6 +1,7 @@
 import React from 'react';
 import '../styles/style.scss';
 
+
 function Button({
   text,
   children,
