@@ -12,6 +12,8 @@ import styles from './ProfileSection.module.scss';
 
 function ProfileSection({ formData, onChange, onFileSelect }) {
   const dispatch = useDispatch();
+
+  // Redux 상태에서 필요한 값들 추출
   const {
     loading,
     nicknameCheckMessage,
@@ -20,12 +22,15 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
     loginIdCheckError,
   } = useSelector(state => state.auth);
 
+  // 프로필 이미지 미리보기 상태
   const [imagePreview, setImagePreview] = useState(formData.photo || '/photodefault.svg');
 
+  // formData.photo 변경 시 미리보기 업데이트
   useEffect(() => {
     setImagePreview(formData.photo || '/photodefault.svg');
   }, [formData.photo]);
 
+  // 아이디 중복 확인
   const handleLoginIdCheck = async () => {
     if (!formData.loginId.trim()) {
       alert('아이디를 입력해주세요.');
@@ -38,6 +43,7 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
     }
   };
 
+  // 닉네임 중복 확인
   const handleNicknameCheck = async () => {
     if (!formData.nickname.trim()) {
       alert('닉네임을 입력해주세요.');
@@ -50,16 +56,19 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
     }
   };
 
+  // 아이디 입력 시 상태 초기화 및 부모 전달
   const handleLoginIdChange = e => {
     dispatch(clearLoginIdCheck());
     onChange(e);
   };
 
+  // 닉네임 입력 시 상태 초기화 및 부모 전달
   const handleNicknameChange = e => {
     dispatch(clearNicknameCheck());
     onChange(e);
   };
 
+  // 이미지 파일 선택 시 미리보기 및 업로드용 파일 전달
   const handleFileSelect = e => {
     const file = e.target.files[0];
     if (!file) return;
@@ -76,11 +85,11 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
 
     const reader = new FileReader();
     reader.onload = e => {
-      setImagePreview(e.target.result);
+      setImagePreview(e.target.result); // 미리보기용 base64 이미지
     };
     reader.readAsDataURL(file);
-    onFileSelect(file);
-    e.target.value = '';
+    onFileSelect(file); // 부모 컴포넌트로 전달
+    e.target.value = ''; // 같은 파일 재선택 가능하도록 초기화
   };
 
   return (
@@ -113,6 +122,7 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
       </div>
 
       <div className={styles.idAndNick}>
+        {/* 아이디 입력 및 중복 확인 */}
         <Input
           label="아이디"
           required
@@ -135,6 +145,7 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
           </div>
         </Input>
 
+        {/* 닉네임 입력 및 중복 확인 */}
         <Input
           label="닉네임"
           required

@@ -7,7 +7,7 @@ import IDInput from '../SignIn/components/IDInput';
 import PhoneVerification from '../../../common/forms/PhoneVerification';
 import useSignInHandlers from '../SignIn/hooks/useSignInHandlers';
 import Button from '../../../common/components/Button';
-import NewPWModal from './NewPWModal'; // ✅ 추가
+import NewPWModal from './NewPWModal';
 import styles from './FindPWModal.module.scss';
 
 function FindPWModal({ onClose }) {
@@ -60,7 +60,7 @@ function FindPWModal({ onClose }) {
       });
       if (res.data.success) {
         alert('인증이 완료되었습니다.');
-        setShowNewPWModal(true); // 인증되면 모달 전환
+        setShowNewPWModal(true);
       } else {
         alert(res.data.message || '인증 실패');
       }
@@ -70,7 +70,7 @@ function FindPWModal({ onClose }) {
   };
 
   if (showNewPWModal) {
-    return <NewPWModal onClose={onClose} authId={authId} />; // ✅ 인증 성공 시 NewPWModal 열림
+    return <NewPWModal onClose={onClose} authId={authId} />;
   }
 
   return (

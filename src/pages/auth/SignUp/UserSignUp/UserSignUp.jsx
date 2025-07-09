@@ -20,11 +20,13 @@ import styles from './UserSignUp.module.scss';
 
 function UserSignUp() {
   const dispatch = useDispatch();
-  const ref = useRef();
+  const ref = useRef(); // 유효성 검사 실패 시 포커스를 줄 때 사용
 
+  // Redux 상태 (회원가입 진행 상황, 에러, 성공 여부, SMS 인증 여부)
   const { loading, error, signUpSuccess } = useSelector(state => state.auth);
   const { isVerified } = useSelector(state => state.smsAuth);
 
+  // 기본 회원가입 입력 필드
   const [formData, setFormData] = useState({
     loginId: '',
     password: '',
@@ -35,51 +37,69 @@ function UserSignUp() {
     addrDetail: '',
   });
 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [passwordConfirm, setPasswordConfirm] = useState('');
+  // 부가 입력 필드 (하나의 객체로 묶음)
+  const [extraFields, setExtraFields] = useState({
+    selectedFile: null, // 프로필 이미지 파일
+    passwordConfirm: '', // 비밀번호 확인
+    emailLocal: '', // 이메일 아이디
+    customDomain: '', // 사용자 직접입력 도메인
+    isCustomDomain: false, // 직접입력 도메인 선택 여부
+    emailDomain: 'gmail.com', // 선택 도메인
+    verificationCode: '', // 휴대폰 인증번호
+  });
 
-  const [emailLocal, setEmailLocal] = useState('');
-  const [customDomain, setCustomDomain] = useState('');
-  const [isCustomDomain, setIsCustomDomain] = useState(false);
-  const [emailDomain, setEmailDomain] = useState('gmail.com');
+  // 구조 분해로 상태 꺼내기
+  const {
+    selectedFile,
+    passwordConfirm,
+    emailLocal,
+    customDomain,
+    isCustomDomain,
+    emailDomain,
+    verificationCode,
+  } = extraFields;
 
-  const [verificationCode, setVerificationCode] = useState('');
-
+  // 일반 input 값 변경 핸들러
   const handleInputChange = e => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  // 파일 선택 시 실행
   const handleFileSelect = file => {
-    setSelectedFile(file);
+    setExtraFields(prev => ({ ...prev, selectedFile: file }));
   };
 
+  // 이메일 도메인 선택 변경
   const handleDomainChange = selected => {
     if (selected === '직접입력') {
-      setIsCustomDomain(true);
-      setEmailDomain('');
+      setExtraFields(prev => ({
+        ...prev,
+        isCustomDomain: true,
+        emailDomain: '',
+      }));
     } else {
-      setIsCustomDomain(false);
-      setEmailDomain(selected);
-      setCustomDomain('');
+      setExtraFields(prev => ({
+        ...prev,
+        isCustomDomain: false,
+        emailDomain: selected,
+        customDomain: '',
+      }));
     }
   };
 
+  // 주소 필드 변경
   const handleAddressChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value,
-    }));
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // 이메일 주소 전체 반환
   const getFullEmail = () => {
     const domain = isCustomDomain ? customDomain : emailDomain;
     return emailLocal && domain ? `${emailLocal}@${domain}` : '';
   };
 
+  // 폼 초기화 함수
   const resetForm = () => {
     setFormData({
       loginId: '',
@@ -90,36 +110,41 @@ function UserSignUp() {
       roadFull: '',
       addrDetail: '',
     });
-    setSelectedFile(null);
-    setPasswordConfirm('');
-    setEmailLocal('');
-    setEmailDomain('gmail.com');
-    setCustomDomain('');
-    setIsCustomDomain(false);
-    setVerificationCode('');
+    setExtraFields({
+      selectedFile: null,
+      passwordConfirm: '',
+      emailLocal: '',
+      customDomain: '',
+      isCustomDomain: false,
+      emailDomain: 'gmail.com',
+      verificationCode: '',
+    });
     dispatch(clearSMSAuth());
   };
 
+  // 유효성 검사 함수
   const validateForm = () => {
-    if (!formData.loginId || !formData.password || !formData.nickname || !formData.phone) {
+    const { loginId, password, nickname, phone } = formData;
+
+    if (!loginId || !password || !nickname || !phone) {
       alert('필수 항목을 모두 입력해주세요.');
       ref.current?.focus();
       return false;
     }
 
-    if (formData.password !== passwordConfirm) {
+    if (password !== passwordConfirm) {
       alert('비밀번호가 일치하지 않습니다.');
       return false;
     }
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,16}$/;
-    if (!passwordRegex.test(formData.password)) {
+    if (!passwordRegex.test(password)) {
       alert('비밀번호는 대소문자, 숫자, 특수문자를 포함하여 8~16자로 입력해주세요.');
       return false;
     }
 
     const phoneRegex = /^\d{11}$/;
-    if (!phoneRegex.test(formData.phone)) {
+    if (!phoneRegex.test(phone)) {
       alert('전화번호는 하이픈 없이 11자리 숫자로 입력해주세요.');
       return false;
     }
@@ -132,74 +157,66 @@ function UserSignUp() {
     return true;
   };
 
+  // 임시 토큰 발급 요청
   const getTempToken = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}auth-service/auth/temp-token`);
-      if (response.data.success && response.data.status === 200) {
-        return response.data.data;
-      }
-      throw new Error(response.data.message || '임시 토큰 발급 실패');
+      const { data } = await axios.get(`${API_BASE_URL}auth-service/auth/temp-token`);
+      if (data.success && data.status === 200) return data.data;
+      throw new Error(data.message || '임시 토큰 발급 실패');
     } catch (error) {
       console.error('임시 토큰 발급 실패:', error);
       throw error;
     }
   };
 
+  // presigned URL 발급 요청
   const getPresignedUrl = async (fileName, tempToken) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}api-service/api/presign`, {
-        params: {
-          fileName,
-          category: 'profile',
-        },
+      const { data } = await axios.get(`${API_BASE_URL}api-service/api/presign`, {
+        params: { fileName, category: 'profile' },
         headers: {
           Authorization: `Bearer ${tempToken}`,
           'Content-Type': 'application/json',
         },
       });
-
-      if (response.data.success && response.data.data) {
-        return response.data.data;
-      }
-      throw new Error(response.data.message || 'Presigned URL 생성 실패');
+      if (data.success && data.data) return data.data;
+      throw new Error(data.message || 'Presigned URL 생성 실패');
     } catch (error) {
       console.error('Presigned URL 요청 실패:', error);
       throw error;
     }
   };
 
+  // S3에 이미지 업로드
   const uploadToS3 = async (presignedUrl, file) => {
     try {
       const response = await fetch(presignedUrl, {
         method: 'PUT',
         body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
+        headers: { 'Content-Type': file.type },
       });
 
       if (!response.ok) {
         throw new Error(`S3 업로드 실패: ${response.status} ${response.statusText}`);
       }
 
-      const uploadedUrl = presignedUrl.split('?')[0];
-      return uploadedUrl;
+      return presignedUrl.split('?')[0]; // ? 앞까지가 실제 업로드된 URL
     } catch (error) {
       console.error('[uploadToS3] S3 업로드 오류:', error);
       throw error;
     }
   };
 
+  // 폼 제출 처리
   const handleSubmit = async e => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     let completeFormData = {
       ...formData,
       email: getFullEmail() || null,
-      roadFull: formData.roadFull.trim() === '' ? null : formData.roadFull,
-      addrDetail: formData.addrDetail.trim() === '' ? null : formData.addrDetail,
+      roadFull: formData.roadFull.trim() || null,
+      addrDetail: formData.addrDetail.trim() || null,
     };
 
     try {
@@ -207,20 +224,18 @@ function UserSignUp() {
         const tempToken = await getTempToken();
         const presignedUrl = await getPresignedUrl(selectedFile.name, tempToken);
         const uploadedUrl = await uploadToS3(presignedUrl, selectedFile);
-        completeFormData = {
-          ...completeFormData,
-          photo: uploadedUrl,
-        };
+        completeFormData.photo = uploadedUrl;
       }
 
       await dispatch(signUpUser(completeFormData)).unwrap();
       alert('회원가입 요청 완료');
     } catch (err) {
       console.error('회원가입 실패:', err);
-      alert(err || '회원가입에 실패했습니다.');
+      alert(err?.message || '회원가입에 실패했습니다.');
     }
   };
 
+  // 회원가입 성공 시 상태 초기화
   useEffect(() => {
     if (signUpSuccess) {
       alert('회원가입이 성공적으로 완료되었습니다.');
@@ -244,44 +259,46 @@ function UserSignUp() {
             onChange={handleInputChange}
             onFileSelect={handleFileSelect}
           />
-
           <PasswordSection
             password={formData.password}
             passwordConfirm={passwordConfirm}
             onPasswordChange={handleInputChange}
-            onPasswordConfirmChange={e => setPasswordConfirm(e.target.value)}
+            onPasswordConfirmChange={e =>
+              setExtraFields(prev => ({ ...prev, passwordConfirm: e.target.value }))
+            }
           />
-
           <PhoneVerification
             phone={formData.phone}
             verificationCode={verificationCode}
             onPhoneChange={handleInputChange}
-            onVerificationCodeChange={e => setVerificationCode(e.target.value)}
+            onVerificationCodeChange={e =>
+              setExtraFields(prev => ({ ...prev, verificationCode: e.target.value }))
+            }
           />
-
           <EmailSection
             emailLocal={emailLocal}
             emailDomain={emailDomain}
             customDomain={customDomain}
             isCustomDomain={isCustomDomain}
-            onEmailLocalChange={e => setEmailLocal(e.target.value)}
+            onEmailLocalChange={e =>
+              setExtraFields(prev => ({ ...prev, emailLocal: e.target.value }))
+            }
             onDomainChange={handleDomainChange}
-            onCustomDomainChange={e => setCustomDomain(e.target.value)}
+            onCustomDomainChange={e =>
+              setExtraFields(prev => ({ ...prev, customDomain: e.target.value }))
+            }
             getFullEmail={getFullEmail}
           />
-
           <AddressSection
             roadFull={formData.roadFull}
             addrDetail={formData.addrDetail}
             onAddressChange={handleAddressChange}
           />
-
           <div className={styles['form-group']}>
             <Button type="submit" loading={loading} variant="BASIC" className="wide">
               회원가입
             </Button>
           </div>
-
           {error && <div className={styles['error-message']}>{error}</div>}
         </form>
       </div>
