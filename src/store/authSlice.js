@@ -25,10 +25,12 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
 // 회원가입
 export const signUpUser = createAsyncThunk('auth/signUpUser', async (userData, thunkAPI) => {
   try {
-    const res = await axiosInstance.post('/auth-service/auth/user-signup', userData);
-    const { status, message } = res.data;
-    if (status === 200 || message?.includes('회원가입 성공')) {
-      return res.data.data;
+
+    const response = await axiosInstance.post('/auth-service/auth/user-signup', userData);
+    const { status } = response.data;
+    console.log(response.data);
+    if (status === 200) {
+      return response.data.data;
     }
     return thunkAPI.rejectWithValue('회원가입 실패');
   } catch (e) {
@@ -84,9 +86,14 @@ export const checkLoginId = createAsyncThunk('auth/checkLoginId', async (loginId
 // 회원정보 조회
 export const lookupUser = createAsyncThunk('auth/lookupUser', async ({ password }, thunkAPI) => {
   try {
-    const res = await axiosInstance.post('/auth-service/auth/get-info', { password });
-    if (res.data.success && res.data.status === 200 && res.data.message === '성공적으로 정보가 조회되었습니다.') {
-      return res.data.data;
+
+    const response = await axiosInstance.post('/auth-service/auth/get-info', {
+      password,
+    });
+    if (
+      response.data.success
+    ) {
+      return response.data.data;
     }
     return thunkAPI.rejectWithValue('회원정보 조회 실패');
   } catch (e) {
