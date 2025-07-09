@@ -49,7 +49,7 @@ axiosInstance.interceptors.response.use(
         const res = await axios.post(`${API_BASE_URL}auth-service/auth/reissue`, {
           refreshToken,
         });
-        const newAccessToken = res.data.accessToken;
+        const newAccessToken = res.data.data;
         localStorage.setItem('ACCESS_TOKEN', newAccessToken);
         originalRequest.headers = {
           ...originalRequest.headers,

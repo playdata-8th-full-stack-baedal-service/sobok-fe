@@ -1,8 +1,8 @@
 import React from 'react';
-import Header from './Header';
 import { useDispatch } from 'react-redux';
-import { logout } from '../../store/authSlice';
 import { useNavigate } from 'react-router-dom';
+import Header from './Header';
+import { logout } from '../../store/authSlice';
 import axios from '../../services/axios-config';
 
 // 테스트용
@@ -16,7 +16,7 @@ import axios from '../../services/axios-config';
   window.dispatchEvent(new PopStateEvent('popstate'));
 */
 
-const AdminHeader = () => {
+function AdminHeader() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -38,7 +38,15 @@ const AdminHeader = () => {
     }
   };
 
-  return <Header rightthree={<button onClick={handleLogout}>로그아웃</button>} />;
-};
+  return (
+    <Header
+      rightthree={
+        <button type="button" onClick={handleLogout}>
+          로그아웃
+        </button>
+      }
+    />
+  );
+}
 
 export default AdminHeader;
