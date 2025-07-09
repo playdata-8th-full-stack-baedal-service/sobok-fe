@@ -1,0 +1,61 @@
+/* UserSignUp.module.scss */
+
+.signup-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f8f8f8;
+}
+
+.signup-container {
+  width: 100%;
+  max-width: 700px;
+  padding: 40px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.signup-header {
+  text-align: center;
+  margin-bottom: 32px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111;
+  }
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.form-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.wideButton {
+  min-width: 100%; 
+}
+
+.error-message {
+  margin-top: 12px;
+  color: #d32f2f;
+  font-weight: 600;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .signup-wrap {
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+}

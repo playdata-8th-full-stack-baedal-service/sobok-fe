@@ -1,14 +1,16 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import styles from '../SignInPage.module.scss';
+import { useDispatch } from 'react-redux';
+import { openModal } from '../../../../store/modalSlice';
+import styles from './HelperLinks.module.scss';
 
 function HelperLinks() {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   return (
     <div className={styles.helperLinks}>
-      <button onClick={() => navigate('/auth/find-id')}>아이디 찾기</button>
-      <span> / </span>
-      <button onClick={() => navigate('/auth/find-password')}>비밀번호 찾기</button>
+      <button onClick={() => dispatch(openModal('FIND_ID'))}>아이디 찾기</button>
+      <span>/</span>
+      <button onClick={() => dispatch(openModal('FIND_PW'))}>비밀번호 찾기</button>
     </div>
   );
 }

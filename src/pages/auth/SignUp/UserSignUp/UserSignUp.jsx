@@ -1,16 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { signUpUser, clearSignUpSuccess, clearEmailCheck, clearLoginIdCheck, clearNicknameCheck } from '@/store/authSlice';
+import {
+  signUpUser,
+  clearSignUpSuccess,
+  clearEmailCheck,
+  clearLoginIdCheck,
+  clearNicknameCheck,
+} from '@/store/authSlice';
 import { clearSMSAuth } from '@/store/smsAuthSlice';
 import ProfileSection from './components/signup/ProfileSection';
-import PasswordSection from './components/signup/PasswordSection';
-import PhoneVerification from './components/signup/PhoneVerification';
-import EmailSection from './components/signup/EmailSection';
-import AddressSection from './components/signup/AddressSection';
-import Button from './components/common/Button';
+import PasswordSection from '../../../../common/forms/PasswordSection';
+import PhoneVerification from '../../../../common/forms/PhoneVerification';
+import EmailSection from '../../../../common/forms/EmailSection';
+import AddressSection from '../../../../common/forms/AddressSection';
+import Button from '../../../../common/components/Button';
 import axios from 'axios';
 import { API_BASE_URL } from '@/services/host-config';
-import './UserSignUp.scss';
+import styles from './UserSignUp.module.scss';
 
 function UserSignUp() {
   const dispatch = useDispatch();
@@ -28,12 +34,15 @@ function UserSignUp() {
     roadFull: '',
     addrDetail: '',
   });
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [passwordConfirm, setPasswordConfirm] = useState('');
+
   const [emailLocal, setEmailLocal] = useState('');
-  const [emailDomain, setEmailDomain] = useState('gmail.com');
   const [customDomain, setCustomDomain] = useState('');
   const [isCustomDomain, setIsCustomDomain] = useState(false);
+  const [emailDomain, setEmailDomain] = useState('gmail.com');
+
   const [verificationCode, setVerificationCode] = useState('');
 
   const handleInputChange = e => {
@@ -144,7 +153,7 @@ function UserSignUp() {
           category: 'profile',
         },
         headers: {
-          'Authorization': `Bearer ${tempToken}`,
+          Authorization: `Bearer ${tempToken}`,
           'Content-Type': 'application/json',
         },
       });
@@ -164,7 +173,7 @@ function UserSignUp() {
       const response = await fetch(presignedUrl, {
         method: 'PUT',
         body: file,
-        headers: { 
+        headers: {
           'Content-Type': file.type,
         },
       });
@@ -194,7 +203,6 @@ function UserSignUp() {
     };
 
     try {
-      // 프로필 사진이 선택된 경우 S3에 업로드
       if (selectedFile) {
         const tempToken = await getTempToken();
         const presignedUrl = await getPresignedUrl(selectedFile.name, tempToken);
@@ -225,52 +233,58 @@ function UserSignUp() {
   }, [signUpSuccess, dispatch]);
 
   return (
-    <div className="signup-container">
-      <div className="signup-header">
-        <h2>회원가입</h2>
-      </div>
-      <form onSubmit={handleSubmit} className="signup-form">
-        <ProfileSection formData={formData} onChange={handleInputChange} onFileSelect={handleFileSelect} />
-
-        <PasswordSection
-          password={formData.password}
-          passwordConfirm={passwordConfirm}
-          onPasswordChange={handleInputChange}
-          onPasswordConfirmChange={e => setPasswordConfirm(e.target.value)}
-        />
-
-        <PhoneVerification
-          phone={formData.phone}
-          verificationCode={verificationCode}
-          onPhoneChange={handleInputChange}
-          onVerificationCodeChange={e => setVerificationCode(e.target.value)}
-        />
-
-        <EmailSection
-          emailLocal={emailLocal}
-          emailDomain={emailDomain}
-          customDomain={customDomain}
-          isCustomDomain={isCustomDomain}
-          onEmailLocalChange={e => setEmailLocal(e.target.value)}
-          onDomainChange={handleDomainChange}
-          onCustomDomainChange={e => setCustomDomain(e.target.value)}
-          getFullEmail={getFullEmail}
-        />
-
-        <AddressSection
-          roadFull={formData.roadFull}
-          addrDetail={formData.addrDetail}
-          onAddressChange={handleAddressChange}
-        />
-
-        <div className="form-group">
-          <Button type="submit" loading={loading}>
-            회원가입
-          </Button>
+    <div className={styles['signup-wrap']}>
+      <div className={styles['signup-container']}>
+        <div className={styles['signup-header']}>
+          <h2>회원가입</h2>
         </div>
+        <form onSubmit={handleSubmit} className={styles['signup-form']}>
+          <ProfileSection
+            formData={formData}
+            onChange={handleInputChange}
+            onFileSelect={handleFileSelect}
+          />
 
-        {error && <div className="error-message">{error}</div>}
-      </form>
+          <PasswordSection
+            password={formData.password}
+            passwordConfirm={passwordConfirm}
+            onPasswordChange={handleInputChange}
+            onPasswordConfirmChange={e => setPasswordConfirm(e.target.value)}
+          />
+
+          <PhoneVerification
+            phone={formData.phone}
+            verificationCode={verificationCode}
+            onPhoneChange={handleInputChange}
+            onVerificationCodeChange={e => setVerificationCode(e.target.value)}
+          />
+
+          <EmailSection
+            emailLocal={emailLocal}
+            emailDomain={emailDomain}
+            customDomain={customDomain}
+            isCustomDomain={isCustomDomain}
+            onEmailLocalChange={e => setEmailLocal(e.target.value)}
+            onDomainChange={handleDomainChange}
+            onCustomDomainChange={e => setCustomDomain(e.target.value)}
+            getFullEmail={getFullEmail}
+          />
+
+          <AddressSection
+            roadFull={formData.roadFull}
+            addrDetail={formData.addrDetail}
+            onAddressChange={handleAddressChange}
+          />
+
+          <div className={styles['form-group']}>
+            <Button type="submit" loading={loading} variant="BASIC" className="wide">
+              회원가입
+            </Button>
+          </div>
+
+          {error && <div className={styles['error-message']}>{error}</div>}
+        </form>
+      </div>
     </div>
   );
 }

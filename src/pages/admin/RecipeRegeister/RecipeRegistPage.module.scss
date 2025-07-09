@@ -1,0 +1,47 @@
+.ImageandOverview {
+    display: flex;
+    justify-content: space-around;
+    gap: 40px;
+    padding: 20px 60px;
+    border-bottom: 1px solid black;
+
+    .imageselection {
+        width: 20vw;
+        display: flex;
+        flex-direction: column;
+        white-space: nowrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .overviewselection {
+        width: 60vw;
+        display: flex;
+        flex-direction: column;
+        gap: 10px 0;
+
+        .nameselection {
+            width: 200px;
+        }
+
+        .categoryselection {
+            white-space: nowrap;
+            width: 100px;
+            border-radius: 20px;
+            color: rgb(0, 0, 0);
+            background-color: rgb(255, 255, 255);
+            border: 1px solid rgb(0, 0, 0);
+            box-shadow: 2px 4px 5px rgba(0, 0, 0, $alpha: 0.4);
+            cursor: pointer;
+
+            &:hover {
+                background-color: rgb(0, 0, 0);
+                color:rgb(255, 255, 255) ;
+            }
+        }
+
+        
+
+
+    }
+}

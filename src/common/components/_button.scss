@@ -46,3 +46,61 @@
 }
 
 
+.button_BASIC {
+  cursor: pointer;
+  width: 102px;
+  height: 35px;
+  padding: 0 16px;
+  font-size: $d-button-text;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: $letter-spacing;
+  color: black;
+  transition: all 0.3s;
+  border-radius: 50px;
+  background-color: rgb(224, 224, 224);
+  color: rgb(0, 0, 0);
+  border: 1px solid black;
+  align-items: center;
+  align-content: center;
+
+  &:hover {
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}   
+
+.small {
+  @extend .button_BASIC;
+  padding: 0px 9px;
+  font-size: 13px;
+  margin-top: 7px;
+  font-size: 15px;
+   
+  &:hover {
+    background-color: inherit;
+    color: inherit;
+    border-color: inherit;
+  }
+}
+
+.wide {
+  @extend .button_BASIC;
+  min-width: 50%; 
+  background-color: black;
+  color: white;
+  height: 40px; 
+  justify-content: center;
+}
+
+.confirm {
+  @extend .button_BASIC;
+  width: 100%;
+  align-items: center;
+  margin-top: 10px;
+}

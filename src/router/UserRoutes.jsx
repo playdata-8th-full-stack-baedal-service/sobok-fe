@@ -14,7 +14,8 @@ import MainPage from '../pages/user/All/Main/MainPage';
 
 // private 페이지 (USER 권한 필요)
 // import NewPostPage from '../pages/user/Post/Posting/NewPostPage';
-// import CartModal from '../pages/user/Cart/CartModal/CartModal';
+
+
 // import PayPage from '../pages/user/Pay/PayPage';
 import UserInfoPage from '../pages/user/UserInfo/UserInfoPage';
 import MyPostListPage from '../pages/user/UserOptions/MyPostList/MyPostListPage';
@@ -23,7 +24,11 @@ import MyOrderListPage from '../pages/user/UserOptions/MyOrderList/MyOrderListPa
 import BookmarkRecipePage from '../pages/user/UserOptions/BookmarkRecipe/BookmarkRecipePage';
 import LikePostPage from '../pages/user/UserOptions/LikePost/LikePostPage';
 import SuccessPage from '../pages/user/Pay/toss/TossSuccess';
+
 import UserCartPage from '../pages/user/Cart/CartPage/UserCartPage';
+
+import PayPage from '../pages/user/Pay/PayPage';
+
 
 function UserRoutes() {
   return (
@@ -55,22 +60,15 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
-        {/* <Route
-          path="cart-modal"
-          element={
-            <RoleRoute role="USER">
-              <CartModal />
-            </RoleRoute>
-          }
-        /> */}
-        {/* <Route
+
+        <Route
           path="pay"
           element={
             <RoleRoute role="USER">
               <PayPage />
             </RoleRoute>
           }
-        /> */}
+        />
         <Route
           path="tossSuccess"
           element={
@@ -135,6 +133,9 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
+
+
+        <Route path="/tossSuccess" element={<SuccessPage />} />
       </Routes>
     </>
   );

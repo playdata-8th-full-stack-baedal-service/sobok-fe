@@ -44,6 +44,14 @@ function HubRegisterPage() {
     error: null,
   });
 
+  // 주소 중복확인 상태 관리 추가
+  const [shopAddressCheck, setShopAddressCheck] = useState({
+    isChecked: false,
+    isAvailable: false,
+    loading: false,
+    error: null,
+  });
+
   // 비밀번호 검증 상태 관리
   const [passwordValidation, setPasswordValidation] = useState({
     isValid: false,
@@ -148,6 +156,16 @@ function HubRegisterPage() {
         error: null,
       });
     }
+
+    // 주소 입력값이 변경되면 중복확인 상태 초기화
+    if (name === 'roadFull') {
+      setShopAddressCheck({
+        isChecked: false,
+        isAvailable: false,
+        loading: false,
+        error: null,
+      });
+    }
   };
 
   // 아이디 중복확인 함수
@@ -203,7 +221,7 @@ function HubRegisterPage() {
 
     try {
       // axiosInstance를 사용하여 CORS 설정 적용
-      const response = await axiosInstance.post('/auth-service/auth/check-shopName', {
+      const response = await axiosInstance.get('/auth-service/auth/check-shopName', {
         params: {
           shopName: formData.shopName,
         },
@@ -256,6 +274,73 @@ function HubRegisterPage() {
     }
   };
 
+  // 주소 중복확인 함수 추가
+  const handleCheckShopAddress = async () => {
+    if (!formData.roadFull.trim()) {
+      alert('주소를 입력해주세요.');
+      return;
+    }
+
+    setShopAddressCheck(prev => ({
+      ...prev,
+      loading: true,
+      error: null,
+    }));
+
+    try {
+      const response = await axiosInstance.get('/auth-service/auth/check-shopAddress', {
+        params: {
+          shopAddress: formData.roadFull,
+        },
+      });
+
+      console.log('주소 중복 확인 API 응답:', response.data);
+
+      // API 응답이 성공인 경우
+      if (response.data.success === true && response.data.status === 200) {
+        setShopAddressCheck({
+          isChecked: true,
+          isAvailable: true,
+          loading: false,
+          error: null,
+        });
+        alert(response.data.message || '사용 가능한 주소입니다.');
+      } else {
+        // API 응답이 실패인 경우
+        setShopAddressCheck({
+          isChecked: true,
+          isAvailable: false,
+          loading: false,
+          error: response.data.message || '이미 사용중인 주소입니다.',
+        });
+        alert(response.data.message || '이미 사용중인 주소입니다.');
+      }
+    } catch (error) {
+      console.error('주소 중복 확인 오류:', error);
+
+      // 서버에서 400, 409 등의 에러 응답을 보낸 경우
+      if (error.response && error.response.data) {
+        const errorMessage = error.response.data.message || '이미 사용중인 주소입니다.';
+        setShopAddressCheck({
+          isChecked: true,
+          isAvailable: false,
+          loading: false,
+          error: errorMessage,
+        });
+        alert(errorMessage);
+      } else {
+        // 네트워크 오류 등의 경우
+        setShopAddressCheck({
+          isChecked: true,
+          isAvailable: false,
+          loading: false,
+          error: '주소 중복 확인 중 오류가 발생했습니다.',
+        });
+        alert('주소 중복 확인 중 오류가 발생했습니다.');
+      }
+    }
+  };
+
   // 다음 주소검색 팝업 열기
   const handleAddressSearch = () => {
     if (!window.daum) {
@@ -301,6 +386,14 @@ function HubRegisterPage() {
           ...prev,
           roadFull: fullAddress,
         }));
+
+        // 주소가 변경되었으므로 중복확인 상태 초기화
+        setShopAddressCheck({
+          isChecked: false,
+          isAvailable: false,
+          loading: false,
+          error: null,
+        });
       },
       // 팝업 크기 설정
       width: '100%',
@@ -348,6 +441,13 @@ function HubRegisterPage() {
       alert('지점 이름 중복 확인을 완료해주세요.');
       return false;
     }
+
+    // 주소 중복확인 체크 추가
+    if (!shopAddressCheck.isChecked || !shopAddressCheck.isAvailable) {
+      alert('주소 중복 확인을 완료해주세요.');
+      return false;
+    }
+
     return true;
   };
 
@@ -367,6 +467,12 @@ function HubRegisterPage() {
       isAvailable: false,
     });
     setShopNameCheck({
+      isChecked: false,
+      isAvailable: false,
+      loading: false,
+      error: null,
+    });
+    setShopAddressCheck({
       isChecked: false,
       isAvailable: false,
       loading: false,
@@ -605,12 +711,33 @@ function HubRegisterPage() {
               value={formData.roadFull}
               onChange={handleInputChange}
               placeholder="주소검색 버튼을 클릭해주세요"
-              readOnly
             />
             <button type="button" onClick={handleAddressSearch}>
               주소 검색
             </button>
           </div>
+          {/* 주소 중복 확인 버튼 및 상태 표시 추가 */}
+          {formData.roadFull && (
+            <div className={styled.addrinput} style={{ marginTop: '10px' }}>
+              <input
+                type="text"
+                value={formData.roadFull}
+                placeholder="선택된 주소"
+                readOnly
+              />
+              <button
+                type="button"
+                onClick={handleCheckShopAddress}
+                disabled={shopAddressCheck.loading || !formData.roadFull.trim()}
+              >
+                {shopAddressCheck.loading ? '처리 중...' : '중복 확인'}
+              </button>
+            </div>
+          )}
+          {shopAddressCheck.isChecked && shopAddressCheck.isAvailable && (
+            <p className={styled.corretshopname}>✓ 사용 가능한 주소입니다!</p>
+          )}
+          {shopAddressCheck.error && <p className={styled.notshopname}>{shopAddressCheck.error}</p>}
         </div>
 
         <button type="submit" className={styled.submitButton} disabled={submitLoading}>

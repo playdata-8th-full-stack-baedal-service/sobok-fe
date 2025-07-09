@@ -1,0 +1,18 @@
+.idWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 15px;
+}
+
+.rememberMe {
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
