@@ -12,12 +12,16 @@
 }
 
 .modalBox {
+  width: 50%;
+  height: 50%;
   background: #fff;
+  border: 2px solid rgb(102, 102, 102);
   border-radius: 0px;
   padding: 30px 45px 50px;
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 // 모달 종류에 따라 맞는 사이즈 적용
@@ -25,26 +29,30 @@
   width: 360px;
 }
 .md {
-  width: 440px;
+  width: 500px;
 }
 .lg {
-  width: 560px;
+  width: 700px;
 }
 
 // 제목 및 닫기 버튼 묶음
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; 
   align-items: center;
-  margin-bottom: 15px;
-  // 제목
+  position: relative;
+  margin-top: 20px;
+
   h2 {
-    font-size: 20px;
+    font-size: 25px;
     font-weight: bold;
   }
 
-  // 닫기 버튼
   .closeBtn {
+    position: absolute;
+    right: 0; 
+    top: 50%;
+    transform: translateY(-50%);
     background: none;
     border: none;
     font-size: 20px;
@@ -52,7 +60,11 @@
   }
 }
 
-// // 모달 본문
-// .content {
-//   flex: 1;
-// }
+// 모달 본문
+.content {
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+}
+
