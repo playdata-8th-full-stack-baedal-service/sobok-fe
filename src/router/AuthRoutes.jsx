@@ -11,6 +11,7 @@ import PersonalInfoCertifi from '../pages/auth/PersonalInfoCertifi/PersonalInfoC
 import UserHeader from '../layout/headers/userHeader/UserHeader';
 import UserSignUp from '../pages/auth/SignUp/UserSignUp/UserSignUp';
 import RiderSignUp from '../pages/auth/SignUp/RiderSignUp/RiderSignUp';
+import KaKaoUserSignUp from '../pages/auth/SignUp/UserSignUp/KaKaoUserSignUp';
 
 function AuthRoutes() {
   return (
@@ -25,6 +26,7 @@ function AuthRoutes() {
         <Route path="signup/personal" element={<PersonalInfoCertifi />} />
         <Route path="signup/usersignup" element={<UserSignUp />} />
         <Route path="signup/ridersignup" element={<RiderSignUp />} />
+        <Route path="signup/kakao-usersignup" element={<KaKaoUserSignUp />} />
       </Routes>
     </>
   );

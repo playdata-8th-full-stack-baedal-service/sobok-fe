@@ -13,6 +13,7 @@ function EmailSection({
   onDomainChange,
   onCustomDomainChange,
   getFullEmail,
+  disabled,
 }) {
   const dispatch = useDispatch();
   const { loading, emailCheckMessage, emailCheckError } = useSelector(state => state.auth);
@@ -79,6 +80,7 @@ function EmailSection({
           value={emailLocal}
           onChange={handleEmailLocalChange}
           placeholder="이메일"
+          disabled={disabled}
         />
         <span>@</span>
         <select value={isCustomDomain ? '직접입력' : emailDomain} onChange={handleDomainChange}>
@@ -105,6 +107,7 @@ function EmailSection({
           onChange={handleCustomDomainChange}
           placeholder="도메인을 입력하세요 (예: company.com)"
           className="custom-domain-input"
+          disabled={disabled}
         />
       )}
       {getFullEmail() && <p className="email-preview">완성된 이메일: {getFullEmail()}</p>}

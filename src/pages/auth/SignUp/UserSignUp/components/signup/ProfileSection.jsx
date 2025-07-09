@@ -9,7 +9,7 @@ import {
 import FormInput from '../common/FormInput';
 import Button from '../common/Button';
 
-function ProfileSection({ formData, onChange, onFileSelect }) {
+function ProfileSection({ formData, onChange, onFileSelect, disabled }) {
   const dispatch = useDispatch();
   const {
     loading,
@@ -70,7 +70,7 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
     console.log('[handleFileSelect] 선택된 파일:', {
       name: file.name,
       type: file.type,
-      size: file.size
+      size: file.size,
     });
 
     if (!file.type.startsWith('image/')) {
@@ -153,6 +153,7 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
               value={formData.loginId}
               onChange={handleLoginIdChange}
               className={loginIdCheckError ? 'input-error' : ''}
+              disabled={disabled}
             />
             <Button
               type="button"
