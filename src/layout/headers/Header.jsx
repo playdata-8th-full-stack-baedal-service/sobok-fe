@@ -3,7 +3,7 @@ import styles from './Header.module.scss';
 
 function Header({ lefttitle, rightone, righttwo, rightthree }) {
   const handleLogoClick = () => {
-    const role = localStorage.getItem('userRole');
+    const role = localStorage.getItem('USER_ROLE');
 
     // 역할에 따라 메인 페이지 경로 설정
     if (role === 'HUB') {

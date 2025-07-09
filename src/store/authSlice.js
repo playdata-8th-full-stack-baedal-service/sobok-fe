@@ -13,19 +13,24 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
     if (res.data.success) {
       const { accessToken, refreshToken, role, id: userId, recoveryTarget } = res.data.data;
       const tokenData = { accessToken, refreshToken, role, userId, recoveryTarget };
-      Object.entries(tokenData).forEach(([k, v]) => localStorage.setItem(k === 'userId' ? 'userId' : k.toUpperCase(), v));
+      localStorage.setItem('ACCESS_TOKEN', accessToken);
+      localStorage.setItem('REFRESH_TOKEN', refreshToken);
+      localStorage.setItem('USER_ROLE', role);
+      localStorage.setItem('USER_ID', userId);
+      localStorage.setItem('RECOVERY_TARGET', recoveryTarget);
       return tokenData;
     }
     return thunkAPI.rejectWithValue('로그인 실패');
   } catch (e) {
-    return thunkAPI.rejectWithValue(e.response?.data?.data?.message || '로그인 요청에 실패하였습니다.');
+    return thunkAPI.rejectWithValue(
+      e.response?.data?.data?.message || '로그인 요청에 실패하였습니다.'
+    );
   }
 });
 
 // 회원가입
 export const signUpUser = createAsyncThunk('auth/signUpUser', async (userData, thunkAPI) => {
   try {
-
     const response = await axiosInstance.post('/auth-service/auth/user-signup', userData);
     const { status } = response.data;
     console.log(response.data);
@@ -54,21 +59,29 @@ export const deleteUser = createAsyncThunk('auth/deleteUser', async ({ password 
 export const checkEmail = createAsyncThunk('auth/checkEmail', async (email, thunkAPI) => {
   try {
     const res = await axiosInstance.get('/auth-service/auth/check-email', { params: { email } });
-    if (res.data.status === 200 || res.data.message === '사용 가능한 이메일입니다.') return res.data.message;
+    if (res.data.status === 200 || res.data.message === '사용 가능한 이메일입니다.')
+      return res.data.message;
     return thunkAPI.rejectWithValue('이메일 중복확인 실패');
   } catch (e) {
-    return thunkAPI.rejectWithValue(e.response?.data?.message || '이메일 중복 확인에 실패했습니다.');
+    return thunkAPI.rejectWithValue(
+      e.response?.data?.message || '이메일 중복 확인에 실패했습니다.'
+    );
   }
 });
 
 // 닉네임 중복 확인
 export const checkNickName = createAsyncThunk('auth/checkNickName', async (nickname, thunkAPI) => {
   try {
-    const res = await axiosInstance.get('/auth-service/auth/check-nickname', { params: { nickname } });
-    if (res.data.status === 200 || res.data.message === '사용 가능한 닉네임입니다.') return res.data.message;
+    const res = await axiosInstance.get('/auth-service/auth/check-nickname', {
+      params: { nickname },
+    });
+    if (res.data.status === 200 || res.data.message === '사용 가능한 닉네임입니다.')
+      return res.data.message;
     return thunkAPI.rejectWithValue('닉네임 중복 확인 실패');
   } catch (e) {
-    return thunkAPI.rejectWithValue(e.response?.data?.message || '닉네임 중복 확인에 실패했습니다.');
+    return thunkAPI.rejectWithValue(
+      e.response?.data?.message || '닉네임 중복 확인에 실패했습니다.'
+    );
   }
 });
 
@@ -76,23 +89,23 @@ export const checkNickName = createAsyncThunk('auth/checkNickName', async (nickn
 export const checkLoginId = createAsyncThunk('auth/checkLoginId', async (loginId, thunkAPI) => {
   try {
     const res = await axiosInstance.get('/auth-service/auth/check-id', { params: { loginId } });
-    if (res.data.status === 200 || res.data.message === '사용 가능한 아이디입니다.') return res.data.message;
+    if (res.data.status === 200 || res.data.message === '사용 가능한 아이디입니다.')
+      return res.data.message;
     return thunkAPI.rejectWithValue('아이디 중복 확인 실패');
   } catch (e) {
-    return thunkAPI.rejectWithValue(e.response?.data?.message || '아이디 중복 확인에 실패했습니다.');
+    return thunkAPI.rejectWithValue(
+      e.response?.data?.message || '아이디 중복 확인에 실패했습니다.'
+    );
   }
 });
 
 // 회원정보 조회
 export const lookupUser = createAsyncThunk('auth/lookupUser', async ({ password }, thunkAPI) => {
   try {
-
     const response = await axiosInstance.post('/auth-service/auth/get-info', {
       password,
     });
-    if (
-      response.data.success
-    ) {
+    if (response.data.success) {
       return response.data.data;
     }
     return thunkAPI.rejectWithValue('회원정보 조회 실패');
@@ -124,7 +137,10 @@ const initialState = {
   userInfoError: null,
 };
 
-const setLoading = state => { state.loading = true; state.error = null; };
+const setLoading = state => {
+  state.loading = true;
+  state.error = null;
+};
 const setMessageError = (state, type, payload) => {
   state[`${type}Message`] = null;
   state[`${type}Error`] = null;
@@ -148,8 +164,12 @@ const authSlice = createSlice({
         userInfoError: null,
       });
     },
-    clearSignUpSuccess: state => { state.signUpSuccess = false; },
-    clearDeleteSuccess: state => { state.deleteSuccess = false; },
+    clearSignUpSuccess: state => {
+      state.signUpSuccess = false;
+    },
+    clearDeleteSuccess: state => {
+      state.deleteSuccess = false;
+    },
     clearEmailCheck: state => setMessageError(state, 'emailCheck'),
     clearNicknameCheck: state => setMessageError(state, 'nicknameCheck'),
     clearLoginIdCheck: state => setMessageError(state, 'loginIdCheck'),
