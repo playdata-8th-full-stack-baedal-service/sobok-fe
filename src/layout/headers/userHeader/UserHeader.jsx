@@ -21,7 +21,7 @@ const UserHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const isLoggedIn = !!localStorage.getItem('accessToken');
+  const isLoggedIn = !!localStorage.getItem('ACCESS_TOKEN');
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);

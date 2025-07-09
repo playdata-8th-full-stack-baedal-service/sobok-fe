@@ -2,8 +2,8 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
 function RoleRoute({ role, children }) {
-  const token = localStorage.getItem('accessToken');
-  const userRole = localStorage.getItem('userRole');
+  const token = localStorage.getItem('ACCESS_TOKEN');
+  const userRole = localStorage.getItem('USER_ROLE');
   const location = useLocation();
 
   // 로그인 여부 확인
