@@ -100,8 +100,8 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
           <label htmlFor="profile-image-input">
             <Button
               type="button"
-              variant="BASIC_SMALL"
-              className={styles.profileImageButton}
+              variant="BASIC"
+              className="small"
               onClick={() => {
                 document.getElementById('profile-image-input').click();
               }}

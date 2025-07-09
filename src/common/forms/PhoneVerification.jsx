@@ -12,15 +12,13 @@ function PhoneVerification({
   onVerificationCodeChange,
   wrapperClassName = '',
   showLabel = true,
-  phonePlaceholder = '01012345678',
-  codePlaceholder = '인증번호를 입력하세요',
-  sendButtonText = '인증하기',
-  confirmButtonText = '확인',
+  showButton = true,
+  onRequestVerification,
 }) {
   const dispatch = useDispatch();
   const { isVerified, isCodeSent, error: smsError } = useSelector(state => state.smsAuth);
 
-  const handleSendSMS = () => {
+  const defaultHandleSendSMS = () => {
     const phoneRegex = /^\d{11}$/;
     if (!phoneRegex.test(phone)) {
       alert('전화번호는 하이픈 없이 11자리 숫자로 입력해주세요.');
@@ -28,6 +26,8 @@ function PhoneVerification({
     }
     dispatch(sendSMSCode(phone));
   };
+
+  const handleSendSMS = onRequestVerification || defaultHandleSendSMS;
 
   const handleVerifySMS = () => {
     if (!verificationCode.trim()) {
@@ -52,11 +52,11 @@ function PhoneVerification({
               id="phone"
               value={phone}
               onChange={onPhoneChange}
-              placeholder={phonePlaceholder}
+              placeholder="전화번호를 입력하세요."
               className={smsError ? styles.inputError : ''}
             />
             <Button type="button" variant="BASIC" onClick={handleSendSMS} disabled={isCodeSent}>
-              {isCodeSent ? '전송됨' : sendButtonText}
+              {isCodeSent ? '전송됨' : '인증요청'}
             </Button>
           </div>
         </Input>
@@ -75,11 +75,13 @@ function PhoneVerification({
               id="phonevalid"
               value={verificationCode}
               onChange={onVerificationCodeChange}
-              placeholder={codePlaceholder}
+              placeholder="인증번호를 입력하세요."
             />
-            <Button type="button" variant="BASIC" onClick={handleVerifySMS}>
-              {confirmButtonText}
-            </Button>
+            {showButton && (
+              <Button type="button" variant="BASIC" onClick={handleVerifySMS}>
+                인증확인
+              </Button>
+            )}
           </div>
         </Input>
       </div>

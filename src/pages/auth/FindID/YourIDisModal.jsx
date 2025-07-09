@@ -1,48 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { resetSMSAuth } from '../../../store/smsAuthSlice';
-import { API_BASE_URL } from '../../../services/host-config';
 import ModalWrapper from '../../../common/modals/ModalWrapper';
 import Button from '../../../common/components/Button';
 import styles from './YourIDIsModal.module.scss';
 
-function YourIDIsModal({ onClose, phone, verificationCode }) {
-  const [loginIds, setLoginIds] = useState([]);
+function YourIDIsModal({ onClose, loginIds = [] }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const fetchLoginIds = async () => {
-      try {
-        const response = await axios.post(
-          `${API_BASE_URL}/auth-service/auth/findLoginId`,
-          {
-            userPhoneNumber: phone,
-            userInputCode: verificationCode,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-
-        if (response.data.success && response.data.data) {
-          setLoginIds(response.data.data.map(item => item.loginId));
-        } else {
-          alert(response.data.message || '아이디를 찾을 수 없습니다.');
-          handleCloseWithReset();
-        }
-      } catch (err) {
-        alert(err.response?.data?.message || '아이디 조회 중 오류가 발생했습니다.');
-        handleCloseWithReset();
-      }
-    };
-
-    fetchLoginIds();
-  }, [phone, verificationCode]);
 
   const handleCloseWithReset = () => {
     dispatch(resetSMSAuth());
@@ -86,7 +52,7 @@ function YourIDIsModal({ onClose, phone, verificationCode }) {
             </div>
           </>
         ) : (
-          <p>아이디를 조회 중입니다...</p>
+          <p>아이디를 불러올 수 없습니다.</p>
         )}
       </div>
     </ModalWrapper>

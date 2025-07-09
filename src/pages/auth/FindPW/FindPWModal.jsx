@@ -1,73 +1,108 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
+import axiosInstance from '../../../services/axios-config';
 import { resetSMSAuth } from '../../../store/smsAuthSlice';
-import { openModal } from '../../../store/modalSlice';
 import ModalWrapper from '../../../common/modals/ModalWrapper';
+import IDInput from '../SignIn/components/IDInput';
 import PhoneVerification from '../../../common/forms/PhoneVerification';
-import styles from './FindIDModal.module.scss';
+import useSignInHandlers from '../SignIn/hooks/useSignInHandlers';
 import Button from '../../../common/components/Button';
+import NewPWModal from './NewPWModal'; // ✅ 추가
+import styles from './FindPWModal.module.scss';
 
 function FindPWModal({ onClose }) {
+  const [id, setId] = useState('');
   const [phone, setPhone] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
+  const [authId, setAuthId] = useState(null);
+  const [showNewPWModal, setShowNewPWModal] = useState(false);
+
+  const idInputRef = useRef();
   const dispatch = useDispatch();
 
-  const handleFindID = () => {
-    if (!phone || !verificationCode) {
-      alert('전화번호와 인증번호를 모두 입력해주세요.');
-      return;
-    }
+  const { handleKeyDown } = useSignInHandlers({
+    id,
+    password: '',
+    setError: () => {},
+    idInputRef,
+  });
 
-    onClose();
-
-    setTimeout(() => {
-      dispatch(
-        openModal({
-          type: 'YOUR_ID',
-          props: {
-            phone,
-            verificationCode,
-          },
-        })
-      );
-    }, 0);
-  };
-
-  // 모달 외부 또는 X 버튼 클릭 시 닫음
   const handleCloseWithReset = () => {
     setPhone('');
     setVerificationCode('');
+    setAuthId(null);
     dispatch(resetSMSAuth());
     onClose();
   };
 
-  const handlePhoneChange = e => {
-    setPhone(e.target.value);
+  const handleRequestVerification = async () => {
+    try {
+      const res = await axiosInstance.post('/auth-service/auth/verification', {
+        loginId: id,
+        userPhoneNumber: phone,
+      });
+      if (res.data.success) {
+        alert('인증번호가 전송되었습니다.');
+        setAuthId(res.data.data);
+      } else {
+        alert(res.data.message);
+      }
+    } catch (e) {
+      alert(e.response?.data?.message || '인증 요청 실패');
+    }
   };
 
-  const handleCodeChange = e => {
-    setVerificationCode(e.target.value);
+  const handleVerifyCode = async () => {
+    try {
+      const res = await axiosInstance.post('/auth-service/sms/verify', {
+        phoneNumber: phone,
+        inputCode: verificationCode,
+      });
+      if (res.data.success) {
+        alert('인증이 완료되었습니다.');
+        setShowNewPWModal(true); // 인증되면 모달 전환
+      } else {
+        alert(res.data.message || '인증 실패');
+      }
+    } catch (e) {
+      alert(e.response?.data?.message || '인증 확인 실패');
+    }
   };
+
+  if (showNewPWModal) {
+    return <NewPWModal onClose={onClose} authId={authId} />; // ✅ 인증 성공 시 NewPWModal 열림
+  }
 
   return (
-    <ModalWrapper title="아이디 찾기" onClose={handleCloseWithReset}>
+    <ModalWrapper title="비밀번호 찾기" onClose={handleCloseWithReset}>
       <div className={styles.container}>
+        <IDInput
+          id={id}
+          setId={setId}
+          rememberMe={false}
+          setRememberMe={() => {}}
+          onKeyDown={handleKeyDown}
+          inputRef={idInputRef}
+          showLabel={false}
+          showRememberMe={false}
+          labelText=""
+          placeholder="아이디를 입력해 주세요."
+        />
+
         <PhoneVerification
           phone={phone}
           verificationCode={verificationCode}
-          onPhoneChange={handlePhoneChange}
-          onVerificationCodeChange={handleCodeChange}
+          onPhoneChange={e => setPhone(e.target.value)}
+          onVerificationCodeChange={e => setVerificationCode(e.target.value)}
           showLabel={false}
-          phonePlaceholder="전화번호를 입력하세요."
-          codePlaceholder="인증번호를 입력하세요."
-          sendButtonText="인증하기"
-          confirmButtonText="확인"
+          showButton={false}
+          onRequestVerification={handleRequestVerification}
         />
-      </div>
 
-      <Button type="button" variant="BASIC" onClick={handleFindID} className="confirm">
-        아이디 찾기
-      </Button>
+        <Button type="button" variant="BASIC" onClick={handleVerifyCode} className="confirm">
+          인증번호 확인
+        </Button>
+      </div>
     </ModalWrapper>
   );
 }

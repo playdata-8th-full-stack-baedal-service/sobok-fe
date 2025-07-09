@@ -3,17 +3,16 @@
   gap: 28px;
   width: 100%;
   align-items: flex-start;
-  justify-content: flex-start; /* 왼쪽 정렬 */
+  justify-content: flex-start; 
 }
 
 .profileImageSection {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
   flex-shrink: 0;
   width: 120px; 
-  padding-left: 12px; 
+  padding-left: 10px; 
 }
 
 .profileImagePreview img {
@@ -33,7 +32,6 @@
 .idAndNick {
   display: flex;
   flex-direction: column;
-  gap: 16px;
   flex: 1;
 }
 
@@ -44,7 +42,7 @@
 }
 
 .inputWithButton .inputButtonGroup input {
-  flex: 1; /* input 길이 늘리기 */
+  flex: 1; 
 }
 
 .inputWithButton .inputButtonGroup button {
