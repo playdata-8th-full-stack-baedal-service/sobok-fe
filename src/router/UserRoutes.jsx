@@ -33,7 +33,8 @@ function UserRoutes() {
       <UserHeader />
       <Routes>
         {/* 비회원도 접근 가능한 페이지 */}
-        <Route path="/main" element={<MainPage />} />
+        {/* <Route path="main" element={<MainPage />} /> */}
+        <Route path="" element={<MainPage />} />
         {/* <Route path="product" element={<ProductPage />} /> */}
         {/* <Route path="search" element={<SearchPage />} /> */}
         {/* <Route path="category" element={<CategoryPage />} /> */}
@@ -142,7 +143,7 @@ function UserRoutes() {
           }
         />
 
-        <Route path="/tossSuccess" element={<SuccessPage />} />
+        <Route path="tossSuccess" element={<SuccessPage />} />
       </Routes>
     </>
   );
