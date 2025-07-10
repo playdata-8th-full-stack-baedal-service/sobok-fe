@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import axiosInstance from '../../../../services/axios-config';
+import styles from './TossSuccess.module.scss';
 
 export default function SuccessPage() {
   const navigate = useNavigate();
@@ -36,8 +37,11 @@ export default function SuccessPage() {
   }, [navigate, searchParams]);
 
   return (
-    <div className="result wrapper">
-      <CircularProgress />
+    <div className={styles.loadingWrapper}>
+      <div className={styles.loadingBox}>
+        <CircularProgress />
+        <p className={styles.loadingText}>결제를 처리 중입니다...</p>
+      </div>
     </div>
   );
 }
