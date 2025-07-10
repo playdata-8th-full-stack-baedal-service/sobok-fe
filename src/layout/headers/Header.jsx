@@ -10,6 +10,8 @@ function Header({ lefttitle, rightone, righttwo, rightthree }) {
       window.location.href = '/hub';
     } else if (role === 'RIDER') {
       window.location.href = '/rider';
+    } else if (role === 'ADMIN') {
+      window.location.href = '/admin';
     } else if (role === 'USER') {
       window.location.href = '/user/main';
     } else {
