@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { sendSMSCode, verifySMSCode } from '../../store/smsAuthSlice';
 import Input from '../../common/components/Input';
 import Button from '../../common/components/Button';
+import styles from './PhoneVerification.module.scss';
 
 function PhoneVerification({
   phone,
@@ -10,11 +11,14 @@ function PhoneVerification({
   onPhoneChange,
   onVerificationCodeChange,
   wrapperClassName = '',
+  showLabel = true,
+  showButton = true,
+  onRequestVerification,
 }) {
   const dispatch = useDispatch();
   const { isVerified, isCodeSent, error: smsError } = useSelector(state => state.smsAuth);
 
-  const handleSendSMS = () => {
+  const defaultHandleSendSMS = () => {
     const phoneRegex = /^\d{11}$/;
     if (!phoneRegex.test(phone)) {
       alert('전화번호는 하이픈 없이 11자리 숫자로 입력해주세요.');
@@ -22,6 +26,8 @@ function PhoneVerification({
     }
     dispatch(sendSMSCode(phone));
   };
+
+  const handleSendSMS = onRequestVerification || defaultHandleSendSMS;
 
   const handleVerifySMS = () => {
     if (!verificationCode.trim()) {
@@ -62,23 +68,31 @@ function PhoneVerification({
         </div>
       </div>
 
-      {smsError && <p className="message error">{smsError}</p>}
-
-      <div className="phone-group">
-        <label htmlFor="phonevalid">
-          인증 번호 <span className="required">*</span>
-        </label>
-        <div className="phonecomp">
-          <Input
-            id="phonevalid"
-            type="text"
-            value={verificationCode}
-            onChange={onVerificationCodeChange}
-          />
-          <Button type="button" variant="BASIC" onClick={handleVerifySMS} text="확인" />
-        </div>
-        {isVerified && <p className="message success">인증이 완료되었습니다.</p>}
+      <div className={styles.inputWithButton}>
+        <Input
+          label="인증번호"
+          required
+          success={isVerified && '인증이 완료되었습니다.'}
+          showLabel={showLabel}
+        >
+          <div className={styles.inputButtonGroup}>
+            <input
+              type="text"
+              id="phonevalid"
+              value={verificationCode}
+              onChange={onVerificationCodeChange}
+              placeholder="인증번호를 입력하세요."
+            />
+            {showButton && (
+              <Button type="button" variant="BASIC" onClick={handleVerifySMS}>
+                인증확인
+              </Button>
+            )}
+          </div>
+        </Input>
       </div>
+
+      {smsError && <p className={`${styles.message} ${styles.error}`}>{smsError}</p>}
     </div>
   );
 }

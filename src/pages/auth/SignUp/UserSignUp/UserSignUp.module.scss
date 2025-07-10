@@ -1,167 +1,61 @@
-// UserSignUp.module.scss
+/* UserSignUp.module.scss */
 
-.required {
-  color: red;
+.signup-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f8f8f8;
 }
 
-.signupContainer {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 20px 40px;
+.signup-container {
+  width: 100%;
+  max-width: 700px;
+  padding: 40px;
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   font-family: 'Noto Sans KR', sans-serif;
 }
 
-.signupHeader {
+.signup-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 32px;
 
   h2 {
+    font-size: 24px;
     font-weight: 700;
-    color: #333;
+    color: #111;
   }
 }
 
-.signupForm {
-  .containerTop {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    gap: 20px;
-    margin-bottom: 18px;
-  }
-
-  .profileImageUpload {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .idAndNick {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .emailGroup {
-    .emailInputs {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-
-      input[type='text'] {
-        flex: 1;
-      }
-
-      span {
-        font-weight: 600;
-      }
-
-      select {
-        padding-right: 5px;
-      }
-    }
-
-    .customDomainInput {
-      margin-top: 6px;
-    }
-
-    .emailPreview {
-      margin-top: 6px;
-      font-size: 13px;
-      color: #555;
-    }
-  }
-
-  .addressGroup {
-    .addressSearch {
-      display: flex;
-      gap: 6px;
-
-      input[type='text'] {
-        flex: 1;
-        cursor: pointer;
-        background: #f5f5f5;
-      }
-    }
-
-    input[name='addrDetail'] {
-      margin-top: 8px;
-    }
-  }
-
-  .inputWithButton {
-    .inputButtonGroup {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-
-      button {
-        white-space: nowrap;
-        min-width: 80px;
-      }
-    }
-  }
-
-  .errorMessage {
-    margin-top: 12px;
-    color: #d32f2f;
-    font-weight: 600;
-    text-align: center;
-  }
-}
-
-.phoneComp {
+.signup-form {
   display: flex;
-  gap: 8px;
-  align-items: center;
-
-  label {
-    font-weight: 600;
-    min-width: 80px;
-  }
-
-  .message {
-    margin-top: 4px;
-    font-size: 12px;
-
-    &.error {
-      color: #d32f2f;
-    }
-
-    &.success {
-      color: #388e3c;
-    }
-  }
+  flex-direction: column;
+  gap: 1px;
 }
 
-// 반응형 스타일
+.form-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.wideButton {
+  min-width: 100%; 
+}
+
+.error-message {
+  margin-top: 12px;
+  color: #d32f2f;
+  font-weight: 600;
+  text-align: center;
+}
+
 @media (max-width: 768px) {
-  .signupForm {
-    .inputButtonGroup {
-      flex-direction: column;
-      gap: 8px;
-
-      input,
-      button {
-        width: 100%;
-      }
-    }
-
-    .emailInputs {
-      flex-direction: column;
-      gap: 8px;
-
-      input,
-      select,
-      button {
-        width: 100%;
-      }
-
-      span {
-        display: none;
-      }
-    }
+  .signup-wrap {
+    align-items: flex-start;
+    padding-top: 40px;
   }
 }

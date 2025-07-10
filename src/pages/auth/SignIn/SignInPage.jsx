@@ -13,7 +13,6 @@ function SignInPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-
   const idInputRef = useRef();
 
   const { handleSignIn, handleKeyDown } = useSignInHandlers({

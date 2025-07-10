@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../../store/authSlice';
-import { setToken } from '../../../../common/utils/token';
 
 export default function useSignInHandlers({ id, password, setError, setPassword, idInputRef }) {
   const dispatch = useDispatch();
@@ -14,9 +13,6 @@ export default function useSignInHandlers({ id, password, setError, setPassword,
 
       if (loginUser.fulfilled.match(result)) {
         const { accessToken, role, userId, recoveryTarget } = result.payload;
-
-        // 토큰 저장
-        setToken(accessToken);
 
         // 필요한 경우 recoveryTarget도 활용 가능
         if (recoveryTarget) {

@@ -1,0 +1,44 @@
+// AddressSection.module.scss
+
+.addressGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.addressSearch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.addressSearch input {
+  flex: 1;
+}
+
+.addressSearch button {
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+.detailInput {
+  font-size: 1rem;       
+  line-height: 1.5;      
+  font-weight: 400; 
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .addressSearch {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .addressSearch input,
+  .addressSearch button {
+    width: 100%;
+  }
+}
+

@@ -40,10 +40,12 @@
 
     &.error {
       color: #d32f2f;
+      margin-left: 12px;
     }
 
     &.success {
       color: #388e3c;
+      margin-left: 12px;
     }
   }
 }
@@ -53,13 +55,15 @@ input[type='text'],
 input[type='password'],
 input[type='file'],
 select {
-  height: 30px;
-  padding: 6px 10px;
+  height: 35px;
+  padding: 0px 14px;
+  align-items: center;
+  align-content: center;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 20px;
   transition: border-color 0.2s;
-  align-items: center;
+  margin-top: 5px;
 
   &:focus {
     outline: none;
