@@ -99,6 +99,8 @@ const cartSlice = createSlice({
     cartItems: [],
     selectedItems: [],
     totalPrice: 0,
+    addresses: [],
+    selectedAddress: null,
     loading: false,
     error: null,
   },
@@ -132,6 +134,12 @@ const cartSlice = createSlice({
         return sum + (item ? calculateItemTotal(item) : 0);
       }, 0);
     },
+    setAddresses: (state, action) => {
+      state.addresses = action.payload;
+    },
+    setSelectedAddress: (state, action) => {
+      state.selectedAddress = action.payload;
+    },
   },
   extraReducers: builder => {
     builder
@@ -152,7 +160,14 @@ const cartSlice = createSlice({
   },
 });
 
-export const { toggleSelectItem, increaseQuantity, decreaseQuantity, deleteItem, calculateTotal } =
-  cartSlice.actions;
+export const {
+  toggleSelectItem,
+  increaseQuantity,
+  decreaseQuantity,
+  deleteItem,
+  calculateTotal,
+  setAddresses,
+  setSelectedAddress,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;

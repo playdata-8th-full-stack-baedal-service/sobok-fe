@@ -7,6 +7,7 @@ import NewPWModal from '../../pages/auth/FindPW/NewPWModal';
 // 모달들은 모두 추가해두어야함
 
 import { closeModal } from '../../store/modalSlice';
+import PayAddressChange from '../../pages/user/Pay/component/PayAddressChange';
 
 function ModalController() {
   const { modalType, modalProps } = useSelector(state => state.modal);
@@ -25,6 +26,9 @@ function ModalController() {
       return <FindPWModal onClose={handleClose} />;
     case 'NEW_PW':
       return <NewPWModal onClose={handleClose} />;
+    case 'PAY_ADDRESS_CHANGE':
+      return <PayAddressChange onClose={handleClose} />;
+
     default:
       return null;
   }

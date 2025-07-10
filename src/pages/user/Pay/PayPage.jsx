@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axiosInstance from '../../../services/axios-config';
 import CheckoutPage from './toss/Checkout';
 import generateRandomString from '../../../common/utils/paymentUtils';
 import { openModal } from '../../../store/modalSlice';
+import { setAddresses, setSelectedAddress } from '../../../store/cartSlice';
+import styles from './PayPage.module.scss';
 
 function PayPage() {
   const navigate = useNavigate();
   const [totalPrice, setTotalPrice] = useState(0);
   const [selectedItems, setSelectedItems] = useState([]);
   const dispatch = useDispatch();
-
+  const { selectedAddress } = useSelector(state => state.cart);
   const [orderer, setOrderer] = useState({
     userId: 0,
     nickname: '',
@@ -58,6 +60,9 @@ function PayPage() {
           cartCookIdList: response.data.data.selectedItems,
         }));
 
+        dispatch(setAddresses(response.data.data.addresses));
+        dispatch(setSelectedAddress(response.data.data.addresses[0].id));
+
         console.log(response.data.data.totalPrice);
         setTotalPrice(response.data.data.totalPrice);
         setSelectedItems(response.data.data.selectedItems);
@@ -82,7 +87,7 @@ function PayPage() {
             orderId: shipping.orderId,
             totalPrice,
             riderRequest: shipping.riderRequest,
-            userAddressId: orderer.addresses[shipping.userAddressIdx].id,
+            userAddressId: selectedAddress,
             cartCookIdList: selectedItems,
           },
           {
@@ -110,17 +115,15 @@ function PayPage() {
   const handleAddressChange = () => {
     // 주소를 바꿀 수 있는 모달 창 떠야함
     // shipping.userAddress 변경
-
-    dispatch(openModal('address-change'));
-    console.log('address change');
+    dispatch(openModal('PAY_ADDRESS_CHANGE'));
   };
 
   return (
-    <div className="payment-page">
+    <div className={styles.paymentPage}>
       <h2>결제하기</h2>
 
       {/* 주문자 정보 */}
-      <section className="orderer-info box">
+      <section className={styles.ordererInfo}>
         <h3>주문자 정보</h3>
         <div>
           <input type="text" value={orderer.nickname} readOnly />
@@ -129,10 +132,15 @@ function PayPage() {
       </section>
 
       {/* 배송 정보 */}
-      <section className="shipping-info box">
+      <section className={styles.shippingInfo}>
         <h3>배송 정보</h3>
         <div>
-          <textarea value={orderer.addresses[0].roadFull || ''} readOnly />
+          <textarea
+            value={
+              orderer.addresses.find(address => address.id === selectedAddress)?.roadFull || ''
+            }
+            readOnly
+          />
           <button type="button" onClick={handleAddressChange}>
             변경
           </button>
@@ -146,12 +154,12 @@ function PayPage() {
       </section>
 
       {/* 결제 수단 */}
-      <section className="payment-method box">
+      <section className={styles.paymentMethod}>
         <h3>결제 수단</h3>
         <CheckoutPage orderer={orderer} shipping={shipping} ready={goPay} totalPrice={totalPrice} />
       </section>
       {/* 결제 버튼 */}
-      <footer className="payment-footer">
+      <footer className={styles.paymentFooter}>
         <span>총 금액 {shipping.totalPrice.toLocaleString()} 원</span>
         <button type="button" onClick={handlePayment}>
           결제 하기

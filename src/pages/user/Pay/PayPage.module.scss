@@ -1,79 +1,76 @@
-.payment-page {
+.paymentPage {
   max-width: 600px;
   margin: 0 auto;
   padding: 2rem;
-  background-color: #fff;
   font-family: sans-serif;
+
+  h2 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
 }
 
-h2 {
-  font-size: 1.5rem;
-  font-weight: bold;
+.ordererInfo,
+.shippingInfo {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1.2rem;
   margin-bottom: 1.5rem;
-}
-
-/* 공통 박스 스타일 */
-.box {
-  border: 1px solid #000;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
+  background-color: #f9f9f9;
 
   h3 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-}
-
-/* 주문자 정보 */
-.orderer-info input {
-  width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-/* 배송 정보 */
-.shipping-info {
-  border: 2px solid #007aff; // 파란색 강조
-
-  textarea {
-    width: calc(100% - 60px);
-    padding: 0.5rem;
-    resize: none;
-    height: 3.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
   }
 
-  button {
-    float: right;
-    width: 50px;
-    height: 2.5rem;
-    font-size: 0.9rem;
-    border: 1px solid #aaa;
-    background-color: #fff;
-    border-radius: 4px;
-    cursor: pointer;
+  div {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+
+    textarea {
+      flex: 1;
+      resize: none;
+      height: 3.5rem;
+      padding: 0.75rem;
+      font-size: 0.95rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #fff;
+    }
+
+    button {
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+      background-color: #007aff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #005bb5;
+      }
+    }
   }
 
   input[type='text'] {
     width: 100%;
-    padding: 0.5rem;
-    margin-top: 0.5rem;
+    padding: 0.75rem;
+    font-size: 0.95rem;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 6px;
+    background-color: #fff;
   }
 }
 
-/* 결제 하단 */
-.payment-footer {
+.paymentFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 1.2rem;
   border-top: 1px solid #ccc;
   background-color: #f2f2f2;
   font-size: 1.1rem;
@@ -83,12 +80,16 @@ h2 {
   }
 
   button {
-    padding: 0.6rem 1.2rem;
+    padding: 0.6rem 1.4rem;
     font-size: 1rem;
     background-color: #000;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+
+    &:hover {
+      background-color: #333;
+    }
   }
 }

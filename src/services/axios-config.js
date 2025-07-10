@@ -55,7 +55,7 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } catch (err) {
         localStorage.clear();
-        window.location.href = '/auth/login';
+        window.location.href = '/auth/signin';
         return Promise.reject(err);
       }
     }

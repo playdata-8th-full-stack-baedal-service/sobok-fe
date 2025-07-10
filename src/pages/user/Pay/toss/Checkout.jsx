@@ -1,6 +1,7 @@
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import axiosInstance from '../../../../services/axios-config';
 
 const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
 const customerKey = 'fuvcoqV8JaQDkDPczoS_S';
@@ -99,7 +100,11 @@ export default function CheckoutPage({ orderer, shipping, ready, totalPrice }) {
               });
             } catch (error) {
               // 에러 처리하기
-              console.error(error);
+              alert('결제에 실패했습니다. 다시 시도해주세요.');
+              const res = await axiosInstance.delete(
+                `/payment-service/payment/fail-payment?orderId=${shipping.orderId}`
+              );
+              console.log(res);
             }
           }}
         >
