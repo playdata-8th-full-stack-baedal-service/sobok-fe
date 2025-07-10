@@ -131,9 +131,15 @@ function PayPage() {
       {/* 주문자 정보 */}
       <section className={styles.ordererInfo}>
         <h3>주문자 정보</h3>
-        <div>
-          <input type="text" value={orderer.nickname} readOnly />
-          <input type="text" value={orderer.phone} readOnly />
+        <div className={styles.ordererFields}>
+          <div className={styles.fieldGroup}>
+            <label htmlFor="orderer">주문자</label>
+            <input id="orderer" type="text" value={orderer.nickname} readOnly />
+          </div>
+          <div className={styles.fieldGroup}>
+            <label htmlFor="phone">전화번호</label>
+            <input id="phone" type="text" value={orderer.phone} readOnly />
+          </div>
         </div>
       </section>
 
@@ -161,7 +167,6 @@ function PayPage() {
 
       {/* 결제 수단 */}
       <section className={styles.paymentMethod}>
-        <h3>결제 수단</h3>
         <CheckoutPage orderer={orderer} shipping={shipping} ready={goPay} totalPrice={totalPrice} />
       </section>
       {/* 결제 버튼 */}
