@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import {
   signUpUser,
   clearSignUpSuccess,
@@ -14,7 +15,6 @@ import PhoneVerification from '../../../../common/forms/PhoneVerification';
 import EmailSection from '../../../../common/forms/EmailSection';
 import AddressSection from '../../../../common/forms/AddressSection';
 import Button from '../../../../common/components/Button';
-import axios from 'axios';
 import { API_BASE_URL } from '@/services/host-config';
 import styles from './UserSignUp.module.scss';
 
@@ -134,20 +134,26 @@ function UserSignUp() {
 
   const getTempToken = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}auth-service/auth/temp-token`);
+      const response = await axios.get(`${API_BASE_URL}/auth-service/auth/temp-token`);
+      
+      console.log(response.data.data);
+      
       if (response.data.success && response.data.status === 200) {
         return response.data.data;
       }
       throw new Error(response.data.message || '임시 토큰 발급 실패');
     } catch (error) {
+      console.log(error);
+      
       console.error('임시 토큰 발급 실패:', error);
+      
       throw error;
     }
   };
 
   const getPresignedUrl = async (fileName, tempToken) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}api-service/api/presign`, {
+      const response = await axios.get(`${API_BASE_URL}/api-service/api/presign`, {
         params: {
           fileName,
           category: 'profile',
@@ -212,9 +218,10 @@ function UserSignUp() {
           photo: uploadedUrl,
         };
       }
-
+      console.log(completeFormData);
+      
       await dispatch(signUpUser(completeFormData)).unwrap();
-      alert('회원가입 요청 완료');
+      
     } catch (err) {
       console.error('회원가입 실패:', err);
       alert(err || '회원가입에 실패했습니다.');
