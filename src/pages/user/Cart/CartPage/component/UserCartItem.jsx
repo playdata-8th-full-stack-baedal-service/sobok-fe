@@ -15,7 +15,7 @@ import styles from './UserCartItem.module.scss';
 function UserCartItem({ item }) {
   const dispatch = useDispatch();
 
-  const { selectedItems } = useSelector(state => state.cart);
+  const { selectedItems, totalPrice } = useSelector(state => state.cart);
 
   // 카트 아이템 선택
   const handleSelectItem = () => {
@@ -24,21 +24,25 @@ function UserCartItem({ item }) {
 
   // 카트 아이템 삭제
   const handleDeleteItem = () => {
-    dispatch(deleteCartItem(item.id));
     dispatch(deleteItem(item.id));
+    dispatch(deleteCartItem({ id: item.id, totalPrice, selectedItems }));
   };
 
   // 카트 아이템 수량 증가
   const handleIncreaseQuantity = () => {
-    dispatch(editCartItemCount({ id: item.id, count: item.quantity + 1 }));
     dispatch(increaseQuantity(item.id));
+    dispatch(
+      editCartItemCount({ id: item.id, count: item.quantity + 1, totalPrice, selectedItems })
+    );
   };
 
   // 카트 아이템 수량 감소
   const handleDecreaseQuantity = () => {
     if (item.quantity > 1) {
-      dispatch(editCartItemCount({ id: item.id, count: item.quantity - 1 }));
       dispatch(decreaseQuantity(item.id));
+      dispatch(
+        editCartItemCount({ id: item.id, count: item.quantity - 1, totalPrice, selectedItems })
+      );
     }
   };
 

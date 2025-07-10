@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import axiosInstance from '../../../services/axios-config';
 import CheckoutPage from './toss/Checkout';
 import generateRandomString from '../../../common/utils/paymentUtils';
+import { openModal } from '../../../store/modalSlice';
 
 function PayPage() {
+  const navigate = useNavigate();
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const dispatch = useDispatch();
+
   const [orderer, setOrderer] = useState({
     userId: 0,
     nickname: '',
@@ -21,9 +29,9 @@ function PayPage() {
   const [shipping, setShipping] = useState({
     orderId: generateRandomString(),
     riderRequest: '',
-    totalPrice: 1,
-    userAddress: 0,
-    cartCookIdList: [],
+    totalPrice,
+    userAddressIdx: 0,
+    cartCookIdList: selectedItems,
   });
 
   const [ready, isReady] = useState(false);
@@ -41,34 +49,41 @@ function PayPage() {
           nickname: response.data.data.nickname,
           phone: response.data.data.phone,
           addresses: response.data.data.addresses,
+          email: response.data.data.email || 'example@example.com',
         }));
 
         setShipping(prev => ({
           ...prev,
-          userAddress: response.data.data.addresses[0].id,
+          totalPrice: response.data.data.totalPrice,
+          cartCookIdList: response.data.data.selectedItems,
         }));
+
+        console.log(response.data.data.totalPrice);
+        setTotalPrice(response.data.data.totalPrice);
+        setSelectedItems(response.data.data.selectedItems);
       } catch (err) {
         console.log(err.response.data);
+        alert('주문자 정보를 불러오는 과정에서 오류가 발생하였습니다. 잠시 후 다시 시도해주세요.');
+        navigate('/user/cart');
       }
     };
 
     fetchOrdererInfo();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (!ready) return;
 
     const requestData = async () => {
       try {
-        alert(shipping.userAddress);
         const response = await axiosInstance.post(
           '/payment-service/payment/register',
           {
             orderId: shipping.orderId,
-            totalPrice: shipping.totalPrice,
+            totalPrice,
             riderRequest: shipping.riderRequest,
-            userAddressId: shipping.userAddress,
-            cartCookIdList: shipping.cartCookIdList,
+            userAddressId: orderer.addresses[shipping.userAddressIdx].id,
+            cartCookIdList: selectedItems,
           },
           {
             headers: {
@@ -86,14 +101,7 @@ function PayPage() {
     };
 
     requestData();
-  }, [
-    ready,
-    shipping.cartCookIdList,
-    shipping.orderId,
-    shipping.riderRequest,
-    shipping.totalPrice,
-    shipping.userAddress,
-  ]);
+  }, [ready]);
 
   const handlePayment = () => {
     isReady(true);
@@ -102,6 +110,8 @@ function PayPage() {
   const handleAddressChange = () => {
     // 주소를 바꿀 수 있는 모달 창 떠야함
     // shipping.userAddress 변경
+
+    dispatch(openModal('address-change'));
     console.log('address change');
   };
 
@@ -138,7 +148,7 @@ function PayPage() {
       {/* 결제 수단 */}
       <section className="payment-method box">
         <h3>결제 수단</h3>
-        <CheckoutPage orderer={orderer} shipping={shipping} ready={goPay} />
+        <CheckoutPage orderer={orderer} shipping={shipping} ready={goPay} totalPrice={totalPrice} />
       </section>
       {/* 결제 버튼 */}
       <footer className="payment-footer">

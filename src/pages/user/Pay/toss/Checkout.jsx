@@ -5,10 +5,10 @@ import PropTypes from 'prop-types';
 const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
 const customerKey = 'fuvcoqV8JaQDkDPczoS_S';
 
-export default function CheckoutPage({ orderer, shipping, ready }) {
+export default function CheckoutPage({ orderer, shipping, ready, totalPrice }) {
   const [amount] = useState({
     currency: 'KRW',
-    value: shipping.totalPrice,
+    value: totalPrice,
   });
   const [widgets, setWidgets] = useState(null);
   const buttonRef = useRef(null);
@@ -58,8 +58,11 @@ export default function CheckoutPage({ orderer, shipping, ready }) {
       return;
     }
 
-    widgets.setAmount(amount);
-  }, [widgets, amount]);
+    widgets.setAmount({
+      currency: 'KRW',
+      value: totalPrice,
+    });
+  }, [widgets, amount, totalPrice]);
 
   useEffect(() => {
     if (ready) {
@@ -128,4 +131,5 @@ CheckoutPage.propTypes = {
     cartCookIdList: PropTypes.arrayOf(PropTypes.number),
   }).isRequired,
   ready: PropTypes.bool.isRequired,
+  totalPrice: PropTypes.number.isRequired,
 };

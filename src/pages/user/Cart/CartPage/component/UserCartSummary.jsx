@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { calculateTotal } from '../../../../../store/cartSlice';
+import { calculateTotal, startPayment } from '../../../../../store/cartSlice';
 import styles from './UserCartSummary.module.scss';
 
 function UserCartSummary() {
@@ -21,6 +21,7 @@ function UserCartSummary() {
         disabled={selectedItems.length === 0}
         className={`${styles.payButton} ${selectedItems.length > 0 ? styles.active : ''}`}
         onClick={() => {
+          dispatch(startPayment({ selectedItems, totalPrice }));
           navigate('/user/pay');
         }}
       >
