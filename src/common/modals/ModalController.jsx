@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import FindIDModal from '../../pages/auth/FindID/FindIDModal';
 import YourIDIsModal from '../../pages/auth/FindID/YourIDisModal';
 import FindPWModal from '../../pages/auth/FindPW/FindPWModal';
-import NewPWModal from '../../pages/auth/FindPW/NewPWModal';
+// import NewPWModal from '../../pages/auth/FindPW/NewPWModal';
+import PWChangedModal from '../../pages/auth/FindPW/PWChangedModal';
 // 모달들은 모두 추가해두어야함
 
 import { closeModal } from '../../store/modalSlice';
@@ -23,8 +24,10 @@ function ModalController() {
       return <YourIDIsModal onClose={handleClose} {...modalProps} />;
     case 'FIND_PW':
       return <FindPWModal onClose={handleClose} />;
-    case 'NEW_PW':
-      return <NewPWModal onClose={handleClose} />;
+    // case 'NEW_PW':
+    //   return <NewPWModal onClose={handleClose} />;
+    case 'PW_CHANGED':
+      return <PWChangedModal onClose={handleClose} />;
     default:
       return null;
   }

@@ -19,7 +19,6 @@ function AdminRoutes() {
         <Route path="all-order" element={<AllOrderPage />} />
         <Route path="hub-register" element={<HubRegisterPage />} />
         <Route path="ingredient" element={<IngrediantPage />} />
-        <Route path="menu-recommend" element={<MenuRecommendPage />} />
         <Route path="recipe-regist" element={<RecipeRegistPage />} />
         <Route path="rider-list" element={<RiderListPage />} />
       </Routes>
