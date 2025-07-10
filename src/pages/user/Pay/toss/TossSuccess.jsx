@@ -39,7 +39,7 @@ export default function SuccessPage() {
         navigate('/user/cart');
       } else {
         // 결제 성공
-        navigate(`/`);
+        navigate(`/user/paycomplete`);
       }
     }
     confirm();
