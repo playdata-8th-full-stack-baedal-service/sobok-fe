@@ -11,7 +11,7 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange }) {
   const allIngredients = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get('/ingredient/all-search');
+      const response = await axiosInstance.get('/cook-service/ingredient/all-search');
       console.log(response.data);
       if (response.data.success && Array.isArray(response.data.data)) {
         setIngredients(response.data.data);
@@ -45,7 +45,6 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange }) {
   };
 
   const handleIngredientSelect = ingredient => {
-    // 이미 선택된 식재료인지 확인
     const existingIngredient = selectedIngredients.find(item => item.id === ingredient.id);
     if (existingIngredient) {
       // 이미 선택된 경우 기존 수량에 해당 식재료의 unit 값만큼 추가
@@ -59,7 +58,6 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange }) {
         )
       );
     } else {
-      // 새로 선택하는 경우 기본값으로 추가
       setSelectedIngredients(prev => [...prev, { ...ingredient, unit: ingredient.unit || '10' }]);
     }
   };

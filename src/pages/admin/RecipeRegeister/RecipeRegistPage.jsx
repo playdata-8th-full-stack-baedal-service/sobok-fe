@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import style from './RecipeRegistPage.module.scss';
 import axiosInstance from '../../../services/axios-config';
 import ImageandOverview from './units/ImageandOverview';
@@ -16,9 +16,18 @@ function RecipeRegistPage() {
     ingredients: [],
   });
   const [selectedFile, setSelectedFile] = useState(null);
+  const modalType = useSelector(state => state.modal.modalType);
+
+  // 모달이 닫힐 때마다 resetSignal 갱신
+  useEffect(() => {
+    if (modalType === null) {
+      // setResetSignal(Date.now()); // 사용하지 않음
+    }
+  }, [modalType]);
 
   const handleChangeInput = e => {
     const { name, value } = e.target;
+    console.log(name, value);
     setFormData(prev => ({
       ...prev,
       [name]: value,
@@ -29,16 +38,16 @@ function RecipeRegistPage() {
     setSelectedFile(file);
   };
 
-  const handleIngredientsChange = ingredients => {
+  const handleIngredientsChange = useCallback(ingredients => {
     setFormData(prev => ({
       ...prev,
       ingredients,
     }));
-  };
+  }, []);
 
   const getPresignUrl = async fileName => {
     try {
-      const response = await axios.get(`${API_BASE_URL}api-service/api/presign`, {
+      const response = await axiosInstance.get(`/api-service/api/presign`, {
         params: {
           fileName,
           category: 'food',
@@ -92,10 +101,12 @@ function RecipeRegistPage() {
       ingredients: [],
     });
     setSelectedFile(null);
+    // setResetSignal(Date.now()); // 선택된 식재료도 초기화 // 사용하지 않음
   };
 
   const handleResetClick = () => {
     resetForm();
+    // setResetSignal(Date.now()); // 사용하지 않음
   };
 
   const vaildSection = () => {
@@ -158,23 +169,22 @@ function RecipeRegistPage() {
     }
 
     try {
+      const submitData = { ...formData };
       if (selectedFile) {
         const presignedUrl = await getPresignUrl(selectedFile.name);
         const uploadedUrl = await uploadToS3(presignedUrl, selectedFile);
-        setFormData(prev => ({
-          ...prev,
-          thumbnailUrl: uploadedUrl,
-        }));
+        submitData.thumbnailUrl = uploadedUrl;
       }
-      const response = await axiosInstance.post('/cook-service/cook/cook-register', formData);
+      console.log(submitData);
+      const response = await axiosInstance.post('/cook-service/cook/cook-register', submitData);
       console.log(response.data);
       if (response.data.success) {
-        return response.data;
+        // 성공 시 추가 동작 필요하면 여기에 작성
       }
-      return response.data.message;
+      // 실패 시 메시지 처리
     } catch (err) {
       alert('레시피 등록 실패!');
-      console.log(error.response.data.message);
+      console.log(err.response?.data?.message);
     }
   };
 
@@ -195,7 +205,9 @@ function RecipeRegistPage() {
         <button type="button" onClick={handleResetClick} className={style.cleatbutton}>
           취소
         </button>
-        <button type="submit" className={style.uploadbutton}>업로드</button>
+        <button type="submit" className={style.uploadbutton}>
+          업로드
+        </button>
       </div>
     </form>
   );

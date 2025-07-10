@@ -1,15 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { openModal } from '@/store/modalSlice';
+import { clearCategory } from '@/store/categorySlice';
 import style from '../RecipeRegistPage.module.scss';
 
 function ImageandOverview({ formData, onFileSelect, onChange }) {
   const [imagePreview, setImagePreview] = useState(formData.thumbnailUrl || '/photodefault.svg');
   const dispatch = useDispatch();
+  const selectedCategory = useSelector(state => state.category.selected);
 
   useEffect(() => {
     setImagePreview(formData.thumbnailUrl || '/photodefault.svg');
   }, [formData.thumbnailUrl]);
+
+  useEffect(() => {
+    if (selectedCategory) {
+      onChange({
+        target: {
+          name: 'category',
+          value: selectedCategory,
+        },
+      });
+      dispatch(clearCategory());
+    }
+  }, [selectedCategory, onChange, dispatch]);
 
   const handleFileSelect = e => {
     const file = e.target.files[0];
@@ -51,8 +65,8 @@ function ImageandOverview({ formData, onFileSelect, onChange }) {
       openModal({
         type: 'CATEGORY_SELECT',
         props: {
-          formData,
           onChange,
+          formData,
         },
       })
     );

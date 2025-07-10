@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import ModalWrapper from '@/common/modals/ModalWrapper';
 import styles from '../RecipeRegistPage.module.scss';
+import { API_BASE_URL } from '@/services/host-config';
 import axiosInstance from '../../../../services/axios-config';
 
-function IngredientRegisterModal({ onClose, initialIngreName = '' }) {
+function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
   const [formData, setFormData] = useState({
     ingreName: initialIngreName,
     price: '',
@@ -75,25 +77,27 @@ function IngredientRegisterModal({ onClose, initialIngreName = '' }) {
         price: parseInt(formData.price, 10),
       };
 
-      const response = await axiosInstance.post('/ingredient/ingredient-register', requestData);
+      const response = await axiosInstance.post(
+        `/cook-service/ingredient/register`,
+        requestData
+      );
       console.log(response.data);
       if (response.data.success) {
         alert('식재료가 등록되었습니다.');
-        // 부모 컴포넌트에 새로고침 신호 전달
-        if (onClose) {
-          onClose('refresh');
-        }
+        if (onClose) onClose();
       } else {
         alert(response.data.message);
       }
     } catch (error) {
       console.error(error);
+      console.log(error.response.message);
+
       alert('식재료 등록에 실패했습니다.');
     }
   };
 
   return (
-    <ModalWrapper title="식재료 등록" onClose={onClose} size="md">
+    <ModalWrapper title="식재료 등록" onClose={onClose} size="lg">
       <div className={styles.ingredientRegisterModal}>
         <form onSubmit={handleSubmit}>
           <div className={styles.formField}>
@@ -150,7 +154,11 @@ function IngredientRegisterModal({ onClose, initialIngreName = '' }) {
           </div>
 
           <div className={styles.buttonGroup}>
-            <button type="button" onClick={onClose} className={styles.cancelButton}>
+            <button
+              type="button"
+              onClick={() => onClose && onClose()}
+              className={styles.cancelButton}
+            >
               취소
             </button>
             <button type="submit" className={styles.submitButton}>
