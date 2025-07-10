@@ -1,8 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkEmail, clearEmailCheck } from '@/store/authSlice';
-import Input from '../components/Input';
-import Button from '../components/Button';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
 import styles from './EmailSection.module.scss';
 
 function EmailSection({

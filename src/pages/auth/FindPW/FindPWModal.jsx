@@ -4,7 +4,7 @@ import axiosInstance from '../../../services/axios-config';
 import { resetSMSAuth } from '../../../store/smsAuthSlice';
 import ModalWrapper from '../../../common/modals/ModalWrapper';
 import IDInput from '../SignIn/components/IDInput';
-import PhoneVerification from '../../../common/forms/PhoneVerification';
+import PhoneVerification from '../../../common/forms/Phone/PhoneVerification';
 import useSignInHandlers from '../SignIn/hooks/useSignInHandlers';
 import Button from '../../../common/components/Button';
 import NewPWModal from './NewPWModal'; // ✅ 추가

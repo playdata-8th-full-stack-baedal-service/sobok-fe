@@ -1,8 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendSMSCode, verifySMSCode } from '../../store/smsAuthSlice';
-import Input from '../../common/components/Input';
-import Button from '../../common/components/Button';
+import { sendSMSCode, verifySMSCode } from '../../../store/smsAuthSlice';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
 import styles from './PhoneVerification.module.scss';
 
 function PhoneVerification({
