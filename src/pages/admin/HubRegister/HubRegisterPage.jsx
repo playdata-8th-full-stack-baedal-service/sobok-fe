@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import { sendSMSCode, verifySMSCode, resetSMSAuth } from '@/store/smsAuthSlice';
-import { checkLoginId, clearLoginIdCheck } from '@/store/authSlice'; // authSlice에서 import 추가
+import { checkLoginId, clearLoginIdCheck } from '@/store/authSlice';
 import styled from './HubRegisterPage.module.scss';
 import axiosInstance from '../../../services/axios-config';
-import { API_BASE_URL } from '../../../services/host-config';
+// import DuplicateCheckInput from '@/common/components/DuplicateCheckInput';
+import ShopNameDuplicateCheckInput from './ShopNameDuplicateCheckInput';
 
 function HubRegisterPage() {
   const dispatch = useDispatch();
@@ -61,13 +61,13 @@ function HubRegisterPage() {
   });
 
   // 비밀번호 유효성 검사 함수
-  const validatePassword = (password) => {
+  const validatePassword = password => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,16}$/;
     return passwordRegex.test(password);
   };
 
   // 비밀번호 입력 처리
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = e => {
     const newPassword = e.target.value;
     setFormData(prev => ({
       ...prev,
@@ -87,7 +87,7 @@ function HubRegisterPage() {
   };
 
   // 비밀번호 확인 입력 처리
-  const handlePasswordConfirmChange = (e) => {
+  const handlePasswordConfirmChange = e => {
     const newPasswordConfirm = e.target.value;
     setPasswordConfirm(newPasswordConfirm);
 
@@ -553,31 +553,24 @@ function HubRegisterPage() {
           )}
         </div>
 
-        <div>
-          <label htmlFor="shopName">
-            지점 이름 <span>*</span>
-          </label>
-          <div className={styled.shopNameInput}>
-            <input
-              type="text"
-              name="shopName"
-              id="shopName"
-              value={formData.shopName}
-              onChange={handleInputChange}
-            />
-            <button
-              type="button"
-              onClick={handleCheckShopName}
-              disabled={shopNameCheck.loading || !formData.shopName.trim()}
-            >
-              {shopNameCheck.loading ? '처리 중...' : '중복 확인'}
-            </button>
-          </div>
-          {shopNameCheck.isChecked && shopNameCheck.isAvailable && (
-            <p className={styled.corretshopname}>✓ 사용 가능한 지점명 입니다!</p>
-          )}
-          {shopNameCheck.error && <p className={styled.notshopname}>{shopNameCheck.error}</p>}
-        </div>
+        {/* 지점명 중복확인 인풋+버튼+상태 메시지 */}
+        <ShopNameDuplicateCheckInput
+          value={formData.shopName}
+          onChange={e => {
+            handleInputChange(e);
+            setShopNameCheck({
+              isChecked: false,
+              isAvailable: false,
+              loading: false,
+              error: null,
+            });
+          }}
+          onCheck={handleCheckShopName}
+          loading={shopNameCheck.loading}
+          isChecked={shopNameCheck.isChecked}
+          isAvailable={shopNameCheck.isAvailable}
+          error={shopNameCheck.error}
+        />
 
         <div>
           <label htmlFor="ownerName">
@@ -606,14 +599,15 @@ function HubRegisterPage() {
           />
           {passwordValidation.showValidation && (
             <div style={{ marginTop: '5px' }}>
-              <p style={{ 
-                color: passwordValidation.isValid ? 'green' : 'red', 
-                fontSize: '14px' 
-              }}>
-                {passwordValidation.isValid 
-                  ? '✓ 사용 가능한 비밀번호입니다!' 
-                  : '✗ 대소문자, 숫자, 특수문자(@$!%*?&)를 포함하여 8~16자로 입력해주세요.'
-                }
+              <p
+                style={{
+                  color: passwordValidation.isValid ? 'green' : 'red',
+                  fontSize: '14px',
+                }}
+              >
+                {passwordValidation.isValid
+                  ? '✓ 사용 가능한 비밀번호입니다!'
+                  : '✗ 대소문자, 숫자, 특수문자(@$!%*?&)를 포함하여 8~16자로 입력해주세요.'}
               </p>
             </div>
           )}
@@ -632,14 +626,15 @@ function HubRegisterPage() {
           />
           {passwordValidation.showMatchValidation && (
             <div style={{ marginTop: '5px' }}>
-              <p style={{ 
-                color: passwordValidation.isMatching ? 'green' : 'red', 
-                fontSize: '14px' 
-              }}>
-                {passwordValidation.isMatching 
-                  ? '✓ 비밀번호가 일치합니다!' 
-                  : '✗ 비밀번호가 일치하지 않습니다.'
-                }
+              <p
+                style={{
+                  color: passwordValidation.isMatching ? 'green' : 'red',
+                  fontSize: '14px',
+                }}
+              >
+                {passwordValidation.isMatching
+                  ? '✓ 비밀번호가 일치합니다!'
+                  : '✗ 비밀번호가 일치하지 않습니다.'}
               </p>
             </div>
           )}
@@ -719,12 +714,7 @@ function HubRegisterPage() {
           {/* 주소 중복 확인 버튼 및 상태 표시 추가 */}
           {formData.roadFull && (
             <div className={styled.addrinput} style={{ marginTop: '10px' }}>
-              <input
-                type="text"
-                value={formData.roadFull}
-                placeholder="선택된 주소"
-                readOnly
-              />
+              <input type="text" value={formData.roadFull} placeholder="선택된 주소" readOnly />
               <button
                 type="button"
                 onClick={handleCheckShopAddress}

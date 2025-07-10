@@ -3,9 +3,10 @@ import authReducer from './authSlice';
 import riderReducer from './riderSlice';
 import smsAuthReducer from './smsAuthSlice';
 
-import cartReducer from './cartSlice';
+import modalReducer from './modalSlice';
 
-import modalReducer from './modalSlice'; 
+import cartReducer from './cartSlice';
+ 
 
 
 const store = configureStore({
@@ -13,11 +14,8 @@ const store = configureStore({
     auth: authReducer,
     rider: riderReducer,
     smsAuth: smsAuthReducer,
-
     cart: cartReducer,
-
     modal: modalReducer, 
-
   },
 });
 
