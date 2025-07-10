@@ -26,6 +26,7 @@ import SuccessPage from '../pages/user/Pay/toss/TossSuccess';
 import UserCartPage from '../pages/user/Cart/CartPage/UserCartPage';
 import PayPage from '../pages/user/Pay/PayPage';
 import PayCompletePage from '../pages/user/Pay/paycomplete/PayCompletePage';
+import ProductPage from '../pages/user/All/Product/ProductPage';
 
 function UserRoutes() {
   return (
@@ -35,7 +36,7 @@ function UserRoutes() {
         {/* 비회원도 접근 가능한 페이지 */}
         {/* <Route path="main" element={<MainPage />} /> */}
         <Route path="" element={<MainPage />} />
-        {/* <Route path="product" element={<ProductPage />} /> */}
+        <Route path="product" element={<ProductPage />} />
         {/* <Route path="search" element={<SearchPage />} /> */}
         {/* <Route path="category" element={<CategoryPage />} /> */}
         {/* <Route path="post-list" element={<PostListPage />} /> */}
