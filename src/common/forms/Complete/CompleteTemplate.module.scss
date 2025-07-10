@@ -1,0 +1,37 @@
+.pageWrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 100px;
+}
+
+.container{
+    width: 800px;
+    align-content: center;
+    align-items: center; 
+    text-align: center;
+    padding: 70px 100px 110px 100px;
+}
+
+.icon{
+    width: 48px;
+    height: 48px;
+    stroke-width: 3;
+}
+
+.text{
+    margin-top: 30px;
+    margin-bottom: 50px;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.buttonGroup{
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import {
   signUpUser,
   clearSignUpSuccess,
@@ -9,16 +10,17 @@ import {
 } from '@/store/authSlice';
 import { clearSMSAuth } from '@/store/smsAuthSlice';
 import ProfileSection from './components/signup/ProfileSection';
-import PasswordSection from '../../../../common/forms/PasswordSection';
-import PhoneVerification from '../../../../common/forms/PhoneVerification';
-import EmailSection from '../../../../common/forms/EmailSection';
-import AddressSection from '../../../../common/forms/AddressSection';
+import PasswordSection from '../../../../common/forms/PasswordConfirm/PasswordSection';
+import PhoneVerification from '../../../../common/forms/Phone/PhoneVerification';
+import EmailSection from '../../../../common/forms/Email/EmailSection';
+import AddressSection from '../../../../common/forms/Address/AddressSection';
 import Button from '../../../../common/components/Button';
-import axios from 'axios';
 import { API_BASE_URL } from '@/services/host-config';
 import styles from './UserSignUp.module.scss';
+import { useNavigate } from 'react-router-dom';
 
 function UserSignUp() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const ref = useRef();
 
@@ -134,20 +136,26 @@ function UserSignUp() {
 
   const getTempToken = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}auth-service/auth/temp-token`);
+      const response = await axios.get(`${API_BASE_URL}/auth-service/auth/temp-token`);
+      
+      console.log(response.data.data);
+      
       if (response.data.success && response.data.status === 200) {
         return response.data.data;
       }
       throw new Error(response.data.message || '임시 토큰 발급 실패');
     } catch (error) {
+      console.log(error);
+      
       console.error('임시 토큰 발급 실패:', error);
+      
       throw error;
     }
   };
 
   const getPresignedUrl = async (fileName, tempToken) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}api-service/api/presign`, {
+      const response = await axios.get(`${API_BASE_URL}/api-service/api/presign`, {
         params: {
           fileName,
           category: 'profile',
@@ -212,9 +220,10 @@ function UserSignUp() {
           photo: uploadedUrl,
         };
       }
-
+      console.log(completeFormData);
+      
       await dispatch(signUpUser(completeFormData)).unwrap();
-      alert('회원가입 요청 완료');
+      
     } catch (err) {
       console.error('회원가입 실패:', err);
       alert(err || '회원가입에 실패했습니다.');
@@ -223,12 +232,12 @@ function UserSignUp() {
 
   useEffect(() => {
     if (signUpSuccess) {
-      alert('회원가입이 성공적으로 완료되었습니다.');
       resetForm();
       dispatch(clearSignUpSuccess());
       dispatch(clearEmailCheck());
       dispatch(clearNicknameCheck());
       dispatch(clearLoginIdCheck());
+      Navigate('/signup/complete');
     }
   }, [signUpSuccess, dispatch]);
 

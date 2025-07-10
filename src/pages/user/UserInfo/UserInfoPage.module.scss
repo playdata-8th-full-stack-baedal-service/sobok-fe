@@ -26,7 +26,7 @@
   border-bottom: 1px solid #e9ecef;
   display: flex;
   justify-content: space-between;
-  
+
   h1 {
     margin: 0;
     font-size: 24px;
@@ -73,7 +73,7 @@
   align-items: center;
   justify-content: center;
   background: #f8f9fa;
-  
+
   img {
     width: 100%;
     height: 100%;
@@ -94,7 +94,7 @@
   font-size: 14px;
   cursor: pointer;
   transition: background 0.3s ease;
-  
+
   &:hover {
     background: #555;
   }
@@ -114,7 +114,7 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  
+
   label {
     min-width: 100px;
     font-weight: 500;
@@ -131,6 +131,11 @@
   color: #333;
   display: flex;
   align-items: center;
+}
+
+.disabledText {
+  color: #6c757d;
+  font-style: italic;
 }
 
 .fieldWithButton {
@@ -153,7 +158,7 @@
   border-radius: 4px;
   font-size: 14px;
   outline: none;
-  
+
   &:focus {
     border-color: #007bff;
   }
@@ -177,7 +182,7 @@
   font-size: 14px;
   outline: none;
   width: 120px;
-  
+
   &:focus {
     border-color: #007bff;
   }
@@ -191,11 +196,11 @@
   padding: 6px 12px;
   font-size: 14px;
   cursor: pointer;
-  
+
   &:hover:not(:disabled) {
     background: #0056b3;
   }
-  
+
   &:disabled {
     background: #6c757d;
     cursor: not-allowed;
@@ -210,7 +215,7 @@
   padding: 6px 12px;
   font-size: 14px;
   cursor: pointer;
-  
+
   &:hover {
     background: #5a6268;
   }
@@ -224,7 +229,7 @@
   font-size: 12px;
   cursor: pointer;
   color: #007bff;
-  
+
   &:hover {
     background: #e9ecef;
   }
@@ -249,7 +254,7 @@
 
 .deliveryInfo {
   margin-bottom: 20px;
-  
+
   .subsectionTitle {
     font-size: 16px;
     font-weight: 500;
@@ -287,7 +292,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: background 0.3s ease;
-  
+
   &:hover {
     background: #c82333;
   }
@@ -321,7 +326,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  
+
   h2 {
     margin: 0;
     font-size: 20px;
@@ -336,7 +341,7 @@
   cursor: pointer;
   color: #6c757d;
   padding: 5px;
-  
+
   &:hover {
     color: #333;
   }
@@ -350,7 +355,7 @@
 
 .formGroup {
   margin-bottom: 20px;
-  
+
   label {
     display: block;
     margin-bottom: 8px;
@@ -361,7 +366,7 @@
 
 .inputWrapper {
   position: relative;
-  
+
   input {
     width: 100%;
     padding: 12px 40px 12px 15px;
@@ -370,11 +375,11 @@
     font-size: 14px;
     outline: none;
     transition: border-color 0.3s ease;
-    
+
     &:focus {
       border-color: #007bff;
     }
-    
+
     &::placeholder {
       color: #6c757d;
     }
@@ -391,7 +396,7 @@
   cursor: pointer;
   color: #6c757d;
   padding: 5px;
-  
+
   &:hover {
     color: #333;
   }
@@ -414,11 +419,11 @@
   font-weight: 500;
   cursor: pointer;
   transition: background 0.3s ease;
-  
+
   &:hover:not(:disabled) {
     background: #0056b3;
   }
-  
+
   &:disabled {
     background: #6c757d;
     cursor: not-allowed;
@@ -436,7 +441,7 @@
 
 .loadingContent {
   text-align: center;
-  
+
   p {
     margin-top: 20px;
     color: #666;
@@ -455,8 +460,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 // 오류 상태
@@ -477,43 +486,44 @@
 }
 
 .errorIcon {
-  color: #dc3545;}
+  color: #dc3545;
+}
 
-  .addressBox {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    width: 50vw;
-    position: relative;
-    
-    .addressText {
-      font-size: 20px;
-      font-weight: bold;
-    }
+.addressBox {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  width: 50vw;
+  position: relative;
 
-    .addressText2 {
-      font-size: 17px;
-    }
+  .addressText {
+    font-size: 20px;
+    font-weight: bold;
   }
 
-  .addrbutton {
-    width: 10vw;
-    border-radius: 10px;
-    color: rgb(0, 0, 0);
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(0, 0, 0);
-    position: absolute;
-    right: 10px;
-    top: 12px;
-
-    &:hover {
-      cursor: pointer;
-      color: rgb(255, 255, 255);
-      background-color: rgb(0, 0, 0);
-    }
+  .addressText2 {
+    font-size: 17px;
   }
+}
 
-  /* 모달 스타일 */
+.addrbutton {
+  width: 10vw;
+  border-radius: 10px;
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(0, 0, 0);
+  position: absolute;
+  right: 10px;
+  top: 12px;
+
+  &:hover {
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    background-color: rgb(0, 0, 0);
+  }
+}
+
+/* 모달 스타일 */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -564,12 +574,12 @@
 
 .addressInfo {
   margin-bottom: 16px;
-  
+
   strong {
     color: #333;
     font-size: 14px;
   }
-  
+
   br + * {
     margin-top: 8px;
     color: #555;
@@ -595,13 +605,13 @@
   border-radius: 6px;
   font-size: 14px;
   transition: border-color 0.2s;
-  
+
   &:focus {
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
   }
-  
+
   &::placeholder {
     color: #999;
   }
@@ -613,7 +623,8 @@
   justify-content: flex-end;
 }
 
-.cancelButton, .confirmButton {
+.cancelButton,
+.confirmButton {
   padding: 10px 20px;
   border: none;
   border-radius: 6px;
@@ -621,7 +632,7 @@
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s;
-  
+
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
@@ -633,7 +644,7 @@
   color: rgb(0, 0, 0);
   border: 1px solid rgb(0, 0, 0);
   cursor: pointer;
-  
+
   &:hover:not(:disabled) {
     background-color: #e9ecef;
   }
@@ -642,7 +653,7 @@
 .confirmButton {
   background-color: #007bff;
   color: white;
-  
+
   &:hover:not(:disabled) {
     background-color: #0056b3;
   }
@@ -664,7 +675,7 @@
 .addressActions {
   display: flex;
   gap: 10px;
-  padding: 5px 0px 15px ;
+  padding: 5px 0px 15px;
 }
 
 .addAddressBtn {
@@ -676,7 +687,7 @@
   width: 110px;
 
   &:hover {
-     color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
     background-color: rgb(0, 0, 0);
   }
 }
