@@ -50,6 +50,7 @@ function PhoneVerification({
             <input
               type="text"
               id="phone"
+              name="phone"
               value={phone}
               onChange={onPhoneChange}
               placeholder="전화번호를 입력하세요."

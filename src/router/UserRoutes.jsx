@@ -15,7 +15,6 @@ import MainPage from '../pages/user/All/Main/MainPage';
 // private 페이지 (USER 권한 필요)
 // import NewPostPage from '../pages/user/Post/Posting/NewPostPage';
 
-
 // import PayPage from '../pages/user/Pay/PayPage';
 import UserInfoPage from '../pages/user/UserInfo/UserInfoPage';
 import MyPostListPage from '../pages/user/UserOptions/MyPostList/MyPostListPage';
@@ -24,11 +23,9 @@ import MyOrderListPage from '../pages/user/UserOptions/MyOrderList/MyOrderListPa
 import BookmarkRecipePage from '../pages/user/UserOptions/BookmarkRecipe/BookmarkRecipePage';
 import LikePostPage from '../pages/user/UserOptions/LikePost/LikePostPage';
 import SuccessPage from '../pages/user/Pay/toss/TossSuccess';
-
 import UserCartPage from '../pages/user/Cart/CartPage/UserCartPage';
-
 import PayPage from '../pages/user/Pay/PayPage';
-
+import PayCompletePage from '../pages/user/Pay/paycomplete/PayCompletePage';
 
 function UserRoutes() {
   return (
@@ -69,6 +66,7 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
+
         <Route
           path="tossSuccess"
           element={
@@ -77,6 +75,16 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
+
+        <Route
+          path="paycomplete"
+          element={
+            <RoleRoute role="USER">
+              <PayCompletePage />
+            </RoleRoute>
+          }
+        />
+
         <Route
           path="info"
           element={
@@ -133,7 +141,6 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
-
 
         <Route path="/tossSuccess" element={<SuccessPage />} />
       </Routes>

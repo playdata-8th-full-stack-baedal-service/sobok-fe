@@ -17,8 +17,10 @@ import Button from '../../../../common/components/Button';
 import axios from 'axios';
 import { API_BASE_URL } from '@/services/host-config';
 import styles from './UserSignUp.module.scss';
+import { useNavigate } from 'react-router-dom';
 
 function UserSignUp() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const ref = useRef();
 
@@ -223,12 +225,12 @@ function UserSignUp() {
 
   useEffect(() => {
     if (signUpSuccess) {
-      alert('회원가입이 성공적으로 완료되었습니다.');
       resetForm();
       dispatch(clearSignUpSuccess());
       dispatch(clearEmailCheck());
       dispatch(clearNicknameCheck());
       dispatch(clearLoginIdCheck());
+      Navigate('/signup/complete');
     }
   }, [signUpSuccess, dispatch]);
 

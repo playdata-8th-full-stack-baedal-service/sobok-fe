@@ -132,3 +132,9 @@
   height: 400px; 
   justify-content: center;
 }
+
+.complete {
+  @extend .button_MAINPAGE;
+  min-width:250px; 
+  height: 45px; 
+}
