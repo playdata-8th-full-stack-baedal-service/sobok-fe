@@ -13,6 +13,7 @@ export default function CheckoutPage({ orderer, shipping, ready, totalPrice }) {
   });
   const [widgets, setWidgets] = useState(null);
   const buttonRef = useRef(null);
+  const [isCancel, setIsCancel] = useState(0);
 
   useEffect(() => {
     async function fetchPaymentWidgets() {
@@ -27,6 +28,10 @@ export default function CheckoutPage({ orderer, shipping, ready, totalPrice }) {
     }
 
     fetchPaymentWidgets();
+
+    return () => {
+      setWidgets(null);
+    };
   }, []);
 
   useEffect(() => {
@@ -105,6 +110,8 @@ export default function CheckoutPage({ orderer, shipping, ready, totalPrice }) {
                 `/payment-service/payment/fail-payment?orderId=${shipping.orderId}`
               );
               console.log(res);
+              setIsCancel(prev => prev + 1);
+              window.location.reload();
             }
           }}
         >
