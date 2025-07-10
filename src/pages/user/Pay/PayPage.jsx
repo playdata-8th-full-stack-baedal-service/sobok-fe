@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../../services/axios-config';
 import CheckoutPage from './toss/Checkout';
-
-const generateRandomString = () => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = 'Sobok-';
-  for (let i = 0; i < 10; i += 1) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-};
+import generateRandomString from '../../../common/utils/paymentUtils';
 
 function PayPage() {
   const [orderer, setOrderer] = useState({

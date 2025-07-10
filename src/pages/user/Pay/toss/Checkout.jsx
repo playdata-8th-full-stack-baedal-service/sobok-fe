@@ -5,16 +5,6 @@ import PropTypes from 'prop-types';
 const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
 const customerKey = 'fuvcoqV8JaQDkDPczoS_S';
 
-// 랜덤 10자리 문자열 생성 함수
-const generateRandomString = () => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = 'Sobok-';
-  for (let i = 0; i < 10; i += 1) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-};
-
 export default function CheckoutPage({ orderer, shipping, ready }) {
   const [amount] = useState({
     currency: 'KRW',
