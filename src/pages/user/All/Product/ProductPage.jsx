@@ -1,133 +1,70 @@
 /* eslint-disable react/function-component-definition */
 import React, { useEffect, useState } from 'react';
 import styles from './ProductPage.module.scss';
-import Button from '../../../../common/components/Button';
+import ProductImage from './components/ProductImage';
+import ProductInfo from './components/ProductInfo';
+import BaseIngredients from './components/BaseIngredients';
+import AdditionalIngredients from './components/AdditionalIngredients';
 
 const ProductPage = () => {
   const [thumbnailUrl, setThumbnailUrl] = useState('');
+  const [portion, setPortion] = useState(1);
+  const [baseIngredients, setBaseIngredients] = useState([
+    { id: 1, name: '대파', qty: '20g' },
+    { id: 2, name: '양파', qty: '30g' },
+    { id: 3, name: '고추', qty: '10g' },
+  ]);
+  const [additionalIngredients, setAdditionalIngredients] = useState([
+    { id: 101, name: '계란', qty: 1 },
+    { id: 102, name: '치즈', qty: 2 },
+  ]);
 
   useEffect(() => {
     setThumbnailUrl('https://picsum.photos/200/300');
   }, []);
 
-  const handleThumbnailClick = () => {
-    setThumbnailUrl('https://picsum.photos/200/300');
+  const handleRecipeClick = () => {};
+  const handlePayClick = () => {};
+  const handleCartClick = () => {};
+  const handlePortionChange = value => {
+    if (value < 1) return;
+    setPortion(value);
   };
+  const handleQtyChange = (id, value) => {
+    setAdditionalIngredients(prev =>
+      prev.map(item => (item.id === id ? { ...item, qty: value < 1 ? 1 : value } : item))
+    );
+  };
+  const handleRemove = id => {
+    setAdditionalIngredients(prev => prev.filter(item => item.id !== id));
+  };
+  const handleSearch = () => {};
 
-  const handleRecipeClick = () => {
-    setThumbnailUrl('https://picsum.photos/200/300');
-  };
-
-  const handlePayClick = () => {
-    setThumbnailUrl('https://picsum.photos/200/300');
-  };
-
-  const handleCartClick = () => {
-    setThumbnailUrl('https://picsum.photos/200/300');
-  };
-
-  const handleQtyChange = (idx, value) => {
-    setThumbnailUrl('https://picsum.photos/200/300');
-  };
-
-  const handleRemove = idx => {
-    setThumbnailUrl('https://picsum.photos/200/300');
-  };
   return (
     <div className={styles.productPage}>
       <header className={styles.productHeader}>
-        <img src={thumbnailUrl} alt="음식 이미지" className={styles.productImage} />
-
-        <div className={styles.productInfo}>
-          <div className={styles.productTop}>
-            <h2 className={styles.productName}>음식 이름</h2>
-            <p className={styles.productBasePrice}>기본 레시피 : 13,000 원</p>
-            <Button className={styles.productFavorite}>★</Button>
-          </div>
-
-          <span className={styles.productCategory}># 카테고리</span>
-
-          <p className={styles.productWarning}>
-            알레르기 유발 물질 안내
-            <br />
-            <small>돼지고기, 간장(대두), 굴소스(굴), 생면(밀)</small>
-            <br />
-          </p>
-
-          <div className={styles.productActions}>
-            <Button className={styles.recipeButton} onClick={handleRecipeClick}>
-              레시피 보기
-            </Button>
-            <p className={styles.totalPrice}>24,000 원</p>
-            <Button className={styles.payButton} onClick={handlePayClick}>
-              결제 하기
-            </Button>
-            <Button className={styles.cartButton} onClick={handleCartClick}>
-              장바구니 담기
-            </Button>
-          </div>
-        </div>
+        <ProductImage thumbnailUrl={thumbnailUrl} />
+        <ProductInfo
+          name="음식 이름"
+          basePrice={13000}
+          category="# 카테고리"
+          warning="돼지고기, 간장(대두), 굴소스(굴), 생면(밀)"
+          onRecipeClick={handleRecipeClick}
+          onPayClick={handlePayClick}
+          onCartClick={handleCartClick}
+        />
       </header>
-
-      <section className={styles.baseIngredients}>
-        <div className={styles.sectionHeader}>
-          <h3>기본 식재료</h3>
-          <div className={styles.portionControl}>
-            <Button>-</Button>
-            <span> 1 인분 </span>
-            <Button>+</Button>
-          </div>
-        </div>
-
-        <div className={styles.ingredientGrid}>
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className={styles.ingredientItem}>
-              대파 20g
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <div className={styles.additionalIngredients}>
-        <h3>추가 식재료</h3>
-
-        <div className={styles.searchBar}>
-          <Button className={styles.searchIcon}>🔍</Button>
-          <input type="text" placeholder="식재료를 입력하세요" />
-        </div>
-
-        <div className={styles.ingredientGrid}>
-          {/* {additionalIngredients.map((item, idx) => ( */}
-          {Array.from({ length: 8 }).map((item, idx) => (
-            <div className={styles.ingredientControl}>
-              <span className={styles.ingredientName}>대파</span>
-
-              <div className={styles.quantityControl}>
-                <Button className={styles.qtyButton}>-</Button>
-                <span className={styles.ingredientQty}>20g</span>
-                <Button className={styles.qtyButton}>+</Button>
-              </div>
-
-              <Button className={styles.removeButton}>×</Button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* 추천 식재료 영역 */}
-      {/* <section className="relatedProducts">
-        <div className="relatedHeader">
-          <h3>추천 식재료</h3>
-          <button type="button" className="moreButton">더보기</button>
-        </div>
-        <div className="relatedList">
-          {[1, 2, 3].map((_, i) => (
-            <div key={i} className="relatedItem">
-              썸네일
-            </div>
-          ))}
-        </div>
-      </section> */}
+      <BaseIngredients
+        ingredients={baseIngredients}
+        portion={portion}
+        onPortionChange={handlePortionChange}
+      />
+      <AdditionalIngredients
+        ingredients={additionalIngredients}
+        onQtyChange={handleQtyChange}
+        onRemove={handleRemove}
+        onSearch={handleSearch}
+      />
     </div>
   );
 };
