@@ -20,10 +20,14 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
       localStorage.setItem('RECOVERY_TARGET', recoveryTarget);
       return tokenData;
     }
-    return thunkAPI.rejectWithValue('로그인 실패');
-  } catch (e) {
+    // success: false
     return thunkAPI.rejectWithValue(
-      e.response?.data?.data?.message || '로그인 요청에 실패하였습니다.'
+      e.response?.data?.message || '로그인 실패.'
+      );
+  } catch (e) {
+    // 요청 자체 실패 (네트워크, 서버 에러 등)
+    return thunkAPI.rejectWithValue(
+      e.response?.data?.message || '로그인 요청에 실패하였습니다.'
     );
   }
 });
