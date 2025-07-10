@@ -395,7 +395,9 @@
 .buttonGroup {
   display: flex;
   gap: 15px;
-  flex .cleatbutton {
+  flex-direction: row-reverse;
+
+  .cleatbutton {
     background-color: rgb(245, 7, 7);
     width: 140px;
     height: 30px;
@@ -414,4 +416,9 @@
     border: none;
     cursor: pointer;
   }
+}
+
+.dropdownmenu {
+    padding: 10px 20px;
+    font-weight: bold;
 }

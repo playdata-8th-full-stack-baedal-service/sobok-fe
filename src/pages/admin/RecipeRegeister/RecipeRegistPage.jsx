@@ -1,12 +1,15 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import style from './RecipeRegistPage.module.scss';
 import axiosInstance from '../../../services/axios-config';
 import ImageandOverview from './units/ImageandOverview';
 import IngredientsSelection from './units/IngredientsSelection';
 import RecipeSelection from './units/RecipeSelection';
+import CategorySelectModal from './units/CategorySelectModal';
+import { closeModal } from '../../../store/modalSlice';
 
 function RecipeRegistPage() {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     name: '',
     allergy: '',
@@ -16,7 +19,9 @@ function RecipeRegistPage() {
     ingredients: [],
   });
   const [selectedFile, setSelectedFile] = useState(null);
+  const [resetSignal, setResetSignal] = useState(0);
   const modalType = useSelector(state => state.modal.modalType);
+  const modalProps = useSelector(state => state.modal.modalProps);
 
   // 모달이 닫힐 때마다 resetSignal 갱신
   useEffect(() => {
@@ -101,7 +106,7 @@ function RecipeRegistPage() {
       ingredients: [],
     });
     setSelectedFile(null);
-    // setResetSignal(Date.now()); // 선택된 식재료도 초기화 // 사용하지 않음
+    setResetSignal(Date.now()); // 선택된 식재료, 검색어 모두 초기화
   };
 
   const handleResetClick = () => {
@@ -188,6 +193,10 @@ function RecipeRegistPage() {
     }
   };
 
+  const handleCloseModal = () => {
+    dispatch(closeModal());
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <ImageandOverview
@@ -199,6 +208,7 @@ function RecipeRegistPage() {
         formData={formData}
         onChange={handleChangeInput}
         onIngredientsChange={handleIngredientsChange}
+        resetSignal={resetSignal}
       />
       <RecipeSelection formData={formData} onChange={handleChangeInput} />
       <div className={style.buttonGroup}>
@@ -209,6 +219,14 @@ function RecipeRegistPage() {
           업로드
         </button>
       </div>
+      {/* 카테고리 선택 모달 직접 렌더링 */}
+      {modalType === 'CATEGORY_SELECT' && (
+        <CategorySelectModal
+          onClose={handleCloseModal}
+          formData={modalProps?.formData || formData}
+          onChange={handleChangeInput}
+        />
+      )}
     </form>
   );
 }

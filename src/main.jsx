@@ -5,14 +5,13 @@ import App from './App';
 import store from './store/store';
 import './common/styles/style.scss';
 import { BrowserRouter } from 'react-router-dom';
-import RecipeRegistPage from './pages/admin/RecipeRegeister/RecipeRegistPage';
+
 
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <Provider store={store}>
       <App/>
-      <RecipeRegistPage/>
     </Provider>
   </BrowserRouter>
 );

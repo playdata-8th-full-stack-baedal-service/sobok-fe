@@ -65,7 +65,6 @@ function ImageandOverview({ formData, onFileSelect, onChange }) {
       openModal({
         type: 'CATEGORY_SELECT',
         props: {
-          onChange,
           formData,
         },
       })
