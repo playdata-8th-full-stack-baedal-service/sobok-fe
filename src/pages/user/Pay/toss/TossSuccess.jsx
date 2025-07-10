@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import axiosInstance from '../../../../services/axios-config';
+import styles from './TossSuccess.module.scss';
 
 export default function SuccessPage() {
   const navigate = useNavigate();
@@ -26,7 +27,16 @@ export default function SuccessPage() {
       console.log(response);
       if (!response.data.success) {
         // 결제 실패 비즈니스 로직을 구현하세요.
+        try {
+          await axiosInstance.delete(
+            `/payment-service/payment/delete-payment?orderId=${searchParams.get('orderId')}`
+          );
+        } catch (err) {
+          console.log(err);
+        }
+
         alert('결제 실패! 다시 시도해주세요');
+        navigate('/user/cart');
       } else {
         // 결제 성공
         navigate(`/`);
@@ -36,8 +46,11 @@ export default function SuccessPage() {
   }, [navigate, searchParams]);
 
   return (
-    <div className="result wrapper">
-      <CircularProgress />
+    <div className={styles.loadingWrapper}>
+      <div className={styles.loadingBox}>
+        <CircularProgress />
+        <p className={styles.loadingText}>결제를 처리 중입니다...</p>
+      </div>
     </div>
   );
 }

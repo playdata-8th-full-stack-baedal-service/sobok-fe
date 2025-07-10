@@ -16,6 +16,7 @@ import PWChangedModal from '../../pages/auth/FindPW/PWChangedModal';
 // 모달들은 모두 추가해두어야함
 
 import { closeModal } from '../../store/modalSlice';
+import PayAddressChange from '../../pages/user/Pay/component/PayAddressChange';
 import CategorySelectModal from '../../pages/admin/RecipeRegeister/units/CategorySelectModal';
 import IngredientRegisterModal from '../../pages/admin/RecipeRegeister/units/ingredientRegisterModal';
 
@@ -50,6 +51,9 @@ function ModalController() {
     //   return <FindPWModal onClose={handleClose} />;
     case 'FIND_PW':
       return <FindPWModal onClose={handleClose} />;
+    case 'PAY_ADDRESS_CHANGE':
+      return <PayAddressChange onClose={handleClose} />;
+
     // case 'NEW_PW':
     //   return <NewPWModal onClose={handleClose} />;
     case 'PW_CHANGED':

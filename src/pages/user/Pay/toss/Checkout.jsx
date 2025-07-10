@@ -1,27 +1,19 @@
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import axiosInstance from '../../../../services/axios-config';
 
 const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
 const customerKey = 'fuvcoqV8JaQDkDPczoS_S';
 
-// 랜덤 10자리 문자열 생성 함수
-const generateRandomString = () => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = 'Sobok-';
-  for (let i = 0; i < 10; i += 1) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-};
-
-export default function CheckoutPage({ orderer, shipping, ready }) {
+export default function CheckoutPage({ orderer, shipping, ready, totalPrice }) {
   const [amount] = useState({
     currency: 'KRW',
-    value: shipping.totalPrice,
+    value: totalPrice,
   });
   const [widgets, setWidgets] = useState(null);
   const buttonRef = useRef(null);
+  const [isCancel, setIsCancel] = useState(0);
 
   useEffect(() => {
     async function fetchPaymentWidgets() {
@@ -36,6 +28,10 @@ export default function CheckoutPage({ orderer, shipping, ready }) {
     }
 
     fetchPaymentWidgets();
+
+    return () => {
+      setWidgets(null);
+    };
   }, []);
 
   useEffect(() => {
@@ -68,8 +64,11 @@ export default function CheckoutPage({ orderer, shipping, ready }) {
       return;
     }
 
-    widgets.setAmount(amount);
-  }, [widgets, amount]);
+    widgets.setAmount({
+      currency: 'KRW',
+      value: totalPrice,
+    });
+  }, [widgets, amount, totalPrice]);
 
   useEffect(() => {
     if (ready) {
@@ -106,7 +105,13 @@ export default function CheckoutPage({ orderer, shipping, ready }) {
               });
             } catch (error) {
               // 에러 처리하기
-              console.error(error);
+              alert('결제에 실패했습니다. 다시 시도해주세요.');
+              const res = await axiosInstance.delete(
+                `/payment-service/payment/fail-payment?orderId=${shipping.orderId}`
+              );
+              console.log(res);
+              setIsCancel(prev => prev + 1);
+              window.location.reload();
             }
           }}
         >
@@ -138,4 +143,5 @@ CheckoutPage.propTypes = {
     cartCookIdList: PropTypes.arrayOf(PropTypes.number),
   }).isRequired,
   ready: PropTypes.bool.isRequired,
+  totalPrice: PropTypes.number.isRequired,
 };

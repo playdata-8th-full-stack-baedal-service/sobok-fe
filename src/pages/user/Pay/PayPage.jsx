@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import axiosInstance from '../../../services/axios-config';
 import CheckoutPage from './toss/Checkout';
-
-const generateRandomString = () => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = 'Sobok-';
-  for (let i = 0; i < 10; i += 1) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-};
+import generateRandomString from '../../../common/utils/paymentUtils';
+import { openModal } from '../../../store/modalSlice';
+import { setAddresses, setSelectedAddress } from '../../../store/cartSlice';
+import styles from './PayPage.module.scss';
 
 function PayPage() {
+  const navigate = useNavigate();
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const dispatch = useDispatch();
+  const { selectedAddress } = useSelector(state => state.cart);
   const [orderer, setOrderer] = useState({
     userId: 0,
     nickname: '',
@@ -29,9 +31,9 @@ function PayPage() {
   const [shipping, setShipping] = useState({
     orderId: generateRandomString(),
     riderRequest: '',
-    totalPrice: 1,
-    userAddress: 0,
-    cartCookIdList: [],
+    totalPrice,
+    userAddressIdx: 0,
+    cartCookIdList: selectedItems,
   });
 
   const [ready, isReady] = useState(false);
@@ -49,34 +51,44 @@ function PayPage() {
           nickname: response.data.data.nickname,
           phone: response.data.data.phone,
           addresses: response.data.data.addresses,
+          email: response.data.data.email || 'example@example.com',
         }));
 
         setShipping(prev => ({
           ...prev,
-          userAddress: response.data.data.addresses[0].id,
+          totalPrice: response.data.data.totalPrice,
+          cartCookIdList: response.data.data.selectedItems,
         }));
+
+        dispatch(setAddresses(response.data.data.addresses));
+        dispatch(setSelectedAddress(response.data.data.addresses[0].id));
+
+        console.log(response.data.data.totalPrice);
+        setTotalPrice(response.data.data.totalPrice);
+        setSelectedItems(response.data.data.selectedItems);
       } catch (err) {
         console.log(err.response.data);
+        alert('주문자 정보를 불러오는 과정에서 오류가 발생하였습니다. 잠시 후 다시 시도해주세요.');
+        navigate('/user/cart');
       }
     };
 
     fetchOrdererInfo();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (!ready) return;
 
     const requestData = async () => {
       try {
-        alert(shipping.userAddress);
         const response = await axiosInstance.post(
           '/payment-service/payment/register',
           {
             orderId: shipping.orderId,
-            totalPrice: shipping.totalPrice,
+            totalPrice,
             riderRequest: shipping.riderRequest,
-            userAddressId: shipping.userAddress,
-            cartCookIdList: shipping.cartCookIdList,
+            userAddressId: selectedAddress,
+            cartCookIdList: selectedItems,
           },
           {
             headers: {
@@ -90,18 +102,17 @@ function PayPage() {
         letsgopay(true);
       } catch (err) {
         console.log(err.response.data);
+        alert('결제에 실패했습니다. 다시 시도해주세요.');
+        const res = await axiosInstance.delete(
+          `/payment-service/payment/fail-payment?orderId=${shipping.orderId}`
+        );
+        console.log(res);
+        navigate('/user/cart');
       }
     };
 
     requestData();
-  }, [
-    ready,
-    shipping.cartCookIdList,
-    shipping.orderId,
-    shipping.riderRequest,
-    shipping.totalPrice,
-    shipping.userAddress,
-  ]);
+  }, [ready]);
 
   const handlePayment = () => {
     isReady(true);
@@ -110,27 +121,38 @@ function PayPage() {
   const handleAddressChange = () => {
     // 주소를 바꿀 수 있는 모달 창 떠야함
     // shipping.userAddress 변경
-    console.log('address change');
+    dispatch(openModal('PAY_ADDRESS_CHANGE'));
   };
 
   return (
-    <div className="payment-page">
+    <div className={styles.paymentPage}>
       <h2>결제하기</h2>
 
       {/* 주문자 정보 */}
-      <section className="orderer-info box">
+      <section className={styles.ordererInfo}>
         <h3>주문자 정보</h3>
-        <div>
-          <input type="text" value={orderer.nickname} readOnly />
-          <input type="text" value={orderer.phone} readOnly />
+        <div className={styles.ordererFields}>
+          <div className={styles.fieldGroup}>
+            <label htmlFor="orderer">주문자</label>
+            <input id="orderer" type="text" value={orderer.nickname} readOnly />
+          </div>
+          <div className={styles.fieldGroup}>
+            <label htmlFor="phone">전화번호</label>
+            <input id="phone" type="text" value={orderer.phone} readOnly />
+          </div>
         </div>
       </section>
 
       {/* 배송 정보 */}
-      <section className="shipping-info box">
+      <section className={styles.shippingInfo}>
         <h3>배송 정보</h3>
         <div>
-          <textarea value={orderer.addresses[0].roadFull || ''} readOnly />
+          <textarea
+            value={
+              orderer.addresses.find(address => address.id === selectedAddress)?.roadFull || ''
+            }
+            readOnly
+          />
           <button type="button" onClick={handleAddressChange}>
             변경
           </button>
@@ -144,12 +166,11 @@ function PayPage() {
       </section>
 
       {/* 결제 수단 */}
-      <section className="payment-method box">
-        <h3>결제 수단</h3>
-        <CheckoutPage orderer={orderer} shipping={shipping} ready={goPay} />
+      <section className={styles.paymentMethod}>
+        <CheckoutPage orderer={orderer} shipping={shipping} ready={goPay} totalPrice={totalPrice} />
       </section>
       {/* 결제 버튼 */}
-      <footer className="payment-footer">
+      <footer className={styles.paymentFooter}>
         <span>총 금액 {shipping.totalPrice.toLocaleString()} 원</span>
         <button type="button" onClick={handlePayment}>
           결제 하기

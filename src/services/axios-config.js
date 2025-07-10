@@ -27,11 +27,6 @@ axiosInstance.interceptors.request.use(
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
-    console.log('[axiosInstance] 요청:', {
-      url: config.url,
-      headers: config.headers,
-    });
-
     return config;
   },
   error => Promise.reject(error)
@@ -40,13 +35,15 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   response => response,
   async error => {
-    const errorStatus = error?.response?.status;
+    const errorStatus = error?.response?.data?.status;
     const originalRequest = error.config;
     const refreshToken = localStorage.getItem('REFRESH_TOKEN');
+    const userId = localStorage.getItem('USER_ID');
 
     if (errorStatus === 666) {
       try {
-        const res = await axios.post(`${API_BASE_URL}auth-service/auth/reissue`, {
+        const res = await axios.post(`${API_BASE_URL}/auth-service/auth/reissue`, {
+          id: userId,
           refreshToken,
         });
         const newAccessToken = res.data.data;
@@ -58,7 +55,7 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } catch (err) {
         localStorage.clear();
-        window.location.href = '/login';
+        window.location.href = '/auth/signin';
         return Promise.reject(err);
       }
     }

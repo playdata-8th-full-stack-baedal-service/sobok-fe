@@ -1,12 +1,13 @@
 /**
  * 카트 아이템의 총 가격을 계산합니다.
  * @param {Object} item - 카트 아이템 객체
- * @param {Array} item.ingredients - 재료 배열
+ * @param {Array} item.baseIngredients - 재료 배열
  * @param {number} item.quantity - 수량
  * @returns {number} 총 가격
  */
 export const calculateItemTotal = item => {
-  const ingredientsTotal = item.ingredients.reduce(
+  const ingreList = [...item.baseIngredients, ...item.additionalIngredients];
+  const ingredientsTotal = ingreList.reduce(
     (sum, ing) => sum + ing.unitQuantity * ing.price * ing.unit,
     0
   );

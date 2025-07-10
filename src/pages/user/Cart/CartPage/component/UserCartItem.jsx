@@ -15,7 +15,7 @@ import styles from './UserCartItem.module.scss';
 function UserCartItem({ item }) {
   const dispatch = useDispatch();
 
-  const { selectedItems } = useSelector(state => state.cart);
+  const { selectedItems, totalPrice } = useSelector(state => state.cart);
 
   // 카트 아이템 선택
   const handleSelectItem = () => {
@@ -24,21 +24,25 @@ function UserCartItem({ item }) {
 
   // 카트 아이템 삭제
   const handleDeleteItem = () => {
-    dispatch(deleteCartItem(item.id));
     dispatch(deleteItem(item.id));
+    dispatch(deleteCartItem({ id: item.id, totalPrice, selectedItems }));
   };
 
   // 카트 아이템 수량 증가
   const handleIncreaseQuantity = () => {
-    dispatch(editCartItemCount({ id: item.id, count: item.quantity + 1 }));
     dispatch(increaseQuantity(item.id));
+    dispatch(
+      editCartItemCount({ id: item.id, count: item.quantity + 1, totalPrice, selectedItems })
+    );
   };
 
   // 카트 아이템 수량 감소
   const handleDecreaseQuantity = () => {
     if (item.quantity > 1) {
-      dispatch(editCartItemCount({ id: item.id, count: item.quantity - 1 }));
       dispatch(decreaseQuantity(item.id));
+      dispatch(
+        editCartItemCount({ id: item.id, count: item.quantity - 1, totalPrice, selectedItems })
+      );
     }
   };
 
@@ -62,18 +66,30 @@ function UserCartItem({ item }) {
 
       <div className={styles.content}>
         <h3 className={styles.cookName}>{item.cookName}</h3>
-        <ul className={styles.ingredientList}>
-          {item.ingredients.map(ingre => {
-            const totalWeight = ingre.unitQuantity * ingre.unit;
-            const ingredientTotal = totalWeight * ingre.price;
 
-            return (
-              <li key={ingre.ingredientId}>
-                {ingre.ingreName} - {totalWeight}g / ₩{ingredientTotal.toLocaleString()}
-              </li>
-            );
-          })}
-        </ul>
+        {/* 기본 재료 */}
+        <p className={styles.ingredientSummary}>
+          <strong>기본 재료:</strong>{' '}
+          {item.baseIngredients
+            .map(ingre => {
+              const totalWeight = ingre.unitQuantity * ingre.unit;
+              return `${ingre.ingreName} ${totalWeight}g`;
+            })
+            .join(', ')}
+        </p>
+
+        {/* 추가 재료 */}
+        <p className={styles.ingredientSummary}>
+          <strong>추가 재료:</strong>{' '}
+          {item.additionalIngredients.length === 0
+            ? '없음'
+            : item.additionalIngredients
+                .map(ingre => {
+                  const totalWeight = ingre.unitQuantity * ingre.unit;
+                  return `${ingre.ingreName} ${totalWeight}g`;
+                })
+                .join(', ')}
+        </p>
       </div>
 
       <button type="button" onClick={handleDeleteItem} className={styles.deleteButton}>
@@ -102,7 +118,17 @@ UserCartItem.propTypes = {
     cookName: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
     quantity: PropTypes.number.isRequired,
-    ingredients: PropTypes.arrayOf(
+    baseIngredients: PropTypes.arrayOf(
+      PropTypes.shape({
+        ingredientId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        ingreName: PropTypes.string.isRequired,
+        unitQuantity: PropTypes.number.isRequired,
+        unit: PropTypes.string.isRequired,
+        price: PropTypes.number.isRequired,
+        origin: PropTypes.string,
+      })
+    ).isRequired,
+    additionalIngredients: PropTypes.arrayOf(
       PropTypes.shape({
         ingredientId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
         ingreName: PropTypes.string.isRequired,

@@ -26,12 +26,15 @@ export const fetchCartItem = createAsyncThunk('user/cart', async (_, thunkAPI) =
 // 카트 아이템 수량 수정
 export const editCartItemCount = createAsyncThunk(
   'payment/edit-cart-item-count',
-  async ({ id, count }, thunkAPI) => {
+  async ({ id, count, totalPrice, selectedItems }, thunkAPI) => {
     try {
       console.info('카트 정보 수정 시작');
       const response = await axiosInstance.patch(
         '/payment-service/payment/cart-count-edit',
-        {},
+        {
+          totalPrice,
+          selectedItems,
+        },
         {
           params: {
             id,
@@ -51,18 +54,44 @@ export const editCartItemCount = createAsyncThunk(
 );
 
 // 카트 아이템 삭제
-export const deleteCartItem = createAsyncThunk('payment/delete-cart-item', async (id, thunkAPI) => {
-  try {
-    console.info('카트 정보 삭제 시작');
-    const response = await axiosInstance.delete(`/payment-service/payment/delete-cart/${id}`);
-    console.info('카트 정보 삭제 성공', response.data.data.message);
-    return response.data.data;
-  } catch (err) {
-    const message = err.response?.data?.data?.message || '회원의 카트 정보 삭제에 실패하였습니다.';
-    console.error(message);
-    return thunkAPI.rejectWithValue(message);
+export const deleteCartItem = createAsyncThunk(
+  'payment/delete-cart-item',
+  async ({ id, totalPrice, selectedItems }, thunkAPI) => {
+    try {
+      console.info('카트 정보 삭제 시작');
+      const response = await axiosInstance.delete(`/payment-service/payment/delete-cart/${id}`, {
+        totalPrice,
+        selectedItems,
+      });
+      console.info('카트 정보 삭제 성공', response.data.data.message);
+      return response.data.data;
+    } catch (err) {
+      const message =
+        err.response?.data?.data?.message || '회원의 카트 정보 삭제에 실패하였습니다.';
+      console.error(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
+
+export const startPayment = createAsyncThunk(
+  'payment/start-payment',
+  async ({ selectedItems, totalPrice }, thunkAPI) => {
+    try {
+      console.info('결제 시작');
+      const response = await axiosInstance.post('/payment-service/payment/start-pay', {
+        selectedItems,
+        totalPrice,
+      });
+      console.info('결제 시작 성공', response.data.data.message);
+      return response.data.data;
+    } catch (err) {
+      const message = err.response?.data?.data?.message || '결제 시작에 실패하였습니다.';
+      console.error(message);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 const cartSlice = createSlice({
   name: 'cart',
@@ -70,6 +99,8 @@ const cartSlice = createSlice({
     cartItems: [],
     selectedItems: [],
     totalPrice: 0,
+    addresses: [],
+    selectedAddress: null,
     loading: false,
     error: null,
   },
@@ -103,6 +134,12 @@ const cartSlice = createSlice({
         return sum + (item ? calculateItemTotal(item) : 0);
       }, 0);
     },
+    setAddresses: (state, action) => {
+      state.addresses = action.payload;
+    },
+    setSelectedAddress: (state, action) => {
+      state.selectedAddress = action.payload;
+    },
   },
   extraReducers: builder => {
     builder
@@ -123,7 +160,14 @@ const cartSlice = createSlice({
   },
 });
 
-export const { toggleSelectItem, increaseQuantity, decreaseQuantity, deleteItem, calculateTotal } =
-  cartSlice.actions;
+export const {
+  toggleSelectItem,
+  increaseQuantity,
+  decreaseQuantity,
+  deleteItem,
+  calculateTotal,
+  setAddresses,
+  setSelectedAddress,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;
