@@ -59,7 +59,6 @@
   transition: all 0.3s;
   border-radius: 50px;
   background-color: rgb(224, 224, 224);
-  color: rgb(0, 0, 0);
   border: 1px solid black;
   align-items: center;
   align-content: center;
@@ -103,4 +102,39 @@
   width: 100%;
   align-items: center;
   margin-top: 10px;
+}
+
+.button_MAINPAGE {
+  cursor: pointer;
+  font-size: $d-button-text;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: $letter-spacing;
+  color: black;
+  transition: all 0.3s;
+  background-color: rgb(208, 208, 208);
+  border: none;
+  border-radius: 50px;
+  align-items: center;
+  align-content: center;
+}
+
+.adminMain {
+  @extend .button_MAINPAGE;
+  min-width: 300px; 
+  height: 180px; 
+  justify-content: center;
+}
+
+.riderMain {
+  @extend .button_MAINPAGE;
+  min-width:250px; 
+  height: 400px; 
+  justify-content: center;
+}
+
+.complete {
+  @extend .button_MAINPAGE;
+  min-width:250px; 
+  height: 45px; 
 }

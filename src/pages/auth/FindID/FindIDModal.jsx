@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { resetSMSAuth } from '../../../store/smsAuthSlice';
 import { openModal } from '../../../store/modalSlice';
 import ModalWrapper from '../../../common/modals/ModalWrapper';
-import PhoneVerification from '../../../common/forms/PhoneVerification';
+import PhoneVerification from '../../../common/forms/Phone/PhoneVerification';
 import styles from './FindIDModal.module.scss';
 import Button from '../../../common/components/Button';
 import axios from 'axios';

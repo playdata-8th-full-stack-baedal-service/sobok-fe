@@ -1,0 +1,33 @@
+.container{
+width: 100%;
+padding: 30px 50px 30px 50px;
+}
+
+.header {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  position: relative;
+  margin-top: 20px;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.buttonGroup{
+  display: flex;
+  margin-top: 50px;
+  gap: 30px;
+  flex-direction: column;
+}
+
+.firstLine{
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.secondLine{
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}

@@ -10,15 +10,17 @@ import {
 } from '@/store/authSlice';
 import { clearSMSAuth } from '@/store/smsAuthSlice';
 import ProfileSection from './components/signup/ProfileSection';
-import PasswordSection from '../../../../common/forms/PasswordSection';
-import PhoneVerification from '../../../../common/forms/PhoneVerification';
-import EmailSection from '../../../../common/forms/EmailSection';
-import AddressSection from '../../../../common/forms/AddressSection';
+import PasswordSection from '../../../../common/forms/PasswordConfirm/PasswordSection';
+import PhoneVerification from '../../../../common/forms/Phone/PhoneVerification';
+import EmailSection from '../../../../common/forms/Email/EmailSection';
+import AddressSection from '../../../../common/forms/Address/AddressSection';
 import Button from '../../../../common/components/Button';
 import { API_BASE_URL } from '@/services/host-config';
 import styles from './UserSignUp.module.scss';
+import { useNavigate } from 'react-router-dom';
 
 function UserSignUp() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const ref = useRef();
 
@@ -230,12 +232,12 @@ function UserSignUp() {
 
   useEffect(() => {
     if (signUpSuccess) {
-      alert('회원가입이 성공적으로 완료되었습니다.');
       resetForm();
       dispatch(clearSignUpSuccess());
       dispatch(clearEmailCheck());
       dispatch(clearNicknameCheck());
       dispatch(clearLoginIdCheck());
+      Navigate('/signup/complete');
     }
   }, [signUpSuccess, dispatch]);
 

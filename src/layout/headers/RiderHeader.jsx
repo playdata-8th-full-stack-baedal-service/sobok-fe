@@ -7,13 +7,13 @@ import axios from '../../services/axios-config';
 
 // 테스트용
 /*
-    localStorage.setItem('accessToken', 'temp-access-token');
-    localStorage.setItem('refreshToken', 'temp-refresh-token');
-    localStorage.setItem('userRole', 'RIDER');
-    localStorage.setItem('userId', 'rider1');
+    localStorage.setItem('ACCESS_TOKEN', 'temp-access-token');
+    localStorage.setItem('REFRESH_TOKEN', 'temp-refresh-token');
+    localStorage.setItem('USER_ROLE', 'RIDER');
+    localStorage.setItem('USER_ID', 'rider1');
 
-     window.history.pushState({}, '', '/rider');
-     window.dispatchEvent(new PopStateEvent('popstate'));
+    window.history.pushState({}, '', '/rider');
+    window.dispatchEvent(new PopStateEvent('popstate'));
 */
 
 const RiderHeader = () => {
