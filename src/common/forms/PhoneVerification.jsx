@@ -47,6 +47,7 @@ function PhoneVerification({
             id="phone"
             type="text"
             value={phone}
+            name='phone'
             onChange={onPhoneChange}
             placeholder="01012345678"
             className={smsError ? 'input-error' : ''}
