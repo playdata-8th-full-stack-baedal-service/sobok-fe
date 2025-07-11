@@ -21,14 +21,10 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
       return tokenData;
     }
     // success: false
-    return thunkAPI.rejectWithValue(
-      e.response?.data?.message || '로그인 실패.'
-      );
+    return thunkAPI.rejectWithValue(e.response?.data?.message || '로그인 실패.');
   } catch (e) {
     // 요청 자체 실패 (네트워크, 서버 에러 등)
-    return thunkAPI.rejectWithValue(
-      e.response?.data?.message || '로그인 요청에 실패하였습니다.'
-    );
+    return thunkAPI.rejectWithValue(e.response?.data?.message || '로그인 요청에 실패하였습니다.');
   }
 });
 
@@ -62,7 +58,7 @@ export const deleteUser = createAsyncThunk('auth/deleteUser', async ({ password 
 // 이메일 중복 확인
 export const checkEmail = createAsyncThunk('auth/checkEmail', async (email, thunkAPI) => {
   try {
-    const res = await axiosInstance.get('/auth-service/auth/check-email', { params: { email } });
+    const res = await axiosInstance.get('/user-service/user/check-email', { params: { email } });
     if (res.data.status === 200 || res.data.message === '사용 가능한 이메일입니다.')
       return res.data.message;
     return thunkAPI.rejectWithValue('이메일 중복확인 실패');
@@ -76,7 +72,7 @@ export const checkEmail = createAsyncThunk('auth/checkEmail', async (email, thun
 // 닉네임 중복 확인
 export const checkNickName = createAsyncThunk('auth/checkNickName', async (nickname, thunkAPI) => {
   try {
-    const res = await axiosInstance.get('/auth-service/auth/check-nickname', {
+    const res = await axiosInstance.get('/user-service/user/check-nickname', {
       params: { nickname },
     });
     if (res.data.status === 200 || res.data.message === '사용 가능한 닉네임입니다.')

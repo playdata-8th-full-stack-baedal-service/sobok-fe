@@ -221,7 +221,7 @@ function HubRegisterPage() {
 
     try {
       // axiosInstance를 사용하여 CORS 설정 적용
-      const response = await axiosInstance.get('/auth-service/auth/check-shopName', {
+      const response = await axiosInstance.get('/shop-service/shop/check-shopName', {
         params: {
           shopName: formData.shopName,
         },
@@ -288,7 +288,7 @@ function HubRegisterPage() {
     }));
 
     try {
-      const response = await axiosInstance.get('/auth-service/auth/check-shopAddress', {
+      const response = await axiosInstance.get('/shop-service/shop/check-shopAddress', {
         params: {
           shopAddress: formData.roadFull,
         },
