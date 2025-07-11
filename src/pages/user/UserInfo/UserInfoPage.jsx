@@ -398,6 +398,10 @@ function UserInfoPage() {
     );
   }, []);
 
+  const handleAddressDelete = useCallback(addressId => {
+    setAddresses(prevAddresses => prevAddresses.filter(addr => addr.id !== addressId));
+  }, []);
+
   const handleAddressesChange = useCallback(async () => {
     try {
       const response = await axiosInstance.get('/user-service/user/getAddress');
@@ -609,6 +613,7 @@ function UserInfoPage() {
             <AddrList
               addresses={addresses}
               onAddressUpdate={handleAddressUpdate}
+              onAddressDelete={handleAddressDelete}
               onAddressesChange={handleAddressesChange}
             />
 

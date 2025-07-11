@@ -4,10 +4,8 @@ import { openModal, closeModal } from '@/store/modalSlice';
 import axiosInstance from '@/services/axios-config';
 import styles from '../UserInfoPage.module.scss';
 
-function AddrList({ addresses, onAddressUpdate, onAddressesChange }) {
+function AddrList({ addresses, onAddressUpdate, onAddressesChange, onAddressDelete }) {
   const dispatch = useDispatch();
-  const [selectedAddress, setSelectedAddress] = useState(null);
-  const [targetAddressId, setTargetAddressId] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
@@ -52,8 +50,6 @@ function AddrList({ addresses, onAddressUpdate, onAddressesChange }) {
           bname: data.bname,
           query: data.query,
         };
-        setSelectedAddress(fullAddress);
-        setTargetAddressId(addressId);
         dispatch(
           openModal({
             type: 'ADDR_CONFIRM',
@@ -144,6 +140,7 @@ function AddrList({ addresses, onAddressUpdate, onAddressesChange }) {
       return;
     }
 
+    setIsUpdating(true);
     try {
       const response = await axiosInstance.delete(`/user-service/user/deleteAddress/${id}`);
 
@@ -153,9 +150,9 @@ function AddrList({ addresses, onAddressUpdate, onAddressesChange }) {
         console.log('주소 삭제 성공');
         alert('주소가 성공적으로 삭제되었습니다.');
 
-        // 주소 목록 새로고침
-        if (onAddressesChange) {
-          await onAddressesChange();
+        // 즉시 로컬 상태 업데이트
+        if (onAddressDelete) {
+          onAddressDelete(id);
         }
       } else {
         console.log('삭제 실패:', response.data.message);
@@ -165,6 +162,8 @@ function AddrList({ addresses, onAddressUpdate, onAddressesChange }) {
       console.log('삭제 실패:', err);
       const errorMessage = err.response?.data?.message || '주소 삭제 중 오류가 발생했습니다.';
       alert(errorMessage);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -172,7 +171,11 @@ function AddrList({ addresses, onAddressUpdate, onAddressesChange }) {
     <div className={styles.addressSection}>
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>배송지 관리</h2>
-        <button className={styles.addAddressBtn} onClick={() => openAddressSearch(null)}>
+        <button
+          type="button"
+          className={styles.addAddressBtn}
+          onClick={() => openAddressSearch(null)}
+        >
           주소 추가
         </button>
       </div>
@@ -193,10 +196,15 @@ function AddrList({ addresses, onAddressUpdate, onAddressesChange }) {
                 </div>
               </div>
               <div className={styles.addressActions}>
-                <button className={styles.editBtn} onClick={() => openAddressSearch(address.id)}>
+                <button
+                  type="button"
+                  className={styles.editBtn}
+                  onClick={() => openAddressSearch(address.id)}
+                >
                   수정
                 </button>
                 <button
+                  type="button"
                   className={styles.deleteBtn}
                   onClick={() => handleDeleteAddr(address.id)}
                   disabled={isUpdating}
