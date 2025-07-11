@@ -2,12 +2,11 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice';
 import riderReducer from './riderSlice';
 import smsAuthReducer from './smsAuthSlice';
+import categoryReducer from './categorySlice';
 
 import modalReducer from './modalSlice';
 
 import cartReducer from './cartSlice';
- 
-
 
 const store = configureStore({
   reducer: {
@@ -15,7 +14,8 @@ const store = configureStore({
     rider: riderReducer,
     smsAuth: smsAuthReducer,
     cart: cartReducer,
-    modal: modalReducer, 
+    modal: modalReducer,
+    category: categoryReducer,
   },
 });
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import style from '../RecipeRegistPage.module.scss';
 import SearchInput from './SearchInput';
-import axiosInstance from '../../../../services/axios-config';
+import { API_BASE_URL } from '../../../../services/host-config';
 
-function IngredientsSelection({ formData, onChange, onIngredientsChange }) {
+function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSignal }) {
   const [ingredients, setIngredients] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
@@ -11,9 +12,9 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange }) {
   const allIngredients = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get('/ingredient/all-search');
+      const response = await axios.get(`${API_BASE_URL}/cook-service/ingredient/all-search`);
       console.log(response.data);
-      if (response.data.success && Array.isArray(response.data.data)) {
+      if (response.data.success) {
         setIngredients(response.data.data);
       }
     } catch (error) {
@@ -27,12 +28,16 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange }) {
     allIngredients();
   }, []);
 
+  useEffect(() => {
+    setSelectedIngredients([]);
+  }, [resetSignal]);
+
   // 선택된 식재료가 변경될 때마다 부모 컴포넌트에 알림
   useEffect(() => {
     if (onIngredientsChange) {
       const formattedIngredients = selectedIngredients.map(ingredient => ({
         ingredientId: ingredient.id,
-        unitQuantity: parseInt(ingredient.unit) || 0,
+        unitQuantity: parseInt(ingredient.unit, 10) || 0,
       }));
       onIngredientsChange(formattedIngredients);
     }
@@ -45,12 +50,11 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange }) {
   };
 
   const handleIngredientSelect = ingredient => {
-    // 이미 선택된 식재료인지 확인
     const existingIngredient = selectedIngredients.find(item => item.id === ingredient.id);
     if (existingIngredient) {
       // 이미 선택된 경우 기존 수량에 해당 식재료의 unit 값만큼 추가
-      const currentUnit = parseInt(existingIngredient.unit) || 0;
-      const ingredientUnit = parseInt(ingredient.unit) || 10;
+      const currentUnit = parseInt(existingIngredient.unit, 10) || 0;
+      const ingredientUnit = parseInt(ingredient.unit, 10) || 10;
       setSelectedIngredients(prev =>
         prev.map(item =>
           item.id === ingredient.id
@@ -59,7 +63,6 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange }) {
         )
       );
     } else {
-      // 새로 선택하는 경우 기본값으로 추가
       setSelectedIngredients(prev => [...prev, { ...ingredient, unit: ingredient.unit || '10' }]);
     }
   };
@@ -76,6 +79,7 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange }) {
           placeholder="검색어를 입력하세요."
           onIngredientAdded={allIngredients}
           onIngredientSelect={handleIngredientSelect}
+          resetSignal={resetSignal}
         />
       </div>
 
@@ -98,6 +102,7 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange }) {
                       value={ingredient.unit}
                       onChange={e => handleQuantityChange(ingredient.id, e.target.value)}
                       className={style.quantityInput}
+                      step={parseInt(ingredient.unit, 10) || 1}
                     />
                     <span className={style.unitLabel}>g</span>
                   </div>
