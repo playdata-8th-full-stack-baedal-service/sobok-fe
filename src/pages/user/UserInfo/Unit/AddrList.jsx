@@ -138,22 +138,33 @@ function AddrList({ addresses, onAddressUpdate, onAddressesChange }) {
   };
 
   // 주소 삭제
-  const handleDeleteAddress = async addressId => {
+  const handleDeleteAddr = async id => {
+    // 삭제 확인
     if (!window.confirm('정말로 이 주소를 삭제하시겠습니까?')) {
       return;
     }
+
     try {
-      const response = await axiosInstance.delete(`/user-service/user/deleteAddress/${addressId}`);
-      if (response.data.success && response.data.status === 200) {
+      const response = await axiosInstance.delete(`/user-service/user/deleteAddress/${id}`);
+
+      console.log('삭제 응답:', response.data);
+
+      if (response.data.success) {
+        console.log('주소 삭제 성공');
         alert('주소가 성공적으로 삭제되었습니다.');
+
+        // 주소 목록 새로고침
         if (onAddressesChange) {
           await onAddressesChange();
         }
       } else {
+        console.log('삭제 실패:', response.data.message);
         alert(response.data.message || '주소 삭제에 실패했습니다.');
       }
-    } catch (error) {
-      alert('주소 삭제 중 오류가 발생했습니다.');
+    } catch (err) {
+      console.log('삭제 실패:', err);
+      const errorMessage = err.response?.data?.message || '주소 삭제 중 오류가 발생했습니다.';
+      alert(errorMessage);
     }
   };
 
@@ -187,7 +198,8 @@ function AddrList({ addresses, onAddressUpdate, onAddressesChange }) {
                 </button>
                 <button
                   className={styles.deleteBtn}
-                  onClick={() => handleDeleteAddress(address.id)}
+                  onClick={() => handleDeleteAddr(address.id)}
+                  disabled={isUpdating}
                 >
                   삭제
                 </button>
@@ -197,9 +209,6 @@ function AddrList({ addresses, onAddressUpdate, onAddressesChange }) {
         ) : (
           <div className={styles.noAddress}>
             <p>등록된 주소가 없습니다.</p>
-            <button className={styles.addFirstAddressBtn} onClick={() => openAddressSearch(null)}>
-              주소 추가하기
-            </button>
           </div>
         )}
       </div>
