@@ -15,6 +15,7 @@ import {
   PhoneVerification,
 } from './components';
 import DuplicateCheckInput from '@/common/components/DuplicateCheckInput';
+import ModalController from '@/common/modals/ModalController';
 
 function UserInfoPage() {
   const navigate = useNavigate();
@@ -523,101 +524,104 @@ function UserInfoPage() {
 
   // 메인 컴포넌트 렌더링
   return (
-    <div className={styles.userProfilePage}>
-      <div className={styles.container}>
-        <div className={styles.profileCard}>
-          <div className={styles.cardHeader}>
-            <h1>회원정보 조회</h1>
-            <button type="button" onClick={handlePasswordChangeClick}>
-              비밀번호 변경
-            </button>
-          </div>
+    <>
+      <div className={styles.userProfilePage}>
+        <div className={styles.container}>
+          <div className={styles.profileCard}>
+            <div className={styles.cardHeader}>
+              <h1>회원정보 조회</h1>
+              <button type="button" onClick={handlePasswordChangeClick}>
+                비밀번호 변경
+              </button>
+            </div>
 
-          <div className={styles.cardBody}>
-            <div className={styles.personalInfoSection}>
-              <h2 className={styles.sectionTitle}>개인 정보</h2>
-              <div className={styles.infoLayout}>
-                <ProfileImage
-                  profileImage={localUserInfo.profileImage}
-                  onChangePhoto={handleChangePhoto}
-                />
+            <div className={styles.cardBody}>
+              <div className={styles.personalInfoSection}>
+                <h2 className={styles.sectionTitle}>개인 정보</h2>
+                <div className={styles.infoLayout}>
+                  <ProfileImage
+                    profileImage={localUserInfo.profileImage}
+                    onChangePhoto={handleChangePhoto}
+                  />
 
-                <div className={styles.profileForm}>
-                  <div className={styles.formGrid}>
-                    <EditableField label="닉네임" value={localUserInfo.nickname} disabled />
+                  <div className={styles.profileForm}>
+                    <div className={styles.formGrid}>
+                      <EditableField label="닉네임" value={localUserInfo.nickname} disabled />
 
-                    <EditableField
-                      label="아이디"
-                      value={localUserInfo.loginId || localUserInfo.id}
-                      disabled
-                    />
-
-                    <EditableField
-                      label="전화번호"
-                      value={localUserInfo.phone}
-                      isEditing={editState.isEditingPhone}
-                      onEdit={handleEditPhoneClick}
-                      onCancel={() =>
-                        updateEditState({
-                          isEditingPhone: false,
-                          showVerificationInput: false,
-                          verificationCode: '',
-                        })
-                      }
-                      error={errorState.phoneError || smsError}
-                      hideActions
-                    >
-                      <PhoneVerification
-                        editPhone={editState.editPhone}
-                        onPhoneChange={e => updateEditState({ editPhone: e.target.value })}
-                        showVerificationInput={editState.showVerificationInput}
-                        verificationCode={editState.verificationCode}
-                        onVerificationCodeChange={e =>
-                          updateEditState({ verificationCode: e.target.value })
-                        }
-                        onSendVerificationCode={handleSendVerificationCode}
-                        onVerifyCode={handleVerifyCode}
-                        smsLoading={smsLoading}
-                        phoneLoading={loadingState.phoneLoading}
+                      <EditableField
+                        label="아이디"
+                        value={localUserInfo.loginId || localUserInfo.id}
+                        disabled
                       />
-                    </EditableField>
 
-                    <DuplicateCheckInput
-                      label="이메일"
-                      value={editState.editEmail}
-                      onChange={e => updateEditState({ editEmail: e.target.value })}
-                      onCheck={handleEmailChange}
-                      loading={loadingState.emailLoading}
-                      success={
-                        errorState.emailError === '' && editState.editEmail
-                          ? '사용 가능한 이메일입니다.'
-                          : ''
-                      }
-                      error={errorState.emailError}
-                      placeholder="이메일을 입력하세요"
-                      buttonLabel="중복확인"
-                      inputId="email"
-                    />
+                      <EditableField
+                        label="전화번호"
+                        value={localUserInfo.phone}
+                        isEditing={editState.isEditingPhone}
+                        onEdit={handleEditPhoneClick}
+                        onCancel={() =>
+                          updateEditState({
+                            isEditingPhone: false,
+                            showVerificationInput: false,
+                            verificationCode: '',
+                          })
+                        }
+                        error={errorState.phoneError || smsError}
+                        hideActions
+                      >
+                        <PhoneVerification
+                          editPhone={editState.editPhone}
+                          onPhoneChange={e => updateEditState({ editPhone: e.target.value })}
+                          showVerificationInput={editState.showVerificationInput}
+                          verificationCode={editState.verificationCode}
+                          onVerificationCodeChange={e =>
+                            updateEditState({ verificationCode: e.target.value })
+                          }
+                          onSendVerificationCode={handleSendVerificationCode}
+                          onVerifyCode={handleVerifyCode}
+                          smsLoading={smsLoading}
+                          phoneLoading={loadingState.phoneLoading}
+                        />
+                      </EditableField>
+
+                      <DuplicateCheckInput
+                        label="이메일"
+                        value={editState.editEmail}
+                        onChange={e => updateEditState({ editEmail: e.target.value })}
+                        onCheck={handleEmailChange}
+                        loading={loadingState.emailLoading}
+                        success={
+                          errorState.emailError === '' && editState.editEmail
+                            ? '사용 가능한 이메일입니다.'
+                            : ''
+                        }
+                        error={errorState.emailError}
+                        placeholder="이메일을 입력하세요"
+                        buttonLabel="중복확인"
+                        inputId="email"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <AddrList
-            addresses={addresses}
-            onAddressUpdate={handleAddressUpdate}
-            onAddressesChange={handleAddressesChange}
-          />
+            <AddrList
+              addresses={addresses}
+              onAddressUpdate={handleAddressUpdate}
+              onAddressesChange={handleAddressesChange}
+            />
 
-          <div className={styles.actionButtons}>
-            <button type="button" className={styles.updateBtn} onClick={handleWithdrawalClick}>
-              회원 탈퇴
-            </button>
+            <div className={styles.actionButtons}>
+              <button type="button" className={styles.updateBtn} onClick={handleWithdrawalClick}>
+                회원 탈퇴
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <ModalController />
+    </>
   );
 }
 
