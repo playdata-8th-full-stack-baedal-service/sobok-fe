@@ -6,8 +6,7 @@ import smsAuthReducer from './smsAuthSlice';
 import modalReducer from './modalSlice';
 
 import cartReducer from './cartSlice';
- 
-
+import productReducer from './productSlice';
 
 const store = configureStore({
   reducer: {
@@ -16,6 +15,7 @@ const store = configureStore({
     smsAuth: smsAuthReducer,
     cart: cartReducer,
     modal: modalReducer, 
+    product: productReducer,
   },
 });
 

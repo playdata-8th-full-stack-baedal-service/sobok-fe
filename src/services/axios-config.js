@@ -35,7 +35,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   response => response,
   async error => {
-    const errorStatus = error?.response?.data?.status;
+    const errorStatus = error?.response?.status;
     const originalRequest = error.config;
     const refreshToken = localStorage.getItem('REFRESH_TOKEN');
     const userId = localStorage.getItem('USER_ID');

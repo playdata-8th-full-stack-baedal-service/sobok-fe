@@ -19,6 +19,7 @@ import { closeModal } from '../../store/modalSlice';
 import PayAddressChange from '../../pages/user/Pay/component/PayAddressChange';
 import CategorySelectModal from '../../pages/admin/RecipeRegeister/units/CategorySelectModal';
 import IngredientRegisterModal from '../../pages/admin/RecipeRegeister/units/ingredientRegisterModal';
+import RecipeModal from '../../pages/user/All/Product/modals/RecipeModal';
 
 function ModalController() {
   const { modalType, modalProps } = useSelector(state => state.modal);
@@ -58,6 +59,8 @@ function ModalController() {
     //   return <NewPWModal onClose={handleClose} />;
     case 'PW_CHANGED':
       return <PWChangedModal onClose={handleClose} />;
+    case 'RECIPE':
+      return <RecipeModal onClose={handleClose} recipe={modalProps.recipe} />;
     default:
       return null;
   }

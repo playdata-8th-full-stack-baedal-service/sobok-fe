@@ -1,70 +1,70 @@
 /* eslint-disable react/function-component-definition */
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useSearchParams } from 'react-router-dom';
 import styles from './ProductPage.module.scss';
 import ProductImage from './components/ProductImage';
 import ProductInfo from './components/ProductInfo';
 import BaseIngredients from './components/BaseIngredients';
 import AdditionalIngredients from './components/AdditionalIngredients';
+import {
+  fetchProduct,
+  isBookmarked,
+  setOriginalPrice,
+  setPortion,
+  setTotalPrice,
+} from '../../../../store/productSlice';
 
 const ProductPage = () => {
-  const [thumbnailUrl, setThumbnailUrl] = useState('');
-  const [portion, setPortion] = useState(1);
-  const [baseIngredients, setBaseIngredients] = useState([
-    { id: 1, name: '대파', qty: '20g' },
-    { id: 2, name: '양파', qty: '30g' },
-    { id: 3, name: '고추', qty: '10g' },
-  ]);
-  const [additionalIngredients, setAdditionalIngredients] = useState([
-    { id: 101, name: '계란', qty: 1 },
-    { id: 102, name: '치즈', qty: 2 },
-  ]);
+  const dispatch = useDispatch();
+
+  const { product, loading, error, additionalIngredients, portion, totalPrice, originalPrice } =
+    useSelector(state => state.product);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // 1. 처음 로딩 시 product 불러오기 + 기본값 세팅
+  useEffect(() => {
+    if (!searchParams.get('id')) return;
+
+    dispatch(fetchProduct(searchParams.get('id')));
+    dispatch(setPortion(1));
+  }, [dispatch, searchParams]);
+
+  // 2. product가 세팅된 이후 가격 계산
+  useEffect(() => {
+    if (!product || !product.ingredientList) return;
+
+    const original = product.ingredientList.reduce(
+      (acc, ingredient) => acc + ingredient.unitQuantity * ingredient.unit * ingredient.price,
+      0
+    );
+    dispatch(setOriginalPrice(original));
+
+    const total =
+      original * portion +
+      additionalIngredients.reduce(
+        (acc, ingredient) => acc + ingredient.quantity * ingredient.price * portion,
+        0
+      );
+    dispatch(setTotalPrice(total));
+  }, [dispatch, product, portion, additionalIngredients]);
 
   useEffect(() => {
-    setThumbnailUrl('https://picsum.photos/200/300');
-  }, []);
-
-  const handleRecipeClick = () => {};
-  const handlePayClick = () => {};
-  const handleCartClick = () => {};
-  const handlePortionChange = value => {
-    if (value < 1) return;
-    setPortion(value);
-  };
-  const handleQtyChange = (id, value) => {
-    setAdditionalIngredients(prev =>
-      prev.map(item => (item.id === id ? { ...item, qty: value < 1 ? 1 : value } : item))
-    );
-  };
-  const handleRemove = id => {
-    setAdditionalIngredients(prev => prev.filter(item => item.id !== id));
-  };
-  const handleSearch = () => {};
+    const fetchBookmark = async () => {
+      await dispatch(isBookmarked(searchParams.get('id')));
+    };
+    fetchBookmark();
+  }, [dispatch, searchParams]);
 
   return (
     <div className={styles.productPage}>
       <header className={styles.productHeader}>
-        <ProductImage thumbnailUrl={thumbnailUrl} />
-        <ProductInfo
-          name="음식 이름"
-          basePrice={13000}
-          category="# 카테고리"
-          warning="돼지고기, 간장(대두), 굴소스(굴), 생면(밀)"
-          onRecipeClick={handleRecipeClick}
-          onPayClick={handlePayClick}
-          onCartClick={handleCartClick}
-        />
+        <ProductImage />
+        <ProductInfo />
       </header>
-      <BaseIngredients
-        ingredients={baseIngredients}
-        portion={portion}
-        onPortionChange={handlePortionChange}
-      />
-      <AdditionalIngredients
-        ingredients={additionalIngredients}
-        onQtyChange={handleQtyChange}
-        onRemove={handleRemove}
-        onSearch={handleSearch}
-      />
+      <BaseIngredients />
+      <AdditionalIngredients />
     </div>
   );
 };

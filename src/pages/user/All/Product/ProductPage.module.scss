@@ -1,5 +1,5 @@
 .productPage {
-  max-width: 800px;
+  max-width: 80vw;
   margin: 0 auto;
   padding: 2rem;
   font-family: sans-serif;
@@ -36,30 +36,45 @@
     font-weight: bold;
   }
 
-  .productBasePrice {
-    font-size: 0.95rem;
-    color: #777;
-  }
+  .productPriceContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 18%;
+    margin-bottom: 1rem;
 
-  .productFavorite {
-    font-size: 1.5rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
+    .productBasePrice {
+      font-size: 0.95rem;
+      color: #777;
+    }
 
-  .productFavorite:hover {
-    color: #42bb05;
+    .productFavorite {
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .productFavorite:hover {
+      color: #42bb05;
+    }
   }
 }
 
 .productCategory {
-  background-color: #eee;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  margin-bottom: 0.8rem;
   display: inline-block;
+  padding: 4px 10px;
+  margin-bottom: 1rem;
+  background-color: #f1f3f5;
+  color: #2f343f;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  border: 1px solid #e0e0e0;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  max-width: 100px;
+  text-align: center;
 }
 
 .productWarning {
@@ -113,6 +128,13 @@
 .baseIngredients,
 .additionalIngredients {
   margin-bottom: 2rem;
+
+  h3 {
+    strong {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+  }
 }
 
 .sectionHeader {
@@ -140,6 +162,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.6rem;
+  margin-top: 3rem;
 }
 
 .ingredientItem {
@@ -181,6 +204,12 @@
     padding: 0.6rem;
     border-radius: 6px;
     border: 1px solid #ccc;
+
+    &:focus {
+      border: 1px solid #00b894;
+      outline: none;
+      box-shadow: none;
+    }
   }
 
   .searchButton {
@@ -239,7 +268,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0rem;
 
     input {
       padding: 0.5rem 1rem;
@@ -269,10 +298,12 @@
     justify-content: space-between;
     background-color: #f8f8f8;
     padding: 0.6rem 0.6rem;
-    border-radius: 8px;
+    border-radius: 25px;
     font-size: 0.95rem;
     gap: 1rem;
     width: 100%;
+    white-space: nowrap;
+    text-align: center;
   }
 
   .ingredientName {
@@ -286,6 +317,7 @@
     gap: 0.3rem;
     flex: 1;
     justify-content: center;
+    
   }
 
   .qtyButton {
@@ -309,5 +341,67 @@
     color: #d32f2f;
     cursor: pointer;
     flex-shrink: 0;
+  }
+
+  .totalQty {
+    font-size: 0.9rem;
+    color: #777;
+  }
+
+  .searchItemSelected {
+    display: block;
+    padding: 8px 12px;
+    background-color: #a4a4a4;
+    color: #333;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+  }
+
+  .searchResultContainer {
+    padding: 8px;
+    background-color: #fff;
+    border: none;
+  }
+
+  .searchResult {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .searchItem {
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid #2e2e2e;
+    background-color: transparent;
+    color: #2e2e2e;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+
+    &:hover {
+      background-color: #2e2e2e;
+      color: white;
+    }
+  }
+
+  .searchItemSelected {
+    @extend .searchItem;
+    background-color: #d54e4e;
+    color: white;
+    border: none;
+
+    &:hover {
+      background-color: #d54e4e;
+    }
   }
 }
