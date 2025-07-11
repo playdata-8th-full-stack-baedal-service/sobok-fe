@@ -19,7 +19,7 @@ export const checkPermission = createAsyncThunk(
   'rider/checkPermission',
   async (permission, thunkAPI) => {
     try {
-      const response = await axiosInstance.get('/auth-service/auth/check-permission', {
+      const response = await axiosInstance.get('/delivery-service/delivery/check-permission', {
         params: {
           permission,
         },
