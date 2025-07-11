@@ -156,10 +156,6 @@ function UserInfoPage() {
         return { error: '비밀번호를 입력해주세요.' };
       }
 
-      if (!window.confirm('정말로 탈퇴하시겠습니까?\n탈퇴 후에는 계정을 복구할 수 없습니다.')) {
-        return { cancelled: true };
-      }
-
       updateLoadingState({ withdrawalLoading: true });
 
       try {
@@ -168,7 +164,6 @@ function UserInfoPage() {
         });
 
         if (response.data.success && response.data.status === 200) {
-          alert('회원탈퇴가 완료되었습니다.');
           navigate('/');
           return { success: true };
         }
