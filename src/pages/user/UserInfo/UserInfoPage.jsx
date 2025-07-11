@@ -136,7 +136,6 @@ function UserInfoPage() {
         });
 
         if (response.data.success && response.data.status === 200) {
-          alert('비밀번호가 성공적으로 변경되었습니다.');
           return { success: true };
         }
         return { error: response.data.message || '비밀번호 변경에 실패했습니다.' };
