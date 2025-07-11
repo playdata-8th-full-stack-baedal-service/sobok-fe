@@ -1,11 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import style from './HubListPage.module.scss';
+import axiosInstance from '../../../services/axios-config';
 
 function HubListPage() {
-  return (
-    <div>
-      <h2>가게 리스트 페이지 입니다.</h2>
-    </div>
-  );
+  // const [hubData, setHubData] = useState(null);
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(null);
+
+  // useEffect(() => {
+  //   const response = await axiosInstance.get('shop')
+  // })
+
+
+  // return (
+  //   <div>
+  //     <div></div>
+  //     <div></div>
+  //     <div></div>
+  //     <div></div>
+  //     <div></div>
+  //   </div>
+  // );
 }
 
 export default HubListPage;
