@@ -203,6 +203,7 @@ function RecipeRegistPage() {
         formData={formData}
         onChange={handleChangeInput}
         onFileSelect={handleFileSelect}
+        resetSignal={resetSignal}
       />
       <IngredientsSelection
         formData={formData}
