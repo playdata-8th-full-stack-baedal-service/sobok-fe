@@ -495,7 +495,7 @@ function HubRegisterPage() {
     setSubmitLoading(true);
 
     try {
-      const response = await axiosInstance.post('/auth-service/auth/shop', {
+      const response = await axiosInstance.post('/auth-service/auth/shop-signup', {
         loginId: formData.loginId,
         password: formData.password,
         shopName: formData.shopName,
@@ -503,6 +503,8 @@ function HubRegisterPage() {
         phone: formData.phone,
         roadFull: formData.roadFull,
       });
+      console.log(response.data);
+      
 
       if (response.data.success) {
         alert(
