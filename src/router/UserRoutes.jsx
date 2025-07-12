@@ -27,6 +27,7 @@ import UserCartPage from '../pages/user/Cart/CartPage/UserCartPage';
 import PayPage from '../pages/user/Pay/PayPage';
 import PayCompletePage from '../pages/user/Pay/paycomplete/PayCompletePage';
 import ProductPage from '../pages/user/All/Product/ProductPage';
+import CategoryPage from '../pages/user/All/Category/CategoryPage';
 
 function UserRoutes() {
   return (
@@ -38,7 +39,7 @@ function UserRoutes() {
         <Route path="" element={<MainPage />} />
         <Route path="product" element={<ProductPage />} />
         {/* <Route path="search" element={<SearchPage />} /> */}
-        {/* <Route path="category" element={<CategoryPage />} /> */}
+        <Route path="category" element={<CategoryPage />} />
         {/* <Route path="post-list" element={<PostListPage />} /> */}
         {/* <Route path="post/:id" element={<PostDetailPage />} /> */}
 
