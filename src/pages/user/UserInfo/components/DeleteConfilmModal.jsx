@@ -1,0 +1,68 @@
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import ModalWrapper from '../../../../common/modals/ModalWrapper';
+import { deleteUser } from '../../../../store/authSlice';
+import styles from './DeleteConfilmModal.module.scss';
+
+function DeleteConfilmModal({ onClose, password }) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState('');
+  const withdrawalLoading = useSelector(state => state.auth.loading);
+
+  const handleWithdrawal = async () => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const resultAction = await dispatch(deleteUser({ password }));
+      if (deleteUser.fulfilled.match(resultAction)) {
+        onClose();
+        navigate('/');
+      } else {
+        setError(resultAction.payload || '회원탈퇴에 실패했습니다.');
+      }
+    } catch (err) {
+      setError('회원탈퇴 중 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <ModalWrapper title="회원탈퇴 최종 확인" onClose={onClose} size="lg">
+      <div>
+        <p className={styles.description}>정말로 탈퇴하시겠습니까?</p>
+        <p className={styles.warning}>탈퇴 후에는 계정을 복구할 수 없습니다.</p>
+        <div className={styles.buttonGroup}>
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={isLoading || withdrawalLoading}
+            className={`${styles.button} ${styles.cancel}`}
+          >
+            돌아가기
+          </button>
+          <button
+            type="button"
+            onClick={handleWithdrawal}
+            disabled={isLoading || withdrawalLoading}
+            className={styles.button}
+          >
+            {isLoading || withdrawalLoading ? '탈퇴 중...' : '탈퇴하기'}
+          </button>
+        </div>
+        {error && <p className={styles.error}>{error}</p>}
+      </div>
+    </ModalWrapper>
+  );
+}
+
+DeleteConfilmModal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  password: PropTypes.string.isRequired,
+};
+
+export default DeleteConfilmModal;

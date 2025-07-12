@@ -9,6 +9,7 @@ import HubListPage from '../pages/admin/HubList/HubListPage';
 import RiderListPage from '../pages/admin/RiderList/RiderListPage';
 
 import AdminHeader from '../layout/headers/AdminHeader';
+import RecipeRegistPage from '../pages/admin/RecipeRegeister/RecipeRegistPage';
 
 function AdminRoutes() {
   return (
@@ -18,7 +19,7 @@ function AdminRoutes() {
         <Route path="/" element={<MainPage />} />
         <Route path="all-order" element={<AllOrderPage />} />
         <Route path="hub-register" element={<HubRegisterPage />} />
-        <Route path="ingredient" element={<IngrediantPage />} />
+        <Route path="ingredient" element={<RecipeRegistPage />} />
         <Route path="hub-list" element={<HubListPage />} />
         <Route path="rider-list" element={<RiderListPage />} />
       </Routes>
