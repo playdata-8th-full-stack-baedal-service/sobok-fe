@@ -8,7 +8,6 @@ const RecipeModal = ({ onClose, recipe }) => {
   return (
     <ModalWrapper title="레시피" onClose={onClose}>
       <div>
-        <h3>레시피</h3>
         <p>{recipe}</p>
       </div>
     </ModalWrapper>

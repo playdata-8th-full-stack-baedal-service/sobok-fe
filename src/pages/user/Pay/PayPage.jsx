@@ -38,6 +38,13 @@ function PayPage() {
 
   const [ready, isReady] = useState(false);
   const [goPay, letsgopay] = useState(false);
+  const [onRender, setOnRender] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setOnRender(true);
+    }, 1000);
+  }, [ready]);
 
   useEffect(() => {
     const fetchOrdererInfo = async () => {
@@ -60,6 +67,11 @@ function PayPage() {
           cartCookIdList: response.data.data.selectedItems,
         }));
 
+        if (response.data.data.addresses === null || response.data.data.addresses.length < 1) {
+          alert('주소를 등록해주세요.');
+          navigate('/user');
+          return;
+        }
         dispatch(setAddresses(response.data.data.addresses));
         dispatch(setSelectedAddress(response.data.data.addresses[0].id));
 
@@ -74,7 +86,7 @@ function PayPage() {
     };
 
     fetchOrdererInfo();
-  }, [navigate]);
+  }, [navigate, dispatch]);
 
   useEffect(() => {
     if (!ready) return;
@@ -170,12 +182,14 @@ function PayPage() {
         <CheckoutPage orderer={orderer} shipping={shipping} ready={goPay} totalPrice={totalPrice} />
       </section>
       {/* 결제 버튼 */}
-      <footer className={styles.paymentFooter}>
-        <span>총 금액 {shipping.totalPrice.toLocaleString()} 원</span>
-        <button type="button" onClick={handlePayment}>
-          결제 하기
-        </button>
-      </footer>
+      {onRender && (
+        <footer className={styles.paymentFooter}>
+          <span>총 금액 {shipping.totalPrice.toLocaleString()} 원</span>
+          <button type="button" onClick={handlePayment}>
+            결제 하기
+          </button>
+        </footer>
+      )}
     </div>
   );
 }
