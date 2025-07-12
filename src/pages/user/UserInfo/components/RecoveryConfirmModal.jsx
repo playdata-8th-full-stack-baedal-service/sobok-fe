@@ -2,31 +2,25 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ModalWrapper from '../../../../common/modals/ModalWrapper';
 import styles from './DeleteConfilmModal.module.scss';
+import axiosInstance from '../../../../services/axios-config';
 
 function RecoveryConfirmModal({ onClose, id }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleRecover = async () => {
+  const handleRecover = async id => {
     setIsLoading(true);
     setError('');
     try {
-      const response = await fetch(`/auth-service/auth/recover/${id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json();
-      if (data.success) {
-        alert('계정이 정상적으로 복구되었습니다.');
-        onClose();
-        // 필요시 navigate('/') 등 리다이렉트 추가
-      } else {
-        setError(data.message || '복구에 실패했습니다.');
+      const response = await axiosInstance.post(`/auth-service/auth/recover/${id}`);
+      console.log(response.data);
+      if (response.data.success) {
+        return response.data.message;
       }
-    } catch (err) {
-      setError('복구 요청 중 오류가 발생했습니다.');
+      setError('복구 중 오류가 발생했다면 이게 뜹니다.');
+    } catch (error) {
+      console.error(error.response.data.message);
+      setError('복구 관련 에러가 발생했다면 이게 뜹니다');
     } finally {
       setIsLoading(false);
     }
@@ -61,10 +55,5 @@ function RecoveryConfirmModal({ onClose, id }) {
     </ModalWrapper>
   );
 }
-
-RecoveryConfirmModal.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  id: PropTypes.string.isRequired,
-};
 
 export default RecoveryConfirmModal;
