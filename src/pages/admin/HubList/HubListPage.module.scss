@@ -1,0 +1,28 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    padding: 30px 60px;
+    text-align: center;
+    width: 100vw;
+    margin-top: 60px;
+
+    .titleandbutton {
+        margin-bottom: 100px;
+    }
+}
+
+.card {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 25px;
+    align-items: center;
+    outline: 1px solid black;
+    height: 40px;
+    border-radius: 20px;
+}
+
+.hunsection {
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+}
