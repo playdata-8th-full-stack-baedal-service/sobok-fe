@@ -60,8 +60,10 @@ export const deleteCartItem = createAsyncThunk(
     try {
       console.info('카트 정보 삭제 시작');
       const response = await axiosInstance.delete(`/payment-service/payment/delete-cart/${id}`, {
-        totalPrice,
-        selectedItems,
+        data: {
+          totalPrice,
+          selectedItems,
+        },
       });
       console.info('카트 정보 삭제 성공', response.data.data.message);
       return response.data.data;
@@ -69,6 +71,7 @@ export const deleteCartItem = createAsyncThunk(
       const message =
         err.response?.data?.data?.message || '회원의 카트 정보 삭제에 실패하였습니다.';
       console.error(message);
+      console.log(id, totalPrice, selectedItems);
       return thunkAPI.rejectWithValue(message);
     }
   }

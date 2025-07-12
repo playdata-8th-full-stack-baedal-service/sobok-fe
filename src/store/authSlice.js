@@ -21,14 +21,10 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
       return tokenData;
     }
     // success: false
-    return thunkAPI.rejectWithValue(
-      e.response?.data?.message || '로그인 실패.'
-      );
+    return thunkAPI.rejectWithValue(e.response?.data?.message || '로그인 실패.');
   } catch (e) {
     // 요청 자체 실패 (네트워크, 서버 에러 등)
-    return thunkAPI.rejectWithValue(
-      e.response?.data?.message || '로그인 요청에 실패하였습니다.'
-    );
+    return thunkAPI.rejectWithValue(e.response?.data?.message || '로그인 요청에 실패하였습니다.');
   }
 });
 
