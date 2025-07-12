@@ -7,6 +7,8 @@ import categoryReducer from './categorySlice';
 import modalReducer from './modalSlice';
 
 import cartReducer from './cartSlice';
+import productReducer from './productSlice';
+
 
 const store = configureStore({
   reducer: {
@@ -14,7 +16,8 @@ const store = configureStore({
     rider: riderReducer,
     smsAuth: smsAuthReducer,
     cart: cartReducer,
-    modal: modalReducer,
+    modal: modalReducer, 
+    product: productReducer,
     category: categoryReducer,
   },
 });
