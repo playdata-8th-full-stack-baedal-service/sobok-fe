@@ -68,7 +68,7 @@ const AdditionalIngredients = () => {
       {isFocused && (
         <div className={styles.searchResultContainer}>
           <ul className={styles.searchResult}>
-            {searchQuery?.length > 0 ? (
+            {searchQuery?.length > 0 &&
               searchQuery.map((item, idx) => (
                 <button
                   key={item.id || idx}
@@ -87,12 +87,7 @@ const AdditionalIngredients = () => {
                 >
                   {item.ingreName}
                 </button>
-              ))
-            ) : (
-              <li>
-                <p>검색 결과가 없습니다.</p>
-              </li>
-            )}
+              ))}
           </ul>
         </div>
       )}

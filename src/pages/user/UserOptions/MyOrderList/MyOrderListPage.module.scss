@@ -1,0 +1,20 @@
+.myOrderPage {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .loadMoreButton {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    padding: 1rem 0;
+  }
+}

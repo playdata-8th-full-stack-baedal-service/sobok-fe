@@ -35,13 +35,14 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   response => response,
   async error => {
-    const errorStatus = error?.response?.status;
+    const errorStatus = error?.response?.data?.status;
     const originalRequest = error.config;
     const refreshToken = localStorage.getItem('REFRESH_TOKEN');
     const userId = localStorage.getItem('USER_ID');
 
     if (errorStatus === 666) {
       try {
+        console.log('토큰 재발급 시작');
         const res = await axios.post(`${API_BASE_URL}/auth-service/auth/reissue`, {
           id: userId,
           refreshToken,

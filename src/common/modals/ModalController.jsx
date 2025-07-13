@@ -21,6 +21,7 @@ import CategorySelectModal from '../../pages/admin/RecipeRegeister/units/Categor
 import IngredientRegisterModal from '../../pages/admin/RecipeRegeister/units/ingredientRegisterModal';
 import DeleteConfilmModal from '../../pages/user/UserInfo/components/DeleteConfilmModal';
 import RecipeModal from '../../pages/user/All/Product/modals/RecipeModal';
+import MyOrderDetailPage from '../../pages/user/UserOptions/MyOrderDetail/MyOrderDetailPage';
 
 function ModalController() {
   const { modalType, modalProps } = useSelector(state => state.modal);
@@ -64,6 +65,8 @@ function ModalController() {
       return <DeleteConfilmModal onClose={handleClose} />;
     case 'RECIPE':
       return <RecipeModal onClose={handleClose} recipe={modalProps.recipe} />;
+    case 'ORDER_DETAIL':
+      return <MyOrderDetailPage onClose={handleClose} order={modalProps.order} />;
     default:
       return null;
   }
