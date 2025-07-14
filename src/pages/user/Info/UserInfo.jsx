@@ -1,6 +1,7 @@
 /* eslint-disable no-alert */
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Divider } from '@mui/material';
 import { editEmail, editPhone, lookupUser, sendAuthCode } from '../../../store/userInfoSlice';
 import UserInfoHeader from './component/UserInfoHeader';
 import ProfileImage from './component/ProfileImage';
@@ -116,8 +117,9 @@ function UserInfo() {
         </div>
       </div>
 
+      <Divider />
       <div className={styles.addrSection}>
-        <AddrList />
+        <AddrList addresses={userInfo.addresses} />
       </div>
 
       <Button className={styles.withdrawalButton} type="button" onClick={handleWithdrawalClick}>

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { openModal, closeModal } from '@/store/modalSlice';
 import axiosInstance from '@/services/axios-config';
+import styles from '../UserInfo.module.scss';
+import Button from '../../../../common/components/Button';
 
 function AddrList({ addresses, onAddressUpdate, onAddressesChange, onAddressDelete }) {
   const dispatch = useDispatch();
@@ -167,38 +169,38 @@ function AddrList({ addresses, onAddressUpdate, onAddressesChange, onAddressDele
   };
 
   return (
-    <div>
+    <div className={styles.addrList}>
       <div>
         <h2>배송지 관리</h2>
-        <button type="button" onClick={() => openAddressSearch(null)}>
+        <Button type="button" onClick={() => openAddressSearch(null)}>
           주소 추가
-        </button>
+        </Button>
       </div>
       <div>
         {addresses && addresses.length > 0 ? (
           addresses.map(address => (
-            <div key={address.id}>
-              <div>
-                <div>
+            <div key={address.id} className={styles.addressItem}>
+              <div className={styles.info}>
+                <div className={styles.title}>
                   {address.title || '배송지'}
                   {address.isDefault && <span>기본</span>}
                 </div>
-                <div>
+                <div className={styles.address}>
                   <p>{address.roadFull}</p>
                   {address.addrDetail && <p>{address.addrDetail}</p>}
                 </div>
               </div>
-              <div>
-                <button type="button" onClick={() => openAddressSearch(address.id)}>
+              <div className={styles.actions}>
+                <Button type="button" onClick={() => openAddressSearch(address.id)}>
                   수정
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
                   onClick={() => handleDeleteAddr(address.id)}
                   disabled={isUpdating}
                 >
                   삭제
-                </button>
+                </Button>
               </div>
             </div>
           ))
