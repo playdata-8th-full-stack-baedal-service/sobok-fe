@@ -3,11 +3,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './CookCard.module.scss';
 
-const CookCard = ({ item }) => {
+const CookCard = ({ item, onClick }) => {
   return (
-    <div className={styles.cookItem}>
-      <img src={item.thumbnail} alt={item.name} />
-      <div className={styles.cookName}>{item.name}</div>
+    <div className={styles.cookItem} onClick={onClick}>
+      <img src={item.thumbnail} alt={item.name || item.cookName} />
+      <div className={styles.cookName}>{item.name || item.cookName}</div>
     </div>
   );
 };
@@ -17,6 +17,7 @@ CookCard.propTypes = {
     thumbnail: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default CookCard;

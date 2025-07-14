@@ -1,7 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import OrderCard from './component/OrderCard';
+import axiosInstance from '../../../../services/axios-config';
+import Button from '../../../../common/components/Button';
+import styles from './MyOrderListPage.module.scss';
 
 function MyOrderListPage() {
-  return <header>내 주문 페이지입니다.</header>;
+  const [orders, setOrders] = useState([]);
+  const [pageNo, setPageNo] = useState(1);
+  const [numOfRows] = useState(10);
+  const [isFullLoaded, setIsFullLoaded] = useState(false);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const response = await axiosInstance.get('/payment-service/payment/get-myPayment', {
+        params: {
+          pageNo,
+          numOfRows,
+        },
+      });
+      setOrders(prev => [...prev, ...(response.data.data || [])]);
+      if (response.data.data.length < numOfRows) {
+        setIsFullLoaded(true);
+      }
+    };
+    fetchOrders();
+  }, [pageNo, numOfRows]);
+
+  return (
+    <div className={styles.myOrderPage}>
+      <h2>주문 내역</h2>
+      {orders.map(order => (
+        <OrderCard key={order.paymentId} order={order} />
+      ))}
+      {!isFullLoaded && (
+        <div className={styles.loadMoreButton}>
+          <Button onClick={() => setPageNo(pageNo + 1)}>더보기 +</Button>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default MyOrderListPage;

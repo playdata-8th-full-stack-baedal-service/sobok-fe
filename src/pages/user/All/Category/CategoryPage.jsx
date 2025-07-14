@@ -35,12 +35,14 @@ const categoryList = [
 
 const CategoryPage = () => {
   const [items, setItems] = useState([]);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [pageNo, setPageNo] = useState(1);
-  const [numOfRows, setNumOfRows] = useState(10);
+  const [numOfRows] = useState(12);
+  const [isFullLoaded, setIsFullLoaded] = useState(false);
 
   useEffect(() => {
     async function fetchItems() {
+      if (isFullLoaded) return;
       const response = await axiosInstance.get(`/cook-service/cook/get-cook-category`, {
         params: {
           category: searchParams.get('category'),
@@ -49,9 +51,12 @@ const CategoryPage = () => {
         },
       });
       setItems(prev => [...prev, ...response.data.data]);
+      if (response.data.data.length < numOfRows) {
+        setIsFullLoaded(true);
+      }
     }
     fetchItems();
-  }, [pageNo, numOfRows, searchParams]);
+  }, [pageNo, numOfRows, searchParams, isFullLoaded]);
 
   return (
     <div className={styles.categoryCookPage}>
@@ -60,9 +65,11 @@ const CategoryPage = () => {
         <Button className={styles.sortButton}>최신순/주문량순</Button>
       </div>
       <CookGrid items={items} />
-      <div className={styles.loadMoreButton}>
-        <Button onClick={() => setPageNo(pageNo + 1)}>더보기 +</Button>
-      </div>
+      {!isFullLoaded && (
+        <div className={styles.loadMoreButton}>
+          <Button onClick={() => setPageNo(pageNo + 1)}>더보기 +</Button>
+        </div>
+      )}
     </div>
   );
 };
