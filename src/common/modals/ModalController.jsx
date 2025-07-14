@@ -22,6 +22,7 @@ import IngredientRegisterModal from '../../pages/admin/RecipeRegeister/units/ing
 import DeleteConfilmModal from '../../pages/user/UserInfo/components/DeleteConfilmModal';
 import RecipeModal from '../../pages/user/All/Product/modals/RecipeModal';
 import MyOrderDetailPage from '../../pages/user/UserOptions/MyOrderDetail/MyOrderDetailPage';
+import UserPasswordChangeModal from '../../pages/user/Info/component/UserPasswordChangeModal';
 
 function ModalController() {
   const { modalType, modalProps } = useSelector(state => state.modal);
@@ -67,6 +68,8 @@ function ModalController() {
       return <RecipeModal onClose={handleClose} recipe={modalProps.recipe} />;
     case 'ORDER_DETAIL':
       return <MyOrderDetailPage onClose={handleClose} order={modalProps.order} />;
+    case 'USER_INFO_PASSWORD_CHANGE':
+      return <UserPasswordChangeModal onClose={handleClose} />;
     default:
       return null;
   }
