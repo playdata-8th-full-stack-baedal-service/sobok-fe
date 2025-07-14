@@ -1,12 +1,13 @@
-/* eslint-disable no-return-assign */
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import { editUserPassword, setErrorMessage } from '../../../../store/userInfoSlice';
 import ModalWrapper from '../../../../common/modals/ModalWrapper';
 import Button from '../../../../common/components/Button';
 import PasswordInput from './PasswordInput';
 import PWChangedModal from '../../../auth/FindPW/PWChangedModal';
 import { isPasswordValid } from '../../../../common/utils/authUtils';
+import styles from '../UserInfo.module.scss';
 
 function UserPasswordChangeModal({ onClose }) {
   const [complete, setComplete] = useState(false);
@@ -42,7 +43,7 @@ function UserPasswordChangeModal({ onClose }) {
     <PWChangedModal onClose={onClose} showSimpleClose={complete} />
   ) : (
     <ModalWrapper title="비밀번호 변경" onClose={onClose} size="md">
-      <div>
+      <div className={styles.passwordChangeModal}>
         <p>새로운 비밀번호를 입력해주세요.</p>
 
         <PasswordInput
@@ -75,5 +76,9 @@ function UserPasswordChangeModal({ onClose }) {
     </ModalWrapper>
   );
 }
+
+UserPasswordChangeModal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+};
 
 export default UserPasswordChangeModal;

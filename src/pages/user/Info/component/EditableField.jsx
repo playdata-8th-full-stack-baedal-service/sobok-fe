@@ -1,29 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import styles from '../UserInfo.module.scss';
 
 function EditableField({ label, value, onEditClick, disabled }) {
   const [editValue, setEditValue] = useState(value);
 
-  const handleEditClick = () => {
+  useEffect(() => {
+    setEditValue(value);
+  }, [value]);
+
+  const handleEditClick = e => {
     onEditClick(editValue);
   };
 
   return (
-    <div>
+    <div className={styles.fieldRow}>
       <label htmlFor={label}>{label}</label>
       <input
         type="text"
         value={editValue}
         disabled={disabled}
         id={label}
+        style={{
+          backgroundColor: disabled ? 'lightgray' : 'white',
+        }}
         onChange={e => setEditValue(e.target.value)}
       />
       {!disabled && (
         <button type="button" onClick={handleEditClick}>
-          수정
+          {label === '수증번호' ? '인증' : '변경'}
         </button>
       )}
     </div>
   );
 }
+
+EditableField.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onEditClick: PropTypes.func.isRequired,
+};
 
 export default EditableField;

@@ -28,6 +28,7 @@ export const editUserProfile = createAsyncThunk(
           'Content-Type': 'multipart/form-data',
         },
       });
+      console.log(response.data.data);
       return response.data.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(
@@ -43,6 +44,7 @@ export const editUserPassword = createAsyncThunk(
   async ({ password }, thunkAPI) => {
     try {
       const response = await axiosInstance.patch('/auth-service/auth/edit-password', { password });
+      console.log(response.data.data);
       return response.data.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e.response?.data?.message || '비밀번호 변경에 실패했습니다.');
@@ -101,9 +103,8 @@ export const editEmail = createAsyncThunk('userInfo/editEmail', async ({ email }
 const userInfoSlice = createSlice({
   name: 'userInfo',
   initialState: {
-    userInfo: null,
+    userInfo: {},
     errorMessage: null,
-    isModified: true,
   },
   reducers: {
     // userInfo 정보 설정
@@ -116,92 +117,67 @@ const userInfoSlice = createSlice({
       ...state,
       errorMessage: action.payload,
     }),
-    // 수정 여부 설정
-    setIsModified: (state, action) => ({
-      ...state,
-      isModified: action.payload,
-    }),
   },
   extraReducers: builder => {
     // 회원 정보 조회
     builder
       .addCase(lookupUser.fulfilled, (state, action) => {
-        return {
-          ...state,
-          userInfo: action.payload,
-          errorMessage: null,
-        };
+        state.userInfo = action.payload;
+        state.errorMessage = null;
       })
       .addCase(lookupUser.rejected, (state, action) => {
-        return {
-          ...state,
-          errorMessage: action.payload,
-        };
+        state.errorMessage = action.payload;
       });
 
     // 프로필 이미지 수정
     builder
       .addCase(editUserProfile.fulfilled, (state, action) => {
-        return {
-          ...state,
-          userInfo: { ...state.userInfo, photo: action.payload },
-          errorMessage: null,
-        };
+        state.userInfo = { ...state.userInfo, photo: action.payload };
+        state.errorMessage = null;
       })
       .addCase(editUserProfile.rejected, (state, action) => {
-        return {
-          ...state,
-          errorMessage: action.payload,
-        };
+        state.errorMessage = action.payload;
       });
 
     // 비밀번호 변경
     builder
       .addCase(editUserPassword.fulfilled, state => {
-        return {
-          ...state,
-          errorMessage: null,
-        };
+        state.errorMessage = null;
       })
       .addCase(editUserPassword.rejected, (state, action) => {
-        return {
-          ...state,
-          errorMessage: action.payload,
-        };
+        state.errorMessage = action.payload;
       });
 
     // 인증번호 전송
     builder
       .addCase(sendAuthCode.fulfilled, state => {
-        return {
-          ...state,
-          errorMessage: null,
-        };
+        state.errorMessage = null;
       })
       .addCase(sendAuthCode.rejected, (state, action) => {
-        return {
-          ...state,
-          errorMessage: action.payload,
-        };
+        state.errorMessage = action.payload;
       });
 
     // 전화번호 수정
     builder
       .addCase(editPhone.fulfilled, (state, action) => {
-        return {
-          ...state,
-          userInfo: { ...state.userInfo, phone: action.payload },
-          errorMessage: null,
-        };
+        state.userInfo = { ...state.userInfo, phone: action.payload };
+        state.errorMessage = null;
       })
       .addCase(editPhone.rejected, (state, action) => {
-        return {
-          ...state,
-          errorMessage: action.payload,
-        };
+        state.errorMessage = action.payload;
+      });
+
+    // 이메일 수정
+    builder
+      .addCase(editEmail.fulfilled, (state, action) => {
+        state.userInfo = { ...state.userInfo, email: action.payload };
+        state.errorMessage = null;
+      })
+      .addCase(editEmail.rejected, (state, action) => {
+        state.errorMessage = action.payload;
       });
   },
 });
 
-export const { setUserInfo, setErrorMessage, setIsModified } = userInfoSlice.actions;
+export const { setUserInfo, setErrorMessage } = userInfoSlice.actions;
 export default userInfoSlice.reducer;

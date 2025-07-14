@@ -3,6 +3,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import PropTypes from 'prop-types';
+import styles from '../UserInfo.module.scss';
 
 function PasswordInput({ placeholder, onChange, value }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,7 +14,7 @@ function PasswordInput({ placeholder, onChange, value }) {
   };
 
   return (
-    <div>
+    <div className={styles.passwordInput}>
       <label>비밀번호</label>
       <div>
         <input
@@ -28,5 +30,11 @@ function PasswordInput({ placeholder, onChange, value }) {
     </div>
   );
 }
+
+PasswordInput.propTypes = {
+  placeholder: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+};
 
 export default PasswordInput;

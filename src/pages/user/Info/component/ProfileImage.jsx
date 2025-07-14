@@ -1,6 +1,9 @@
+/* eslint-disable no-console */
 import React, { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { editUserProfile } from '../../../../store/userInfoSlice';
+import styles from '../UserInfo.module.scss';
+import Button from '../../../../common/components/Button';
 
 function ProfileImage() {
   const { userInfo } = useSelector(state => state.userInfo);
@@ -23,20 +26,18 @@ function ProfileImage() {
   };
 
   return (
-    <div>
-      <div>
-        <img src={userInfo?.photo} alt="프로필 사진" />
-        <input
-          type="file"
-          style={{ display: 'none' }}
-          onChange={handleFileChange}
-          ref={fileInputRef}
-        />
-      </div>
-      <button type="button" onClick={onChangePhoto}>
+    <>
+      <img src={userInfo?.photo} alt="프로필 사진" />
+      <input
+        type="file"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+        ref={fileInputRef}
+      />
+      <Button className={styles.changePhotoButton} type="button" onClick={onChangePhoto}>
         사진 변경
-      </button>
-    </div>
+      </Button>
+    </>
   );
 }
 

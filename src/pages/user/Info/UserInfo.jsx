@@ -1,80 +1,113 @@
+/* eslint-disable no-alert */
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  editEmail,
-  editPhone,
-  lookupUser,
-  sendAuthCode,
-  setIsModified,
-} from '../../../store/userInfoSlice';
+import { editEmail, editPhone, lookupUser, sendAuthCode } from '../../../store/userInfoSlice';
 import UserInfoHeader from './component/UserInfoHeader';
 import ProfileImage from './component/ProfileImage';
 import EditableField from './component/EditableField';
 import AddrList from './component/AddrList';
 import { openModal } from '../../../store/modalSlice';
+import styles from './UserInfo.module.scss';
+import Button from '../../../common/components/Button';
 
 function UserInfo() {
-  const { userInfo, errorMessage, isModified } = useSelector(state => state.userInfo);
+  const { userInfo } = useSelector(state => state.userInfo);
   const dispatch = useDispatch();
 
   const [targetPhone, setTargetPhone] = useState('');
+  const [isModified, setIsModified] = useState(true);
 
   // 유저 정보 조회
   useEffect(() => {
-    // 수정되지 않았다면 재조회 하지 않음
-    if (!isModified) return;
+    const fetchUserInfo = async () => {
+      if (!isModified) return;
 
-    dispatch(lookupUser({ password: 'Password123!' }));
-    dispatch(setIsModified(false));
+      try {
+        await dispatch(lookupUser({ password: 'Password123!' })).unwrap();
+        setIsModified(false);
+      } catch (err) {
+        alert(err);
+      }
+    };
+
+    fetchUserInfo();
   }, [dispatch, isModified]);
 
   // 전화번호 수정
-  const handlePhoneEdit = phone => {
-    setTargetPhone(phone);
-    dispatch(sendAuthCode({ phone }));
-    if (errorMessage) {
-      alert(errorMessage);
+  const handlePhoneEdit = async phone => {
+    if (phone === userInfo.phone) {
+      return;
+    }
+
+    try {
+      setTargetPhone(phone);
+      await dispatch(sendAuthCode({ phone })).unwrap();
+      alert('인증번호가 발송되었습니다.');
+    } catch (err) {
+      alert(err);
       setTargetPhone('');
-      dispatch(setIsModified(true));
+      setIsModified(true);
     }
   };
 
   // 전화번호 인증
-  const handlePhoneConfirm = userInputCode => {
-    dispatch(editPhone({ phone: targetPhone, userInputCode }));
-    if (errorMessage) {
-      alert(errorMessage);
+  const handlePhoneConfirm = async userInputCode => {
+    try {
+      await dispatch(editPhone({ phone: targetPhone, userInputCode })).unwrap();
+      alert('전화번호가 변경되었습니다.');
+      setIsModified(true);
+    } catch (err) {
+      alert(err);
+      setIsModified(true);
+    } finally {
       setTargetPhone('');
-      dispatch(setIsModified(true));
     }
-
-    setTargetPhone('');
   };
 
   // 이메일 수정
-  const handleEmailEdit = email => {
-    dispatch(editEmail({ email }));
-    if (errorMessage) {
-      alert(errorMessage);
-      dispatch(setIsModified(true));
+  const handleEmailEdit = async email => {
+    if (email === userInfo.email) {
+      return;
+    }
+
+    try {
+      await dispatch(editEmail({ email })).unwrap();
+      alert('이메일이 변경되었습니다.');
+      setIsModified(true);
+    } catch (err) {
+      alert(err);
+      setIsModified(true);
     }
   };
 
   const handleWithdrawalClick = () => {
-    dispatch(openModal({ type: 'WITHDRAWAL' }));
+    dispatch(openModal('WITHDRAWAL'));
   };
 
   return (
-    <div>
+    <div className={styles.userInfoContainer}>
       <UserInfoHeader />
-      <div>
-        <h2>개인 정보</h2>
-        <ProfileImage />
-        <div>
-          <EditableField label="닉네임" value={userInfo.nickname} disabled />
-          <EditableField label="아이디" value={userInfo.loginId} disabled />
-          <EditableField label="전화번호" value={userInfo.phone} onEditClick={handlePhoneEdit} />
-          {targetPhone && <EditableField label="인증번호" onEditClick={handlePhoneConfirm} />}
+
+      <div className={styles.userInfoContent}>
+        <div className={styles.leftSection}>
+          <ProfileImage />
+        </div>
+
+        <div className={styles.rightSection}>
+          <EditableField label="닉네임" value={userInfo.nickname || ''} disabled />
+          <EditableField label="아이디" value={userInfo.loginId || ''} disabled />
+          <EditableField
+            label="전화번호"
+            value={userInfo.phone || ''}
+            onEditClick={handlePhoneEdit}
+          />
+          {targetPhone && (
+            <EditableField
+              label="인증번호"
+              value={userInfo.authCode || ''}
+              onEditClick={handlePhoneConfirm}
+            />
+          )}
           <EditableField
             label="이메일"
             value={userInfo.email || ''}
@@ -82,12 +115,14 @@ function UserInfo() {
           />
         </div>
       </div>
-      <AddrList />
-      <div>
-        <button type="button" onClick={handleWithdrawalClick}>
-          회원 탈퇴
-        </button>
+
+      <div className={styles.addrSection}>
+        <AddrList />
       </div>
+
+      <Button className={styles.withdrawalButton} type="button" onClick={handleWithdrawalClick}>
+        회원 탈퇴
+      </Button>
     </div>
   );
 }
