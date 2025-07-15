@@ -16,7 +16,11 @@ function SocialLoginListener() {
 
       if (data.type === 'OAUTH_SUCCESS') {
         console.log('로그인 성공:', data);
-        localStorage.setItem('accessToken', data.token);
+        localStorage.setItem('ACCESS_TOKEN', data.accessToken);
+        localStorage.setItem('REFRESH_TOKEN', data.refreshToken);
+        localStorage.setItem('userRole', data.role);
+        localStorage.setItem('userId', data.userId);
+        localStorage.setItem('recovery', data.recoveryTarget);
         navigate('/');
       }
 
