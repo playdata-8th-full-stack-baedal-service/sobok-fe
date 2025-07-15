@@ -14,7 +14,8 @@
 .navItems {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-around;
+  gap: 35px;
   position: relative;
 }
 
@@ -53,4 +54,26 @@
 
 .dropdownArea {
   position: relative;
+}
+
+.logoutbutton {
+  border-radius: 25px;
+  border: none;
+  width: 70px;
+  background-color: rgb(40, 221, 40);
+  box-shadow: 0.5px 0px 3px 2px rgb(130, 138, 130);
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    box-shadow: none;
+  }
+}
+
+.loginbutton {
+  background-color: rgb(16, 129, 235);
+  border: none;
+  border-radius: 20px;
+  width: 70px;
+  white-space: nowrap;
 }

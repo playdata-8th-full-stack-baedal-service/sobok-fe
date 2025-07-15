@@ -4,8 +4,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 5px 20px 5px 20px;
-  border-bottom: 1px solid #ddd;
-  height: 60px; // 헤더 높이를 고정해주면 중앙 정렬이 안정적
+  border-bottom: 1px solid rgb(205, 195, 195);
+  height: 15vh; // 헤더 높이를 고정해주면 중앙 정렬이 안정적
 }
 
 .Left {
@@ -17,6 +17,7 @@
 .Right {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
   z-index: 1;
 }
@@ -28,7 +29,7 @@
   cursor: pointer;
 
   img {
-    height: 50px; 
+    height: 110px; 
     object-fit: contain;
   }
 }

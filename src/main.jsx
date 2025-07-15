@@ -5,15 +5,12 @@ import App from './App';
 import store from './store/store';
 import './common/styles/style.scss';
 import { BrowserRouter } from 'react-router-dom';
-import RiderInfoPage from './pages/rider/RiderInfo/RiderInfoPage';
-import HubInfoPage from './pages/hub/HubInfo/HubInfoPage';
-
-
+import MenuTest from './layout/headers/userHeader/HamburgerMenu';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <Provider store={store}>
-      <App/>
+      <App />
     </Provider>
   </BrowserRouter>
 );

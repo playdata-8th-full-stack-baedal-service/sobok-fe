@@ -1,0 +1,98 @@
+.menuButton {
+  perspective: 600px;
+  width: 48px;
+  height: 48px;
+  position: relative;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.iconContainer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: transform 0.6s cubic-bezier(0.2, 0.64, 0.48, 1.24);
+
+  svg {
+    color: white;
+    stroke: white;
+  }
+}
+
+.menuIcon {
+  background: rgb(0, 0, 0);
+  transform: rotateY(0deg);
+
+  &.rotateOut {
+    transform: rotateY(-180deg);
+  }
+}
+
+.closeIcon {
+  background: rgb(255, 255, 255);
+  transform: rotateY(180deg);
+
+  &.rotateIn {
+    transform: rotateY(0deg);
+  }
+}
+
+:global(*) {
+  box-sizing: border-box;
+}
+
+:global(button) {
+  font-family: inherit;
+}
+
+.sidebar {
+  position: absolute;
+  left: -20px;
+  top: 110px;
+  background-color: rgb(84, 80, 80);
+  width: 250px;
+  height: 100vh;
+  color: rgb(255, 255, 255);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  .siderbartitle {
+    font-size: 20px;
+    font-weight: bold;
+    width: 100vw;
+    text-align: center;
+  }
+
+  .closebutton {
+    border: none;
+    background-color: rgb(84, 80, 80);
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+  }
+}
