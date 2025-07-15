@@ -16,13 +16,35 @@ function SocialLoginSection() {
     );
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      console.log('구글 로그인 버튼 클릭!');
+
+      // 1. 백엔드에 로그인 URL 요청
+      const response = await fetch('http://localhost:8000/api-service/api/google-login-view');
+      const result = await response.json();
+      console.log('result:', result);
+
+      const googleLoginUrl = result.data; // ApiResponse<String> 구조일 때
+
+      // 2. 해당 URL로 팝업 열기
+      const popup = window.open(
+        googleLoginUrl,
+        'google-login',
+        'width=500,height=600,scrollbars=yes,resizable=yes'
+      );
+    } catch (err) {
+      console.error('구글 로그인 요청 실패:', err);
+    }
+  };
+
   return (
     <div className={styles.socialLogin}>
       <h3 className={styles.socialTitle}>소셜 로그인하기</h3>
       <button className={styles.socialBtn} onClick={handleKakaoLogin}>
         <img src="/assets/kakao.png" alt="kakao" /> Kakao로 계속하기
       </button>
-      <button className={styles.socialBtn}>
+      <button className={styles.socialBtn} onClick={handleGoogleLogin}>
         <img src="/assets/google.png" alt="google" /> Google로 계속하기
       </button>
       <button className={styles.socialBtn}>

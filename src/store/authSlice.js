@@ -42,7 +42,7 @@ export const kakaoSignUpUser = createAsyncThunk(
   'auth/kakaoSignUpUser',
   async (userData, thunkAPI) => {
     try {
-      const response = await axiosInstance.post('/auth-service/auth/kakao-user-signup', userData);
+      const response = await axiosInstance.post('/auth-service/auth/social-user-signup', userData);
       const { status, message } = response.data;
       if (status === 200 || message?.includes('회원가입 성공')) {
         return response.data.data;
