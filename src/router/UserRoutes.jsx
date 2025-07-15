@@ -29,6 +29,7 @@ import PayCompletePage from '../pages/user/Pay/paycomplete/PayCompletePage';
 import ProductPage from '../pages/user/All/Product/ProductPage';
 import CategoryPage from '../pages/user/All/Category/CategoryPage';
 import SearchPage from '../pages/user/All/Search/SearchPage';
+import UserInfo from '../pages/user/Info/UserInfo';
 
 function UserRoutes() {
   return (
@@ -140,11 +141,11 @@ function UserRoutes() {
         <Route
           path="userinfo"
           element={
-            <RoleRoute role="UESR">
-              <UserInfoPage />
+            <RoleRoute role="USER">
+              <UserInfo />
             </RoleRoute>
           }
-        />
+        />  
 
         <Route path="tossSuccess" element={<SuccessPage />} />
       </Routes>
