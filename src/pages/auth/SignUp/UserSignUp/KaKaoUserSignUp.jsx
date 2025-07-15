@@ -66,7 +66,7 @@ function UserSignUp() {
     if (signupData) {
       console.log('넘겨받은 JSON:', signupData);
 
-      if (signupData.provider === 'KAKAO') {
+      if (signupData.provider === 'KAKAO' || signupData.provider === 'GOOGLE') {
         // 1. 닉네임 자동 입력
         if (signupData.nickname) {
           setFormData(prev => ({
@@ -85,7 +85,7 @@ function UserSignUp() {
         // 소셜 로그인일 때, 필수 입력값을 임의로 채움
         setFormData(prev => ({
           ...prev,
-          loginId: `kakao_${signupData.kakaoId}`, // 임의 아이디
+          loginId: `social_${signupData.kakaoId}`, // 임의 아이디
           password: 'Password123!!', // 임의 비밀번호
           nickname: signupData.nickname || '',
           phone: signupData.phone || '',
