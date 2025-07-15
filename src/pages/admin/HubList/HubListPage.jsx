@@ -55,8 +55,9 @@ function HubListPage() {
         <p>가게 정보를 불러오는 중 ~</p>
       ) : (
         <div className={style.listWrapper}>
-          {hubList.map(hub => (
+          {hubList.map((hub, index) => (
             <div key={hub.id} className={style.card}>
+              <div className={style.hunsection}>{index + 1}</div>
               <div className={style.hunsection}>{hub.shopName}</div>
               <div className={style.hunsection}>{hub.roadFull}</div>
               <div className={style.hunsection}>{hub.ownerName}</div>

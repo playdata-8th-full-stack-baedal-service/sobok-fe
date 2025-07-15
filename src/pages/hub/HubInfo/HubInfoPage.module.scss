@@ -1,0 +1,37 @@
+.HubInfoPage {
+    width: 70vw;
+    text-align: center;
+    margin: 200px auto;
+
+    .HubInfoPagetitle {
+        font-weight: bold;
+        font-size: 1.5rem;
+        text-align: start;
+        margin-bottom: 30px;
+    }
+
+    .Hubinfocontainer {
+        outline: 1px solid rgb(0, 0, 0);
+        height: 500px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        padding: 10px 20px;
+
+        .hubinput {
+            width: 370px;
+        }
+
+        .hubtitle {
+            white-space: nowrap;
+            font-size: 1.2rem;
+        }
+    }
+
+    .inputcontainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+    }
+}
