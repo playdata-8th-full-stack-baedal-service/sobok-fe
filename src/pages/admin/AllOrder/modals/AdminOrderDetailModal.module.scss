@@ -2,15 +2,76 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: bold;
-  font-size: 18px;
-  padding: 12px 16px;
-  border-bottom: 1px solid #ccc;
-  background-color: #f9f9f9;
+  padding: 16px;
+  border-bottom: 1px solid #ddd;
+  background-color: #fafafa;
+  font-size: 14px;
+}
+
+.orderMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.orderId {
+  font-weight: 600;
+  font-size: 15px;
+  color: #222;
+}
+
+.orderDate {
+  color: #666;
+  font-size: 13px;
+}
+
+.orderState {
+  padding: 10px 12px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+  background-color: #888;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.ORDER_PENDING {
+  background-color: #902929;
+  color: #fff;
+}
+
+.ORDER_COMPLETE {
+  background-color: #e28f30;
+  color: #fff;
+}
+
+.READY_FOR_DELIVERY {
+  background-color: #5fae82;
+  color: #fff;
+}
+
+.PREPARING_INGREDIENTS {
+  background-color: #349b62;
+  color: #fff;
+}
+
+.DELIVERY_ASSIGNED {
+  background-color: #401677;
+  color: #fff;
+}
+
+.DELIVERING {
+  background-color: #401677;
+  color: #fff;
+}
+
+.DELIVERY_COMPLETE {
+  background-color: #401677;
+  color: #fff;
 }
 
 .orderDetailBody {
-  max-height: 500px;
+  max-height: 600px;
   overflow-y: auto;
   padding: 16px;
   display: flex;
@@ -42,5 +103,77 @@
     font-size: 14px;
     color: #555;
     line-height: 1.4;
+  }
+}
+
+.cookDetailBodyRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0;
+
+  .cookDetailTitle {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .cookItem {
+    margin-bottom: 16px;
+
+    .cookTitle {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #555;
+    }
+
+    .ingredientBoxWrapper {
+      display: flex;
+      gap: 16px;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+
+      .ingredientBox {
+        flex: 1 1 100px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .ingredientTitle {
+          font-weight: 600;
+          margin-bottom: 4px;
+          color: #555;
+          font-size: 14px;
+        }
+
+        .ingredientList {
+          display: flex;
+          gap: 4px;
+
+          span {
+            font-size: 12px;
+            color: #202020;
+            line-height: 1.4;
+          }
+
+          .ingredientBaseItem {
+            border: 1.6px solid #888;
+            padding: 4px 8px;
+            border-radius: 8px;
+          }
+
+          .ingredientAddItem {
+            border: 1.6px solid #888;
+            padding: 4px 8px;
+            border-radius: 8px;
+          }
+        }
+      }
+    }
   }
 }

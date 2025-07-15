@@ -3,10 +3,11 @@ import { useDispatch } from 'react-redux';
 import Button from '../../../common/components/Button';
 import axiosInstance from '../../../services/axios-config';
 import OrderGrid from './component/OrderGrid';
+import styles from './AllOrderPage.module.scss';
 
 function AllOrderPage() {
   const [orders, setOrders] = useState([]);
-  const [pageNo, setPageNo] = useState(1);
+  const [pageNo, setPageNo] = useState(0);
   const [numOfRows] = useState(10);
   const [isFullLoaded, setIsFullLoaded] = useState(false);
 
@@ -19,6 +20,7 @@ function AllOrderPage() {
           size: numOfRows,
         },
       });
+      console.log(response.data.data);
       setOrders(prev => [...prev, ...response.data.data.content]);
       if (response.data.data.content.length < numOfRows) {
         setIsFullLoaded(true);
@@ -28,11 +30,11 @@ function AllOrderPage() {
   }, [pageNo, numOfRows]);
 
   return (
-    <div>
-      <h1>주문 내역</h1>
+    <div className={styles.allOrderPage}>
+      <h1 className={styles.allOrderPageTitle}>주문 내역</h1>
       <OrderGrid orders={orders} />
       {!isFullLoaded && (
-        <div>
+        <div className={styles.allOrderPageButton}>
           <Button onClick={() => setPageNo(pageNo + 1)}>더보기 +</Button>
         </div>
       )}

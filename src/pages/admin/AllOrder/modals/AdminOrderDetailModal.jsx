@@ -6,60 +6,29 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ModalWrapper from '@/common/modals/ModalWrapper';
 import { formattedDate, orderStatus } from '@/common/utils/orderUtils';
+import styles from './AdminOrderDetailModal.module.scss';
+import OrderUserInfo from './OrderUserInfo';
+import OrderPaymentInfo from './OrderPaymentInfo';
+import OrderShopInfo from './OrderShopInfo';
+import OrderRiderInfo from './OrderRiderInfo';
+import OrderCookList from './OrderCookList';
+import OrderHeaderInfo from './OrderHeaderInfo';
 
 const AdminOrderDetailModal = ({ onClose, order }) => {
   return (
-    <ModalWrapper title="주문 내역" onClose={onClose}>
+    <ModalWrapper title="주문 내역" onClose={onClose} size="lg">
       <div>
-        <div className="orderDetailHeader">
-          <span>
-            주문 번호: {order.orderId} / 주문 날짜: {formattedDate(order.createdAt)}
-          </span>
-          <span>{orderStatus[order.orderState]}</span>
-        </div>
-        <div className="orderDetailBody">
-          <div className="DetailBodyRow">
-            <span>주문자 정보</span>
-            <span>아이디 : {order.loginId}</span>
-            <span>닉네임 : {order.nickname}</span>
-            <span>전화번호 : {order.phone}</span>
-            <span>
-              주소 : {order.roadFull} {order.address}
-            </span>
-          </div>
-          <div className="DetailBodyRow">
-            <span>결제 정보</span>
-            <span>결제 방법 : {order.payMethod}</span>
-            <span>결제 금액 : {order.totalPrice}</span>
-          </div>
-          <div className="DetailBodyRow">
-            <span>배송 가게 정보</span>
-            <span>가게 지점명 : {order.shopName}</span>
-            <span>가게 담당자 : {order.ownerName}</span>
-            <span>가게 주소 : {order.shopAddress}</span>
-            <span>가게 전화번호 : {order.shopPhone}</span>
-          </div>
-          <div className="DetailBodyRow">
-            <span>라이더 정보</span>
-            <span>라이더 이름 : {order.riderName}</span>
-            <span>라이더 전화번호 : {order.riderPhone}</span>
-          </div>
-          <div className="DetailBodyRow">
-            <span>주문 상품</span>
-            {order.cooks.map((item, idx) => (
-              <div key={item.cookName + idx}>
-                <span>요리 이름 : {item.cookName}</span>
-                <span>기본 식재료</span>
-                {item.baseIngredients.map(ingredient => (
-                  <span key={ingredient + Math.random()}>{ingredient}</span>
-                ))}
-                <span>추가 식재료</span>
-                {item.additionalIngredients.map(ingredient => (
-                  <span key={ingredient + Math.random()}>{ingredient}</span>
-                ))}
-              </div>
-            ))}
-          </div>
+        <OrderHeaderInfo
+          orderId={order.orderId}
+          createdAt={order.createdAt}
+          orderState={order.orderState}
+        />
+        <div className={styles.orderDetailBody}>
+          <OrderUserInfo {...order} />
+          <OrderPaymentInfo {...order} />
+          <OrderShopInfo {...order} />
+          <OrderRiderInfo {...order} />
+          <OrderCookList cooks={order.cooks} />
         </div>
       </div>
     </ModalWrapper>

@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { openModal } from '../../../../store/modalSlice';
 import Button from '../../../../common/components/Button';
 import { formattedDate } from '../../../../common/utils/orderUtils';
+import styles from './OrderGrid.module.scss';
 
 const OrderGrid = ({ orders }) => {
   const dispatch = useDispatch();
@@ -22,15 +23,14 @@ const OrderGrid = ({ orders }) => {
   };
 
   return (
-    <div>
+    <div className={styles.orderListWrapper}>
       {orders.map((order, index) => (
-        <div key={order.orderId}>
-          <div>
-            <span>{index + 1}/</span>
-            <span>{order.orderId.toUpperCase()}/</span>
-            <span>{formattedDate(order.createdAt)}</span>
+        <div key={order.orderId} className={styles.orderCard}>
+          <div className={styles.orderInfo}>
+            <span className={styles.orderId}>{order.orderId.toUpperCase()}</span>
+            <span className={styles.orderDate}>{formattedDate(order.createdAt)}</span>
           </div>
-          <div>
+          <div className={styles.orderActions}>
             <Button onClick={() => handleOrderDetailClick(order)}>주문 상세보기</Button>
           </div>
         </div>
