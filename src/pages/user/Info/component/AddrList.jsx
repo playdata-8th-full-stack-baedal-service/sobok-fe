@@ -5,9 +5,14 @@ import axiosInstance from '@/services/axios-config';
 import styles from '../UserInfo.module.scss';
 import Button from '../../../../common/components/Button';
 
-function AddrList({ addresses, onAddressUpdate, onAddressesChange, onAddressDelete }) {
+function AddrList({ addressList, onAddressUpdate, onAddressesChange, onAddressDelete }) {
   const dispatch = useDispatch();
   const [isUpdating, setIsUpdating] = useState(false);
+  const [addresses, setAddresses] = useState(addressList);
+
+  useEffect(() => {
+    setAddresses(addressList);
+  }, [addressList]);
 
   useEffect(() => {
     if (document.querySelector('script[src*="postcode.v2.js"]')) {

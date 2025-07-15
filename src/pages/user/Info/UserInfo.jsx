@@ -118,8 +118,14 @@ function UserInfo() {
       </div>
 
       <Divider />
+
       <div className={styles.addrSection}>
-        <AddrList addresses={userInfo.addresses} />
+        <AddrList
+          addressList={userInfo.addresses}
+          onAddressUpdate={() => setIsModified(true)}
+          onAddressesChange={() => setIsModified(true)}
+          onAddressDelete={() => setIsModified(true)}
+        />
       </div>
 
       <Button className={styles.withdrawalButton} type="button" onClick={handleWithdrawalClick}>

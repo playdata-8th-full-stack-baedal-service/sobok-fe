@@ -9,10 +9,6 @@ function EditableField({ label, value, onEditClick, disabled }) {
     setEditValue(value);
   }, [value]);
 
-  const handleEditClick = e => {
-    onEditClick(editValue);
-  };
-
   return (
     <div className={styles.fieldRow}>
       <label htmlFor={label}>{label}</label>
@@ -27,7 +23,7 @@ function EditableField({ label, value, onEditClick, disabled }) {
         onChange={e => setEditValue(e.target.value)}
       />
       {!disabled && (
-        <button type="button" onClick={handleEditClick}>
+        <button type="button" onClick={() => onEditClick(editValue)}>
           {label === '수증번호' ? '인증' : '변경'}
         </button>
       )}
@@ -39,6 +35,7 @@ EditableField.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onEditClick: PropTypes.func.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export default EditableField;

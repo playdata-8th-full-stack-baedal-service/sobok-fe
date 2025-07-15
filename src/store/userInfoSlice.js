@@ -43,7 +43,9 @@ export const editUserPassword = createAsyncThunk(
   'userInfo/editUserPassword',
   async ({ password }, thunkAPI) => {
     try {
-      const response = await axiosInstance.patch('/auth-service/auth/edit-password', { password });
+      const response = await axiosInstance.patch('/auth-service/auth/edit-password', {
+        newPassword: password,
+      });
       console.log(response.data.data);
       return response.data.data;
     } catch (e) {
