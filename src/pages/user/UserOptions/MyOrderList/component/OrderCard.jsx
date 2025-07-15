@@ -8,13 +8,13 @@ import styles from './OrderCard.module.scss';
 import { openModal } from '../../../../../store/modalSlice';
 
 const orderStatus = {
-  ORDER_PENDING: '결제 완료',
-  ORDER_COMPLETE: '주문 완료',
+  ORDER_PENDING: '결제 대기',
+  ORDER_COMPLETE: '결제 완료',
   PREPARING_INGREDIENTS: '재료 준비중',
-  READY_FOR_DELIVERY: '배송 준비중',
-  DELIVERY_ASSIGNED: '배송 중',
-  DELIVERING: '배송 완료',
-  DELIVERY_COMPLETE: '취소 완료',
+  READY_FOR_DELIVERY: '재료 준비 완료',
+  DELIVERY_ASSIGNED: '배송 준비중',
+  DELIVERING: '배송 중',
+  DELIVERY_COMPLETE: '배송 완료',
 };
 
 const OrderCard = ({ order }) => {
