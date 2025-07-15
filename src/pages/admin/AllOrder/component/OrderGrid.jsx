@@ -4,14 +4,10 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { openModal } from '../../../../store/modalSlice';
 import Button from '../../../../common/components/Button';
+import { formattedDate } from '../../../../common/utils/orderUtils';
 
 const OrderGrid = ({ orders }) => {
   const dispatch = useDispatch();
-
-  const formattedDate = orderDate => {
-    const date = new Date(orderDate);
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-  };
 
   // 주문 상세보기 클릭
   const handleOrderDetailClick = order => {
@@ -24,6 +20,7 @@ const OrderGrid = ({ orders }) => {
       })
     );
   };
+
   return (
     <div>
       {orders.map((order, index) => (
