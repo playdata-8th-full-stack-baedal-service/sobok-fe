@@ -202,18 +202,21 @@ function UserSignUp() {
     }
   };
 
-  const getPresignedUrl = async (fileName, tempToken) => {
+  const uploadToS3 = async (file, tempToken) => {
+    const formImageData = new FormData();
+    formImageData.append('image', file);
+
     try {
-      const response = await axios.get(`${API_BASE_URL}api-service/api/presign`, {
-        params: {
-          fileName,
-          category: 'profile',
-        },
-        headers: {
-          Authorization: `Bearer ${tempToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.put(
+        `${API_BASE_URL}api-service/api/upload-image/profile`,
+        formImageData,
+        {
+          headers: {
+            Authorization: `Bearer ${tempToken}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
 
       if (response.data.success && response.data.data) {
         return response.data.data;
@@ -221,28 +224,6 @@ function UserSignUp() {
       throw new Error(response.data.message || 'Presigned URL 생성 실패');
     } catch (error) {
       console.error('Presigned URL 요청 실패:', error);
-      throw error;
-    }
-  };
-
-  const uploadToS3 = async (presignedUrl, file) => {
-    try {
-      const response = await fetch(presignedUrl, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`S3 업로드 실패: ${response.status} ${response.statusText}`);
-      }
-
-      const uploadedUrl = presignedUrl.split('?')[0];
-      return uploadedUrl;
-    } catch (error) {
-      console.error('[uploadToS3] S3 업로드 오류:', error);
       throw error;
     }
   };
@@ -263,8 +244,7 @@ function UserSignUp() {
       // 프로필 사진이 선택된 경우 S3에 업로드
       if (selectedFile) {
         const tempToken = await getTempToken();
-        const presignedUrl = await getPresignedUrl(selectedFile.name, tempToken);
-        const uploadedUrl = await uploadToS3(presignedUrl, selectedFile);
+        const uploadedUrl = await uploadToS3(selectedFile, tempToken);
         completeFormData = {
           ...completeFormData,
           photo: uploadedUrl,
