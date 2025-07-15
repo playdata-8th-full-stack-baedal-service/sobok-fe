@@ -7,7 +7,7 @@ function SocialLoginListener() {
   useEffect(() => {
     const handleMessage = event => {
       if (event.origin !== 'http://localhost:8000') {
-        console.warn('출처 불일치: ', event.origin);
+        console.warn('출처 불일치: ', window.location.origin);
         return;
       }
 
@@ -16,10 +16,8 @@ function SocialLoginListener() {
 
       if (data.type === 'OAUTH_SUCCESS') {
         console.log('로그인 성공:', data);
-        // 예: JWT 토큰 저장
         localStorage.setItem('accessToken', data.token);
-        // 홈 또는 마이페이지로 이동
-        navigate('/mypage');
+        navigate('/');
       }
 
       if (data.type === 'NEW_USER_SIGNUP') {

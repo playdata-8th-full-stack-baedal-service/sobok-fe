@@ -76,7 +76,7 @@ export const deleteUser = createAsyncThunk('auth/deleteUser', async ({ password 
 
 export const checkEmail = createAsyncThunk('auth/checkEmail', async (email, thunkAPI) => {
   try {
-    const response = await axiosInstance.get(`/auth-service/auth/check-email`, {
+    const response = await axiosInstance.get(`/user-service/user/check-email`, {
       params: { email },
     });
     if (response.data.status === 200 || response.data.message === '사용 가능한 이메일입니다.') {
@@ -91,7 +91,7 @@ export const checkEmail = createAsyncThunk('auth/checkEmail', async (email, thun
 
 export const checkNickName = createAsyncThunk('auth/checkNickName', async (nickname, thunkAPI) => {
   try {
-    const response = await axiosInstance.get('/auth-service/auth/check-nickname', {
+    const response = await axiosInstance.get('/user-service/user/check-nickname', {
       params: {
         nickname,
       },

@@ -17,7 +17,7 @@ import Button from './components/common/Button';
 import axios from 'axios';
 import { API_BASE_URL } from '@/services/host-config';
 import './UserSignUp.scss';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { kakaoSignUpUser } from '../../../../store/authSlice';
 
 function UserSignUp() {
@@ -48,7 +48,21 @@ function UserSignUp() {
   const location = useLocation();
   const signupData = location.state;
 
+  const [searchParams] = useSearchParams();
+
+  // 쿼리에서 값 꺼내기
+  const provider = searchParams.get('provider');
+  const oauthId = searchParams.get('oauthId');
+  const nickname = searchParams.get('nickname');
+  const email = searchParams.get('email');
+
   useEffect(() => {
+    console.log('쿼리로 전달받은 값:', {
+      provider,
+      oauthId,
+      nickname,
+      email,
+    });
     if (signupData) {
       console.log('넘겨받은 JSON:', signupData);
 
