@@ -12,10 +12,13 @@ import RoleRoute from './router/RoleRoute';
 import ModalController from './common/modals/ModalController';
 import MainPage from './pages/user/All/Main/MainPage';
 import Footer from './layout/footer/Footer';
+import SuccessPage from './pages/user/Pay/toss/TossSuccess';
+import SocialLoginListener from './pages/auth/SignIn/components/SocialLoginListener';
 
 function App() {
   return (
     <>
+      <SocialLoginListener />
       <Routes>
         {/* 비회원도 접근 가능한 유저 메인페이지 */}
         <Route

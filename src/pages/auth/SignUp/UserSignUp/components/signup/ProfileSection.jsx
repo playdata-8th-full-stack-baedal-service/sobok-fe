@@ -10,7 +10,7 @@ import Input from '../../../../../../common/components/Input';
 import Button from '../../../../../../common/components/Button';
 import styles from './ProfileSection.module.scss';
 
-function ProfileSection({ formData, onChange, onFileSelect }) {
+function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = true }) {
   const dispatch = useDispatch();
   const {
     loading,
@@ -62,7 +62,16 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
 
   const handleFileSelect = e => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) {
+      console.log('[handleFileSelect] 파일 선택 안됨');
+      return;
+    }
+
+    console.log('[handleFileSelect] 선택된 파일:', {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+    });
 
     if (!file.type.startsWith('image/')) {
       alert('이미지 파일만 업로드 가능합니다.');
@@ -113,27 +122,29 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
       </div>
 
       <div className={styles.idAndNick}>
-        <Input
-          label="아이디"
-          required
-          className={styles.inputWithButton}
-          success={loginIdCheckMessage}
-          error={loginIdCheckError}
-        >
-          <div className={styles.inputButtonGroup}>
-            <input
-              type="text"
-              id="loginId"
-              name="loginId"
-              value={formData.loginId}
-              onChange={handleLoginIdChange}
-              className={loginIdCheckError ? styles.inputError : ''}
-            />
-            <Button type="button" variant="BASIC" onClick={handleLoginIdCheck} loading={loading}>
-              중복확인
-            </Button>
-          </div>
-        </Input>
+        {showLoginIdInput && (
+          <Input
+            label="아이디"
+            required
+            className={styles.inputWithButton}
+            success={loginIdCheckMessage}
+            error={loginIdCheckError}
+          >
+            <div className={styles.inputButtonGroup}>
+              <input
+                type="text"
+                id="loginId"
+                name="loginId"
+                value={formData.loginId}
+                onChange={handleLoginIdChange}
+                className={loginIdCheckError ? 'input-error' : ''}
+              />
+              <Button type="button" variant="BASIC" onClick={handleLoginIdCheck} loading={loading}>
+                중복확인
+              </Button>
+            </div>
+          </Input>
+        )}
 
         <Input
           label="닉네임"

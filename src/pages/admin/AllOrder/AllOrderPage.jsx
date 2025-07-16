@@ -1,9 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import Button from '../../../common/components/Button';
+import axiosInstance from '../../../services/axios-config';
+import OrderGrid from './component/OrderGrid';
+import styles from './AllOrderPage.module.scss';
 
 function AllOrderPage() {
+  const [orders, setOrders] = useState([]);
+  const [pageNo, setPageNo] = useState(0);
+  const [numOfRows] = useState(10);
+  const [isFullLoaded, setIsFullLoaded] = useState(false);
+
+  // 주문 내역 조회
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const response = await axiosInstance.get('/admin-service/admin/orders', {
+        params: {
+          page: pageNo,
+          size: numOfRows,
+        },
+      });
+      console.log(response.data.data);
+      setOrders(prev => [...prev, ...response.data.data.content]);
+      if (response.data.data.content.length < numOfRows) {
+        setIsFullLoaded(true);
+      }
+    };
+    fetchOrders();
+  }, [pageNo, numOfRows]);
+
   return (
-    <div>
-      <h2>모든 주문 조회 페이지 입니다.</h2>
+    <div className={styles.allOrderPage}>
+      <h1 className={styles.allOrderPageTitle}>주문 내역</h1>
+      <OrderGrid orders={orders} />
+      {!isFullLoaded && (
+        <div className={styles.allOrderPageButton}>
+          <Button onClick={() => setPageNo(pageNo + 1)}>더보기 +</Button>
+        </div>
+      )}
     </div>
   );
 }

@@ -23,6 +23,7 @@ import DeleteConfilmModal from '../../pages/user/UserInfo/components/DeleteConfi
 import RecipeModal from '../../pages/user/All/Product/modals/RecipeModal';
 import MyOrderDetailPage from '../../pages/user/UserOptions/MyOrderDetail/MyOrderDetailPage';
 import UserPasswordChangeModal from '../../pages/user/Info/component/UserPasswordChangeModal';
+import AdminOrderDetailModal from '../../pages/admin/AllOrder/modals/AdminOrderDetailModal';
 
 function ModalController() {
   const { modalType, modalProps } = useSelector(state => state.modal);
@@ -70,6 +71,8 @@ function ModalController() {
       return <MyOrderDetailPage onClose={handleClose} order={modalProps.order} />;
     case 'USER_INFO_PASSWORD_CHANGE':
       return <UserPasswordChangeModal onClose={handleClose} />;
+    case 'ADMIN_ORDER_DETAIL':
+      return <AdminOrderDetailModal onClose={handleClose} order={modalProps.order} />;
     default:
       return null;
   }
