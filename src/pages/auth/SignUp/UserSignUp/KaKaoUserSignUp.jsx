@@ -9,14 +9,14 @@ import {
 } from '@/store/authSlice';
 import { clearSMSAuth } from '@/store/smsAuthSlice';
 import ProfileSection from './components/signup/ProfileSection';
-import PasswordSection from './components/signup/PasswordSection';
-import PhoneVerification from './components/signup/PhoneVerification';
-import EmailSection from './components/signup/EmailSection';
-import AddressSection from './components/signup/AddressSection';
-import Button from './components/common/Button';
+import PasswordSection from '../../../../common/forms/PasswordConfirm/PasswordSection';
+import PhoneVerification from '../../../../common/forms/Phone/PhoneVerification';
+import EmailSection from '../../../../common/forms/Email/EmailSection';
+import AddressSection from '../../../../common/forms/Address/AddressSection';
+import Button from '../../../../common/components/Button';
 import axios from 'axios';
 import { API_BASE_URL } from '@/services/host-config';
-import './UserSignUp.scss';
+import './UserSignUp.module.scss';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { kakaoSignUpUser } from '../../../../store/authSlice';
 

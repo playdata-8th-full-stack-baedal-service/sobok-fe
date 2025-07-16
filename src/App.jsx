@@ -12,11 +12,8 @@ import RoleRoute from './router/RoleRoute';
 import ModalController from './common/modals/ModalController';
 import MainPage from './pages/user/All/Main/MainPage';
 import Footer from './layout/footer/Footer';
-<<<<<<< HEAD
-=======
 import SuccessPage from './pages/user/Pay/toss/TossSuccess';
 import SocialLoginListener from './pages/auth/SignIn/components/SocialLoginListener';
->>>>>>> 9db18ce5431a10d75e15a630f7fd63d5d65fc6ae
 
 function App() {
   return (

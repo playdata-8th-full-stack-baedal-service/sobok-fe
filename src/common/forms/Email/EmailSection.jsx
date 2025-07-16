@@ -97,12 +97,8 @@ function EmailSection({
           value={customDomain}
           onChange={handleCustomDomainChange}
           placeholder="도메인을 입력하세요 (예: company.com)"
-<<<<<<< HEAD:src/common/forms/Email/EmailSection.jsx
-          className={styles.customDomainInput}
-=======
           className="custom-domain-input"
           disabled={disabled}
->>>>>>> 9db18ce5431a10d75e15a630f7fd63d5d65fc6ae:src/pages/auth/SignUp/UserSignUp/components/signup/EmailSection.jsx
         />
       )}
       {getFullEmail() && <p className={styles.emailPreview}>완성된 이메일: {getFullEmail()}</p>}
