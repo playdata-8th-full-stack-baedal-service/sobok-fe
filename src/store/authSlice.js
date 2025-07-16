@@ -11,13 +11,23 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
       password,
     });
     if (res.data.success) {
-      const { accessToken, refreshToken, role, id: userId, recoveryTarget } = res.data.data;
-      const tokenData = { accessToken, refreshToken, role, userId, recoveryTarget };
+      const {
+        accessToken,
+        refreshToken,
+        role,
+        id: userId,
+        recoveryTarget,
+        provider,
+      } = res.data.data;
+      const tokenData = { accessToken, refreshToken, role, userId, recoveryTarget, provider };
       localStorage.setItem('ACCESS_TOKEN', accessToken);
       localStorage.setItem('REFRESH_TOKEN', refreshToken);
       localStorage.setItem('USER_ROLE', role);
       localStorage.setItem('USER_ID', userId);
       localStorage.setItem('RECOVERY_TARGET', recoveryTarget);
+      if (provider != null) {
+        localStorage.setItem('OAUTH', provider);
+      }
       return tokenData;
     }
     // success: false

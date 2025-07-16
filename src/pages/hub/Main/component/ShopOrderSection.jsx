@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/function-component-definition */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RefreshCcw } from 'lucide-react';
+import { CircularProgress } from '@mui/material';
 import styles from '../MainPage.module.scss';
 import Button from '../../../../common/components/Button';
 import { formattedDate } from '../../../../common/utils/orderUtils';
 import axiosInstance from '../../../../services/axios-config';
-import { CircularProgress } from '@mui/material';
 
 const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) => {
   const [orders, setOrders] = useState([]);
@@ -16,12 +16,6 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
   const numOfRows = 3;
 
   const [maxCount, setMaxCount] = useState(10);
-  // 생각을 해보자
-  // 1. 그냥 가져오기
-  // 2. 새로운 주문이 있는 지 확인
-  // 3. 주문에 연동사항이 생기면 가져오기
-  // 4. 더보기 깜빡 절대 안됨
-  // 5. 더보기 버튼 누르면 가져오기
 
   // 대기중인 주문 조회
   const fetchPreparingOrders = async (page = pageNo, number = numOfRows) => {
@@ -60,12 +54,7 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
     // 더보기 버튼 활성화 여부 조회
     if (data.filter(order => order !== null).length === orders.length) setMaxCount(data.length);
     else if (data.filter(order => order !== null).length !== orders.length) {
-      console.log(orders, data);
-      if (pageNo === 1) {
-        fetchPreparingOrders();
-      } else {
-        setOrders(data.filter(order => order !== null));
-      }
+      window.location.reload();
     }
   };
 
@@ -115,9 +104,7 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
                 <Button
                   onClick={() => {
                     handleStatusChange(order);
-                    setOrders(prev => prev.filter(o => o.orderId !== order.orderId));
-                    fetchPreparingOrders();
-                    setMaxCount(prev => prev - 1);
+                    window.location.reload();
                   }}
                 >
                   상태 변경
