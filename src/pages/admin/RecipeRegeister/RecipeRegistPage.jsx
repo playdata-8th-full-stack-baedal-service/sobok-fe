@@ -50,49 +50,28 @@ function RecipeRegistPage() {
     }));
   }, []);
 
-  const getPresignUrl = async fileName => {
+  const uploadToS3 = async file => {
+    const formImageData = new FormData();
+    formImageData.append('image', file);
+
     try {
-      const response = await axiosInstance.get(`/api-service/api/presign`, {
-        params: {
-          fileName,
-          category: 'food',
-        },
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      console.log(response.data.data);
-      if (response.data.success) {
+      const response = await axiosInstance.put(
+        '/api-service/api/upload-image/cook',
+        formImageData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      if (response.data.success && response.data.data) {
         return response.data.data;
       }
-      throw new Error(response.data.message || 'Presigned URL 생성 실패했을때 이게 뜹니다.');
-    } catch (err) {
-      console.error('Presigned URL 요청 실패 시 이게 뜹니다.:', err);
-      throw err;
-    }
-  };
-
-  const uploadToS3 = async (presignUrl, file) => {
-    try {
-      const response = await fetch(presignUrl, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
-      console.log(response.data);
-      if (!response.ok) {
-        throw new Error(
-          `S3 업로드 실패일 경우 이게 뜹니다. ${response.status} ${response.statusText}`
-        );
-      }
-
-      const uploadUrl = presignUrl.split('?')[0];
-      return uploadUrl;
-    } catch (err) {
-      console.error('S3 업로드 오류시 이게 뜹니다', err);
-      throw err;
+      throw new Error(response.data.message || 'Presigned URL 생성 실패');
+    } catch (error) {
+      console.error('Presigned URL 요청 실패:', error);
+      throw error;
     }
   };
 
@@ -176,8 +155,7 @@ function RecipeRegistPage() {
     try {
       const submitData = { ...formData };
       if (selectedFile) {
-        const presignedUrl = await getPresignUrl(selectedFile.name);
-        const uploadedUrl = await uploadToS3(presignedUrl, selectedFile);
+        const uploadedUrl = await uploadToS3(selectedFile);
         submitData.thumbnailUrl = uploadedUrl;
       }
       console.log(submitData);
