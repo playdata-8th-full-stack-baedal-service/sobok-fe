@@ -216,7 +216,7 @@ function UserSignUp() {
       dispatch(clearEmailCheck());
       dispatch(clearNicknameCheck());
       dispatch(clearLoginIdCheck());
-      Navigate('/signup/complete');
+      navigate('/auth/signup/complete');
     }
   }, [signUpSuccess, dispatch]);
 

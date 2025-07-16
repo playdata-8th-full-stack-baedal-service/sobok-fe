@@ -16,11 +16,13 @@ import AddressSection from '../../../../common/forms/Address/AddressSection';
 import Button from '../../../../common/components/Button';
 import axios from 'axios';
 import { API_BASE_URL } from '@/services/host-config';
-import './UserSignUp.module.scss';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import styles from './UserSignUp.module.scss';
+
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { kakaoSignUpUser } from '../../../../store/authSlice';
 
 function UserSignUp() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const ref = useRef();
 
@@ -191,7 +193,7 @@ function UserSignUp() {
 
   const getTempToken = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}auth-service/auth/temp-token`);
+      const response = await axios.get(`${API_BASE_URL}/auth-service/auth/temp-token`);
       if (response.data.success && response.data.status === 200) {
         return response.data.data;
       }
@@ -208,7 +210,7 @@ function UserSignUp() {
 
     try {
       const response = await axios.put(
-        `${API_BASE_URL}api-service/api/upload-image/profile`,
+        `${API_BASE_URL}/api-service/api/upload-image/profile`,
         formImageData,
         {
           headers: {
@@ -254,7 +256,7 @@ function UserSignUp() {
       console.log('[회원가입 요청 데이터]', completeFormData);
 
       await dispatch(kakaoSignUpUser(completeFormData)).unwrap();
-      alert('회원가입 요청 완료');
+      Navigate;
     } catch (err) {
       console.error('회원가입 실패:', err);
       alert(err || '회원가입에 실패했습니다.');
@@ -269,63 +271,59 @@ function UserSignUp() {
       dispatch(clearEmailCheck());
       dispatch(clearNicknameCheck());
       dispatch(clearLoginIdCheck());
+      navigate('/auth/signup/complete');
     }
   }, [signUpSuccess, dispatch]);
 
   return (
-    <div className="signup-container">
-      <div className="signup-header">
-        <h2>회원가입</h2>
-      </div>
-      <form onSubmit={handleSubmit} className="signup-form">
-        <ProfileSection
-          formData={formData}
-          onChange={handleInputChange}
-          onFileSelect={handleFileSelect}
-          disabled={isSocialUser}
-        />
-
-        <PasswordSection
-          password={formData.password}
-          passwordConfirm={passwordConfirm}
-          onPasswordChange={handleInputChange}
-          onPasswordConfirmChange={e => setPasswordConfirm(e.target.value)}
-          disabled={isSocialUser}
-        />
-
-        <PhoneVerification
-          phone={formData.phone}
-          verificationCode={verificationCode}
-          onPhoneChange={handleInputChange}
-          onVerificationCodeChange={e => setVerificationCode(e.target.value)}
-        />
-
-        <EmailSection
-          emailLocal={emailLocal}
-          emailDomain={emailDomain}
-          customDomain={customDomain}
-          isCustomDomain={isCustomDomain}
-          onEmailLocalChange={e => setEmailLocal(e.target.value)}
-          onDomainChange={handleDomainChange}
-          onCustomDomainChange={e => setCustomDomain(e.target.value)}
-          getFullEmail={getFullEmail}
-          disabled={isSocialUser}
-        />
-
-        <AddressSection
-          roadFull={formData.roadFull}
-          addrDetail={formData.addrDetail}
-          onAddressChange={handleAddressChange}
-        />
-
-        <div className="form-group">
-          <Button type="submit" loading={loading}>
-            회원가입 ㄱㄱ
-          </Button>
+    <div className={styles['signup-wrap']}>
+      <div className={styles['signup-container']}>
+        <div className={styles['signup-header']}>
+          <h2>회원가입</h2>
         </div>
+        <form onSubmit={handleSubmit} className={styles['signup-form']}>
+          <ProfileSection
+            formData={formData}
+            onChange={handleInputChange}
+            onFileSelect={handleFileSelect}
+            disabled={true}
+            showLoginIdInput={false}
+          />
 
-        {error && <div className="error-message">{error}</div>}
-      </form>
+          <PhoneVerification
+            phone={formData.phone}
+            verificationCode={verificationCode}
+            onPhoneChange={handleInputChange}
+            onVerificationCodeChange={e => setVerificationCode(e.target.value)}
+          />
+
+          <EmailSection
+            emailLocal={emailLocal}
+            emailDomain={emailDomain}
+            customDomain={customDomain}
+            isCustomDomain={isCustomDomain}
+            onEmailLocalChange={e => setEmailLocal(e.target.value)}
+            onDomainChange={handleDomainChange}
+            onCustomDomainChange={e => setCustomDomain(e.target.value)}
+            getFullEmail={getFullEmail}
+            disabled={true}
+          />
+
+          <AddressSection
+            roadFull={formData.roadFull}
+            addrDetail={formData.addrDetail}
+            onAddressChange={handleAddressChange}
+          />
+
+          <div className={styles['form-group']}>
+            <Button type="submit" loading={loading} variant="BASIC" className="wide">
+              회원가입
+            </Button>
+          </div>
+
+          {error && <div className={styles['error-message']}>{error}</div>}
+        </form>
+      </div>
     </div>
   );
 }

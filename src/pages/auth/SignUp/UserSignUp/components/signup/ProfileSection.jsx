@@ -10,7 +10,7 @@ import Input from '../../../../../../common/components/Input';
 import Button from '../../../../../../common/components/Button';
 import styles from './ProfileSection.module.scss';
 
-function ProfileSection({ formData, onChange, onFileSelect, disabled }) {
+function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = true }) {
   const dispatch = useDispatch();
   const {
     loading,
@@ -122,28 +122,29 @@ function ProfileSection({ formData, onChange, onFileSelect, disabled }) {
       </div>
 
       <div className={styles.idAndNick}>
-        <Input
-          label="아이디"
-          required
-          className={styles.inputWithButton}
-          success={loginIdCheckMessage}
-          error={loginIdCheckError}
-        >
-          <div className={styles.inputButtonGroup}>
-            <input
-              type="text"
-              id="loginId"
-              name="loginId"
-              value={formData.loginId}
-              onChange={handleLoginIdChange}
-              className={loginIdCheckError ? 'input-error' : ''}
-              disabled={disabled}
-            />
-            <Button type="button" variant="BASIC" onClick={handleLoginIdCheck} loading={loading}>
-              중복확인
-            </Button>
-          </div>
-        </Input>
+        {showLoginIdInput && (
+          <Input
+            label="아이디"
+            required
+            className={styles.inputWithButton}
+            success={loginIdCheckMessage}
+            error={loginIdCheckError}
+          >
+            <div className={styles.inputButtonGroup}>
+              <input
+                type="text"
+                id="loginId"
+                name="loginId"
+                value={formData.loginId}
+                onChange={handleLoginIdChange}
+                className={loginIdCheckError ? 'input-error' : ''}
+              />
+              <Button type="button" variant="BASIC" onClick={handleLoginIdCheck} loading={loading}>
+                중복확인
+              </Button>
+            </div>
+          </Input>
+        )}
 
         <Input
           label="닉네임"
