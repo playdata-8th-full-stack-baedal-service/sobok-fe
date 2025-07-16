@@ -149,6 +149,9 @@ const initialState = {
   nicknameCheckError: null,
   loginIdCheckMessage: null,
   loginIdCheckError: null,
+  isLoginIdChecked: false,
+  isEmailChecked: false,
+  isNicknameChecked: false,
   userInfo: null,
   userInfoLoading: false,
   userInfoError: null,
@@ -220,6 +223,20 @@ const authSlice = createSlice({
         state.signUpSuccess = false;
       })
 
+      .addCase(kakaoSignUpUser.pending, state => {
+        setLoading(state);
+        state.signUpSuccess = false;
+      })
+      .addCase(kakaoSignUpUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.signUpSuccess = true;
+      })
+      .addCase(kakaoSignUpUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.signUpSuccess = false;
+      })
+
       .addCase(deleteUser.pending, state => {
         setLoading(state);
         state.deleteSuccess = false;
@@ -247,6 +264,7 @@ const authSlice = createSlice({
       .addCase(checkEmail.fulfilled, (state, action) => {
         state.loading = false;
         state.emailCheckMessage = action.payload;
+        state.isEmailIdChecked = true;
       })
       .addCase(checkEmail.rejected, (state, action) => {
         setMessageError(state, 'emailCheck', action.payload);
@@ -257,6 +275,7 @@ const authSlice = createSlice({
       .addCase(checkNickName.fulfilled, (state, action) => {
         state.loading = false;
         state.nicknameCheckMessage = action.payload;
+        state.isNicknameChecked = true;
       })
       .addCase(checkNickName.rejected, (state, action) => {
         setMessageError(state, 'nicknameCheck', action.payload);
@@ -267,6 +286,7 @@ const authSlice = createSlice({
       .addCase(checkLoginId.fulfilled, (state, action) => {
         state.loading = false;
         state.loginIdCheckMessage = action.payload;
+        state.isLoginIdChecked = true;
       })
       .addCase(checkLoginId.rejected, (state, action) => {
         setMessageError(state, 'loginIdCheck', action.payload);

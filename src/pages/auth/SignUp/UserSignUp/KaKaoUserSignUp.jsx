@@ -9,7 +9,6 @@ import {
 } from '@/store/authSlice';
 import { clearSMSAuth } from '@/store/smsAuthSlice';
 import ProfileSection from './components/signup/ProfileSection';
-import PasswordSection from '../../../../common/forms/PasswordConfirm/PasswordSection';
 import PhoneVerification from '../../../../common/forms/Phone/PhoneVerification';
 import EmailSection from '../../../../common/forms/Email/EmailSection';
 import AddressSection from '../../../../common/forms/Address/AddressSection';
@@ -230,8 +229,15 @@ function UserSignUp() {
     }
   };
 
+  const { isNicknameChecked } = useSelector(state => state.auth);
+
   const handleSubmit = async e => {
     e.preventDefault();
+
+    if (!isNicknameChecked) {
+      alert('닉네임 중복확인을 해주세요.');
+      return;
+    }
 
     if (!validateForm()) return;
 
@@ -256,7 +262,6 @@ function UserSignUp() {
       console.log('[회원가입 요청 데이터]', completeFormData);
 
       await dispatch(kakaoSignUpUser(completeFormData)).unwrap();
-      Navigate;
     } catch (err) {
       console.error('회원가입 실패:', err);
       alert(err || '회원가입에 실패했습니다.');
@@ -265,7 +270,6 @@ function UserSignUp() {
 
   useEffect(() => {
     if (signUpSuccess) {
-      alert('회원가입이 성공적으로 완료되었습니다.');
       resetForm();
       dispatch(clearSignUpSuccess());
       dispatch(clearEmailCheck());
@@ -274,6 +278,11 @@ function UserSignUp() {
       navigate('/auth/signup/complete');
     }
   }, [signUpSuccess, dispatch]);
+
+  // 페이지 진입 시 상태 초기화
+  useEffect(() => {
+    dispatch(clearSMSAuth());
+  }, [formData.loginId]);
 
   return (
     <div className={styles['signup-wrap']}>
@@ -311,7 +320,7 @@ function UserSignUp() {
 
           <AddressSection
             roadFull={formData.roadFull}
-            addrDetail={formData.addrDetail}
+            addDetail={formData.addrDetail}
             onAddressChange={handleAddressChange}
           />
 
