@@ -311,7 +311,7 @@ function UserSignUp() {
 
           <AddressSection
             roadFull={formData.roadFull}
-            addrDetail={formData.addrDetail}
+            addDetail={formData.addrDetail}
             onAddressChange={handleAddressChange}
           />
 
