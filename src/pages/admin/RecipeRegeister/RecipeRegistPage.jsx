@@ -56,7 +56,7 @@ function RecipeRegistPage() {
 
     try {
       const response = await axiosInstance.put(
-        '/api-service/api/upload-image/cook',
+        '/api-service/api/upload-image/food',
         formImageData,
         {
           headers: {
