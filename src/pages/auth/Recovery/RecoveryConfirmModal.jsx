@@ -13,7 +13,6 @@ function RecoveryConfirmModal({ onClose, id }) {
     setIsLoading(true);
     setError('');
     try {
-      // id를 반드시 사용하여 복구 API 호출
       const response = await axiosInstance.post(`/auth-service/auth/recover/${id}`);
       if (response.data.success) {
         alert('복구가 완료되었습니다. 다시 로그인 하십시요');
@@ -30,8 +29,8 @@ function RecoveryConfirmModal({ onClose, id }) {
   };
 
   return (
-    <ModalWrapper onClose={onClose} title="계정 복구 확인" size="lg">
-      <div>
+    <ModalWrapper onClose={onClose} title="계정 복구 확인" size="lg" >
+      <div className={styles.RecoveryConfirmModal}>
         <p className={styles.description}>
           사용자님의 계정은 휴먼모드입니다. 계정을 복구 하시겠습니까?
         </p>
@@ -40,7 +39,7 @@ function RecoveryConfirmModal({ onClose, id }) {
             type="button"
             onClick={onClose}
             disabled={isLoading}
-            className={`${styles.button} ${styles.cancel}`}
+            className={styles.cancel}
           >
             돌아가기
           </button>
@@ -48,7 +47,7 @@ function RecoveryConfirmModal({ onClose, id }) {
             type="button"
             onClick={handleRecover}
             disabled={isLoading}
-            className={styles.button}
+            className={styles.buttondot}
           >
             {isLoading ? '복구 중...' : '복구하기'}
           </button>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import signsupoption from './SignUpOptionPage.module.scss';
 import { Smile, Truck } from 'lucide-react';
+import signsupoption from './SignUpOptionPage.module.scss';
 
 function SignUpOptionPage() {
   const nav = useNavigate();
@@ -12,13 +12,15 @@ function SignUpOptionPage() {
         <p>가입하시려는 회원의 유형을 선택해주세요.</p>
       </div>
       <div className={signsupoption.OptionBlock}>
-        <div onClick={() => nav('/auth/signup/usersignup')}>
-          <Smile size={48}/>
-          <p>사용자 회원가입</p>
+        <div onClick={() => nav('/auth/signup/usersignup')} className={signsupoption.card}>
+          <p className={signsupoption.txt}>
+            <Smile size={48} /> 사용자 회원가입
+          </p>
         </div>
-        <div onClick={() => nav('/auth/signup/ridersignup')}>
-          <Truck size={48}/>
-          <p>배달원 회원가입</p>
+        <div onClick={() => nav('/auth/signup/ridersignup')} className={signsupoption.card}>
+          <p className={signsupoption.txt}>
+            <Truck size={48} /> 배달원 회원가입
+          </p>
         </div>
       </div>
     </div>
