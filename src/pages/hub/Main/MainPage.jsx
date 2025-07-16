@@ -7,7 +7,7 @@ import axiosInstance from '../../../services/axios-config';
 import { openModal } from '../../../store/modalSlice';
 import ShopOrderSection from './component/ShopOrderSection';
 import ShopDeliveryPendingSection from './component/ShopDeliveryPendingSection';
-import ShopPreparePendingSection from './component/ShopPreparePendingSection';
+// import ShopPreparePendingSection from './component/ShopPreparePendingSection';
 
 function MainPage() {
   const dispatch = useDispatch();
@@ -17,7 +17,7 @@ function MainPage() {
   const handleOpenOrderDetailModal = order => {
     dispatch(
       openModal({
-        type: 'ORDER_DETAIL',
+        type: 'SHOP_ORDER_DETAIL',
         props: {
           order,
         },

@@ -15,11 +15,13 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
 
   const numOfRows = 3;
 
-  const [maxCount, setMaxCount] = useState(10);
+  const [maxCount, setMaxCount] = useState(0);
+  const [isFullLoaded, setIsFullLoaded] = useState(false);
 
   // 대기중인 주문 조회
   const fetchPreparingOrders = async (page = pageNo, number = numOfRows) => {
-    await setLoading(true);
+    setLoading(true);
+
     const response = await axiosInstance.get('/shop-service/shop/filtering-order', {
       params: {
         pageNo: page,
@@ -28,14 +30,26 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
       },
     });
 
-    if (pageNo === 1) {
-      setOrders(response.data.data);
-    } else {
-      setOrders(prev => [...prev, ...response.data.data]);
+    const { data } = response.data;
+
+    if (data.length === 0) {
+      setIsFullLoaded(true);
+      setMaxCount(0);
     }
 
-    if (pageNo === 1 && response.data.data.length < numOfRows)
-      setMaxCount(response.data.data.length);
+    if (page === 1) {
+      setOrders(data);
+      setMaxCount(data.length);
+    } else {
+      setOrders(prev => [...prev, ...data]);
+    }
+
+    if (page === 1 && data.length < number) {
+      setIsFullLoaded(true);
+      setMaxCount(data.length);
+    } else {
+      setMaxCount(prev => prev + data.length); // 누적 방식 가능
+    }
 
     setLoading(false);
   };
@@ -52,9 +66,9 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
     const { data } = response.data;
 
     // 더보기 버튼 활성화 여부 조회
-    if (data.filter(order => order !== null).length === orders.length) setMaxCount(data.length);
-    else if (data.filter(order => order !== null).length !== orders.length) {
-      window.location.reload();
+    if (data.length !== orders.length) {
+      setMaxCount(data.length);
+      fetchPreparingOrders(1, pageNo * numOfRows);
     }
   };
 
@@ -70,6 +84,12 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
 
     return () => clearInterval(interval);
   }, [pageNo, orders]);
+
+  // useEffect(() => {
+  //   if (!isFullLoaded && orders.length < pageNo * numOfRows) {
+  //     fetchPreparingOrders(pageNo, 1); // 한 개만 채워넣기
+  //   }
+  // }, [orders]);
 
   const handleLoadMore = () => {
     setPageNo(prev => prev + 1);
@@ -104,7 +124,9 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
                 <Button
                   onClick={() => {
                     handleStatusChange(order);
-                    window.location.reload();
+                    setOrders(prev =>
+                      prev.filter(prevOrder => prevOrder.orderId !== order.orderId)
+                    );
                   }}
                 >
                   상태 변경
@@ -114,7 +136,7 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
           ))
         )}
       </div>
-      {maxCount > orders.length && (
+      {orders.length > 0 && orders.length < maxCount && (
         <div className={styles.allOrderPageButton}>
           <Button onClick={handleLoadMore}>더보기 +</Button>
         </div>

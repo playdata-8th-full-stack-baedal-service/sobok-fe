@@ -35,9 +35,11 @@ const ShopDeliveryPendingSection = ({ isOrderChanged, handleOpenOrderDetailModal
 
   useEffect(() => {
     setLoading(true);
+    console.log('fetchCompletedOrders');
     fetchCompletedOrders().then(() => {
       setLoading(false);
     });
+    console.log('fetchCompletedOrders', orders);
   }, [pageNo]);
 
   useEffect(() => {
