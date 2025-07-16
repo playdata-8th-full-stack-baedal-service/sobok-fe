@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import ModalWrapper from '../../../../common/modals/ModalWrapper';
 import styles from './DeleteConfilmModal.module.scss';
 import axiosInstance from '../../../../services/axios-config';
@@ -16,11 +15,10 @@ function RecoveryConfirmModal({ onClose, id }) {
       console.log(response.data);
       if (response.data.success) {
         return response.data.message;
-      }
+      } 
       setError('복구 중 오류가 발생했다면 이게 뜹니다.');
     } catch (error) {
-      console.error(error.response.data.message);
-      setError('복구 관련 에러가 발생했다면 이게 뜹니다');
+      setError('복구 관련 에러가 발생했다면 이게 뜹니다', error);
     } finally {
       setIsLoading(false);
     }
