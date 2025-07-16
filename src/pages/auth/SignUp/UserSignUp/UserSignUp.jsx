@@ -220,6 +220,11 @@ function UserSignUp() {
     }
   }, [signUpSuccess, dispatch]);
 
+  // 페이지 진입 시 상태 초기화
+  useEffect(() => {
+    dispatch(clearSMSAuth());
+  }, []);
+
   return (
     <div className={styles['signup-wrap']}>
       <div className={styles['signup-container']}>

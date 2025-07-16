@@ -21,7 +21,7 @@ function SocialLoginListener() {
         localStorage.setItem('USER_ROLE', data.role);
         localStorage.setItem('USER_ID', data.userId);
         localStorage.setItem('RECOVERY_TARGET', data.recoveryTarget);
-        navigate('/');
+        navigate('/admin');
       }
 
       if (data.type === 'NEW_USER_SIGNUP') {
