@@ -25,7 +25,7 @@ function Header({ lefttitle, rightone, righttwo, rightthree }) {
 
       {/* 가운데 로고 클릭 시 역할에 따라 이동 */}
       <div className={styles.Logo} onClick={handleLogoClick}>
-        <img src="/소복소복로고.svg" alt="로고" />
+        <img className={styles.logoimg} src="/소복소복로고.svg" alt="로고" />
       </div>
 
       <div className={styles.Right}>

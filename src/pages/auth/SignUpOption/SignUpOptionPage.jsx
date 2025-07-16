@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import signsupoption from './SignUpOptionPage.module.scss';
+import { Smile, Truck } from 'lucide-react';
 
 function SignUpOptionPage() {
   const nav = useNavigate();
@@ -12,11 +13,11 @@ function SignUpOptionPage() {
       </div>
       <div className={signsupoption.OptionBlock}>
         <div onClick={() => nav('/auth/signup/usersignup')}>
-          <img src="#" />
+          <Smile size={48}/>
           <p>사용자 회원가입</p>
         </div>
         <div onClick={() => nav('/auth/signup/ridersignup')}>
-          <img src="#" />
+          <Truck size={48}/>
           <p>배달원 회원가입</p>
         </div>
       </div>

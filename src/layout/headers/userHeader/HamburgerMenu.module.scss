@@ -59,6 +59,28 @@
   }
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+}
+
 :global(*) {
   box-sizing: border-box;
 }
@@ -67,32 +89,43 @@
   font-family: inherit;
 }
 
-.sidebar {
+.card {
   position: absolute;
-  left: -20px;
-  top: 110px;
-  background-color: rgb(84, 80, 80);
   width: 250px;
-  height: 100vh;
-  color: rgb(255, 255, 255);
+  height: 290px;
+  border-radius: 15px;
+  background: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  font-weight: 600;
+  font-size: 1.2em;
+  padding: 15px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+  justify-content: space-between;
+  border: 1px solid black;
+  box-shadow: -3px 3px 1px 0px #000000;
 
-  .siderbartitle {
-    font-size: 20px;
-    font-weight: bold;
-    width: 100vw;
-    text-align: center;
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+
+  &.fadeOut {
+    animation: fadeOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+.element {
+  color: rgb(0, 0, 0);
+  font-size: 0.8em;
+  padding: 6px 15px;
+  border-left: 2px solid grey;
+  cursor: pointer;
+
+  &.active {
+    background-color: #004d92;
+    border-left: 2px solid #8cb4ff;
+    color: azure;
   }
 
-  .closebutton {
-    border: none;
-    background-color: rgb(84, 80, 80);
-    font-size: 20px;
-    font-weight: bold;
-    color: rgb(255, 255, 255);
-    cursor: pointer;
+  &:hover:not(.active) {
+    color: #3775bb;
   }
 }

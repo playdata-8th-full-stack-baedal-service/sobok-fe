@@ -42,6 +42,7 @@ function UserRoutes() {
         <Route path="product" element={<ProductPage />} />
         <Route path="search" element={<SearchPage />} />
         <Route path="category" element={<CategoryPage />} />
+        
         {/* <Route path="post-list" element={<PostListPage />} /> */}
         {/* <Route path="post/:id" element={<PostDetailPage />} /> */}
 
@@ -145,7 +146,7 @@ function UserRoutes() {
               <UserInfo />
             </RoleRoute>
           }
-        />  
+        />
 
         <Route path="tossSuccess" element={<SuccessPage />} />
       </Routes>

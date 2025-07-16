@@ -75,18 +75,12 @@ function UserHeader() {
 
   const LoggedInControls = (
     <div className={styles.navItems}>
-      <ShoppingCart
-        onClick={() => safeNavigate('/user/cart')}
-        className={styles.iconBtn}
-      />
+      <ShoppingCart onClick={() => safeNavigate('/user/cart')} className={styles.iconBtn} />
       <button onClick={handleLogout} className={styles.logoutbutton}>
         로그아웃
       </button>
       <div className={styles.dropdownWrapper} ref={dropdownRef}>
-        <Settings2
-          onClick={toggleDropdown}
-          className={styles.iconBtn}
-        />
+        <Settings2 onClick={toggleDropdown} className={styles.iconBtn} />
         {dropdownOpen && (
           <ul className={styles.dropdownMenu}>
             <li onClick={() => safeNavigate('/user/info')}>회원 정보 수정</li>
@@ -102,8 +96,12 @@ function UserHeader() {
 
   const GuestControls = (
     <div className={styles.navItems}>
-      <button onClick={() => safeNavigate('/auth/signin')} className={styles.loginbutton}>로그인</button>
-      <button onClick={() => safeNavigate('/auth/signup')} className={styles.signupbutton}>회원가입</button>
+      <button onClick={() => safeNavigate('/auth/signin')} className={styles.loginbutton}>
+        로그인
+      </button>
+      <button onClick={() => safeNavigate('/auth/signup')} className={styles.signupbutton}>
+        회원가입
+      </button>
     </div>
   );
 
