@@ -9,7 +9,6 @@ import RiderInfoPage from './pages/rider/RiderInfo/RiderInfoPage';
 import HubInfoPage from './pages/hub/HubInfo/HubInfoPage';
 
 
-
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <Provider store={store}>

@@ -43,7 +43,24 @@ export const signUpUser = createAsyncThunk('auth/signUpUser', async (userData, t
   }
 });
 
-// 회원탈퇴
+export const kakaoSignUpUser = createAsyncThunk(
+  'auth/kakaoSignUpUser',
+  async (userData, thunkAPI) => {
+    try {
+      const response = await axiosInstance.post('/auth-service/auth/social-user-signup', userData);
+      const { status, message } = response.data;
+      if (status === 200 || message?.includes('회원가입 성공')) {
+        return response.data.data;
+      }
+
+      return thunkAPI.rejectWithValue('회원가입 실패');
+    } catch (error) {
+      const message = error.response?.data?.message || '회원가입 요청에 실패하였습니다.';
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const deleteUser = createAsyncThunk('auth/deleteUser', async ({ password }, thunkAPI) => {
   try {
     const res = await axiosInstance.delete('/auth-service/auth/delete', { data: { password } });

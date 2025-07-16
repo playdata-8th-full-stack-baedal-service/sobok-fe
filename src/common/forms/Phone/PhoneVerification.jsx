@@ -43,29 +43,24 @@ function PhoneVerification({
   };
 
   return (
-    <div className={wrapperClassName}>
-      <div className="phone-group">
-        <label htmlFor="phone">
-          전화번호 <span className="required">*</span>
-        </label>
-        <div className="phonecomp">
-          <Input
-            id="phone"
-            type="text"
-            value={phone}
-            name='phone'
-            onChange={onPhoneChange}
-            placeholder="01012345678"
-            className={smsError ? 'input-error' : ''}
-          />
-          <Button
-            type="button"
-            variant="BASIC"
-            onClick={handleSendSMS}
-            disabled={isCodeSent}
-            text={isCodeSent ? '전송됨' : '인증하기'}
-          />
-        </div>
+    <div className={`${styles.phoneWrapper} ${wrapperClassName}`}>
+      <div className={styles.inputWithButton}>
+        <Input label="전화번호" required error={smsError} showLabel={showLabel}>
+          <div className={styles.inputButtonGroup}>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              value={phone}
+              onChange={onPhoneChange}
+              placeholder="전화번호를 입력하세요."
+              className={smsError ? styles.inputError : ''}
+            />
+            <Button type="button" variant="BASIC" onClick={handleSendSMS} disabled={isCodeSent}>
+              {isCodeSent ? '전송됨' : '인증요청'}
+            </Button>
+          </div>
+        </Input>
       </div>
 
       <div className={styles.inputWithButton}>
