@@ -58,6 +58,7 @@
   .fieldRow {
     display: flex;
     align-items: center;
+    position: relative;
 
     label {
       flex: 0 0 80px;
@@ -76,6 +77,15 @@
         background-color: #e0e0e0;
         color: #666;
       }
+    }
+
+    .timer {
+      position: absolute;
+      right: 80px;
+      bottom: 12px;
+      font-size: 13px;
+      color: #666;
+      z-index: 10;
     }
 
     button {
@@ -189,7 +199,6 @@
     margin-top: 1rem;
   }
 }
-
 
 .withdrawalButton {
   margin-top: 3rem;

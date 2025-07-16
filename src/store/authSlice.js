@@ -92,9 +92,8 @@ export const checkNickName = createAsyncThunk('auth/checkNickName', async (nickn
     const res = await axiosInstance.get('/user-service/user/check-nickname', {
       params: { nickname },
     });
-    if (res.data.status === 200 || res.data.message === '사용 가능한 닉네임입니다.')
-      return res.data.message;
-    return thunkAPI.rejectWithValue('닉네임 중복 확인 실패');
+
+    return res.data.message;
   } catch (e) {
     return thunkAPI.rejectWithValue(
       e.response?.data?.message || '닉네임 중복 확인에 실패했습니다.'

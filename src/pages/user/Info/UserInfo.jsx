@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-alert */
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,6 +11,7 @@ import AddrList from './component/AddrList';
 import { openModal } from '../../../store/modalSlice';
 import styles from './UserInfo.module.scss';
 import Button from '../../../common/components/Button';
+import AuthCodeEditableField from './component/AuthCodeEditableField';
 
 function UserInfo() {
   const { userInfo } = useSelector(state => state.userInfo);
@@ -17,6 +19,7 @@ function UserInfo() {
 
   const [targetPhone, setTargetPhone] = useState('');
   const [isModified, setIsModified] = useState(true);
+  const [timer, setTimer] = useState(0);
 
   // 유저 정보 조회
   useEffect(() => {
@@ -34,6 +37,24 @@ function UserInfo() {
     fetchUserInfo();
   }, [dispatch, isModified]);
 
+  // 인증번호 타이머
+  useEffect(() => {
+    if (timer === null || targetPhone === '') return;
+    const interval = setInterval(() => {
+      console.log(timer);
+      setTimer(prev => prev - 1);
+    }, 1000);
+
+    return () => {
+      if (timer <= 0) {
+        setTimer(null);
+        setTargetPhone('');
+        setIsModified(true);
+      }
+      clearInterval(interval);
+    };
+  }, [targetPhone, timer]);
+
   // 전화번호 수정
   const handlePhoneEdit = async phone => {
     if (phone === userInfo.phone) {
@@ -44,6 +65,7 @@ function UserInfo() {
       setTargetPhone(phone);
       await dispatch(sendAuthCode({ phone })).unwrap();
       alert('인증번호가 발송되었습니다.');
+      setTimer(180);
     } catch (err) {
       alert(err);
       setTargetPhone('');
@@ -99,14 +121,16 @@ function UserInfo() {
           <EditableField label="아이디" value={userInfo.loginId || ''} disabled />
           <EditableField
             label="전화번호"
-            value={userInfo.phone || ''}
+            value={targetPhone || userInfo.phone || ''}
             onEditClick={handlePhoneEdit}
+            disabled={targetPhone !== ''}
           />
           {targetPhone && (
-            <EditableField
+            <AuthCodeEditableField
               label="인증번호"
               value={userInfo.authCode || ''}
               onEditClick={handlePhoneConfirm}
+              timer={timer}
             />
           )}
           <EditableField

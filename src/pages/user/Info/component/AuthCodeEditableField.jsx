@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from '../UserInfo.module.scss';
 
-function EditableField({ label, value, onEditClick, disabled }) {
+function AuthCodeEditableField({ label, value, onEditClick, disabled, timer }) {
   const [editValue, setEditValue] = useState(value);
 
   useEffect(() => {
@@ -22,20 +22,29 @@ function EditableField({ label, value, onEditClick, disabled }) {
         }}
         onChange={e => setEditValue(e.target.value)}
       />
+      <span className={styles.timer}>
+        {Math.floor(timer / 60)
+          .toString()
+          .padStart(2, '0')}
+        :
+        {Math.floor(timer % 60)
+          .toString()
+          .padStart(2, '0')}
+      </span>
       {!disabled && (
         <button type="button" onClick={() => onEditClick(editValue)}>
-          변경
+          인증
         </button>
       )}
     </div>
   );
 }
 
-EditableField.propTypes = {
+AuthCodeEditableField.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onEditClick: PropTypes.func.isRequired,
   disabled: PropTypes.bool.isRequired,
 };
 
-export default EditableField;
+export default AuthCodeEditableField;
