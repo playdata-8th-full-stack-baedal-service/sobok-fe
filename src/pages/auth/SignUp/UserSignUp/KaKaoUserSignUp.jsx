@@ -256,7 +256,6 @@ function UserSignUp() {
       console.log('[회원가입 요청 데이터]', completeFormData);
 
       await dispatch(kakaoSignUpUser(completeFormData)).unwrap();
-      Navigate;
     } catch (err) {
       console.error('회원가입 실패:', err);
       alert(err || '회원가입에 실패했습니다.');
@@ -265,7 +264,6 @@ function UserSignUp() {
 
   useEffect(() => {
     if (signUpSuccess) {
-      alert('회원가입이 성공적으로 완료되었습니다.');
       resetForm();
       dispatch(clearSignUpSuccess());
       dispatch(clearEmailCheck());

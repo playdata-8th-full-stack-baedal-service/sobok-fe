@@ -220,6 +220,21 @@ const authSlice = createSlice({
         state.signUpSuccess = false;
       })
 
+      .addCase(kakaoSignUpUser.pending, state => {
+        setLoading(state);
+        state.signUpSuccess = false;
+      })
+      .addCase(kakaoSignUpUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.signUpSuccess = true;
+      })
+      .addCase(kakaoSignUpUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.signUpSuccess = false;
+      })
+
+
       .addCase(deleteUser.pending, state => {
         setLoading(state);
         state.deleteSuccess = false;
