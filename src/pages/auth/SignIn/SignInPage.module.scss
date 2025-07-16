@@ -28,19 +28,120 @@
   margin-bottom: 30px;
 }
 
-.socialBtn {
+.socialBtnone {
   width: 100%;
+  font-size: 14px;
   padding: 10px 12px;
   margin-bottom: 10px;
-  border: 1px solid #000000;
-  border-radius: 999px;
-  background-color: #fff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  font-size: 14px;
-  gap: 10px;
   cursor: pointer;
+  gap: 10px;
+  justify-content: flex-start;
+  text-align: center;
+  font-weight: bold;
+  padding: 0.7em 2em;
+  border: 1px solid #000000;
+  background-color: #fff;
+  border-radius: 999px;
+  position: relative;
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.16), 
+    0 3px 6px rgba(0, 0, 0, 0.1);
+  color: black;
+  text-decoration: none;
+  transition: 0.3s ease all;
+  z-index: 1000;
+
+  &::before {
+    transition: 0.5s all ease;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 50%;
+    bottom: 0;
+    opacity: 0;
+    content: '';
+    background-color: #FAE100;
+    z-index: -1;
+    border-radius: 999px;
+  }
+
+  &:hover,
+  &:focus {
+    color: black;
+
+    &::before {
+      transition: 0.5s all ease;
+      left: 0;
+      right: 0;
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.socialBtntwo {
+  width: 100%;
+  font-size: 14px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 10px;
+  justify-content: flex-start;
+  text-align: center;
+  font-weight: bold;
+  padding: 0.7em 2em;
+  border: 1px solid #000000;
+  background-color: #fff;
+  border-radius: 999px;
+  position: relative;
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.16), 
+    0 3px 6px rgba(0, 0, 0, 0.1);
+  color: black;
+  text-decoration: none;
+  transition: 0.3s ease all;
+  z-index: 1000;
+
+  &::before {
+    transition: 0.5s all ease;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 50%;
+    bottom: 0;
+    opacity: 0;
+    content: '';
+    background-color: #3086F6;
+    z-index: -1;
+    border-radius: 999px;
+  }
+
+  &:hover,
+  &:focus {
+    color: black;
+
+    &::before {
+      transition: 0.5s all ease;
+      left: 0;
+      right: 0;
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
 }
 
 .socialBtn img {

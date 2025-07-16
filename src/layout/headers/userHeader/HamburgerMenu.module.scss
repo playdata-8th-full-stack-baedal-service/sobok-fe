@@ -103,7 +103,7 @@
   flex-direction: column;
   justify-content: space-between;
   border: 1px solid black;
-  box-shadow: -3px 3px 1px 0px #000000;
+  z-index: 999999;
 
   animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 
