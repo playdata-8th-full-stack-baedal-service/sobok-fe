@@ -1,6 +1,0 @@
-@use '../../common/base/index.scss' as *;
-
-.Footer {
-  @include flexbox(center, center);
-  height: 100px;
-}

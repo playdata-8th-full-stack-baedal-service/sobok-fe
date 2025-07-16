@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../store/authSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../services/axios-config';
+import style from './RiderHeader.module.scss';
 
 // 테스트용
 /*
@@ -32,7 +33,7 @@ const RiderHeader = () => {
     }
   };
 
-  return <Header rightone={<button onClick={handleLogout}>로그아웃</button>} />;
+  return <Header rightone={<button onClick={handleLogout} className={style.riderlogoutbutton}>로그아웃</button>} />;
 };
 
 export default RiderHeader;

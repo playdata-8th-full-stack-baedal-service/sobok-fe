@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import { logout } from '../../store/authSlice';
 import axios from '../../services/axios-config';
+import styles from './AdminHeader.module.scss';
 
 // 테스트용
 /*
@@ -41,7 +42,7 @@ function AdminHeader() {
   return (
     <Header
       rightthree={
-        <button type="button" onClick={handleLogout}>
+        <button type="button" onClick={handleLogout} className={styles.adminlogoutbutton}>
           로그아웃
         </button>
       }
