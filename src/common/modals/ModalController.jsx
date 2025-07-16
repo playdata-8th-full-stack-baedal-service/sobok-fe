@@ -24,6 +24,7 @@ import RecipeModal from '../../pages/user/All/Product/modals/RecipeModal';
 import MyOrderDetailPage from '../../pages/user/UserOptions/MyOrderDetail/MyOrderDetailPage';
 import UserPasswordChangeModal from '../../pages/user/Info/component/UserPasswordChangeModal';
 import AdminOrderDetailModal from '../../pages/admin/AllOrder/modals/AdminOrderDetailModal';
+import RecoveryConfirmModal from '../../pages/auth/Recovery/RecoveryConfirmModal';
 
 function ModalController() {
   const { modalType, modalProps } = useSelector(state => state.modal);
@@ -73,6 +74,8 @@ function ModalController() {
       return <UserPasswordChangeModal onClose={handleClose} />;
     case 'ADMIN_ORDER_DETAIL':
       return <AdminOrderDetailModal onClose={handleClose} order={modalProps.order} />;
+    case 'USER_RESTORE' :
+      return <RecoveryConfirmModal onClose={handleClose} {...modalProps} />;
     default:
       return null;
   }
