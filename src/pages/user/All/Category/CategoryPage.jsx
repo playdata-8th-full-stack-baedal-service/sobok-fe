@@ -1,6 +1,6 @@
 /* eslint-disable react/function-component-definition */
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useParams } from 'react-router-dom';
 import Button from '../../../../common/components/Button';
 import CookGrid from '../component/CookGrid';
 import axiosInstance from '../../../../services/axios-config';
@@ -36,16 +36,20 @@ const categoryList = [
 const CategoryPage = () => {
   const [items, setItems] = useState([]);
   const [searchParams] = useSearchParams();
+  const { category: paramCategory } = useParams();
   const [pageNo, setPageNo] = useState(1);
   const [numOfRows] = useState(12);
   const [isFullLoaded, setIsFullLoaded] = useState(false);
+
+  // path 파라미터가 있으면 우선 사용, 없으면 쿼리스트링 사용
+  const categoryValue = paramCategory ? paramCategory.toUpperCase() : (searchParams.get('category') || '').toUpperCase();
 
   useEffect(() => {
     async function fetchItems() {
       if (isFullLoaded) return;
       const response = await axiosInstance.get(`/cook-service/cook/get-cook-category`, {
         params: {
-          category: searchParams.get('category'),
+          category: categoryValue,
           pageNo,
           numOfRows,
         },
@@ -56,12 +60,12 @@ const CategoryPage = () => {
       }
     }
     fetchItems();
-  }, [pageNo, numOfRows, searchParams, isFullLoaded]);
+  }, [pageNo, numOfRows, categoryValue, isFullLoaded]);
 
   return (
     <div className={styles.categoryCookPage}>
       <div className={styles.categoryHeader}>
-        <h2>{categoryList.find(c => c.en === searchParams.get('category').toUpperCase()).name}</h2>
+        <h2>{categoryList.find(c => c.en === categoryValue)?.name || '카테고리'}</h2>
         <Button className={styles.sortButton}>최신순/주문량순</Button>
       </div>
       <CookGrid items={items} />

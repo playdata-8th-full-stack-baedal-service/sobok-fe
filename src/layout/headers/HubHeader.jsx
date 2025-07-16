@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../store/authSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../services/axios-config';
+import styles from './HubHeader.module.scss';
 
 // 테스트용
 /*
@@ -41,9 +42,9 @@ const RiderHeader = () => {
   return (
     <Header
       lefttitle={null}
-      rightone={<button onClick={() => safeNavigate('/hub/history')}>주문 처리 완료 내역</button>}
-      righttwo={<button onClick={() => safeNavigate('/hub/info')}>가게 정보</button>}
-      rightthree={<button onClick={handleLogout}>로그아웃</button>}
+      rightone={<button onClick={() => safeNavigate('/hub/history')} className={styles.orderbutton}>주문 처리 완료 내역</button>}
+      righttwo={<button onClick={() => safeNavigate('/hub/info')} className={styles.hubbutton}>가게 정보</button>}
+      rightthree={<button onClick={handleLogout} className={styles.logoutbuttonhub}>로그아웃</button>}
     />
   );
 };

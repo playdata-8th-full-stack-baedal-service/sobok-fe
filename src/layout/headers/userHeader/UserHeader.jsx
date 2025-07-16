@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { Settings2, ShoppingCart } from 'lucide-react';
 import { logout } from '../../../store/authSlice';
 import axios from '../../../services/axios-config';
 import Header from '../Header';
 import styles from './UserHeader.module.scss';
+import MenuTest from './HamburgerMenu';
 
 // 테스트용
 /*
@@ -17,7 +19,7 @@ import styles from './UserHeader.module.scss';
      window.dispatchEvent(new PopStateEvent('popstate'));
 */
 
-const UserHeader = () => {
+function UserHeader() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -61,7 +63,7 @@ const UserHeader = () => {
 
   const MenuIcon = (
     <div className={styles.menuIcon} onClick={() => console.log('사이드바 열기')}>
-      <img src="/icons/menu.svg" alt="메뉴" />
+      <MenuTest />
     </div>
   );
 
@@ -73,20 +75,12 @@ const UserHeader = () => {
 
   const LoggedInControls = (
     <div className={styles.navItems}>
-      <img
-        src="/icons/cart.svg"
-        alt="장바구니"
-        onClick={() => safeNavigate('/user/cart')}
-        className={styles.iconBtn}
-      />
-      <button onClick={handleLogout}>로그아웃</button>
+      <ShoppingCart onClick={() => safeNavigate('/user/cart')} className={styles.iconBtn} />
+      <button onClick={handleLogout} className={styles.logoutbutton}>
+        로그아웃
+      </button>
       <div className={styles.dropdownWrapper} ref={dropdownRef}>
-        <img
-          src="/icons/dashboard.svg"
-          alt="더보기"
-          onClick={toggleDropdown}
-          className={styles.iconBtn}
-        />
+        <Settings2 onClick={toggleDropdown} className={styles.iconBtn} />
         {dropdownOpen && (
           <ul className={styles.dropdownMenu}>
             <li onClick={() => safeNavigate('/user/info')}>회원 정보 수정</li>
@@ -102,8 +96,12 @@ const UserHeader = () => {
 
   const GuestControls = (
     <div className={styles.navItems}>
-      <button onClick={() => safeNavigate('/auth/signin')}>로그인</button>
-      <button onClick={() => safeNavigate('/auth/signup')}>회원가입</button>
+      <button onClick={() => safeNavigate('/auth/signin')} className={styles.loginbutton}>
+        로그인
+      </button>
+      <button onClick={() => safeNavigate('/auth/signup')} className={styles.signupbutton}>
+        회원가입
+      </button>
     </div>
   );
 
@@ -114,6 +112,6 @@ const UserHeader = () => {
       rightone={isLoggedIn ? LoggedInControls : GuestControls}
     />
   );
-};
+}
 
 export default UserHeader;

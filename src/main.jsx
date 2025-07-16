@@ -12,7 +12,7 @@ import HubInfoPage from './pages/hub/HubInfo/HubInfoPage';
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <Provider store={store}>
-      <App/>
+      <App />
     </Provider>
   </BrowserRouter>
 );
