@@ -354,7 +354,6 @@
       }
     }
   }
-
 }
 
 .RecipeSelection {
@@ -394,27 +393,32 @@
 }
 
 .buttonGroup {
-    display: flex;
-    gap: 15px;
-    flex-direction: row-reverse;
+  display: flex;
+  gap: 15px;
+  flex-direction: row-reverse;
 
-    .cleatbutton {
-        background-color: rgb(245, 7, 7);
-        width: 140px;
-        height: 30px;
-        border-radius: 20px;
-        color: rgb(255, 255, 255);
-        border: none;
-        cursor: pointer;
-    }
+  .cleatbutton {
+    background-color: rgb(245, 7, 7);
+    width: 140px;
+    height: 30px;
+    border-radius: 20px;
+    color: rgb(255, 255, 255);
+    border: none;
+    cursor: pointer;
+  }
 
-    .uploadbutton {
-        background-color: rgb(12, 200, 9);
-        width: 140px;
-        height: 30px;
-        border-radius: 20px;
-        color: rgb(255, 255, 255);
-        border: none;
-        cursor: pointer;
-    }
+  .uploadbutton {
+    background-color: rgb(12, 200, 9);
+    width: 140px;
+    height: 30px;
+    border-radius: 20px;
+    color: rgb(255, 255, 255);
+    border: none;
+    cursor: pointer;
+  }
+}
+
+.dropdownmenu {
+    padding: 10px 20px;
+    font-weight: bold;
 }

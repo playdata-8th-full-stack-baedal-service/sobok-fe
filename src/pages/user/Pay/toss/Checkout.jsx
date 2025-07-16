@@ -57,6 +57,7 @@ export default function CheckoutPage({ orderer, shipping, ready, totalPrice }) {
     }
 
     renderPaymentWidgets();
+    console.log('renderPaymentWidgets');
   }, [widgets, amount]);
 
   useEffect(() => {
@@ -68,6 +69,7 @@ export default function CheckoutPage({ orderer, shipping, ready, totalPrice }) {
       currency: 'KRW',
       value: totalPrice,
     });
+    console.log('setAmount');
   }, [widgets, amount, totalPrice]);
 
   useEffect(() => {
@@ -110,7 +112,6 @@ export default function CheckoutPage({ orderer, shipping, ready, totalPrice }) {
                 `/payment-service/payment/fail-payment?orderId=${shipping.orderId}`
               );
               console.log(res);
-              setIsCancel(prev => prev + 1);
               window.location.reload();
             }
           }}

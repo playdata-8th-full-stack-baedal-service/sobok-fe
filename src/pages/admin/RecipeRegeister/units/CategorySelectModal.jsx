@@ -1,8 +1,12 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import ModalWrapper from '@/common/modals/ModalWrapper';
+import { setCategory } from '@/store/categorySlice';
 import style from '../RecipeRegistPage.module.scss';
 
 function CategorySelectModal({ onClose, formData, onChange }) {
+  const dispatch = useDispatch();
+
   const categoryList = [
     {
       categoryName: '한식',
@@ -31,6 +35,10 @@ function CategorySelectModal({ onClose, formData, onChange }) {
   ];
 
   const handleSelect = category => {
+    // Redux store에 카테고리 저장
+    dispatch(setCategory(category.categoryPostName));
+
+    // 기존 onChange도 호출 (백업용)
     if (onChange) {
       onChange({
         target: {

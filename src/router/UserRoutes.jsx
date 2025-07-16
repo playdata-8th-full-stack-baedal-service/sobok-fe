@@ -26,6 +26,10 @@ import SuccessPage from '../pages/user/Pay/toss/TossSuccess';
 import UserCartPage from '../pages/user/Cart/CartPage/UserCartPage';
 import PayPage from '../pages/user/Pay/PayPage';
 import PayCompletePage from '../pages/user/Pay/paycomplete/PayCompletePage';
+import ProductPage from '../pages/user/All/Product/ProductPage';
+import CategoryPage from '../pages/user/All/Category/CategoryPage';
+import SearchPage from '../pages/user/All/Search/SearchPage';
+import UserInfo from '../pages/user/Info/UserInfo';
 
 function UserRoutes() {
   return (
@@ -33,10 +37,11 @@ function UserRoutes() {
       <UserHeader />
       <Routes>
         {/* 비회원도 접근 가능한 페이지 */}
-        <Route path="/main" element={<MainPage />} />
-        {/* <Route path="product" element={<ProductPage />} /> */}
-        {/* <Route path="search" element={<SearchPage />} /> */}
-        {/* <Route path="category" element={<CategoryPage />} /> */}
+        <Route path="main" element={<MainPage />} />
+        <Route path="" element={<MainPage />} />
+        <Route path="product" element={<ProductPage />} />
+        <Route path="search" element={<SearchPage />} />
+        <Route path="category" element={<CategoryPage />} />
         {/* <Route path="post-list" element={<PostListPage />} /> */}
         {/* <Route path="post/:id" element={<PostDetailPage />} /> */}
 
@@ -136,13 +141,13 @@ function UserRoutes() {
         <Route
           path="userinfo"
           element={
-            <RoleRoute role="UESR">
-              <UserInfoPage />
+            <RoleRoute role="USER">
+              <UserInfo />
             </RoleRoute>
           }
-        />
+        />  
 
-        <Route path="/tossSuccess" element={<SuccessPage />} />
+        <Route path="tossSuccess" element={<SuccessPage />} />
       </Routes>
     </>
   );

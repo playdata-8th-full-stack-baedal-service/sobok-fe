@@ -1,0 +1,407 @@
+.productPage {
+  max-width: 80vw;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: sans-serif;
+  background-color: #fff;
+}
+
+.productHeader {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.productImage {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.productInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.productTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .productName {
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+
+  .productPriceContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 18%;
+    margin-bottom: 1rem;
+
+    .productBasePrice {
+      font-size: 0.95rem;
+      color: #777;
+    }
+
+    .productFavorite {
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .productFavorite:hover {
+      color: #42bb05;
+    }
+  }
+}
+
+.productCategory {
+  display: inline-block;
+  padding: 4px 10px;
+  margin-bottom: 1rem;
+  background-color: #f1f3f5;
+  color: #2f343f;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  border: 1px solid #e0e0e0;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  max-width: 100px;
+  text-align: center;
+}
+
+.productWarning {
+  font-size: 0.85rem;
+  color: #d32f2f;
+  line-height: 1.4;
+
+  small {
+    color: #888;
+  }
+}
+
+.productActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.recipeButton,
+.payButton,
+.cartButton {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.recipeButton {
+  background-color: #fff;
+  border: 1px solid #888;
+}
+
+.payButton {
+  background-color: #00c853;
+  color: #fff;
+}
+
+.cartButton {
+  background-color: #eee;
+}
+
+.totalPrice {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin: 0 1rem;
+}
+
+.baseIngredients,
+.additionalIngredients {
+  margin-bottom: 2rem;
+
+  h3 {
+    strong {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+  }
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  h3 {
+    font-size: 1.2rem;
+  }
+}
+
+.portionControl {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  span {
+    font-size: 1rem;
+  }
+}
+
+.ingredientGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+  margin-top: 3rem;
+}
+
+.ingredientItem {
+  background-color: #f4f4f4;
+  padding: 0.6rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.quantityPill {
+  display: inline-block;
+  background-color: #ddd;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  margin: 0 0.3rem;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: #d32f2f;
+  cursor: pointer;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+
+  input {
+    flex: 1;
+    padding: 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+
+    &:focus {
+      border: 1px solid #00b894;
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  .searchButton {
+    padding: 0.5rem 0.8rem;
+    font-size: 1rem;
+    background-color: #ddd;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+}
+
+.relatedProducts {
+  margin-top: 3rem;
+}
+
+.relatedHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  .moreButton {
+    background: none;
+    border: none;
+    font-size: 0.9rem;
+    color: #007aff;
+    cursor: pointer;
+  }
+}
+
+.relatedList {
+  display: flex;
+  gap: 1rem;
+
+  .relatedItem {
+    width: 100px;
+    height: 100px;
+    background-color: #e0e0e0;
+    border-radius: 6px;
+  }
+}
+.additionalIngredients {
+  h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .searchBar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0rem;
+
+    input {
+      padding: 0.5rem 1rem;
+      border: 1px solid #aaa;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      width: 250px;
+    }
+
+    .searchIcon {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+  }
+
+  .ingredientGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); // 2열 고정
+    gap: 1rem;
+  }
+
+  .ingredientControl {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f8f8f8;
+    padding: 0.6rem 0.6rem;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    gap: 1rem;
+    width: 100%;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .ingredientName {
+    flex-shrink: 0;
+    margin-left: 1rem;
+  }
+
+  .quantityControl {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex: 1;
+    justify-content: center;
+    
+  }
+
+  .qtyButton {
+    padding: 0.2rem 0.8rem;
+    font-size: 1rem;
+    background: transparent;
+    color: #000;
+    cursor: pointer;
+  }
+
+  .ingredientQty {
+    font-weight: bold;
+    min-width: 40px;
+    text-align: center;
+  }
+
+  .removeButton {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #d32f2f;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .totalQty {
+    font-size: 0.9rem;
+    color: #777;
+  }
+
+  .searchItemSelected {
+    display: block;
+    padding: 8px 12px;
+    background-color: #a4a4a4;
+    color: #333;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+  }
+
+  .searchResultContainer {
+    padding: 8px;
+    background-color: #fff;
+    border: none;
+  }
+
+  .searchResult {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .searchItem {
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid #2e2e2e;
+    background-color: transparent;
+    color: #2e2e2e;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+
+    &:hover {
+      background-color: #2e2e2e;
+      color: white;
+    }
+  }
+
+  .searchItemSelected {
+    @extend .searchItem;
+    background-color: #d54e4e;
+    color: white;
+    border: none;
+
+    &:hover {
+      background-color: #d54e4e;
+    }
+  }
+}

@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import style from './RecipeRegistPage.module.scss';
 import axiosInstance from '../../../services/axios-config';
 import ImageandOverview from './units/ImageandOverview';
 import IngredientsSelection from './units/IngredientsSelection';
 import RecipeSelection from './units/RecipeSelection';
+import CategorySelectModal from './units/CategorySelectModal';
+import { closeModal } from '../../../store/modalSlice';
 
 function RecipeRegistPage() {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     name: '',
     allergy: '',
@@ -16,9 +19,20 @@ function RecipeRegistPage() {
     ingredients: [],
   });
   const [selectedFile, setSelectedFile] = useState(null);
+  const [resetSignal, setResetSignal] = useState(0);
+  const modalType = useSelector(state => state.modal.modalType);
+  const modalProps = useSelector(state => state.modal.modalProps);
+
+  // 모달이 닫힐 때마다 resetSignal 갱신
+  useEffect(() => {
+    if (modalType === null) {
+      // setResetSignal(Date.now()); // 사용하지 않음
+    }
+  }, [modalType]);
 
   const handleChangeInput = e => {
     const { name, value } = e.target;
+    console.log(name, value);
     setFormData(prev => ({
       ...prev,
       [name]: value,
@@ -29,16 +43,16 @@ function RecipeRegistPage() {
     setSelectedFile(file);
   };
 
-  const handleIngredientsChange = ingredients => {
+  const handleIngredientsChange = useCallback(ingredients => {
     setFormData(prev => ({
       ...prev,
       ingredients,
     }));
-  };
+  }, []);
 
   const getPresignUrl = async fileName => {
     try {
-      const response = await axios.get(`${API_BASE_URL}api-service/api/presign`, {
+      const response = await axiosInstance.get(`/api-service/api/presign`, {
         params: {
           fileName,
           category: 'food',
@@ -92,10 +106,12 @@ function RecipeRegistPage() {
       ingredients: [],
     });
     setSelectedFile(null);
+    setResetSignal(Date.now()); // 선택된 식재료, 검색어 모두 초기화
   };
 
   const handleResetClick = () => {
     resetForm();
+    // setResetSignal(Date.now()); // 사용하지 않음
   };
 
   const vaildSection = () => {
@@ -158,24 +174,27 @@ function RecipeRegistPage() {
     }
 
     try {
+      const submitData = { ...formData };
       if (selectedFile) {
         const presignedUrl = await getPresignUrl(selectedFile.name);
         const uploadedUrl = await uploadToS3(presignedUrl, selectedFile);
-        setFormData(prev => ({
-          ...prev,
-          thumbnailUrl: uploadedUrl,
-        }));
+        submitData.thumbnailUrl = uploadedUrl;
       }
-      const response = await axiosInstance.post('/cook-service/cook/cook-register', formData);
+      console.log(submitData);
+      const response = await axiosInstance.post('/cook-service/cook/cook-register', submitData);
       console.log(response.data);
       if (response.data.success) {
-        return response.data;
+        // 성공 시 추가 동작 필요하면 여기에 작성
       }
-      return response.data.message;
+      // 실패 시 메시지 처리
     } catch (err) {
       alert('레시피 등록 실패!');
-      console.log(error.response.data.message);
+      console.log(err.response?.data?.message);
     }
+  };
+
+  const handleCloseModal = () => {
+    dispatch(closeModal());
   };
 
   return (
@@ -184,19 +203,31 @@ function RecipeRegistPage() {
         formData={formData}
         onChange={handleChangeInput}
         onFileSelect={handleFileSelect}
+        resetSignal={resetSignal}
       />
       <IngredientsSelection
         formData={formData}
         onChange={handleChangeInput}
         onIngredientsChange={handleIngredientsChange}
+        resetSignal={resetSignal}
       />
       <RecipeSelection formData={formData} onChange={handleChangeInput} />
       <div className={style.buttonGroup}>
         <button type="button" onClick={handleResetClick} className={style.cleatbutton}>
           취소
         </button>
-        <button type="submit" className={style.uploadbutton}>업로드</button>
+        <button type="submit" className={style.uploadbutton}>
+          업로드
+        </button>
       </div>
+      {/* 카테고리 선택 모달 직접 렌더링 */}
+      {modalType === 'CATEGORY_SELECT' && (
+        <CategorySelectModal
+          onClose={handleCloseModal}
+          formData={modalProps?.formData || formData}
+          onChange={handleChangeInput}
+        />
+      )}
     </form>
   );
 }

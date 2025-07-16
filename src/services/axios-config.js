@@ -43,6 +43,7 @@ axiosInstance.interceptors.response.use(
 
     if (errorStatus === 666) {
       try {
+        console.log('토큰 재발급 시작');
         const res = await axios.post(`${API_BASE_URL}/auth-service/auth/reissue`, {
           id: userId,
           refreshToken,

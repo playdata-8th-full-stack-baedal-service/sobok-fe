@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 30px 60px;
+  text-align: center;
+  width: 100vw;
+  margin-top: 60px;
+
+  .titleandbutton {
+    margin-bottom: 100px;
+  }
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 1fr 4fr 1.5fr 1.5fr; /* 비율 조정 가능 */
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 999px; /* pill 스타일 유지용 */
+  margin-bottom: 8px;
+}
+
+.hunsection {
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+}

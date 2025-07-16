@@ -1,6 +1,7 @@
 import React from 'react';
 import ModalWrapper from '@/common/modals/ModalWrapper';
 import PasswordInput from './PasswordInput';
+import PWChangedModal from '@/pages/auth/FindPW/PWChangedModal';
 
 function PasswordChangeModal({ onClose, onSubmit, loading }) {
   const [newPassword, setNewPassword] = React.useState('');
@@ -8,6 +9,7 @@ function PasswordChangeModal({ onClose, onSubmit, loading }) {
   const [showNewPassword, setShowNewPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const [error, setError] = React.useState('');
+  const [showPWChangedModal, setShowPWChangedModal] = React.useState(false);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -22,6 +24,11 @@ function PasswordChangeModal({ onClose, onSubmit, loading }) {
       return;
     }
 
+    if (newPassword !== confirmPassword) {
+      setError('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
     setError('');
 
     try {
@@ -30,13 +37,17 @@ function PasswordChangeModal({ onClose, onSubmit, loading }) {
       if (result?.error) {
         setError(result.error);
       } else if (result?.success) {
-        // 성공 시 모달이 자동으로 닫힘
-        onClose();
+        // 성공 시 PWChangedModal 표시
+        setShowPWChangedModal(true);
       }
-    } catch (error) {
+    } catch (err) {
       setError('비밀번호 변경 중 오류가 발생했습니다.');
     }
   };
+
+  if (showPWChangedModal) {
+    return <PWChangedModal onClose={onClose} showSimpleClose={true} />;
+  }
 
   return (
     <ModalWrapper title="비밀번호 변경" onClose={onClose} size="md">

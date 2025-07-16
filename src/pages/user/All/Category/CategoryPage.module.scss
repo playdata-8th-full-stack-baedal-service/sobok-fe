@@ -1,0 +1,55 @@
+.categoryCookPage {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  .categoryHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .sortButton {
+      padding: 0.4rem 0.8rem;
+      border: 1px solid #333;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      background-color: #333;
+      color: white;
+      cursor: pointer;
+    }
+  }
+
+  .loadMoreButton {
+    display: flex;
+    justify-content: center;
+
+    button {
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      border: 1px solid #222;
+      background-color: white;
+      cursor: pointer;
+      transition: 0.2s ease;
+
+      &:hover {
+        background-color: #3fbdf3;
+        color: #fff;
+        border: none;
+      }
+    }
+  }
+
+  .footer {
+    padding: 2rem;
+    text-align: center;
+    font-weight: bold;
+    background-color: #f2f2f2;
+    border-top: 1px solid #ddd;
+  }
+}
