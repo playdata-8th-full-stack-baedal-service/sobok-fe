@@ -9,7 +9,6 @@ import {
 } from '@/store/authSlice';
 import { clearSMSAuth } from '@/store/smsAuthSlice';
 import ProfileSection from './components/signup/ProfileSection';
-import PasswordSection from '../../../../common/forms/PasswordConfirm/PasswordSection';
 import PhoneVerification from '../../../../common/forms/Phone/PhoneVerification';
 import EmailSection from '../../../../common/forms/Email/EmailSection';
 import AddressSection from '../../../../common/forms/Address/AddressSection';
@@ -230,8 +229,15 @@ function UserSignUp() {
     }
   };
 
+  const { isNicknameChecked } = useSelector(state => state.auth);
+
   const handleSubmit = async e => {
     e.preventDefault();
+
+    if (!isNicknameChecked) {
+      alert('닉네임 중복확인을 해주세요.');
+      return;
+    }
 
     if (!validateForm()) return;
 
@@ -276,7 +282,7 @@ function UserSignUp() {
   // 페이지 진입 시 상태 초기화
   useEffect(() => {
     dispatch(clearSMSAuth());
-  }, []);
+  }, [formData.loginId]);
 
   return (
     <div className={styles['signup-wrap']}>

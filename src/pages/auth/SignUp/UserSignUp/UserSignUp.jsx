@@ -179,10 +179,25 @@ function UserSignUp() {
     }
   };
 
+  const { isLoginIdChecked, isNicknameChecked, isEmailChecked } = useSelector(state => state.auth);
+
   const handleSubmit = async e => {
     e.preventDefault();
 
     if (!validateForm()) return;
+
+    if (!isLoginIdChecked) {
+      alert('아이디 중복체크를 완료해주세요.');
+      return;
+    }
+    if (!isNicknameChecked) {
+      alert('닉네임 중복체크를 완료해주세요.');
+      return;
+    }
+    if (getFullEmail() && !isEmailChecked) {
+      alert('이메일 중복체크를 완료해주세요.');
+      return;
+    }
 
     let completeFormData = {
       ...formData,

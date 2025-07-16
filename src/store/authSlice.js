@@ -47,7 +47,7 @@ export const kakaoSignUpUser = createAsyncThunk(
   'auth/kakaoSignUpUser',
   async (userData, thunkAPI) => {
     try {
-      const response = await axiosInstance.post('/auth-service/auth/user-signup', userData);
+      const response = await axiosInstance.post('/auth-service/auth/social-user-signup', userData);
       const { status, message } = response.data;
       if (status === 200 || message?.includes('회원가입 성공')) {
         return response.data.data;
@@ -149,6 +149,9 @@ const initialState = {
   nicknameCheckError: null,
   loginIdCheckMessage: null,
   loginIdCheckError: null,
+  isLoginIdChecked: false,
+  isEmailChecked: false,
+  isNicknameChecked: false,
   userInfo: null,
   userInfoLoading: false,
   userInfoError: null,
@@ -234,7 +237,6 @@ const authSlice = createSlice({
         state.signUpSuccess = false;
       })
 
-
       .addCase(deleteUser.pending, state => {
         setLoading(state);
         state.deleteSuccess = false;
@@ -262,6 +264,7 @@ const authSlice = createSlice({
       .addCase(checkEmail.fulfilled, (state, action) => {
         state.loading = false;
         state.emailCheckMessage = action.payload;
+        state.isEmailIdChecked = true;
       })
       .addCase(checkEmail.rejected, (state, action) => {
         setMessageError(state, 'emailCheck', action.payload);
@@ -272,6 +275,7 @@ const authSlice = createSlice({
       .addCase(checkNickName.fulfilled, (state, action) => {
         state.loading = false;
         state.nicknameCheckMessage = action.payload;
+        state.isNicknameChecked = true;
       })
       .addCase(checkNickName.rejected, (state, action) => {
         setMessageError(state, 'nicknameCheck', action.payload);
@@ -282,6 +286,7 @@ const authSlice = createSlice({
       .addCase(checkLoginId.fulfilled, (state, action) => {
         state.loading = false;
         state.loginIdCheckMessage = action.payload;
+        state.isLoginIdChecked = true;
       })
       .addCase(checkLoginId.rejected, (state, action) => {
         setMessageError(state, 'loginIdCheck', action.payload);
