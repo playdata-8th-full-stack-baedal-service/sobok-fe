@@ -27,14 +27,6 @@ function MainPage() {
     );
   };
 
-  const handleStatusChange = order => {
-    console.log(order);
-  };
-
-  const handleRefresh = () => {
-    console.log('refresh');
-  };
-
   const fetchPreparingOrders = async () => {
     const response = await axiosInstance.get('/shop-service/shop/filtering-order', {
       params: {
@@ -43,11 +35,25 @@ function MainPage() {
         orderState: 'PREPARING_INGREDIENTS',
       },
     });
-    console.log(response.data.data);
     setOrders(response.data.data);
     if (response.data.data.length < numOfRows) {
       setIsFullLoaded(true);
     }
+  };
+
+  const handleStatusChange = async order => {
+    const response = await axiosInstance.put(
+      `/shop-service/shop/update-order-state/${order.orderId}`,
+      {
+        orderState: 'PREPARING_INGREDIENTS',
+      }
+    );
+    console.log(response.data.data);
+    fetchPreparingOrders();
+  };
+
+  const handleRefresh = () => {
+    fetchPreparingOrders();
   };
 
   useEffect(() => {
