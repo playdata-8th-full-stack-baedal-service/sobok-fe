@@ -47,7 +47,28 @@ export const signUpUser = createAsyncThunk('auth/signUpUser', async (userData, t
   }
 });
 
+<<<<<<< HEAD
 // 회원탈퇴
+=======
+export const kakaoSignUpUser = createAsyncThunk(
+  'auth/kakaoSignUpUser',
+  async (userData, thunkAPI) => {
+    try {
+      const response = await axiosInstance.post('/auth-service/auth/social-user-signup', userData);
+      const { status, message } = response.data;
+      if (status === 200 || message?.includes('회원가입 성공')) {
+        return response.data.data;
+      }
+
+      return thunkAPI.rejectWithValue('회원가입 실패');
+    } catch (error) {
+      const message = error.response?.data?.message || '회원가입 요청에 실패하였습니다.';
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+>>>>>>> 9db18ce5431a10d75e15a630f7fd63d5d65fc6ae
 export const deleteUser = createAsyncThunk('auth/deleteUser', async ({ password }, thunkAPI) => {
   try {
     const res = await axiosInstance.delete('/auth-service/auth/delete', { data: { password } });
@@ -62,9 +83,18 @@ export const deleteUser = createAsyncThunk('auth/deleteUser', async ({ password 
 // 이메일 중복 확인
 export const checkEmail = createAsyncThunk('auth/checkEmail', async (email, thunkAPI) => {
   try {
+<<<<<<< HEAD
     const res = await axiosInstance.get('/auth-service/auth/check-email', { params: { email } });
     if (res.data.status === 200 || res.data.message === '사용 가능한 이메일입니다.')
       return res.data.message;
+=======
+    const response = await axiosInstance.get(`/user-service/user/check-email`, {
+      params: { email },
+    });
+    if (response.data.status === 200 || response.data.message === '사용 가능한 이메일입니다.') {
+      return response.data.message;
+    }
+>>>>>>> 9db18ce5431a10d75e15a630f7fd63d5d65fc6ae
     return thunkAPI.rejectWithValue('이메일 중복확인 실패');
   } catch (e) {
     return thunkAPI.rejectWithValue(
@@ -76,8 +106,15 @@ export const checkEmail = createAsyncThunk('auth/checkEmail', async (email, thun
 // 닉네임 중복 확인
 export const checkNickName = createAsyncThunk('auth/checkNickName', async (nickname, thunkAPI) => {
   try {
+<<<<<<< HEAD
     const res = await axiosInstance.get('/auth-service/auth/check-nickname', {
       params: { nickname },
+=======
+    const response = await axiosInstance.get('/user-service/user/check-nickname', {
+      params: {
+        nickname,
+      },
+>>>>>>> 9db18ce5431a10d75e15a630f7fd63d5d65fc6ae
     });
     if (res.data.status === 200 || res.data.message === '사용 가능한 닉네임입니다.')
       return res.data.message;

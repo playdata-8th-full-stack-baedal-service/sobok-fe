@@ -17,6 +17,7 @@ axiosInstance.interceptors.request.use(
       '/auth-service/auth/check-email',
       '/auth-service/auth/check-nickname',
       '/auth-service/auth/check-id',
+      '/auth-service/auth/kakao-user-signup',
     ];
 
     // 공개 엔드포인트가 아닌 경우에만 Authorization 헤더 추가

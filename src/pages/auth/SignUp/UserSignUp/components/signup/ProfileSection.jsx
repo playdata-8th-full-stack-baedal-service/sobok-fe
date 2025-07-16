@@ -10,7 +10,7 @@ import Input from '../../../../../../common/components/Input';
 import Button from '../../../../../../common/components/Button';
 import styles from './ProfileSection.module.scss';
 
-function ProfileSection({ formData, onChange, onFileSelect }) {
+function ProfileSection({ formData, onChange, onFileSelect, disabled }) {
   const dispatch = useDispatch();
   const {
     loading,
@@ -62,7 +62,20 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
 
   const handleFileSelect = e => {
     const file = e.target.files[0];
+<<<<<<< HEAD
     if (!file) return;
+=======
+    if (!file) {
+      console.log('[handleFileSelect] 파일 선택 안됨');
+      return;
+    }
+
+    console.log('[handleFileSelect] 선택된 파일:', {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+    });
+>>>>>>> 9db18ce5431a10d75e15a630f7fd63d5d65fc6ae
 
     if (!file.type.startsWith('image/')) {
       alert('이미지 파일만 업로드 가능합니다.');
@@ -127,7 +140,12 @@ function ProfileSection({ formData, onChange, onFileSelect }) {
               name="loginId"
               value={formData.loginId}
               onChange={handleLoginIdChange}
+<<<<<<< HEAD
               className={loginIdCheckError ? styles.inputError : ''}
+=======
+              className={loginIdCheckError ? 'input-error' : ''}
+              disabled={disabled}
+>>>>>>> 9db18ce5431a10d75e15a630f7fd63d5d65fc6ae
             />
             <Button type="button" variant="BASIC" onClick={handleLoginIdCheck} loading={loading}>
               중복확인
