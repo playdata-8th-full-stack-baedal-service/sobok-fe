@@ -27,7 +27,9 @@ function MainPage() {
 
   // 주문 상태 변경
   const handleStatusChange = async order => {
-    await axiosInstance.patch(`/payment-service/payment/change-orderState?id=${order.paymentId}`);
+    if (order) {
+      await axiosInstance.patch(`/payment-service/payment/change-orderState?id=${order.paymentId}`);
+    }
     setIsOrderChanged(prev => !prev);
   };
 

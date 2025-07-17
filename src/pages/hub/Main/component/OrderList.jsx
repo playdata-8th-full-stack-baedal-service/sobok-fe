@@ -2,7 +2,7 @@
 import React from 'react';
 import { CircularProgress } from '@mui/material';
 import Button from '../../../../common/components/Button';
-import { formattedDate } from '../../../../common/utils/orderUtils';
+import { formattedDate, orderStatus } from '../../../../common/utils/orderUtils';
 import styles from '../MainPage.module.scss';
 
 const OrderList = ({ loading, orders, isFullLoaded, onLoadMore, onOrderDetailClick }) => {
@@ -17,7 +17,8 @@ const OrderList = ({ loading, orders, isFullLoaded, onLoadMore, onOrderDetailCli
           <div key={order.orderId} className={styles.orderItem}>
             <div className={styles.orderMeta}>
               <span>{order.orderId.toUpperCase()}</span>
-              <span>{formattedDate(order.createdAt)}</span>
+              <span>{formattedDate(order.updatedAt)}</span>
+              <span>{orderStatus[order.orderState]}</span>
             </div>
             <div className={styles.orderActions}>
               <Button onClick={() => onOrderDetailClick(order)}>주문 상세</Button>

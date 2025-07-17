@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import ModalWrapper from '../../../../common/modals/ModalWrapper';
 import styles from './ShopOrderDetailModal.module.scss';
 import axiosInstance from '../../../../services/axios-config';
+import { formattedDate, orderStatus } from '../../../../common/utils/orderUtils';
 
 const ShopOrderDetailModal = ({ onClose, order }) => {
   const [orderDetail, setOrderDetail] = useState(null);
@@ -25,15 +26,9 @@ const ShopOrderDetailModal = ({ onClose, order }) => {
           <div className={styles.header}>
             <div className={styles.info}>
               <div className={styles.orderId}>{orderDetail?.orderId.toUpperCase()}</div>
-              <div className={styles.date}>
-                {new Date(orderDetail?.createdAt).toLocaleString() || ''}
-              </div>
+              <div className={styles.date}>{formattedDate(orderDetail?.createdAt) || ''}</div>
             </div>
-            <div className={styles.status}>
-              {orderDetail?.orderState === 'PREPARING_INGREDIENTS'
-                ? '재료 준비 중'
-                : orderDetail?.orderState}
-            </div>
+            <div className={styles.status}>{orderStatus[orderDetail?.orderState]}</div>
           </div>
 
           {orderDetail?.items?.map((item, idx) => (

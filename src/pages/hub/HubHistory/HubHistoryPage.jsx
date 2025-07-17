@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import axiosInstance from '../../../services/axios-config';
-import styles from '../Main/MainPage.module.scss';
+import styles from './HubHistoryPage.module.scss';
 import OrderList from '../Main/component/OrderList';
 import { openModal } from '../../../store/modalSlice';
 
@@ -63,7 +63,7 @@ const HubHistoryPage = () => {
   return (
     <main className={styles.main}>
       <div className={styles.searchBar}>
-        <h2>완료된 주문</h2>
+        <h2>가게 주문 모아보기</h2>
       </div>
       <OrderList
         loading={loading}
