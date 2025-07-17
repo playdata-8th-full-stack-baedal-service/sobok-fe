@@ -134,7 +134,7 @@ const MyOrderDetailPage = ({ onClose, order }) => {
                 <div className={styles.itemInfo}>
                   <h3>{item.cookName}</h3>
                   <p>수량: {item.quantity}개</p>
-                  <p>가격: {item.price?.toLocaleString()}원</p>
+                  <p>가격: {(+item.price * item.quantity)?.toLocaleString()}원</p>
                 </div>
               </div>
             ))}

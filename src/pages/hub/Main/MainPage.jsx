@@ -7,7 +7,7 @@ import axiosInstance from '../../../services/axios-config';
 import { openModal } from '../../../store/modalSlice';
 import ShopOrderSection from './component/ShopOrderSection';
 import ShopDeliveryPendingSection from './component/ShopDeliveryPendingSection';
-import ShopPreparePendingSection from './component/ShopPreparePendingSection';
+// import ShopPreparePendingSection from './component/ShopPreparePendingSection';
 
 function MainPage() {
   const dispatch = useDispatch();
@@ -17,7 +17,7 @@ function MainPage() {
   const handleOpenOrderDetailModal = order => {
     dispatch(
       openModal({
-        type: 'ORDER_DETAIL',
+        type: 'SHOP_ORDER_DETAIL',
         props: {
           order,
         },
@@ -27,7 +27,9 @@ function MainPage() {
 
   // 주문 상태 변경
   const handleStatusChange = async order => {
-    await axiosInstance.patch(`/payment-service/payment/change-orderState?id=${order.paymentId}`);
+    if (order) {
+      await axiosInstance.patch(`/payment-service/payment/change-orderState?id=${order.paymentId}`);
+    }
     setIsOrderChanged(prev => !prev);
   };
 

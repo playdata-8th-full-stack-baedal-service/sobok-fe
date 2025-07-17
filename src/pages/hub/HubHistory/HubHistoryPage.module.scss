@@ -1,0 +1,22 @@
+main {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  .searchBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.6rem;
+    border-radius: 1rem;
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #333;
+    }
+  }
+}
