@@ -1,100 +1,55 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '@/services/axios-config';
 import styles from './NewPostPage.module.scss';
 import Button from '@/common/components/Button';
 import { API_BASE_URL } from '@/services/host-config';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Editor } from '@toast-ui/react-editor';
+import '@toast-ui/editor/dist/toastui-editor.css';
 
 function NewPostPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const paymentId = location.state?.paymentId;
-
-  const [postId, setPostId] = useState(null);
-  const [cookName, setCookName] = useState('');
+  const cookName = location.state?.cookName || '';
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [imageFiles, setImageFiles] = useState([]);
-  const [imagePreviews, setImagePreviews] = useState([]);
-  const [isUploading, setIsUploading] = useState(false); // 업로드 중 상태
+  const [isUploading, setIsUploading] = useState(false);
+  const editorRef = useRef();
 
-  // 새로고침 또는 탭 닫기 방지
   useEffect(() => {
+    if (!paymentId || !cookName) {
+      alert('잘못된 접근입니다.');
+      navigate(-1);
+    }
+
     const handleBeforeUnload = e => {
       e.preventDefault();
       e.returnValue = '';
     };
+
     window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [paymentId, cookName, navigate]);
 
-  useEffect(() => {
-    if (!paymentId) {
-      alert('잘못된 접근입니다.');
-      navigate(-1);
-      return;
-    }
-
-    const fetchPostData = async () => {
-      try {
-        const response = await axios.post(`${API_BASE_URL}/post-service/post/register`, {
-          paymentId: paymentId,
-        });
-        setPostId(response.data.postId);
-        setCookName(response.data.cookName);
-      } catch (error) {
-        console.error('게시글 등록 정보 불러오기 실패:', error);
-        alert('게시글 정보를 불러올 수 없습니다.');
-      }
-    };
-
-    fetchPostData();
-  }, [paymentId, navigate]);
-
-  const handleImageChange = e => {
-    const files = Array.from(e.target.files);
-    const total = imageFiles.length + files.length;
-
-    if (total > 8) {
-      alert('최대 8장의 사진만 업로드할 수 있습니다.');
-      return;
-    }
-
-    const newPreviews = files.map(file => URL.createObjectURL(file));
-    setImagePreviews(prev => [...prev, ...newPreviews]);
-    setImageFiles(prev => [...prev, ...files]);
-  };
-
-  const handleImageDelete = index => {
-    setImageFiles(prev => prev.filter((_, i) => i !== index));
-    setImagePreviews(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const getTempToken = async () => {
-    const response = await axios.get(`${API_BASE_URL}/auth-service/auth/temp-token`);
-    return response.data.data;
-  };
-
-  const uploadToS3 = async (file, tempToken) => {
+  // 이미지 S3 업로드
+  const uploadToS3 = async file => {
     const formData = new FormData();
     formData.append('image', file);
-    const response = await axios.put(
-      `${API_BASE_URL}/api-service/api/upload-image/post`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${tempToken}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    );
-    return response.data.data;
+    const res = await axios.put(`${API_BASE_URL}/api-service/api/upload-image/post`, formData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data.data;
   };
 
   const handleSubmit = async () => {
-    if (!title || !content) {
+    const editorInstance = editorRef.current.getInstance();
+    const contentHTML = editorInstance.getHTML();
+
+    if (!title || !contentHTML || contentHTML === '<p><br></p>') {
       alert('제목과 내용을 입력해주세요.');
       return;
     }
@@ -102,28 +57,31 @@ function NewPostPage() {
     try {
       setIsUploading(true);
 
-      const tempToken = await getTempToken();
-      const uploadedUrls = await Promise.all(imageFiles.map(file => uploadToS3(file, tempToken)));
-
-      const images = uploadedUrls.map((url, idx) => ({
-        imageUrl: url,
-        index: idx + 1,
-      }));
-
       const body = {
         title,
-        content,
+        content: contentHTML,
         paymentId,
-        images,
+        images: [], // 에디터 내부에 이미지가 포함되므로 따로 전달하지 않음
       };
 
-      await axios.post(`${API_BASE_URL}/post-service/post/save`, body);
-      alert('게시글이 등록되었습니다.');
+      const res = await axiosInstance.post(`/post-service/post/register`, body);
 
-      navigate('/user/my-posts');
-    } catch (error) {
-      console.error('게시글 업로드 실패:', error);
-      alert('게시글 업로드에 실패했습니다.');
+      if (res.data?.postId) {
+        const postId = res.data.postId;
+        alert('게시글이 등록되었습니다.');
+        navigate(`/user/post/${postId}`, { replace: true });
+      } else {
+        throw new Error('등록 응답이 올바르지 않습니다.');
+      }
+    } catch (err) {
+      if (err.response?.status === 404) {
+        alert('결제 정보가 존재하지 않습니다.');
+      } else if (err.response?.status === 500) {
+        alert('서버 통신 오류가 발생했습니다.');
+      } else {
+        console.error('업로드 실패:', err);
+        alert('게시글 업로드에 실패했습니다.');
+      }
     } finally {
       setIsUploading(false);
     }
@@ -141,42 +99,24 @@ function NewPostPage() {
         className={styles['title-input']}
       />
 
-      <textarea
-        placeholder="내용을 입력하세요"
-        value={content}
-        onChange={e => setContent(e.target.value)}
-        className={styles['content-input']}
+      <Editor
+        ref={editorRef}
+        previewStyle="vertical"
+        height="600px"
+        initialEditType="wysiwyg"
+        useCommandShortcut={true}
+        hooks={{
+          addImageBlobHook: async (blob, callback) => {
+            try {
+              const imageUrl = await uploadToS3(blob);
+              callback(imageUrl, 'image');
+            } catch (err) {
+              alert('이미지 업로드에 실패했습니다.');
+              console.error('이미지 업로드 오류:', err);
+            }
+          },
+        }}
       />
-
-      <div className={styles['image-upload-section']}>
-        <label className={styles['image-upload-label']}>
-          사진 첨부하기 (최대 8장)
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageChange}
-            style={{ display: 'none' }}
-            disabled={isUploading}
-          />
-        </label>
-
-        <div className={styles['preview-container']}>
-          {imagePreviews.map((url, index) => (
-            <div key={index} className={styles['preview-box']}>
-              <img src={url} alt={`preview-${index}`} />
-              <button
-                type="button"
-                className={styles['delete-button']}
-                onClick={() => handleImageDelete(index)}
-                disabled={isUploading}
-              >
-                삭제
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
 
       <Button onClick={handleSubmit} variant="BASIC" disabled={isUploading}>
         {isUploading ? '업로드 중...' : '게시글 등록'}

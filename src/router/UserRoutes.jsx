@@ -10,10 +10,10 @@ import MainPage from '../pages/user/All/Main/MainPage';
 // import SearchPage from '../pages/user/All/Search/SearchPage';
 // import CategoryPage from '../pages/user/All/Category/CategoryPage';
 // import PostListPage from '../pages/user/Post/PostList/PostListPage';
-// import PostDetailPage from '../pages/user/Post/PostDetail/PostDetailPage';
+import PostDetailPage from '../pages/user/Post/PostDetail/PostDetailPage';
 
 // private 페이지 (USER 권한 필요)
-// import NewPostPage from '../pages/user/Post/Posting/NewPostPage';
+import NewPostPage from '../pages/user/Post/Posting/NewPostPage';
 
 // import PayPage from '../pages/user/Pay/PayPage';
 import UserInfoPage from '../pages/user/UserInfo/UserInfoPage';
@@ -42,19 +42,19 @@ function UserRoutes() {
         <Route path="product" element={<ProductPage />} />
         <Route path="search" element={<SearchPage />} />
         <Route path="category" element={<CategoryPage />} />
-        
+
         {/* <Route path="post-list" element={<PostListPage />} /> */}
-        {/* <Route path="post/:id" element={<PostDetailPage />} /> */}
+        <Route path="post/:id" element={<PostDetailPage />} />
 
         {/* USER 권한 있어야 접근 가능한 페이지 */}
-        {/* <Route
+        <Route
           path="new-post"
           element={
             <RoleRoute role="USER">
               <NewPostPage />
             </RoleRoute>
           }
-        /> */}
+        />
         <Route
           path="cart"
           element={

@@ -7,7 +7,7 @@ import axiosInstance from '../../../services/axios-config';
 import { openModal } from '../../../store/modalSlice';
 import ShopOrderSection from './component/ShopOrderSection';
 import ShopDeliveryPendingSection from './component/ShopDeliveryPendingSection';
-import ShopPreparePendingSection from './component/ShopPreparePendingSection';
+// import ShopPreparePendingSection from './component/ShopDeliveryPendingSection';
 
 function MainPage() {
   const dispatch = useDispatch();
