@@ -41,14 +41,16 @@ const RiderOrderCard = ({ order, fetchOrders, accepted }) => {
         </p>
         {accepted || (
           <p>
-            <strong>주문 시간:</strong> {formattedDate(order.updatedAt)}
+            <strong>주문 시간:</strong> {formattedDate(order.updatedAt || order.completeTime)}
           </p>
         )}
       </div>
 
-      <div className={styles.acceptButton}>
-        <Button onClick={() => handleStatusChange(order)}>상태 변경</Button>
-      </div>
+      {fetchOrders && (
+        <div className={styles.acceptButton}>
+          <Button onClick={() => handleStatusChange(order)}>상태 변경</Button>
+        </div>
+      )}
     </div>
   );
 };
