@@ -4,11 +4,16 @@ import React from 'react';
 import RiderOrderCard from './RiderOrderCard';
 import styles from '../RequestListPage.module.scss';
 
-const RiderOrderGrid = ({ orders, fetchOrders }) => {
+const RiderOrderGrid = ({ orders, fetchOrders, accepted }) => {
   return (
     <div className={styles.orderList}>
       {orders.map(order => (
-        <RiderOrderCard key={order.orderId} order={order} fetchOrders={fetchOrders} />
+        <RiderOrderCard
+          key={order.orderId}
+          order={order}
+          fetchOrders={fetchOrders}
+          accepted={accepted}
+        />
       ))}
     </div>
   );

@@ -92,6 +92,9 @@ function RequestListPage() {
         </Button>
       </div>
       <div className={styles.tabBar}>
+        {!isLoading && orders.length === 0 && (
+          <div className={styles.emptyWrapper}>배달 가능한 주문이 없습니다.</div>
+        )}
         {isLoading && (
           <div className={styles.loadingWrapper}>
             <CircularProgress />

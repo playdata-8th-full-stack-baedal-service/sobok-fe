@@ -1,3 +1,5 @@
+/* eslint-disable no-nested-ternary */
+/* eslint-disable react/prop-types */
 /* eslint-disable react/function-component-definition */
 import React from 'react';
 import Button from '../../../../common/components/Button';
@@ -5,10 +7,16 @@ import { formattedDate, orderStatus } from '../../../../common/utils/orderUtils'
 import styles from '../RequestListPage.module.scss';
 import axiosInstance from '../../../../services/axios-config';
 
-const RiderOrderCard = ({ order, fetchOrders }) => {
+const RiderOrderCard = ({ order, fetchOrders, accepted }) => {
   const handleStatusChange = async () => {
+    const url = accepted
+      ? order.orderState === 'DELIVERING'
+        ? 'complete-delivery'
+        : 'change-orderState'
+      : 'accept-delivery';
+
     const response = await axiosInstance.patch(
-      `/payment-service/payment/accept-delivery?id=${order.paymentId}`
+      `/payment-service/payment/${url}?id=${order.paymentId}`
     );
     console.log(response.data);
     fetchOrders();
@@ -18,7 +26,7 @@ const RiderOrderCard = ({ order, fetchOrders }) => {
     <div className={styles.orderItem}>
       <div className={styles.orderInfo}>
         <h3>{order.shopName}</h3>
-        <span>{order.orderId}</span>
+        <span>{order.orderId.toUpperCase()}</span>
       </div>
 
       <div className={styles.orderDetail}>
@@ -31,9 +39,11 @@ const RiderOrderCard = ({ order, fetchOrders }) => {
         <p>
           <strong>주문 상태:</strong> {orderStatus[order.orderState]}
         </p>
-        <p>
-          <strong>주문 시간:</strong> {formattedDate(order.updatedAt)}
-        </p>
+        {accepted || (
+          <p>
+            <strong>주문 시간:</strong> {formattedDate(order.updatedAt)}
+          </p>
+        )}
       </div>
 
       <div className={styles.acceptButton}>
