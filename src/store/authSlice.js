@@ -263,7 +263,7 @@ const authSlice = createSlice({
       .addCase(checkEmail.fulfilled, (state, action) => {
         state.loading = false;
         state.emailCheckMessage = action.payload;
-        state.isEmailIdChecked = true;
+        state.isEmailChecked = true;
       })
       .addCase(checkEmail.rejected, (state, action) => {
         setMessageError(state, 'emailCheck', action.payload);
