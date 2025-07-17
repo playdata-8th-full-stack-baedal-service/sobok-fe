@@ -62,9 +62,10 @@ const PostDetailPage = () => {
       </div>
 
       <div className={styles.contentSection}>
-        <div className={styles.textContent}>
-          <p>{post.content}</p>
-        </div>
+        <div
+          className={styles.textContent}
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        ></div>
         <div className={styles.images}>
           {post.images.map((url, idx) => (
             <img key={idx} src={url} alt={`post-img-${idx}`} />
