@@ -104,6 +104,15 @@
   margin-top: 10px;
 }
 
+.flexible {
+  @extend .button_BASIC;
+  width: auto;
+  font-size: 14px;
+  height: auto;
+  font-weight: 500;
+  padding: 4px 10px;
+}
+
 .button_MAINPAGE {
   cursor: pointer;
   font-size: $d-button-text;

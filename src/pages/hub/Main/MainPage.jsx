@@ -7,7 +7,11 @@ import axiosInstance from '../../../services/axios-config';
 import { openModal } from '../../../store/modalSlice';
 import ShopOrderSection from './component/ShopOrderSection';
 import ShopDeliveryPendingSection from './component/ShopDeliveryPendingSection';
+
+// import ShopPreparePendingSection from './component/ShopDeliveryPendingSection';
+
 // import ShopPreparePendingSection from './component/ShopPreparePendingSection';
+
 
 function MainPage() {
   const dispatch = useDispatch();
