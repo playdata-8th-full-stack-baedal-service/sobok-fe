@@ -77,6 +77,8 @@ function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
         price: parseInt(formData.price, 10),
       };
 
+      console.log(requestData);
+
       const response = await axiosInstance.post(
         `/cook-service/ingredient/register`,
         requestData
