@@ -33,7 +33,7 @@ function AddressSection({ roadFull, addrDetail, onAddressChange }) {
     <Input label="주소 (선택)" className={styles.addressGroup}>
       <div className={styles.addressSearch}>
         <input type="text" value={roadFull} placeholder="주소검색 버튼을 클릭해주세요" readOnly />
-        <Button type="button" variant="BASIC" onClick={openDaumPostcode}>
+        <Button type="button" variant="BASIC" onClick={openDaumPostcode} className={styles.addrbutton}>
           주소검색
         </Button>
       </div>

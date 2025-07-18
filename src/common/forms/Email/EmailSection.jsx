@@ -87,7 +87,7 @@ function EmailSection({
             </option>
           ))}
         </select>
-        <Button type="button" variant="BASIC" onClick={handleEmailCheck} loading={loading}>
+        <Button type="button" variant="BASIC" onClick={handleEmailCheck} loading={loading} className={styles.overlapcheckbutton}>
           중복확인
         </Button>
       </div>

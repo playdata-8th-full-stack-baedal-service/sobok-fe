@@ -26,6 +26,7 @@ function IDInput({
               checked={rememberMe}
               onChange={() => setRememberMe(!rememberMe)}
             />
+            <div className={styles.checkmark}></div>
             로그인 정보 저장
           </label>
         )}

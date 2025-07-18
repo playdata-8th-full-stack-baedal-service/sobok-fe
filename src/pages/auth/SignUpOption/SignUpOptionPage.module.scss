@@ -1,7 +1,7 @@
 .SignUpOption {
     font-size: 20px;
     white-space: nowrap;
-    margin-top: 150px;
+    margin: 150px auto;
     width: 100vw;
 
     .SignupTitle {
@@ -37,3 +37,43 @@
     }
 }
 
+.card {
+  width: 100vw;
+  height: 260px;
+  background: rgb(255, 255, 255);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  color: #333;
+  border-radius: 40px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.7s ease-in-out;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    height: 30%;
+    width: 100%;
+    background-color: #000000;
+    bottom: 0;
+    right: 0;
+    transform: translateY(70px);
+    border-radius: 100%;
+    transition: all 0.7s ease-in-out;
+  }
+
+  .txt {
+    z-index: 2;
+  }
+
+  &:hover {
+    color: #f3f3f3;
+
+    &::before {
+      transform: scale(7) translate(-20px);
+    }
+  }
+}
