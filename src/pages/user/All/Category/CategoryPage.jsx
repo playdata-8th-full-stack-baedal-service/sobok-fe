@@ -36,36 +36,40 @@ const categoryList = [
 const CategoryPage = () => {
   const [items, setItems] = useState([]);
   const [searchParams] = useSearchParams();
-  const { category: paramCategory } = useParams();
   const [pageNo, setPageNo] = useState(1);
   const [numOfRows] = useState(12);
   const [isFullLoaded, setIsFullLoaded] = useState(false);
 
   // path 파라미터가 있으면 우선 사용, 없으면 쿼리스트링 사용
-  const categoryValue = paramCategory ? paramCategory.toUpperCase() : (searchParams.get('category') || '').toUpperCase();
-
   useEffect(() => {
+    console.log('useEffect 호출!');
     async function fetchItems() {
       if (isFullLoaded) return;
       const response = await axiosInstance.get(`/cook-service/cook/get-cook-category`, {
         params: {
-          category: categoryValue,
+          category: searchParams.get('category') || '',
           pageNo,
           numOfRows,
         },
       });
-      setItems(prev => [...prev, ...response.data.data]);
+
+      if (pageNo === 1) {
+        setItems(response.data.data);
+      } else {
+        setItems(prev => [...prev, ...response.data.data]);
+      }
+
       if (response.data.data.length < numOfRows) {
         setIsFullLoaded(true);
       }
     }
     fetchItems();
-  }, [pageNo, numOfRows, categoryValue, isFullLoaded]);
+  }, [pageNo]);
 
   return (
     <div className={styles.categoryCookPage}>
       <div className={styles.categoryHeader}>
-        <h2>{categoryList.find(c => c.en === categoryValue)?.name || '카테고리'}</h2>
+        <h2>{categoryList.find(c => c.en === searchParams.get('category'))?.name || '카테고리'}</h2>
         <Button className={styles.sortButton}>최신순/주문량순</Button>
       </div>
       <CookGrid items={items} />

@@ -1,28 +1,23 @@
 /* eslint-disable react/function-component-definition */
-import React, { useState, useEffect, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import axiosInstance from '../../../services/axios-config';
-import styles from './HubHistoryPage.module.scss';
-import OrderList from '../Main/component/OrderList';
-import { openModal } from '../../../store/modalSlice';
+import React, { useEffect, useState, useCallback } from 'react';
+import axiosInstance from '../../../../services/axios-config';
+import styles from '../MainPage.module.scss';
+import OrderList from './OrderList';
 
-const HubHistoryPage = () => {
+const ShopDeliveryPendingSection = ({ isOrderChanged, handleOpenOrderDetailModal }) => {
   const [orders, setOrders] = useState([]);
-
   const [pageNo, setPageNo] = useState(1);
-  const numOfRows = 10;
-
-  const [loading, setLoading] = useState(false);
   const [isFullLoaded, setIsFullLoaded] = useState(false);
-
-  const dispatch = useDispatch();
+  const numOfRows = 3;
+  const [loading, setLoading] = useState(false);
 
   // 완료된 주문 조회
   const fetchCompletedOrders = useCallback(async () => {
-    const response = await axiosInstance.get('/shop-service/shop/all-order', {
+    const response = await axiosInstance.get('/shop-service/shop/filtering-order', {
       params: {
         pageNo,
         numOfRows,
+        orderState: 'READY_FOR_DELIVERY',
       },
     });
 
@@ -37,24 +32,25 @@ const HubHistoryPage = () => {
     }
   }, [pageNo, numOfRows]);
 
-  // 주문 상세 모달 열기
-  const handleOpenOrderDetailModal = order => {
-    dispatch(
-      openModal({
-        type: 'SHOP_ORDER_DETAIL',
-        props: {
-          order,
-        },
-      })
-    );
-  };
-
   useEffect(() => {
     setLoading(true);
     fetchCompletedOrders().then(() => {
       setLoading(false);
     });
   }, [pageNo]);
+
+  useEffect(() => {
+    if (pageNo !== 1) {
+      setPageNo(1);
+    } else {
+      setLoading(true);
+      fetchCompletedOrders().then(() => {
+        setLoading(false);
+      });
+    }
+
+    setIsFullLoaded(false);
+  }, [isOrderChanged]);
 
   const handleLoadMore = () => {
     setPageNo(pageNo + 1);
@@ -63,7 +59,7 @@ const HubHistoryPage = () => {
   return (
     <main className={styles.main}>
       <div className={styles.searchBar}>
-        <h2>가게 주문 모아보기</h2>
+        <h2>완료된 주문</h2>
       </div>
       <OrderList
         loading={loading}
@@ -76,4 +72,4 @@ const HubHistoryPage = () => {
   );
 };
 
-export default HubHistoryPage;
+export default ShopDeliveryPendingSection;

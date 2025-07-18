@@ -18,10 +18,10 @@ function SocialLoginListener() {
         console.log('로그인 성공:', data);
         localStorage.setItem('ACCESS_TOKEN', data.accessToken);
         localStorage.setItem('REFRESH_TOKEN', data.refreshToken);
-        localStorage.setItem('userRole', data.role);
-        localStorage.setItem('userId', data.userId);
-        localStorage.setItem('recovery', data.recoveryTarget);
-        navigate('/');
+        localStorage.setItem('USER_ROLE', data.role);
+        localStorage.setItem('USER_ID', data.userId);
+        localStorage.setItem('RECOVERY_TARGET', data.recoveryTarget);
+        navigate('/admin');
       }
 
       if (data.type === 'NEW_USER_SIGNUP') {

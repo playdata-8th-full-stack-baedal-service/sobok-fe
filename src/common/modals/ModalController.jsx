@@ -8,10 +8,7 @@ import PasswordChangeModal from '../../pages/user/UserInfo/components/PasswordCh
 import WithdrawalModal from '../../pages/user/UserInfo/components/WithdrawalModal';
 import AddrConfirmModal from '../../pages/user/UserInfo/components/AddrConfirmModal';
 import ProfilePhotoChangeModal from '../../pages/user/UserInfo/components/ProfilePhotoChangeModal';
-// import FindPWModal from '../../pages/auth/FindPW/FindPWModal';
-
 import FindPWModal from '../../pages/auth/FindPW/FindPWModal';
-// import NewPWModal from '../../pages/auth/FindPW/NewPWModal';
 import PWChangedModal from '../../pages/auth/FindPW/PWChangedModal';
 // 모달들은 모두 추가해두어야함
 
@@ -25,6 +22,7 @@ import MyOrderDetailPage from '../../pages/user/UserOptions/MyOrderDetail/MyOrde
 import UserPasswordChangeModal from '../../pages/user/Info/component/UserPasswordChangeModal';
 import AdminOrderDetailModal from '../../pages/admin/AllOrder/modals/AdminOrderDetailModal';
 import RecoveryConfirmModal from '../../pages/auth/Recovery/RecoveryConfirmModal';
+import ShopOrderDetailModal from '../../pages/hub/Main/modals/ShopOrderDetailModal';
 
 function ModalController() {
   const { modalType, modalProps } = useSelector(state => state.modal);
@@ -76,6 +74,8 @@ function ModalController() {
       return <AdminOrderDetailModal onClose={handleClose} order={modalProps.order} />;
     case 'USER_RESTORE' :
       return <RecoveryConfirmModal onClose={handleClose} {...modalProps} />;
+    case 'SHOP_ORDER_DETAIL':
+      return <ShopOrderDetailModal onClose={handleClose} order={modalProps.order} />;
     default:
       return null;
   }

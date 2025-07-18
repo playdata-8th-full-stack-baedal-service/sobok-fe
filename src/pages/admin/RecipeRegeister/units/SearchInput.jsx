@@ -53,10 +53,7 @@ function SearchInput({
       searchTimeoutRef.current = setTimeout(async () => {
         try {
           const response = await axiosInstance.get(
-            `/cook-service/ingredient/keyword-search`,{
-                params : { keyword : query}
-            }
-          
+            `/cook-service/ingredient/keyword-search?keyword=${query}`
           );
           console.log('API 응답:', response.data); // 디버깅용
           if (response.data.success && Array.isArray(response.data.data)) {

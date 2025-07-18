@@ -179,10 +179,25 @@ function UserSignUp() {
     }
   };
 
+  const { isLoginIdChecked, isNicknameChecked, isEmailChecked } = useSelector(state => state.auth);
+
   const handleSubmit = async e => {
     e.preventDefault();
 
     if (!validateForm()) return;
+
+    if (!isLoginIdChecked) {
+      alert('아이디 중복체크를 완료해주세요.');
+      return;
+    }
+    if (!isNicknameChecked) {
+      alert('닉네임 중복체크를 완료해주세요.');
+      return;
+    }
+    if (getFullEmail() && !isEmailChecked) {
+      alert('이메일 중복체크를 완료해주세요.');
+      return;
+    }
 
     let completeFormData = {
       ...formData,
@@ -219,6 +234,11 @@ function UserSignUp() {
       navigate('/auth/signup/complete');
     }
   }, [signUpSuccess, dispatch]);
+
+  // 페이지 진입 시 상태 초기화
+  useEffect(() => {
+    dispatch(clearSMSAuth());
+  }, []);
 
   return (
     <div className={styles['signup-wrap']}>
@@ -260,7 +280,7 @@ function UserSignUp() {
 
           <AddressSection
             roadFull={formData.roadFull}
-            addrDetail={formData.addrDetail}
+            addDetail={formData.addrDetail}
             onAddressChange={handleAddressChange}
           />
 

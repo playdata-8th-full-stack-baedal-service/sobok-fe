@@ -11,13 +11,23 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
       password,
     });
     if (res.data.success) {
-      const { accessToken, refreshToken, role, id: userId, recoveryTarget } = res.data.data;
-      const tokenData = { accessToken, refreshToken, role, userId, recoveryTarget };
+      const {
+        accessToken,
+        refreshToken,
+        role,
+        id: userId,
+        recoveryTarget,
+        provider,
+      } = res.data.data;
+      const tokenData = { accessToken, refreshToken, role, userId, recoveryTarget, provider };
       localStorage.setItem('ACCESS_TOKEN', accessToken);
       localStorage.setItem('REFRESH_TOKEN', refreshToken);
       localStorage.setItem('USER_ROLE', role);
       localStorage.setItem('USER_ID', userId);
       localStorage.setItem('RECOVERY_TARGET', recoveryTarget);
+      if (provider != null) {
+        localStorage.setItem('OAUTH', provider);
+      }
       return tokenData;
     }
     // success: false
@@ -92,9 +102,8 @@ export const checkNickName = createAsyncThunk('auth/checkNickName', async (nickn
     const res = await axiosInstance.get('/user-service/user/check-nickname', {
       params: { nickname },
     });
-    if (res.data.status === 200 || res.data.message === '사용 가능한 닉네임입니다.')
-      return res.data.message;
-    return thunkAPI.rejectWithValue('닉네임 중복 확인 실패');
+
+    return res.data.message;
   } catch (e) {
     return thunkAPI.rejectWithValue(
       e.response?.data?.message || '닉네임 중복 확인에 실패했습니다.'
@@ -149,6 +158,9 @@ const initialState = {
   nicknameCheckError: null,
   loginIdCheckMessage: null,
   loginIdCheckError: null,
+  isLoginIdChecked: false,
+  isEmailChecked: false,
+  isNicknameChecked: false,
   userInfo: null,
   userInfoLoading: false,
   userInfoError: null,
@@ -220,6 +232,20 @@ const authSlice = createSlice({
         state.signUpSuccess = false;
       })
 
+      .addCase(kakaoSignUpUser.pending, state => {
+        setLoading(state);
+        state.signUpSuccess = false;
+      })
+      .addCase(kakaoSignUpUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.signUpSuccess = true;
+      })
+      .addCase(kakaoSignUpUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.signUpSuccess = false;
+      })
+
       .addCase(deleteUser.pending, state => {
         setLoading(state);
         state.deleteSuccess = false;
@@ -247,6 +273,7 @@ const authSlice = createSlice({
       .addCase(checkEmail.fulfilled, (state, action) => {
         state.loading = false;
         state.emailCheckMessage = action.payload;
+        state.isEmailChecked = true;
       })
       .addCase(checkEmail.rejected, (state, action) => {
         setMessageError(state, 'emailCheck', action.payload);
@@ -257,6 +284,7 @@ const authSlice = createSlice({
       .addCase(checkNickName.fulfilled, (state, action) => {
         state.loading = false;
         state.nicknameCheckMessage = action.payload;
+        state.isNicknameChecked = true;
       })
       .addCase(checkNickName.rejected, (state, action) => {
         setMessageError(state, 'nicknameCheck', action.payload);
@@ -267,6 +295,7 @@ const authSlice = createSlice({
       .addCase(checkLoginId.fulfilled, (state, action) => {
         state.loading = false;
         state.loginIdCheckMessage = action.payload;
+        state.isLoginIdChecked = true;
       })
       .addCase(checkLoginId.rejected, (state, action) => {
         setMessageError(state, 'loginIdCheck', action.payload);

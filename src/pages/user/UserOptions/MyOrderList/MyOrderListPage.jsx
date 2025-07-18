@@ -29,13 +29,20 @@ function MyOrderListPage() {
   return (
     <div className={styles.myOrderPage}>
       <h2>주문 내역</h2>
-      {orders.map(order => (
-        <OrderCard key={order.paymentId} order={order} />
-      ))}
-      {!isFullLoaded && (
-        <div className={styles.loadMoreButton}>
-          <Button onClick={() => setPageNo(pageNo + 1)}>더보기 +</Button>
-        </div>
+      {orders.length === 0 ? (
+        <div className={styles.noOrders}>주문 내역이 없습니다.</div>
+      ) : (
+        <>
+          {orders.map(order => (
+            <OrderCard key={order.paymentId} order={order} />
+          ))}
+
+          {!isFullLoaded && (
+            <div className={styles.loadMoreButton}>
+              <Button onClick={() => setPageNo(pageNo + 1)}>더보기 +</Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
