@@ -1,7 +1,9 @@
 .container {
-  padding: 40px 100px;
-  max-width: 1400px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Pretendard', sans-serif;
 }
 
 .title {
@@ -16,6 +18,7 @@
   font-size: 18px;
   color: #888;
   margin-top: 80px;
+  margin-bottom: 80px;
 }
 
 .grid {
