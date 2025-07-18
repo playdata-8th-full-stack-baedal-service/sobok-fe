@@ -1,5 +1,5 @@
 .container {
-  padding: 40px 200px;
+  padding: 40px 100px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -20,20 +20,21 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 20px;
 }
 
 .card {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: space-between;
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 12px;
-  padding: 12px;
+  padding: 16px 20px;
   cursor: pointer;
-  gap: 12px;
+  gap: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease;
 
@@ -51,11 +52,50 @@
   flex-shrink: 0;
 }
 
+.centerContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.titleBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  align-items: flex-start; 
+  gap: 7px;
+  font-size: 14px;
+  flex: 1;
+
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+  }
+
+  p {
+    margin: 0;
+    color: #555;
+
+    strong {
+      color: #222;
+    }
+  }
+
+  span {
+    color: #ccc;
+  }
+}
+
 .info {
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   gap: 4px;
   font-size: 14px;
+  min-width: 140px;
 
   h3 {
     font-size: 15px;
@@ -73,7 +113,6 @@
     }
   }
 }
-
 
 .date {
   font-size: 13px;

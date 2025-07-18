@@ -71,11 +71,16 @@ const MyPostListPage = () => {
                 className={styles.thumbnail}
               />
 
+              <div className={styles.centerContent}>
+                <div className={styles.titleBox}>
+                  <h3>{post.title}</h3>
+                  <p>
+                    <strong>요리 이름</strong>: {post.cookName}
+                  </p>
+                </div>
+              </div>
+
               <div className={styles.info}>
-                <h3>{post.title}</h3>
-                <p>
-                  <strong>요리 이름</strong>: {post.cookName}
-                </p>
                 <p>
                   <strong>작성자</strong>: {post.nickName}
                 </p>
