@@ -8,6 +8,17 @@
   margin-bottom: 20px;
 }
 
+.likeSection {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  cursor: pointer;
+
+}
+
+
+
 .left, .right {
   display: flex;
   flex-direction: column;
