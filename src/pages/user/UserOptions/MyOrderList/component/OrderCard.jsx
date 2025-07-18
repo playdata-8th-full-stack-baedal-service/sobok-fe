@@ -42,10 +42,12 @@ const OrderCard = ({ order }) => {
       </div>
       <div className={styles.orderItems}>
         {order.cook.map(item => (
+
           <OrderItem
             key={`${order.orderId}-${item.cookName}`}
             item={{ ...item, paymentId: order.paymentId }}
           />
+
         ))}
       </div>
       <div className={styles.orderFooter}>

@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/function-component-definition */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RefreshCcw } from 'lucide-react';
+import { CircularProgress } from '@mui/material';
 import styles from '../MainPage.module.scss';
 import Button from '../../../../common/components/Button';
 import { formattedDate } from '../../../../common/utils/orderUtils';
 import axiosInstance from '../../../../services/axios-config';
-import { CircularProgress } from '@mui/material';
 
 const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) => {
   const [orders, setOrders] = useState([]);
@@ -15,17 +15,13 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
 
   const numOfRows = 3;
 
-  const [maxCount, setMaxCount] = useState(10);
-  // 생각을 해보자
-  // 1. 그냥 가져오기
-  // 2. 새로운 주문이 있는 지 확인
-  // 3. 주문에 연동사항이 생기면 가져오기
-  // 4. 더보기 깜빡 절대 안됨
-  // 5. 더보기 버튼 누르면 가져오기
+  const [maxCount, setMaxCount] = useState(0);
+  const [isFullLoaded, setIsFullLoaded] = useState(false);
 
   // 대기중인 주문 조회
   const fetchPreparingOrders = async (page = pageNo, number = numOfRows) => {
-    await setLoading(true);
+    setLoading(true);
+
     const response = await axiosInstance.get('/shop-service/shop/filtering-order', {
       params: {
         pageNo: page,
@@ -34,14 +30,28 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
       },
     });
 
-    if (pageNo === 1) {
-      setOrders(response.data.data);
-    } else {
-      setOrders(prev => [...prev, ...response.data.data]);
+    const { data } = response.data;
+
+    if (data.length === 0) {
+      setIsFullLoaded(true);
+      setMaxCount(0);
     }
 
-    if (pageNo === 1 && response.data.data.length < numOfRows)
-      setMaxCount(response.data.data.length);
+    if (page === 1) {
+      setOrders(data);
+      setMaxCount(data.length);
+    } else {
+      setOrders(prev => [...prev, ...data]);
+    }
+
+    if (data.length < number) {
+      console.log('data.length', data.length);
+      setIsFullLoaded(true);
+      if (page === 1) setMaxCount(data.length);
+      else setMaxCount(prev => prev + data.length);
+    } else {
+      setMaxCount(prev => prev + data.length);
+    }
 
     setLoading(false);
   };
@@ -58,14 +68,11 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
     const { data } = response.data;
 
     // 더보기 버튼 활성화 여부 조회
-    if (data.filter(order => order !== null).length === orders.length) setMaxCount(data.length);
-    else if (data.filter(order => order !== null).length !== orders.length) {
-      console.log(orders, data);
-      if (pageNo === 1) {
-        fetchPreparingOrders();
-      } else {
-        setOrders(data.filter(order => order !== null));
-      }
+    if (data.length !== orders.length) {
+      setMaxCount(data.length);
+      handleStatusChange(null);
+      fetchPreparingOrders(1, pageNo * numOfRows);
+      setIsFullLoaded(false);
     }
   };
 
@@ -82,6 +89,14 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
     return () => clearInterval(interval);
   }, [pageNo, orders]);
 
+  // 상태 변경 시 페이지 초기화
+  const handleRefreshClick = () => {
+    setPageNo(1);
+    setMaxCount(numOfRows);
+    fetchPreparingOrders(1, numOfRows);
+  };
+
+  // 더보기 버튼 클릭 시 페이지 넘버 증가
   const handleLoadMore = () => {
     setPageNo(prev => prev + 1);
   };
@@ -90,12 +105,7 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
     <main className={styles.main}>
       <div className={styles.searchBar}>
         <h2>대기중인 주문</h2>
-        <RefreshCcw
-          onClick={() => {
-            window.location.reload();
-          }}
-          className={styles.refreshButton}
-        />
+        <RefreshCcw onClick={handleRefreshClick} className={styles.refreshButton} />
       </div>
       <div className={styles.orderList}>
         {loading && <CircularProgress style={{ position: 'absolute', top: '50%', left: '50%' }} />}
@@ -108,16 +118,19 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
             <div key={order.orderId + order.paymentId} className={styles.orderItem}>
               <div className={styles.orderMeta}>
                 <span>{order.orderId.toUpperCase()}</span>
-                <span>{formattedDate(order.createdAt)}</span>
+                <span>{formattedDate(order.updatedAt)}</span>
               </div>
               <div className={styles.orderActions}>
                 <Button onClick={() => handleOpenOrderDetailModal(order)}>주문 상세</Button>
                 <Button
                   onClick={() => {
                     handleStatusChange(order);
-                    setOrders(prev => prev.filter(o => o.orderId !== order.orderId));
-                    fetchPreparingOrders();
-                    setMaxCount(prev => prev - 1);
+                    setOrders(prev =>
+                      prev.filter(prevOrder => prevOrder.orderId !== order.orderId)
+                    );
+                    setTimeout(() => {
+                      handleRefreshClick();
+                    }, 100);
                   }}
                 >
                   상태 변경
@@ -127,7 +140,7 @@ const ShopOrderSection = ({ handleStatusChange, handleOpenOrderDetailModal }) =>
           ))
         )}
       </div>
-      {maxCount > orders.length && (
+      {orders.length > 0 && orders.length < maxCount && (
         <div className={styles.allOrderPageButton}>
           <Button onClick={handleLoadMore}>더보기 +</Button>
         </div>
