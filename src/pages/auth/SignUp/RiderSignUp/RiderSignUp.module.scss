@@ -1,17 +1,16 @@
-
 .riderSignup {
   max-width: 600px;
-  margin: 0 auto;
+  margin: 0 auto 50px;
   padding: 40px 20px;
   background-color: #ffffff;
-  border-radius: 12px;
+  border-radius: 50px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 
   h2 {
     text-align: center;
     margin-bottom: 40px;
-    font-size: 28px;
-    font-weight: 700;
+    font-size: 20px;
+    font-weight: bold;
     color: #333;
     padding-bottom: 10px;
   }
@@ -29,31 +28,26 @@
       label {
         font-size: 14px;
         font-weight: 600;
-        color: #555;
+        color: rgb(0, 0, 0);
         margin-bottom: 4px;
       }
 
-      
       input {
-        width: 100%;
-        padding: 12px 16px;
-        border: 2px solid #e1e5e9;
-        border-radius: 8px;
-        font-size: 14px;
-        transition: all 0.3s ease;
-        background-color: #fff;
-        box-sizing: border-box;
-        height: 48px; 
-        border-radius: 20px;
+        flex: 1;
+        padding: 0.875rem;
+        font-size: 1rem;
+        border: 1.5px solid #000;
+        border-radius: 50px;
+        box-shadow: 2.5px 3px 0 #000;
+        outline: none;
+        transition: ease 0.25s;
 
         &:focus {
-          outline: none;
-          border-color: #007bff;
-          box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+          box-shadow: 5.5px 7px 0 black;
         }
 
         &::placeholder {
-          color: #adb5bd;
+          color: black;
         }
 
         &:invalid {
@@ -68,28 +62,33 @@
 
         input {
           flex: 1;
-          // 공통 input 스타일 상속
         }
 
         .verifyButton,
         .duplicateButton {
-          padding: 12px 20px;
-          background-color: #007bff;
-          color: white;
-          border: none;
-          border-radius: 8px;
-          font-size: 14px;
-          font-weight: 600;
+          --bg: #000;
+          --hover-bg: #ffffff;
+          --hover-text: #000;
+
+          color: #fff;
+          height: 50px;
           cursor: pointer;
-          white-space: nowrap;
-          transition: all 0.3s ease;
-          min-width: 100px;
-          height: 48px; // input과 동일한 높이
-          box-sizing: border-box;
+          border: 1px solid var(--bg);
+          border-radius: 50px;
+          padding: 0.8em 2em;
+          background: var(--bg);
+          transition: 0.2s;
 
           &:hover {
-            background-color: #0056b3;
-            transform: translateY(-1px);
+            color: var(--hover-text);
+            transform: translate(-0.25rem, -0.25rem);
+            background: var(--hover-bg);
+            box-shadow: 0.25rem 0.25rem var(--bg);
+          }
+
+          &:active {
+            transform: translate(0);
+            box-shadow: none;
           }
 
           &:active {
@@ -122,10 +121,6 @@
           flex-direction: column;
           gap: 4px;
           width: 100%;
-
-          input {
-          
-          }
         }
       }
 
@@ -135,48 +130,7 @@
           flex-direction: column;
           gap: 12px;
 
-          .phoneVerify {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-
-            input {
-              flex: 1;
-              // 공통 input 스타일 상속
-            }
-
-            .verifyButton {
-              padding: 12px 20px;
-              background-color: #007bff;
-              color: white;
-              border: none;
-              border-radius: 8px;
-              font-size: 14px;
-              font-weight: 600;
-              cursor: pointer;
-              white-space: nowrap;
-              transition: all 0.3s ease;
-              min-width: 100px;
-              height: 48px; // input과 동일한 높이
-              box-sizing: border-box;
-
-              &:hover {
-                background-color: #0056b3;
-                transform: translateY(-1px);
-              }
-
-              &:active {
-                transform: translateY(0);
-              }
-
-              &:disabled {
-                background-color: #6c757d;
-                cursor: not-allowed;
-                transform: none;
-              }
-            }
-          }
-
+          .phoneVerify,
           .codeVerify {
             display: flex;
             align-items: center;
@@ -184,27 +138,32 @@
 
             input {
               flex: 1;
-              // 공통 input 스타일 상속
             }
 
             .verifyButton {
-              padding: 12px 20px;
-              background-color: #007bff;
-              color: white;
-              border: none;
-              border-radius: 8px;
-              font-size: 14px;
-              font-weight: 600;
+              --bg: #000;
+              --hover-bg: #ffffff;
+              --hover-text: #000;
+
+              color: #fff;
+              height: 50px;
               cursor: pointer;
-              white-space: nowrap;
-              transition: all 0.3s ease;
-              min-width: 100px;
-              height: 48px; // input과 동일한 높이
-              box-sizing: border-box;
+              border: 1px solid var(--bg);
+              border-radius: 50px;
+              padding: 0.8em 2em;
+              background: var(--bg);
+              transition: 0.2s;
 
               &:hover {
-                background-color: #0056b3;
-                transform: translateY(-1px);
+                color: var(--hover-text);
+                transform: translate(-0.25rem, -0.25rem);
+                background: var(--hover-bg);
+                box-shadow: 0.25rem 0.25rem var(--bg);
+              }
+
+              &:active {
+                transform: translate(0);
+                box-shadow: none;
               }
 
               &:active {
@@ -224,7 +183,7 @@
       .validationMessage {
         font-size: 12px;
         font-weight: 500;
-        margin-top: 4px;
+        margin-top: 6px;
         display: flex;
         align-items: center;
         gap: 4px;
@@ -248,22 +207,32 @@
     }
 
     .submitButton {
-      margin-top: 20px;
-      padding: 16px 32px;
-      background: linear-gradient(135deg, #007bff, #0056b3);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 700;
+      --bg: #000;
+      --hover-bg: #ffffff;
+      --hover-text: #000;
+
+      color: #fff;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-      height: 56px; // 제출 버튼은 조금 더 크게
+      border: 1px solid var(--bg);
+      border-radius: 50px;
+      padding: 0.8em 2em;
+      background: var(--bg);
+      transition: 0.2s;
+      height: 50px;
+      font-size: 20px;
+      text-align: center;
+      font-weight: bold;
 
       &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        color: var(--hover-text);
+        transform: translate(-0.25rem, -0.25rem);
+        background: var(--hover-bg);
+        box-shadow: 0.25rem 0.25rem var(--bg);
+      }
+
+      &:active {
+        transform: translate(0);
+        box-shadow: none;
       }
 
       &:active {
@@ -275,6 +244,21 @@
         cursor: not-allowed;
         transform: none;
         box-shadow: none;
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 20px;
+          height: 20px;
+          margin-left: -10px;
+          margin-top: -10px;
+          border: 2px solid transparent;
+          border-top: 2px solid #ffffff;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
       }
     }
 
@@ -291,7 +275,7 @@
   }
 }
 
-// 반응형 디자인
+// 반응형
 @media (max-width: 768px) {
   .riderSignup {
     margin: 0 10px;
@@ -318,7 +302,7 @@
           .duplicateButton {
             width: 100%;
             min-width: unset;
-            order: 0; // 모바일에서는 버튼이 input 아래로
+            order: 0;
           }
         }
 
@@ -343,49 +327,7 @@
   }
 }
 
-// 다크모드 지원 (선택사항)
-@media (prefers-color-scheme: dark) {
-  .riderSignup {
-    background-color: #2d3748;
-    color: #e2e8f0;
-
-    h2 {
-      color: #e2e8f0;
-      border-bottom-color: #4299e1;
-    }
-
-    .signupForm {
-      .formGroup {
-        label {
-          color: #cbd5e0;
-        }
-
-        input {
-          background-color: #4a5568;
-          border-color: #718096;
-          color: #e2e8f0;
-
-          &:focus {
-            border-color: #4299e1;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
-          }
-
-          &::placeholder {
-            color: #a0aec0;
-          }
-        }
-      }
-
-      .errorMessage {
-        background-color: #fed7d7;
-        color: #742a2a;
-        border-color: #feb2b2;
-      }
-    }
-  }
-}
-
-// 애니메이션 효과
+// 키프레임
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -397,48 +339,17 @@
   }
 }
 
-.riderSignup {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-.formGroup {
-  animation: fadeInUp 0.4s ease-out;
-  animation-fill-mode: both;
-
-  @for $i from 1 through 10 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{$i * 0.1}s;
-    }
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 
-// 포커스 상태 개선
+// 포커스
 input:focus {
   position: relative;
   z-index: 1;
-}
-
-// 버튼 로딩 효과
-.submitButton:disabled {
-  position: relative;
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin-left: -10px;
-    margin-top: -10px;
-    border: 2px solid transparent;
-    border-top: 2px solid #ffffff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
