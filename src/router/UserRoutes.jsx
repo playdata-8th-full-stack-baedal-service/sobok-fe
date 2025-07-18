@@ -19,7 +19,6 @@ import NewPostPage from '../pages/user/Post/Posting/NewPostPage';
 import UserInfoPage from '../pages/user/UserInfo/UserInfoPage';
 import MyPostListPage from '../pages/user/UserOptions/MyPostList/MyPostListPage';
 import MyOrderListPage from '../pages/user/UserOptions/MyOrderList/MyOrderListPage';
-// import MyOrderDetailPage from '../pages/user/UserOptions/MyOrderDetail/MyOrderDetailPage';
 import BookmarkRecipePage from '../pages/user/UserOptions/BookmarkRecipe/BookmarkRecipePage';
 import LikePostPage from '../pages/user/UserOptions/LikePost/LikePostPage';
 import SuccessPage from '../pages/user/Pay/toss/TossSuccess';
@@ -30,6 +29,7 @@ import ProductPage from '../pages/user/All/Product/ProductPage';
 import CategoryPage from '../pages/user/All/Category/CategoryPage';
 import SearchPage from '../pages/user/All/Search/SearchPage';
 import UserInfo from '../pages/user/Info/UserInfo';
+import EditPostPage from '../pages/user/Post/EditPost/EditPostPage';
 
 function UserRoutes() {
   return (
@@ -42,7 +42,6 @@ function UserRoutes() {
         <Route path="product" element={<ProductPage />} />
         <Route path="search" element={<SearchPage />} />
         <Route path="category" element={<CategoryPage />} />
-
         {/* <Route path="post-list" element={<PostListPage />} /> */}
         <Route path="post/:id" element={<PostDetailPage />} />
 
@@ -55,6 +54,16 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
+
+        <Route
+          path="edit-post"
+          element={
+            <RoleRoute role="USER">
+              <EditPostPage />
+            </RoleRoute>
+          }
+        />
+
         <Route
           path="cart"
           element={
@@ -115,14 +124,6 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
-        {/* <Route
-          path="order/:id"
-          element={
-            <RoleRoute role="USER">
-              <MyOrderDetailPage />
-            </RoleRoute>
-          }
-        /> */}
         <Route
           path="bookmarks"
           element={

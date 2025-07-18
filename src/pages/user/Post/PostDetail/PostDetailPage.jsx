@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '@/services/axios-config';
 import styles from './PostDetailPage.module.scss';
+import Button from '../../../../common/components/Button';
 
 const PostDetailPage = () => {
   const { id } = useParams();
-  console.log('받아온 postId:', id);
   const [post, setPost] = useState(null);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleEditPost = () => {
+    navigate('/user/edit-post', { state: { post } });
+  };
 
   useEffect(() => {
     const fetchPostDetail = async () => {
@@ -62,10 +67,9 @@ const PostDetailPage = () => {
       </div>
 
       <div className={styles.contentSection}>
-        <div
-          className={styles.textContent}
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        ></div>
+        <div className={styles.textContent}>
+          <div className={styles.inner} dangerouslySetInnerHTML={{ __html: post.content }}></div>
+        </div>
         <div className={styles.images}>
           {post.images.map((url, idx) => (
             <img key={idx} src={url} alt={`post-img-${idx}`} />
@@ -96,12 +100,14 @@ const PostDetailPage = () => {
       </div>
 
       <div className={styles.buttonSection}>
-        <button onClick={() => console.log('수정 클릭')} className={styles.button}>
-          수정하기
-        </button>
-        <button onClick={() => console.log('삭제 클릭')} className={styles.button}>
-          삭제하기
-        </button>
+        <div className={styles.buttonWrapper}>
+          <Button type="button" variant="BASIC" className="flexible" onClick={handleEditPost}>
+            수정하기
+          </Button>
+          {/* <Button type="button" variant="BASIC" className="flexible" onClick={handleDeletePost}>
+            삭제하기
+          </Button> */}
+        </div>
       </div>
     </div>
   );
