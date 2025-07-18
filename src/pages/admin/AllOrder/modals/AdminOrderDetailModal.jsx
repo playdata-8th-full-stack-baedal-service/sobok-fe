@@ -5,7 +5,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ModalWrapper from '@/common/modals/ModalWrapper';
-import { formattedDate, orderStatus } from '@/common/utils/orderUtils';
 import styles from './AdminOrderDetailModal.module.scss';
 import OrderUserInfo from './OrderUserInfo';
 import OrderPaymentInfo from './OrderPaymentInfo';

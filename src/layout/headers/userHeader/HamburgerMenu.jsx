@@ -57,6 +57,9 @@ function MenuTest() {
 
   const handleCategoryClick = category => {
     nav(`/user/category?category=${category}`);
+    if (window.location.pathname.includes('/user/category')) {
+      window.location.reload();
+    }
     closeSiderBar(); // 페이드 아웃 애니메이션과 함께 닫기
   };
 
