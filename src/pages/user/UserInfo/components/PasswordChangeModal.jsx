@@ -2,6 +2,7 @@ import React from 'react';
 import ModalWrapper from '@/common/modals/ModalWrapper';
 import PasswordInput from './PasswordInput';
 import PWChangedModal from '@/pages/auth/FindPW/PWChangedModal';
+import styles from './PasswordChangeModal.module.scss';
 
 function PasswordChangeModal({ onClose, onSubmit, loading }) {
   const [newPassword, setNewPassword] = React.useState('');
@@ -46,15 +47,13 @@ function PasswordChangeModal({ onClose, onSubmit, loading }) {
   };
 
   if (showPWChangedModal) {
-    return <PWChangedModal onClose={onClose} showSimpleClose={true} />;
+    return <PWChangedModal onClose={onClose} showSimpleClose />;
   }
 
   return (
     <ModalWrapper title="비밀번호 변경" onClose={onClose} size="md">
-      <div>
-        <p style={{ color: '#666', marginBottom: '20px', lineHeight: '1.5' }}>
-          새로운 비밀번호를 입력해주세요.
-        </p>
+      <div className={styles.formselection}>
+        <p className={styles.description}>새로운 비밀번호를 입력해주세요.</p>
 
         <form onSubmit={handleSubmit}>
           <PasswordInput
@@ -76,33 +75,16 @@ function PasswordChangeModal({ onClose, onSubmit, loading }) {
             id="confirmPassword"
           />
 
-          <div style={{ marginBottom: '20px' }}>
-            <p style={{ fontWeight: '500', marginBottom: '10px' }}>비밀번호 요구사항:</p>
-            <ul style={{ margin: 0, paddingLeft: '20px', color: '#666' }}>
+          <div className={styles.requirements}>
+            <p className={styles.requirementsTitle}>비밀번호 요구사항:</p>
+            <ul className={styles.requirementsList}>
               <li>최소 8자 이상</li>
               <li>대문자, 소문자, 숫자, 특수문자 포함</li>
               <li>기존 비밀번호와 다른 비밀번호</li>
             </ul>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              width: '100%',
-              background: '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              padding: '12px',
-              fontSize: '16px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              transition: 'background 0.3s ease',
-            }}
-            onMouseOver={e => !loading && (e.target.style.background = '#0056b3')}
-            onMouseOut={e => !loading && (e.target.style.background = '#007bff')}
-          >
+          <button type="submit" disabled={loading} className={styles.submitButton}>
             {loading ? '변경 중...' : '변경'}
           </button>
         </form>

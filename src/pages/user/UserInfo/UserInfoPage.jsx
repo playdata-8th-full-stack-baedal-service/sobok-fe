@@ -528,7 +528,7 @@ function UserInfoPage() {
           <div className={styles.profileCard}>
             <div className={styles.cardHeader}>
               <h1>회원정보 조회</h1>
-              <button type="button" onClick={handlePasswordChangeClick}>
+              <button type="button" onClick={handlePasswordChangeClick} className={styles.resetpasswordbutton}>
                 비밀번호 변경
               </button>
             </div>
