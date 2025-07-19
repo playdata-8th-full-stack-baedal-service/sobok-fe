@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { openModal, closeModal } from '@/store/modalSlice';
 import axiosInstance from '@/services/axios-config';
 import styles from '../UserInfoPage.module.scss';
+import { Pencil, Trash } from 'lucide-react';
 
 function AddrList({ addresses, onAddressUpdate, onAddressesChange, onAddressDelete }) {
   const dispatch = useDispatch();
@@ -201,7 +202,7 @@ function AddrList({ addresses, onAddressUpdate, onAddressesChange, onAddressDele
                   className={styles.editBtn}
                   onClick={() => openAddressSearch(address.id)}
                 >
-                  수정
+                  <Pencil className={styles.editsvgIcon}/>
                 </button>
                 <button
                   type="button"
@@ -209,7 +210,7 @@ function AddrList({ addresses, onAddressUpdate, onAddressesChange, onAddressDele
                   onClick={() => handleDeleteAddr(address.id)}
                   disabled={isUpdating}
                 >
-                  삭제
+                  <Trash className={styles.deletesvgIcon}/>
                 </button>
               </div>
             </div>

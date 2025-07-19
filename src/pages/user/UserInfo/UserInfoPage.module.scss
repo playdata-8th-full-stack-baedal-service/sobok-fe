@@ -86,17 +86,28 @@
 }
 
 .changePhotoBtn {
-  background: #333;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 8px 16px;
-  font-size: 14px;
+  --bg: #000;
+  --hover-bg: #ffffff;
+  --hover-text: #000;
+
+  color: #fff;
   cursor: pointer;
-  transition: background 0.3s ease;
+  border: 1px solid var(--bg);
+  border-radius: 50px;
+  padding: 0.8em 2em;
+  background: var(--bg);
+  transition: 0.2s;
 
   &:hover {
-    background: #555;
+    color: var(--hover-text);
+    transform: translate(-0.25rem, -0.25rem);
+    background: var(--hover-bg);
+    box-shadow: 0.25rem 0.25rem var(--bg);
+  }
+
+  &:active {
+    transform: translate(0);
+    box-shadow: none;
   }
 }
 
@@ -117,25 +128,24 @@
 
   label {
     min-width: 100px;
-    font-weight: 500;
-    color: #333;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
   }
 }
 
 .fieldValue {
   flex: 1;
   padding: 10px 15px;
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
+  background: #ffffff;
+  border-radius: 50px;
   color: #333;
   display: flex;
   align-items: center;
 }
 
 .disabledText {
-  color: #6c757d;
-  font-style: italic;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
 }
 
 .fieldWithButton {
@@ -153,14 +163,17 @@
 }
 
 .editInput {
-  padding: 8px 12px;
-  border: 1px solid #e9ecef;
-  border-radius: 4px;
-  font-size: 14px;
+  flex: 1;
+  padding: 0.875rem;
+  font-size: 1rem;
+  border: 1.5px solid #000;
+  border-radius: 50px;
+  box-shadow: 2.5px 3px 0 #000;
   outline: none;
+  transition: ease 0.25s;
 
   &:focus {
-    border-color: #007bff;
+    box-shadow: 5.5px 7px 0 black;
   }
 }
 
@@ -173,32 +186,48 @@
   display: flex;
   gap: 8px;
   align-items: center;
+  justify-content: center;
 }
 
 .verificationInput {
-  padding: 8px 12px;
-  border: 1px solid #e9ecef;
-  border-radius: 4px;
-  font-size: 14px;
+  flex: 1;
+  padding: 0.875rem;
+  font-size: 1rem;
+  border: 1.5px solid #000;
+  border-radius: 50px;
+  box-shadow: 2.5px 3px 0 #000;
   outline: none;
-  width: 120px;
+  transition: ease 0.25s;
 
   &:focus {
-    border-color: #007bff;
+    box-shadow: 5.5px 7px 0 black;
   }
 }
 
 .confirmBtn {
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 6px 12px;
-  font-size: 14px;
-  cursor: pointer;
+  --bg: #000;
+  --hover-bg: #ffffff;
+  --hover-text: #000;
 
-  &:hover:not(:disabled) {
-    background: #0056b3;
+  color: #fff;
+  cursor: pointer;
+  border: 1px solid var(--bg);
+  border-radius: 4px;
+  padding: 0.8em 2em;
+  background: var(--bg);
+  transition: 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--hover-text);
+    transform: translate(-0.25rem, -0.25rem);
+    background: var(--hover-bg);
+    box-shadow: 0.25rem 0.25rem var(--bg);
+  }
+
+  &:active {
+    transform: translate(0);
+    box-shadow: none;
   }
 
   &:disabled {
@@ -222,16 +251,29 @@
 }
 
 .changeBtn {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-size: 12px;
+  --bg: #000;
+  --hover-bg: #ffffff;
+  --hover-text: #000;
+
+  color: #fff;
   cursor: pointer;
-  color: #007bff;
+  border: 1px solid var(--bg);
+  border-radius: 4px;
+  padding: 0.8em 2em;
+  background: var(--bg);
+  transition: 0.2s;
+  white-space: nowrap;
 
   &:hover {
-    background: #e9ecef;
+    color: var(--hover-text);
+    transform: translate(-0.25rem, -0.25rem);
+    background: var(--hover-bg);
+    box-shadow: 0.25rem 0.25rem var(--bg);
+  }
+
+  &:active {
+    transform: translate(0);
+    box-shadow: none;
   }
 }
 
@@ -282,22 +324,6 @@
   text-align: center;
   display: flex;
   justify-content: space-evenly;
-}
-
-.updateBtn {
-  background: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  padding: 12px 30px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.3s ease;
-
-  &:hover {
-    background: #c82333;
-  }
 }
 
 // 비밀번호 모달
@@ -681,16 +707,254 @@
 }
 
 .addAddressBtn {
-  color: rgb(0, 0, 0);
-  background-color: rgb(255, 255, 255);
-  border: 1px solid rgb(0, 0, 0);
+  --bg: #000;
+  --hover-bg: #ffffff;
+  --hover-text: #000;
+
+  color: #fff;
   cursor: pointer;
-  border-radius: 10px;
-  width: 110px;
+  border: 1px solid var(--bg);
+  border-radius: 4px;
+  padding: 0.8em 2em;
+  background: var(--bg);
+  transition: 0.2s;
 
   &:hover {
-    color: rgb(255, 255, 255);
-    background-color: rgb(0, 0, 0);
+    color: var(--hover-text);
+    transform: translate(-0.25rem, -0.25rem);
+    background: var(--hover-bg);
+    box-shadow: 0.25rem 0.25rem var(--bg);
+  }
+
+  &:active {
+    transform: translate(0);
+    box-shadow: none;
   }
 }
 
+.resetpasswordbutton {
+  --bg: #000;
+  --hover-bg: #ffffff;
+  --hover-text: #000;
+
+  color: #fff;
+  cursor: pointer;
+  border: 1px solid var(--bg);
+  border-radius: 4px;
+  padding: 0.8em 2em;
+  background: var(--bg);
+  transition: 0.2s;
+  width: 120px;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--hover-text);
+    transform: translate(-0.25rem, -0.25rem);
+    background: var(--hover-bg);
+    box-shadow: 0.25rem 0.25rem var(--bg);
+  }
+
+  &:active {
+    transform: translate(0);
+    box-shadow: none;
+  }
+}
+
+
+.deleteBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    display: none;
+    content: "삭제";
+    color: white;
+    transition-duration: 0.3s;
+    font-size: 2px;
+  }
+
+  &:hover {
+    width: 90px;
+    border-radius: 50px;
+    background-color: rgb(255, 69, 69);
+    align-items: center;
+
+    .delete-svgIcon {
+      width: 20px;
+      transform: translateY(60%) rotate(360deg);
+      transition-duration: 0.3s;
+    }
+
+    &::before {
+      display: block;
+      padding-right: 10px;
+      font-size: 13px;
+      opacity: 1;
+      transform: translateY(0px);
+      transition-duration: 0.3s;
+    }
+  }
+}
+
+.deletesvgIcon {
+  width: 15px;
+  transition-duration: 0.3s;
+  color: white;
+
+  path {
+    fill: white;
+  }
+}
+
+.editBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    display: none;
+    content: "변경";
+    color: white;
+    transition-duration: 0.3s;
+    font-size: 2px;
+  }
+
+  &:hover {
+    width: 90px;
+    border-radius: 50px;
+    background-color: rgb(40, 225, 15);
+    align-items: center;
+
+    .delete-svgIcon {
+      width: 20px;
+      transform: translateY(60%) rotate(360deg);
+      transition-duration: 0.3s;
+    }
+
+    &::before {
+      display: block;
+      padding-right: 10px;
+      font-size: 13px;
+      opacity: 1;
+      transform: translateY(0px);
+      transition-duration: 0.3s;
+    }
+  }
+}
+
+.editsvgIcon {
+  width: 15px;
+  transition-duration: 0.3s;
+  color: white;
+
+  path {
+    fill: white;
+  }
+}
+
+.updateBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgb(255, 69, 69);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    position: absolute;
+    top: -20px;
+    content: "회원탈퇴";
+    color: white;
+    transition: font-size 0.3s ease-in-out, opacity 0.3s ease-in-out, transform 0.3s ease-in-out, color 0.3s ease-in-out;
+    font-size: 2px;
+  }
+
+  .svgIcon {
+    width: 12px;
+    transition: transform 0.3s ease-in-out;
+
+    path {
+      fill: white;
+    }
+  }
+
+  &:hover {
+    width: 140px;
+    border-radius: 50px;
+    transform: scale(1.1);
+    color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.3);
+
+    &::before {
+      font-size: 13px;
+      opacity: 1;
+      transform: translateY(30px);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .svgIcon {
+      width: 50px;
+      transform: translateY(60%);
+    }
+  }
+}
+
+.checkbutton {
+    --bg: #000;
+  --hover-bg: #ffffff;
+  --hover-text: #000;
+
+  color: #fff;
+  cursor: pointer;
+  border: 1px solid var(--bg);
+  border-radius: 50px;
+  padding: 0.8em 2em;
+  background: var(--bg);
+  transition: 0.2s;
+  width: 120px;
+  height: 40px;
+
+
+  &:hover {
+    color: var(--hover-text);
+    transform: translate(-0.25rem, -0.25rem);
+    background: var(--hover-bg);
+    box-shadow: 0.25rem 0.25rem var(--bg);
+  }
+
+  &:active {
+    transform: translate(0);
+    box-shadow: none;
+  }
+}

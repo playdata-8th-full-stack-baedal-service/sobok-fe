@@ -32,8 +32,8 @@ function DeleteConfilmModal({ onClose, password }) {
   };
 
   return (
-    <ModalWrapper title="회원탈퇴 최종 확인" onClose={onClose} size="lg">
-      <div>
+    <ModalWrapper title="회원탈퇴 확인" onClose={onClose} size="lg">
+      <div className={styles.formcheck}>
         <p className={styles.description}>정말로 탈퇴하시겠습니까?</p>
         <p className={styles.warning}>탈퇴 후에는 계정을 복구할 수 없습니다.</p>
         <div className={styles.buttonGroup}>
@@ -49,7 +49,7 @@ function DeleteConfilmModal({ onClose, password }) {
             type="button"
             onClick={handleWithdrawal}
             disabled={isLoading || withdrawalLoading}
-            className={styles.button}
+            className={styles.buttonone}
           >
             {isLoading || withdrawalLoading ? '탈퇴 중...' : '탈퇴하기'}
           </button>
