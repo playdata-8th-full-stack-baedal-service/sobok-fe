@@ -104,7 +104,7 @@ function UserRoutes() {
           path="info"
           element={
             <RoleRoute role="USER">
-              <UserInfoPage />
+              <UserInfo />
             </RoleRoute>
           }
         />
@@ -137,14 +137,6 @@ function UserRoutes() {
           element={
             <RoleRoute role="USER">
               <LikePostPage />
-            </RoleRoute>
-          }
-        />
-        <Route
-          path="userinfo"
-          element={
-            <RoleRoute role="USER">
-              <UserInfo />
             </RoleRoute>
           }
         />

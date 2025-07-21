@@ -19,7 +19,7 @@ function UserInfo() {
 
   const [targetPhone, setTargetPhone] = useState('');
   const [isModified, setIsModified] = useState(true);
-  const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState(180);
 
   // 유저 정보 조회
   useEffect(() => {
@@ -27,7 +27,7 @@ function UserInfo() {
       if (!isModified) return;
 
       try {
-        await dispatch(lookupUser({ password: 'Password123!' })).unwrap();
+        await dispatch(lookupUser()).unwrap();
         setIsModified(false);
       } catch (err) {
         alert(err);
@@ -104,7 +104,8 @@ function UserInfo() {
   };
 
   const handleWithdrawalClick = () => {
-    dispatch(openModal('WITHDRAWAL'));
+    // 회원 탈퇴 모달 열기
+    dispatch(openModal({}));
   };
 
   return (

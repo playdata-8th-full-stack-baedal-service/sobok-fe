@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import Input from '../../../../common/components/Input';
 import styles from '../UserInfo.module.scss';
 
 function EditableField({ label, value, onEditClick, disabled }) {
