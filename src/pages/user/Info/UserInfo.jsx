@@ -27,7 +27,7 @@ function UserInfo() {
       if (!isModified) return;
 
       try {
-        await dispatch(lookupUser({ password: 'Password123!' })).unwrap();
+        await dispatch(lookupUser()).unwrap();
         setIsModified(false);
       } catch (err) {
         alert(err);

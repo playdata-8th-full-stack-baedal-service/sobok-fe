@@ -4,11 +4,9 @@ import axiosInstance from '../services/axios-config';
 // 회원 정보 조회
 export const lookupUser = createAsyncThunk(
   'userInfo/lookupUser',
-  async ({ password }, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
-      const response = await axiosInstance.post('/auth-service/auth/get-info', {
-        password,
-      });
+      const response = await axiosInstance.post('/auth-service/auth/get-info');
 
       console.log(response.data.data);
       return response.data.data;
