@@ -108,7 +108,6 @@ function HubRegisterPage() {
         isChecked: true,
         isAvailable: true,
       });
-      
     }
 
     if (loginIdCheckError) {
@@ -116,7 +115,6 @@ function HubRegisterPage() {
         isChecked: true,
         isAvailable: false,
       });
-      
     }
   }, [loginIdCheckMessage, loginIdCheckError]);
 
@@ -504,7 +502,6 @@ function HubRegisterPage() {
         roadFull: formData.roadFull,
       });
       console.log(response.data);
-      
 
       if (response.data.success) {
         alert(
@@ -604,12 +601,12 @@ function HubRegisterPage() {
             className={styled.passwordinput}
           />
           {passwordValidation.showValidation && (
-            <div style={{ marginTop: '-30px', whiteSpace : 'nowrap'}}>
+            <div style={{ marginTop: '-30px', whiteSpace: 'nowrap' }}>
               <p
                 style={{
                   color: passwordValidation.isValid ? 'green' : 'red',
                   fontSize: '13px',
-                  fontWeight : 'bold',
+                  fontWeight: 'bold',
                 }}
               >
                 {passwordValidation.isValid
@@ -663,12 +660,17 @@ function HubRegisterPage() {
               disabled={isVerified}
               className={styled.phoneNumberinput}
             />
-            <button type="button" onClick={handleSendSMS} disabled={loading || isVerified} className={styled.phonenumberbutton}>
+            <button
+              type="button"
+              onClick={handleSendSMS}
+              disabled={loading || isVerified}
+              className={styled.phonenumberbutton}
+            >
               {loading ? '전송 중...' : isCodeSent ? '재전송' : '인증하기'}
             </button>
           </div>
           {isCodeSent && !isVerified && (
-            <p style={{ color: 'green', fontSize: '13px', marginTop: '-30px', fontWeight : 'bold' }}>
+            <p style={{ color: 'green', fontSize: '13px', marginTop: '-30px', fontWeight: 'bold' }}>
               인증번호가 전송되었습니다.
             </p>
           )}
@@ -688,7 +690,12 @@ function HubRegisterPage() {
                 placeholder="인증번호를 입력하세요"
                 className={styled.phoneNumbervaildinput}
               />
-              <button type="button" onClick={handleVerifySMS} disabled={loading} className={styled.phoneNumbervaildbutton}>
+              <button
+                type="button"
+                onClick={handleVerifySMS}
+                disabled={loading}
+                className={styled.phoneNumbervaildbutton}
+              >
                 {loading ? '확인 중...' : '확인'}
               </button>
             </div>
@@ -726,7 +733,13 @@ function HubRegisterPage() {
           {/* 주소 중복 확인 버튼 및 상태 표시 추가 */}
           {formData.roadFull && (
             <div className={styled.addrinput} style={{ marginTop: '-20px' }}>
-              <input type="text" value={formData.roadFull} placeholder="선택된 주소" readOnly className={styled.addrvaildinput}/>
+              <input
+                type="text"
+                value={formData.roadFull}
+                placeholder="선택된 주소"
+                readOnly
+                className={styled.addrvaildinput}
+              />
               <button
                 type="button"
                 onClick={handleCheckShopAddress}
@@ -743,7 +756,7 @@ function HubRegisterPage() {
           {shopAddressCheck.error && <p className={styled.notshopname}>{shopAddressCheck.error}</p>}
         </div>
 
-        <button type="submit" className={styled.submitButton} disabled={submitLoading} className={styled.submitbutton}>
+        <button type="submit" className={styled.submitButton} disabled={submitLoading}>
           {submitLoading ? '등록 중...' : '가게 등록'}
         </button>
       </form>

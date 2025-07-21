@@ -8,7 +8,7 @@ const PostDetailPage = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [error, setError] = useState('');
-  const [isLiked, setIsLiked] = useState(false); // 좋아요 상태
+  const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
 
   const handleEditPost = () => {
