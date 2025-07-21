@@ -74,7 +74,7 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
   return (
     <div className={style.IngredientsSelection}>
       <div className={style.newingredientselection}>
-        <p>기본 식재료 등록</p>
+        <p className={style.ingretitle}>기본 식재료 등록</p>
         <SearchInput
           placeholder="검색어를 입력하세요."
           onIngredientAdded={allIngredients}
@@ -84,7 +84,7 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
       </div>
 
       <div className={style.ingredientlist}>
-        <h3>선택한 식재료 목록</h3>
+        <h3 className={style.ingretitletwo}>선택한 식재료 목록</h3>
         {selectedIngredients.length === 0 ? (
           <p>검색을 통해 식재료를 선택해주세요.</p>
         ) : (

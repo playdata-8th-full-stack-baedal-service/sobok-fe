@@ -131,41 +131,35 @@ function SearchInput({
         placeholder={placeholder}
       />
       <div className={style.searchIcon}>
-        <Search size={20} color="#666" />
+        <Search size={15} color="#000000" />
       </div>
       {viewDropDown && query.length > 0 && (
         <div className={style.dropdownContainer}>
           <div className={style.SearchDropDown}>
             {isSearching ? (
               <div className={style.dropdownmenu}>검색 중...</div>
-            ) : result && result.length > 0 ? (
+            ) : (
               <>
-                {result.map(item => (
-                  <div
-                    key={item.id}
-                    onClick={() => handleSelect(item)}
-                    className={style.dropdownmenu}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    {item.ingreName}
-                  </div>
-                ))}
+                {result &&
+                  result.length > 0 &&
+                  result.map(item => (
+                    <div
+                      key={item.id}
+                      onClick={() => handleSelect(item)}
+                      className={style.dropdownmenu}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {item.ingreName}
+                    </div>
+                  ))}
                 <div
-                  className={style.dropdownmenu}
+                  className={style.dropdownmenuadd}
                   onClick={handleAddIngredient}
                   style={{ cursor: 'pointer' }}
                 >
                   + 식재료 추가
                 </div>
               </>
-            ) : (
-              <div
-                className={style.dropdownmenu}
-                onClick={handleAddIngredient}
-                style={{ cursor: 'pointer' }}
-              >
-                + 식재료 추가
-              </div>
             )}
           </div>
         </div>
