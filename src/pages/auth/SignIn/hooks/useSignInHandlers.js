@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../../store/authSlice';
+import { openModal } from '../../../../store/modalSlice';
 
 export default function useSignInHandlers({ id, password, setError, setPassword, idInputRef }) {
   const dispatch = useDispatch();
@@ -14,9 +15,9 @@ export default function useSignInHandlers({ id, password, setError, setPassword,
       if (loginUser.fulfilled.match(result)) {
         const { accessToken, role, userId, recoveryTarget } = result.payload;
 
-        // 필요한 경우 recoveryTarget도 활용 가능
+        // recoveryTarget이 있으면 복구 모달 띄우기
         if (recoveryTarget) {
-          setError('복구 대상 계정입니다. 복구 절차를 진행해주세요.');
+          dispatch(openModal({ type: 'USER_RESTORE', props: { id: Number(userId) } }));
           return;
         }
 

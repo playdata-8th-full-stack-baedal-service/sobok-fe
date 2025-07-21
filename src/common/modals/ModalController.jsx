@@ -21,6 +21,7 @@ import RecipeModal from '../../pages/user/All/Product/modals/RecipeModal';
 import MyOrderDetailPage from '../../pages/user/UserOptions/MyOrderDetail/MyOrderDetailPage';
 import UserPasswordChangeModal from '../../pages/user/Info/component/UserPasswordChangeModal';
 import AdminOrderDetailModal from '../../pages/admin/AllOrder/modals/AdminOrderDetailModal';
+import RecoveryConfirmModal from '../../pages/auth/Recovery/RecoveryConfirmModal';
 import ShopOrderDetailModal from '../../pages/hub/Main/modals/ShopOrderDetailModal';
 
 function ModalController() {
@@ -71,6 +72,8 @@ function ModalController() {
       return <UserPasswordChangeModal onClose={handleClose} />;
     case 'ADMIN_ORDER_DETAIL':
       return <AdminOrderDetailModal onClose={handleClose} order={modalProps.order} />;
+    case 'USER_RESTORE' :
+      return <RecoveryConfirmModal onClose={handleClose} {...modalProps} />;
     case 'SHOP_ORDER_DETAIL':
       return <ShopOrderDetailModal onClose={handleClose} order={modalProps.order} />;
     default:

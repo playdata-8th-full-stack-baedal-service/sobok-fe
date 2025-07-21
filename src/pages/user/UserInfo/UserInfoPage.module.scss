@@ -280,6 +280,8 @@
   padding: 20px 30px;
   border-top: 1px solid #e9ecef;
   text-align: center;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .updateBtn {

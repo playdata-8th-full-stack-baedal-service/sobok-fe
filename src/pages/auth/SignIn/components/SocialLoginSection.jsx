@@ -1,5 +1,8 @@
 import React from 'react';
+import { RiKakaoTalkFill } from 'react-icons/ri';
 import styles from '../SignInPage.module.scss';
+import { FaGoogle } from 'react-icons/fa';
+import { SiNaver } from 'react-icons/si';
 
 // 환경변수에서 가져오기
 const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
@@ -41,14 +44,11 @@ function SocialLoginSection() {
   return (
     <div className={styles.socialLogin}>
       <h3 className={styles.socialTitle}>소셜 로그인하기</h3>
-      <button className={styles.socialBtn} onClick={handleKakaoLogin}>
-        <img src="/assets/kakao.png" alt="kakao" /> Kakao로 계속하기
+      <button className={styles.socialBtnone} onClick={handleKakaoLogin}>
+        <RiKakaoTalkFill /> Kakao로 계속하기
       </button>
-      <button className={styles.socialBtn} onClick={handleGoogleLogin}>
-        <img src="/assets/google.png" alt="google" /> Google로 계속하기
-      </button>
-      <button className={styles.socialBtn}>
-        <img src="/assets/naver.png" alt="naver" /> Naver로 계속하기
+      <button className={styles.socialBtntwo} onClick={handleGoogleLogin}>
+        <FaGoogle/> Google로 계속하기
       </button>
     </div>
   );

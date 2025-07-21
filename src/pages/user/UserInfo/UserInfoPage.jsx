@@ -615,6 +615,9 @@ function UserInfoPage() {
               <button type="button" className={styles.updateBtn} onClick={handleWithdrawalClick}>
                 회원 탈퇴
               </button>
+              <button type="button" onClick={() => navigate('/', {replace: true})} className={styles.checkbutton}>
+                변경완료
+              </button>
             </div>
           </div>
         </div>

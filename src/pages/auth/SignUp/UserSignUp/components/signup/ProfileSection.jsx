@@ -139,7 +139,7 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
                 onChange={handleLoginIdChange}
                 className={loginIdCheckError ? 'input-error' : ''}
               />
-              <Button type="button" variant="BASIC" onClick={handleLoginIdCheck} loading={loading}>
+              <Button type="button" variant="BASIC" onClick={handleLoginIdCheck} loading={loading} className={styles.overlapcheckbutton}>
                 중복확인
               </Button>
             </div>
@@ -162,7 +162,7 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
               onChange={handleNicknameChange}
               className={nicknameCheckError ? styles.inputError : ''}
             />
-            <Button type="button" variant="BASIC" onClick={handleNicknameCheck} loading={loading}>
+            <Button type="button" variant="BASIC" onClick={handleNicknameCheck} loading={loading} className={styles.overlapcheckbutton}>
               중복확인
             </Button>
           </div>

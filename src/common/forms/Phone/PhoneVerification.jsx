@@ -56,7 +56,7 @@ function PhoneVerification({
               placeholder="전화번호를 입력하세요."
               className={smsError ? styles.inputError : ''}
             />
-            <Button type="button" variant="BASIC" onClick={handleSendSMS} disabled={isCodeSent}>
+            <Button type="button" variant="BASIC" onClick={handleSendSMS} disabled={isCodeSent} className={styles.verifynumberbutton}>
               {isCodeSent ? '전송됨' : '인증요청'}
             </Button>
           </div>
@@ -79,7 +79,7 @@ function PhoneVerification({
               placeholder="인증번호를 입력하세요."
             />
             {showButton && (
-              <Button type="button" variant="BASIC" onClick={handleVerifySMS}>
+              <Button type="button" variant="BASIC" onClick={handleVerifySMS} className={styles.checkbuttonnumber}>
                 인증확인
               </Button>
             )}

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import {
   signUpUser,
   clearSignUpSuccess,
@@ -17,7 +18,6 @@ import AddressSection from '../../../../common/forms/Address/AddressSection';
 import Button from '../../../../common/components/Button';
 import { API_BASE_URL } from '@/services/host-config';
 import styles from './UserSignUp.module.scss';
-import { useNavigate } from 'react-router-dom';
 
 function UserSignUp() {
   const navigate = useNavigate();

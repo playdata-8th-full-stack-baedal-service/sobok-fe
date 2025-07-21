@@ -44,3 +44,54 @@
     width: 100%;
   }
 }
+
+.verifynumberbutton {
+  transition: all 0.3s ease-in-out;
+  width: 110px;
+  height: 35px;
+  border-radius: 50px;
+  box-shadow: 0 10px 30px -20px rgba(0, 0, 0, 0.5);
+  outline: none;
+  cursor: pointer;
+  border: none;
+  font-size: 18px;
+  color: rgba(0, 0, 0);
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgba(0, 0, 0);
+
+  &:hover {
+    transform: translateY(3px);
+    box-shadow: none;
+    background-color: rgb(55, 240, 10);
+    border: none;
+    color: rgba(0, 0, 0);
+  }
+
+  &:active {
+    opacity: 0.5;
+  }
+}
+
+.checkbuttonnumber {
+  transition: all 0.3s ease-in-out;
+  width: 110px;
+  height: 35px;
+  border-radius: 50px;
+  box-shadow: 0 10px 30px -20px rgba(0, 0, 0, 0.5);
+  outline: none;
+  cursor: pointer;
+  border: none;
+  font-size: 18px;
+  color: rgba(0, 0, 0);
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgba(0, 0, 0);
+
+  &:hover {
+    transform: translateY(3px);
+    box-shadow: none;
+  }
+
+  &:active {
+    opacity: 0.5;
+  }
+}
