@@ -55,7 +55,7 @@ const ProductPage = () => {
       await dispatch(isBookmarked(searchParams.get('id')));
     };
     fetchBookmark();
-  }, [dispatch, searchParams]);
+  }, [dispatch, searchParams, product]);
 
   return (
     <div className={styles.productPage}>
