@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ModalWrapper from '../../../../common/modals/ModalWrapper';
 import PasswordInput from './PasswordInput';
 import DeleteConfilmModal from './DeleteConfilmModal';
-import styles from './DeleteConfilmModal.module.scss';
+import styles from './WithdrawalModal.module.scss';
 
 function WithdrawalModal({ onClose, onSubmit, loading }) {
   const [withdrawalPassword, setWithdrawalPassword] = React.useState('');

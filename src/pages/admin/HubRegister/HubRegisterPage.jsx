@@ -108,7 +108,7 @@ function HubRegisterPage() {
         isChecked: true,
         isAvailable: true,
       });
-      alert(loginIdCheckMessage);
+      
     }
 
     if (loginIdCheckError) {
@@ -116,7 +116,7 @@ function HubRegisterPage() {
         isChecked: true,
         isAvailable: false,
       });
-      alert(loginIdCheckError);
+      
     }
   }, [loginIdCheckMessage, loginIdCheckError]);
 
@@ -526,8 +526,8 @@ function HubRegisterPage() {
     <div className={styled.HubRegisterPage}>
       <h2 className={styled.hubregistertitle}>가게 등록</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="loginId">
+        <div className={styled.idselection}>
+          <label htmlFor="loginId" className={styled.idtitle}>
             아이디 <span>*</span>
           </label>
           <div className={styled.loginIdinput}>
@@ -538,11 +538,13 @@ function HubRegisterPage() {
               value={formData.loginId}
               onChange={handleInputChange}
               placeholder="영문자, 숫자 4~20자"
+              className={styled.idinput}
             />
             <button
               type="button"
               onClick={handleCheckLoginId}
               disabled={authLoading || !formData.loginId.trim()}
+              className={styled.idcheckbutton}
             >
               {authLoading ? '확인 중...' : '중복 확인'}
             </button>
@@ -574,8 +576,8 @@ function HubRegisterPage() {
           error={shopNameCheck.error}
         />
 
-        <div>
-          <label htmlFor="ownerName">
+        <div className={styled.ownernameselection}>
+          <label htmlFor="ownerName" className={styled.ownerNametitle}>
             대표자 이름 <span>*</span>
           </label>
           <input
@@ -584,11 +586,12 @@ function HubRegisterPage() {
             id="ownerName"
             value={formData.ownerName}
             onChange={handleInputChange}
+            className={styled.ownerinput}
           />
         </div>
 
-        <div>
-          <label htmlFor="password">
+        <div className={styled.passwordselection}>
+          <label htmlFor="password" className={styled.passwordtitle}>
             비밀번호 <span>*</span>
           </label>
           <input
@@ -598,13 +601,15 @@ function HubRegisterPage() {
             value={formData.password}
             onChange={handlePasswordChange}
             placeholder="대소문자, 숫자, 특수문자 포함 8~16자"
+            className={styled.passwordinput}
           />
           {passwordValidation.showValidation && (
-            <div style={{ marginTop: '5px' }}>
+            <div style={{ marginTop: '-30px', whiteSpace : 'nowrap'}}>
               <p
                 style={{
                   color: passwordValidation.isValid ? 'green' : 'red',
-                  fontSize: '14px',
+                  fontSize: '13px',
+                  fontWeight : 'bold',
                 }}
               >
                 {passwordValidation.isValid
@@ -615,8 +620,8 @@ function HubRegisterPage() {
           )}
         </div>
 
-        <div>
-          <label htmlFor="passwordConfirm">
+        <div className={styled.passwordconfirmselection}>
+          <label htmlFor="passwordConfirm" className={styled.passwordConfirmtitle}>
             비밀번호 확인 <span>*</span>
           </label>
           <input
@@ -625,13 +630,15 @@ function HubRegisterPage() {
             value={passwordConfirm}
             onChange={handlePasswordConfirmChange}
             placeholder="비밀번호를 다시 입력해주세요"
+            className={styled.passwordConfirminput}
           />
           {passwordValidation.showMatchValidation && (
-            <div style={{ marginTop: '5px' }}>
+            <div style={{ marginTop: '-30px' }}>
               <p
                 style={{
                   color: passwordValidation.isMatching ? 'green' : 'red',
-                  fontSize: '14px',
+                  fontSize: '13px',
+                  fontWeight: 'bold',
                 }}
               >
                 {passwordValidation.isMatching
@@ -642,8 +649,8 @@ function HubRegisterPage() {
           )}
         </div>
 
-        <div>
-          <label htmlFor="phone">
+        <div className={styled.phoneNumberSelection}>
+          <label htmlFor="phone" className={styled.phonenumbertitle}>
             전화 번호 <span>*</span>
           </label>
           <div className={styled.phoneinput}>
@@ -654,21 +661,22 @@ function HubRegisterPage() {
               value={formData.phone}
               onChange={handleInputChange}
               disabled={isVerified}
+              className={styled.phoneNumberinput}
             />
-            <button type="button" onClick={handleSendSMS} disabled={loading || isVerified}>
+            <button type="button" onClick={handleSendSMS} disabled={loading || isVerified} className={styled.phonenumberbutton}>
               {loading ? '전송 중...' : isCodeSent ? '재전송' : '인증하기'}
             </button>
           </div>
           {isCodeSent && !isVerified && (
-            <p style={{ color: 'green', fontSize: '14px', marginTop: '5px' }}>
+            <p style={{ color: 'green', fontSize: '13px', marginTop: '-30px', fontWeight : 'bold' }}>
               인증번호가 전송되었습니다.
             </p>
           )}
         </div>
 
         {isCodeSent && !isVerified && (
-          <div>
-            <label htmlFor="phonevalid">
+          <div className={styled.passwordconfirmselection}>
+            <label htmlFor="phonevalid" className={styled.passwordValidationtitle}>
               인증 번호 <span>*</span>
             </label>
             <div className={styled.phoneinput}>
@@ -678,8 +686,9 @@ function HubRegisterPage() {
                 value={verificationCode}
                 onChange={e => setVerificationCode(e.target.value)}
                 placeholder="인증번호를 입력하세요"
+                className={styled.phoneNumbervaildinput}
               />
-              <button type="button" onClick={handleVerifySMS} disabled={loading}>
+              <button type="button" onClick={handleVerifySMS} disabled={loading} className={styled.phoneNumbervaildbutton}>
                 {loading ? '확인 중...' : '확인'}
               </button>
             </div>
@@ -687,7 +696,7 @@ function HubRegisterPage() {
         )}
 
         {isVerified && (
-          <div style={{ color: 'green', fontSize: '14px', marginTop: '5px' }}>
+          <div style={{ color: 'green', fontSize: '13px', marginTop: '-30px', fontWeight: 'bold' }}>
             ✓ 인증이 완료되었습니다.
           </div>
         )}
@@ -696,8 +705,8 @@ function HubRegisterPage() {
           <div style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{smsError}</div>
         )}
 
-        <div>
-          <label htmlFor="roadFull">
+        <div className={styled.addrselection}>
+          <label htmlFor="roadFull" className={styled.addrtitle}>
             지점 주소 <span>*</span>
           </label>
           <div className={styled.addrinput}>
@@ -708,19 +717,21 @@ function HubRegisterPage() {
               value={formData.roadFull}
               onChange={handleInputChange}
               placeholder="주소검색 버튼을 클릭해주세요"
+              className={styled.addressinput}
             />
-            <button type="button" onClick={handleAddressSearch}>
+            <button type="button" onClick={handleAddressSearch} className={styled.addrbutton}>
               주소 검색
             </button>
           </div>
           {/* 주소 중복 확인 버튼 및 상태 표시 추가 */}
           {formData.roadFull && (
-            <div className={styled.addrinput} style={{ marginTop: '10px' }}>
-              <input type="text" value={formData.roadFull} placeholder="선택된 주소" readOnly />
+            <div className={styled.addrinput} style={{ marginTop: '-20px' }}>
+              <input type="text" value={formData.roadFull} placeholder="선택된 주소" readOnly className={styled.addrvaildinput}/>
               <button
                 type="button"
                 onClick={handleCheckShopAddress}
                 disabled={shopAddressCheck.loading || !formData.roadFull.trim()}
+                className={styled.addrcheckbutton}
               >
                 {shopAddressCheck.loading ? '처리 중...' : '중복 확인'}
               </button>
@@ -732,7 +743,7 @@ function HubRegisterPage() {
           {shopAddressCheck.error && <p className={styled.notshopname}>{shopAddressCheck.error}</p>}
         </div>
 
-        <button type="submit" className={styled.submitButton} disabled={submitLoading}>
+        <button type="submit" className={styled.submitButton} disabled={submitLoading} className={styled.submitbutton}>
           {submitLoading ? '등록 중...' : '가게 등록'}
         </button>
       </form>

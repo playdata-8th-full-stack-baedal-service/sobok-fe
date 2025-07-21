@@ -7,6 +7,7 @@ import IngredientsSelection from './units/IngredientsSelection';
 import RecipeSelection from './units/RecipeSelection';
 import CategorySelectModal from './units/CategorySelectModal';
 import { closeModal } from '../../../store/modalSlice';
+import { TbPencilCancel } from 'react-icons/tb';
 
 function RecipeRegistPage() {
   const dispatch = useDispatch();
@@ -192,7 +193,7 @@ function RecipeRegistPage() {
       <RecipeSelection formData={formData} onChange={handleChangeInput} />
       <div className={style.buttonGroup}>
         <button type="button" onClick={handleResetClick} className={style.cleatbutton}>
-          취소
+          <TbPencilCancel className={style.cancelicon}/>
         </button>
         <button type="submit" className={style.uploadbutton}>
           업로드

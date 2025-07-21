@@ -155,7 +155,7 @@ function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
             />
           </div>
 
-          <div className={styles.buttonGroup}>
+          <div className={styles.buttonsGroup}>
             <button
               type="button"
               onClick={() => onClose && onClose()}

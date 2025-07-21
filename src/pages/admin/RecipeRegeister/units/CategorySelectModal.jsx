@@ -60,7 +60,12 @@ function CategorySelectModal({ onClose, formData, onChange }) {
             className={style.categorybutton}
             onClick={() => handleSelect(category)}
           >
-            {category.categoryName}
+            <span className={style.circle1}></span>
+            <span className={style.circle2}></span>
+            <span className={style.circle3}></span>
+            <span className={style.circle4}></span>
+            <span className={style.circle5}></span>
+            <span className={style.text}>{category.categoryName}</span>
           </button>
         ))}
       </div>

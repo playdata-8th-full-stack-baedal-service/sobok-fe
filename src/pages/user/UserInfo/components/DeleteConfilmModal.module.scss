@@ -1,123 +1,78 @@
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modalContent {
-  background: #fff;
-  border-radius: 12px;
-  width: 90vw;
-  max-width: 500px;
-  min-width: 320px;
-  padding: 32px 24px 24px 24px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+.formcheck {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-}
-
-.title {
-  font-size: 22px;
-  font-weight: bold;
-  margin-bottom: 18px;
-  color: #222;
-  text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .description {
-  color: #666;
-  margin-bottom: 20px;
-  line-height: 1.5;
-  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .warning {
-  color: #dc3545;
+  font-size: 14px;
   font-weight: bold;
-  margin-bottom: 20px;
-  text-align: center;
-  line-height: 1.5;
+  margin-bottom: 80px;
 }
 
 .buttonGroup {
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 60px;
+}
+
+.buttonone {
+  --bg: rgb(245, 5, 5);
+  --hover-bg: #ffffff;
+  --hover-text: #000;
+
+  color: #fff;
+  cursor: pointer;
+  border: 1px solid var(--bg);
+  border-radius: 4px;
+  padding: 0.8em 2em;
+  background: var(--bg);
+  transition: 0.2s;
+  width: 200px;
+  border: 1px solid black;
+
+  &:hover {
+    color: var(--hover-text);
+    transform: translate(-0.25rem, -0.25rem);
+    background: var(--hover-bg);
+    box-shadow: 0.25rem 0.25rem var(--bg);
+  }
+
+  &:active {
+    transform: translate(0);
+    box-shadow: none;
+  }
 }
 
 .button {
-  flex: 1;
-  background: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 12px;
-  font-size: 16px;
-  font-weight: 500;
+  --bg: #000;
+  --hover-bg: #ffffff;
+  --hover-text: #000;
+
+  color: #fff;
   cursor: pointer;
-  transition: background 0.3s ease;
-}
+  border: 1px solid var(--bg);
+  border-radius: 4px;
+  padding: 0.8em 2em;
+  background: var(--bg);
+  transition: 0.2s;
+  width: 200px;
 
-.button.cancel {
-  background: #6c757d;
-}
+  &:hover {
+    color: var(--hover-text);
+    transform: translate(-0.25rem, -0.25rem);
+    background: var(--hover-bg);
+    box-shadow: 0.25rem 0.25rem var(--bg);
+  }
 
-.button:disabled {
-  background: #aaa;
-  cursor: not-allowed;
-}
-
-.button:hover:not(:disabled) {
-  background: #c82333;
-}
-
-.button.cancel:hover:not(:disabled) {
-  background: #495057;
-}
-
-.error {
-  color: #dc3545;
-  font-size: 14px;
-  margin-top: 10px;
-  text-align: center;
-}
-
-// WithdrawalModal용 스타일
-.withdrawalDescription {
-  color: #666;
-  margin-bottom: 20px;
-  line-height: 1.5;
-  text-align: center;
-}
-
-.withdrawalForm {
-  width: 100%;
-}
-
-.withdrawalButton {
-  width: 100%;
-  background: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 12px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-.withdrawalButton:disabled {
-  background: #aaa;
-  cursor: not-allowed;
-}
-.withdrawalButton:hover:not(:disabled) {
-  background: #c82333;
+  &:active {
+    transform: translate(0);
+    box-shadow: none;
+  }
 }

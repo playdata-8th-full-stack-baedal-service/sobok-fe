@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './DuplicateCheckInput.module.scss';
 
 function DuplicateCheckInput({
   label,
@@ -14,9 +15,13 @@ function DuplicateCheckInput({
   inputId,
 }) {
   return (
-    <div style={{ marginBottom: 16 }}>
-      {label && <label htmlFor={inputId}>{label}</label>}
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+    <div className={styles.container}>
+      {label && (
+        <label htmlFor={inputId} className={styles.label}>
+          {label}
+        </label>
+      )}
+      <div className={styles.inputRow}>
         <input
           id={inputId}
           name={inputId}
@@ -25,14 +30,19 @@ function DuplicateCheckInput({
           onChange={onChange}
           placeholder={placeholder}
           disabled={disabled}
-          style={{ flex: 1 }}
+          className={styles.input}
         />
-        <button type="button" onClick={onCheck} disabled={loading || disabled || !value.trim()}>
+        <button
+          type="button"
+          onClick={onCheck}
+          disabled={loading || disabled || !value.trim()}
+          className={styles.button}
+        >
           {loading ? '처리 중...' : buttonLabel}
         </button>
       </div>
-      {success && <p style={{ color: 'green', margin: 0 }}>{success}</p>}
-      {error && <p style={{ color: 'red', margin: 0 }}>{error}</p>}
+      {success && <p className={styles.success}>{success}</p>}
+      {error && <p className={styles.error}>{error}</p>}
     </div>
   );
 }

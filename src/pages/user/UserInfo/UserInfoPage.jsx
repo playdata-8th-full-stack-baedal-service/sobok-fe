@@ -16,6 +16,7 @@ import {
 } from './components';
 import DuplicateCheckInput from '@/common/components/DuplicateCheckInput';
 import ModalController from '@/common/modals/ModalController';
+import { SquareX, Trash2, X } from 'lucide-react';
 
 function UserInfoPage() {
   const navigate = useNavigate();
@@ -528,7 +529,7 @@ function UserInfoPage() {
           <div className={styles.profileCard}>
             <div className={styles.cardHeader}>
               <h1>회원정보 조회</h1>
-              <button type="button" onClick={handlePasswordChangeClick}>
+              <button type="button" onClick={handlePasswordChangeClick} className={styles.resetpasswordbutton}>
                 비밀번호 변경
               </button>
             </div>
@@ -613,7 +614,7 @@ function UserInfoPage() {
 
             <div className={styles.actionButtons}>
               <button type="button" className={styles.updateBtn} onClick={handleWithdrawalClick}>
-                회원 탈퇴
+                <Trash2 className={styles.svgIcon}/>
               </button>
               <button type="button" onClick={() => navigate('/', {replace: true})} className={styles.checkbutton}>
                 변경완료

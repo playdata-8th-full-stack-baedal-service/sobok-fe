@@ -108,6 +108,7 @@ function ImageandOverview({ formData, onFileSelect, onChange, resetSignal }) {
             onClick={() => {
               document.getElementById('uploadimage').click();
             }}
+            className={style.imageselectbutton}
           >
             이미지 선택
           </button>
