@@ -12,13 +12,17 @@ function NewPostPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const paymentId = location.state?.paymentId;
-  const cookName = location.state?.cookName || '';
+  const cookId = location.state?.cookId;
+  const cookName = location.state?.cookName;
+
   const [title, setTitle] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const [imageList, setImageList] = useState([]);
   const editorRef = useRef();
 
+  // 잘못된 접근 방지
   useEffect(() => {
-    if (!paymentId || !cookName) {
+    if (!paymentId || !cookId) {
       alert('잘못된 접근입니다.');
       navigate(-1);
     }
@@ -30,21 +34,24 @@ function NewPostPage() {
 
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [paymentId, cookName, navigate]);
+  }, [paymentId, cookId, navigate]);
 
-  // 이미지 S3 업로드
+  // S3 이미지 업로드
   const uploadToS3 = async file => {
     const formData = new FormData();
     formData.append('image', file);
+
     const res = await axios.put(`${API_BASE_URL}/api-service/api/upload-image/post`, formData, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
         'Content-Type': 'multipart/form-data',
       },
     });
+
     return res.data.data;
   };
 
+  // 게시글 등록 요청
   const handleSubmit = async () => {
     const editorInstance = editorRef.current.getInstance();
     const contentHTML = editorInstance.getHTML();
@@ -58,16 +65,22 @@ function NewPostPage() {
       setIsUploading(true);
 
       const body = {
-        title,
-        content: contentHTML,
         paymentId,
-        images: [], // 에디터 내부에 이미지가 포함되므로 따로 전달하지 않음
+        posts: [
+          {
+            title,
+            content: contentHTML,
+            cookId,
+            images: imageList,
+          },
+        ],
       };
 
       const res = await axiosInstance.post(`/post-service/post/register`, body);
 
-      if (res.data?.postId) {
-        const postId = res.data.postId;
+      const posts = res.data?.posts;
+      if (posts && posts.length > 0 && posts[0].postId) {
+        const postId = posts[0].postId;
         alert('게시글이 등록되었습니다.');
         navigate(`/user/post/${postId}`, { replace: true });
       } else {
@@ -109,6 +122,13 @@ function NewPostPage() {
           addImageBlobHook: async (blob, callback) => {
             try {
               const imageUrl = await uploadToS3(blob);
+
+              const newImage = {
+                imageUrl,
+                index: imageList.length + 1,
+              };
+
+              setImageList(prev => [...prev, newImage]);
               callback(imageUrl, 'image');
             } catch (err) {
               alert('이미지 업로드에 실패했습니다.');

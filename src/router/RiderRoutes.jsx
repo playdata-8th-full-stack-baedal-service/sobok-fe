@@ -15,7 +15,7 @@ function RiderRoutes() {
     <>
       <RiderHeader />
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="" element={<MainPage />} />
         <Route path="/info" element={<RiderInfoPage />} />
         <Route path="/history" element={<DelivaryHistoryPage />} />
         <Route path="/request-list" element={<RequestListPage />} />

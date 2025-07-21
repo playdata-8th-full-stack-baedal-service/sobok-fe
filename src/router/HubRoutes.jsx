@@ -14,7 +14,7 @@ function HubRoutes() {
     <>
       <HubHeader />
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="" element={<MainPage />} />
         <Route path="/order-detail" element={<OrderDetailPage />} />
         <Route path="/history" element={<HubHistoryPage />} />
         <Route path="/info" element={<HubInfoPage />} />

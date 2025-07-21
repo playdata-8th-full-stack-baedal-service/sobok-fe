@@ -38,7 +38,7 @@ const PostDetailPage = () => {
   const handleLikePost = async () => {
     if (isLiked) {
       try {
-        await axiosInstance.delete('/post-service/post/user-unlike', {
+        await axiosInstance.delete('/user-service/user/user-unlike', {
           data: { postId: Number(id) },
         });
         setIsLiked(false);
@@ -52,7 +52,7 @@ const PostDetailPage = () => {
       }
     } else {
       try {
-        await axiosInstance.post('/post-service/post/user-like', {
+        await axiosInstance.post('/user-service/user/user-like', {
           postId: Number(id),
         });
         setIsLiked(true);
@@ -113,7 +113,19 @@ const PostDetailPage = () => {
           <p>
             <strong>제목</strong> : {post.title}
           </p>
-          <button className={styles.button}>주문 조회하기</button>
+          {/* 기본 재료 리스트 표시 */}
+          {post.baseIngredients && post.baseIngredients.length > 0 && (
+            <div className={styles.ingredientsSection}>
+              <strong>작성자 주문 내역:</strong>
+              <ul>
+                {post.baseIngredients.map(item => (
+                  <li key={item.ingredientId}>
+                    {item.ingredientName}({item.origin}) {item.quantity}g
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
         <div className={styles.right}>
           <p>
@@ -136,31 +148,6 @@ const PostDetailPage = () => {
         <div className={styles.textContent}>
           <div className={styles.inner} dangerouslySetInnerHTML={{ __html: post.content }}></div>
         </div>
-        <div className={styles.images}>
-          {post.images.map((url, idx) => (
-            <img key={idx} src={url} alt={`post-img-${idx}`} />
-          ))}
-        </div>
-      </div>
-
-      <div className={styles.ingredients}>
-        <h3>기본 재료</h3>
-        <ul>
-          {post.baseIngredients.map(ing => (
-            <li key={ing.id}>
-              {ing.ingredientName}&nbsp;&nbsp;{ing.quantity}g ({ing.origin}) / {ing.price}원
-            </li>
-          ))}
-        </ul>
-
-        <h3>추가 재료</h3>
-        <ul>
-          {post.additionalIngredients.map(ing => (
-            <li key={ing.id}>
-              {ing.ingredientName}&nbsp;&nbsp;{ing.quantity}g ({ing.origin}) / {ing.price}원
-            </li>
-          ))}
-        </ul>
       </div>
 
       <div className={styles.buttonSection}>

@@ -15,7 +15,17 @@ function RoleRoute({ role, children }) {
   // 역할 권한 확인
   if (userRole !== role) {
     alert('접근 권한이 없습니다.');
-    return <Navigate to="/" replace />;
+
+    // 역할에 따른 메인 페이지 경로 지정
+    const redirectPath =
+      {
+        USER: '/user',
+        RIDER: '/rider',
+        HUB: '/hub',
+        ADMIN: '/admin',
+      }[userRole] || '/';
+
+    return <Navigate to={redirectPath} replace />;
   }
 
   return children;

@@ -12,6 +12,7 @@ const OrderItem = ({ item }) => {
       state: {
         paymentId: item.paymentId,
         cookName: item.cookName,
+        cookId: item.cookId,
       },
     });
   };
@@ -36,6 +37,7 @@ OrderItem.propTypes = {
     cookName: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
     paymentId: PropTypes.number.isRequired,
+    cookId: PropTypes.number.isRequired,
   }).isRequired,
 };
 
