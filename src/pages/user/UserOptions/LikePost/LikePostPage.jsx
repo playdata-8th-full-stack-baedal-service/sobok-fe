@@ -33,7 +33,7 @@ function LikePostPage() {
   const handleUnlike = async (e, id) => {
     e.stopPropagation(); // 카드 클릭 막기
     try {
-      await axiosInstance.delete('/post-service/post/user-unlike', {
+      await axiosInstance.delete('/user-service/user/user-unlike', {
         data: { postId: Number(id) }, // ← 여기가 핵심
       });
       setLikePosts(prev => prev.filter(post => post.postId !== id)); // ← post.postId로 비교

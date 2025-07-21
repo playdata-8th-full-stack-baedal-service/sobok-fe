@@ -25,12 +25,21 @@
   gap: 8px;
 }
 
-.button {
-  padding: 6px 12px;
-  border: 1px solid black;
-  background: white;
-  cursor: pointer;
+.ingredientsSection {
+  margin-top: 10px;
+  font-size: 14px;
+
+  ul {
+    margin-top: 5px;
+    padding-left: 20px;
+
+    li {
+      line-height: 1.6;
+    }
+  }
 }
+
+
 
 .contentSection {
   margin: 20px 0;

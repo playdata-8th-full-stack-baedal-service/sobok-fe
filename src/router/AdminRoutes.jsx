@@ -16,7 +16,7 @@ function AdminRoutes() {
     <>
       <AdminHeader />
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="" element={<MainPage />} />
         <Route path="all-order" element={<AllOrderPage />} />
         <Route path="hub-register" element={<HubRegisterPage />} />
         <Route path="ingredient" element={<RecipeRegistPage />} />
