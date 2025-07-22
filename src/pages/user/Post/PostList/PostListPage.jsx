@@ -3,6 +3,7 @@ import Masonry from 'react-masonry-css';
 import { useNavigate } from 'react-router-dom';
 import styles from './PostListPage.module.scss';
 import axiosInstance from '../../../../services/axios-config';
+import { Heart } from 'lucide-react';
 
 function PostListPage() {
   const [postList, setPostList] = useState([]);
@@ -129,7 +130,7 @@ function PostListPage() {
               <p className={styles.date}>
                 <strong>작성일</strong>: {new Date(post.updatedAt).toLocaleDateString('ko-KR')}
               </p>
-              <span>{post.likeCount}</span>
+              <span><Heart size={16} fill="red" color="red" /> {post.likeCount}</span>
             </div>
           </div>
         ))}
