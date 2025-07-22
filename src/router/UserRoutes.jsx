@@ -14,7 +14,6 @@ import SearchPage from '../pages/user/All/Search/SearchPage';
 
 // private 페이지 (USER 권한 필요)
 import NewPostPage from '../pages/user/Post/Posting/NewPostPage';
-import UserInfoPage from '../pages/user/UserInfo/UserInfoPage';
 import MyPostListPage from '../pages/user/UserOptions/MyPostList/MyPostListPage';
 import MyOrderListPage from '../pages/user/UserOptions/MyOrderList/MyOrderListPage';
 import BookmarkRecipePage from '../pages/user/UserOptions/BookmarkRecipe/BookmarkRecipePage';
@@ -23,7 +22,6 @@ import SuccessPage from '../pages/user/Pay/toss/TossSuccess';
 import UserCartPage from '../pages/user/Cart/CartPage/UserCartPage';
 import PayPage from '../pages/user/Pay/PayPage';
 import PayCompletePage from '../pages/user/Pay/paycomplete/PayCompletePage';
-
 import UserInfo from '../pages/user/Info/UserInfo';
 import EditPostPage from '../pages/user/Post/EditPost/EditPostPage';
 
@@ -100,7 +98,7 @@ function UserRoutes() {
           path="info"
           element={
             <RoleRoute role="USER">
-              <UserInfoPage />
+              <UserInfo />
             </RoleRoute>
           }
         />
