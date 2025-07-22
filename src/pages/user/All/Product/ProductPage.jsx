@@ -7,6 +7,7 @@ import ProductImage from './components/ProductImage';
 import ProductInfo from './components/ProductInfo';
 import BaseIngredients from './components/BaseIngredients';
 import AdditionalIngredients from './components/AdditionalIngredients';
+import BestPostView from './components/BestPostView/BestPostView';
 import {
   fetchProduct,
   isBookmarked,
@@ -14,6 +15,7 @@ import {
   setPortion,
   setTotalPrice,
 } from '../../../../store/productSlice';
+import { fetchCookPostsByLike } from '../../../../store/postSlice';
 
 const ProductPage = () => {
   const dispatch = useDispatch();
@@ -21,13 +23,15 @@ const ProductPage = () => {
   const { product, loading, error, additionalIngredients, portion, totalPrice, originalPrice } =
     useSelector(state => state.product);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { bestPosts: posts } = useSelector(state => state.post);
+  const [searchParams] = useSearchParams();
 
   // 1. 처음 로딩 시 product 불러오기 + 기본값 세팅
   useEffect(() => {
-    if (!searchParams.get('id')) return;
+    const id = searchParams.get('id');
+    if (!id) return;
 
-    dispatch(fetchProduct(searchParams.get('id')));
+    dispatch(fetchProduct(id));
     dispatch(setPortion(1));
   }, [dispatch, searchParams]);
 
@@ -50,12 +54,24 @@ const ProductPage = () => {
     dispatch(setTotalPrice(total));
   }, [dispatch, product, portion, additionalIngredients]);
 
+  // 3. 북마크 상태 불러오기
   useEffect(() => {
     const fetchBookmark = async () => {
       await dispatch(isBookmarked(searchParams.get('id')));
     };
     fetchBookmark();
   }, [dispatch, searchParams, product]);
+
+  // 4. 레시피 Best 3 불러오기
+  useEffect(() => {
+    if (product?.cookId) {
+      dispatch(fetchCookPostsByLike(product.cookId));
+    }
+  }, [dispatch, product?.cookId]);
+
+  const handlePostClick = postId => {
+    window.location.href = `/user/post/${postId}`;
+  };
 
   return (
     <div className={styles.productPage}>
@@ -65,6 +81,7 @@ const ProductPage = () => {
       </header>
       <BaseIngredients />
       <AdditionalIngredients />
+      <BestPostView posts={posts} onClick={handlePostClick} />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import modalReducer from './modalSlice';
 import cartReducer from './cartSlice';
 import productReducer from './productSlice';
 import userInfoReducer from './userInfoSlice';
+import postReducer from './postSlice';
 
 const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
     product: productReducer,
     category: categoryReducer,
     userInfo: userInfoReducer,
+    post: postReducer,
   },
 });
 
