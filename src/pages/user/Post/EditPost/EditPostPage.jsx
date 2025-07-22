@@ -12,8 +12,9 @@ const EditPostPage = () => {
   const post = location.state?.post;
 
   const [title, setTitle] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [content, setContent] = useState('');
+  const [cookName, setCookName] = useState(''); // ✅ 요리 이름 상태 추가
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!post) {
@@ -21,11 +22,12 @@ const EditPostPage = () => {
       navigate(-1);
       return;
     }
+
     setTitle(post.title);
     setContent(post.content);
+    setCookName(post.cookName); // ✅ 요리 이름 설정
   }, [post, navigate]);
 
-  // content 내 이미지 태그에서 src만 추출
   const extractImagesFromContent = html => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
@@ -97,15 +99,22 @@ const EditPostPage = () => {
 
   return (
     <div className={styles['edit-wrap']}>
-      <h2>게시글 수정</h2>
+      {/* ✅ 요리 이름 표시 */}
+      <h2 className={styles['cook-name']}>요리 이름: {cookName}</h2>
 
-      <input
-        type="text"
-        value={title}
-        onChange={e => setTitle(e.target.value)}
-        className={styles['title-input']}
-        placeholder="제목을 입력하세요"
-      />
+      <div className={styles['title-group']}>
+        <label htmlFor="post-title" className={styles['title-label']}>
+          제목:
+        </label>
+        <input
+          type="text"
+          id="post-title"
+          placeholder="제목을 입력하세요"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          className={styles['title-input']}
+        />
+      </div>
 
       <TiptapEditor
         content={content}
