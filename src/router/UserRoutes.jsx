@@ -19,6 +19,7 @@ import MyOrderListPage from '../pages/user/UserOptions/MyOrderList/MyOrderListPa
 import BookmarkRecipePage from '../pages/user/UserOptions/BookmarkRecipe/BookmarkRecipePage';
 import LikePostPage from '../pages/user/UserOptions/LikePost/LikePostPage';
 import SuccessPage from '../pages/user/Pay/toss/TossSuccess';
+import FailPage from '../pages/user/Pay/toss/Fail';
 import UserCartPage from '../pages/user/Cart/CartPage/UserCartPage';
 import PayPage from '../pages/user/Pay/PayPage';
 import PayCompletePage from '../pages/user/Pay/paycomplete/PayCompletePage';
@@ -84,6 +85,16 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
+
+        {/* tossFail */}
+        <Route
+          path="tossFail"
+          element={
+            <RoleRoute role="USER">
+              <FailPage />
+            </RoleRoute>
+          }
+        ></Route>
 
         <Route
           path="paycomplete"

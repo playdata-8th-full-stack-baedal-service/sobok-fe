@@ -39,7 +39,7 @@ axiosInstance.interceptors.response.use(
     const errorStatus = error?.response?.data?.status;
     const originalRequest = error.config;
     const refreshToken = localStorage.getItem('REFRESH_TOKEN');
-    const userId = localStorage.getItem('USER_ID');
+    const userId = localStorage.getItem('USER_ID'); // 사실은 authId  
 
     if (errorStatus === 666) {
       try {

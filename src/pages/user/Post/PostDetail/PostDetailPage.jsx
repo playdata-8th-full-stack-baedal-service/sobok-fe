@@ -60,7 +60,7 @@ const PostDetailPage = () => {
       } catch (err) {
         if (err.response?.data.status === 400) {
           alert('이미 좋아요한 게시글입니다.');
-          setIsLiked(true); // 이미 좋아요 상태라고 간주
+          setIsLiked(true);
         } else if (err.response?.status === 404) {
           alert('게시글이 존재하지 않습니다.');
         } else {
