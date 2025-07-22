@@ -24,6 +24,17 @@ const EditPostPage = () => {
     setContent(post.content);
   }, [post, navigate]);
 
+  // content 내 이미지 태그에서 src만 추출
+  const extractImagesFromContent = html => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const imgs = Array.from(doc.querySelectorAll('img')).map((img, i) => ({
+      imageUrl: img.getAttribute('src'),
+      index: i + 1,
+    }));
+    return imgs;
+  };
+
   const handleSubmit = async () => {
     if (!title || !content || content === '<p></p>') {
       alert('제목과 내용을 입력해주세요.');
@@ -32,11 +43,14 @@ const EditPostPage = () => {
 
     try {
       setIsSubmitting(true);
+
+      const images = extractImagesFromContent(content);
+
       const body = {
         postId: post.postId,
         title,
         content,
-        images: [],
+        images,
       };
 
       const res = await axiosInstance.put('/post-service/post/update', body);

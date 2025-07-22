@@ -21,7 +21,7 @@
     background-color: #f8f8f8;
     border: 1px solid #ccc;
     border-radius: 4px;
-    cursor: pointer; 
+    cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -79,6 +79,7 @@
     font-family: monospace;
     overflow-x: auto;
     border-radius: 4px;
+    white-space: pre-wrap; // 코드 블럭 자동 줄바꿈
   }
 
   h2 {

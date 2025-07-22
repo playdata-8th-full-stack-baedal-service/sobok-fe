@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import axiosInstance from '@/services/axios-config';
 import styles from './NewPostPage.module.scss';
 import Button from '@/common/components/Button';
 import { API_BASE_URL } from '@/services/host-config';
 import { useLocation, useNavigate } from 'react-router-dom';
 import TiptapEditor from '@/common/forms/Post/TiptapEditor';
+import { useDispatch } from 'react-redux';
+import { registerPost } from '@/store/postSlice';
 
 function NewPostPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
+
   const paymentId = location.state?.paymentId;
   const cookId = location.state?.cookId;
   const cookName = location.state?.cookName;
 
   const [title, setTitle] = useState('');
   const [isUploading, setIsUploading] = useState(false);
-  const [imageList, setImageList] = useState([]); // 게시글 이미지들
   const [content, setContent] = useState('');
 
   useEffect(() => {
@@ -34,7 +36,7 @@ function NewPostPage() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [paymentId, cookId, navigate]);
 
-  // 이미지 업로드 + imageList에 저장
+  // 이미지 업로드 + 서버에 저장
   const uploadToS3 = async file => {
     const formData = new FormData();
     formData.append('image', file);
@@ -47,8 +49,6 @@ function NewPostPage() {
     });
 
     const imageUrl = res.data.data;
-    // index는 1부터 시작하여 순차 부여
-    setImageList(prev => [...prev, { imageUrl, index: prev.length + 1 }]);
     return imageUrl;
   };
 
@@ -61,30 +61,39 @@ function NewPostPage() {
 
     try {
       setIsUploading(true);
-      const body = {
-        paymentId,
-        posts: [
-          {
-            title,
-            content,
-            cookId,
-            images: imageList,
-          },
-        ],
+
+      // 본문 내 이미지 src 추출
+      const extractImagesFromContent = html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const imgs = Array.from(doc.querySelectorAll('img')).map((img, i) => ({
+          imageUrl: img.getAttribute('src'),
+          index: i + 1,
+        }));
+        return imgs;
       };
 
-      const res = await axiosInstance.post(`/post-service/post/register`, body);
-      const posts = res.data?.posts;
-      if (posts && posts.length > 0 && posts[0].postId) {
+      const images = extractImagesFromContent(content);
+
+      const resultAction = await dispatch(
+        registerPost({
+          paymentId,
+          cookId,
+          title,
+          content,
+          imageList: images,
+        })
+      );
+
+      if (registerPost.fulfilled.match(resultAction)) {
+        const { postId } = resultAction.payload;
         alert('게시글이 등록되었습니다.');
-        navigate(`/user/post/${posts[0].postId}`, { replace: true });
+        navigate(`/user/post/${postId}`, { replace: true });
       } else {
-        throw new Error('등록 응답이 올바르지 않습니다.');
+        throw new Error(resultAction.payload || '등록 실패');
       }
     } catch (err) {
-      if (err.response?.status === 404) alert('결제 정보가 존재하지 않습니다.');
-      else if (err.response?.status === 500) alert('서버 통신 오류가 발생했습니다.');
-      else alert('게시글 업로드에 실패했습니다.');
+      alert(err.message || '게시글 업로드에 실패했습니다.');
     } finally {
       setIsUploading(false);
     }
