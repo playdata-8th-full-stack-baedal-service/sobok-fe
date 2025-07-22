@@ -1,0 +1,42 @@
+.post-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.cook-name {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+}
+
+.title-input {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+
+  &:focus {
+    border-color: #888;
+  }
+}
+
+

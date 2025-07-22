@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import axiosInstance from '@/services/axios-config';
 import styles from './NewPostPage.module.scss';
 import Button from '@/common/components/Button';
 import { API_BASE_URL } from '@/services/host-config';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Editor } from '@toast-ui/react-editor';
-import '@toast-ui/editor/dist/toastui-editor.css';
+import TiptapEditor from '@/common/forms/Post/TiptapEditor';
 
 function NewPostPage() {
   const navigate = useNavigate();
@@ -17,10 +16,9 @@ function NewPostPage() {
 
   const [title, setTitle] = useState('');
   const [isUploading, setIsUploading] = useState(false);
-  const [imageList, setImageList] = useState([]);
-  const editorRef = useRef();
+  const [imageList, setImageList] = useState([]); // 게시글 이미지들
+  const [content, setContent] = useState('');
 
-  // 잘못된 접근 방지
   useEffect(() => {
     if (!paymentId || !cookId) {
       alert('잘못된 접근입니다.');
@@ -36,7 +34,7 @@ function NewPostPage() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [paymentId, cookId, navigate]);
 
-  // S3 이미지 업로드
+  // 이미지 업로드 + imageList에 저장
   const uploadToS3 = async file => {
     const formData = new FormData();
     formData.append('image', file);
@@ -48,28 +46,27 @@ function NewPostPage() {
       },
     });
 
-    return res.data.data;
+    const imageUrl = res.data.data;
+    // index는 1부터 시작하여 순차 부여
+    setImageList(prev => [...prev, { imageUrl, index: prev.length + 1 }]);
+    return imageUrl;
   };
 
   // 게시글 등록 요청
   const handleSubmit = async () => {
-    const editorInstance = editorRef.current.getInstance();
-    const contentHTML = editorInstance.getHTML();
-
-    if (!title || !contentHTML || contentHTML === '<p><br></p>') {
+    if (!title || !content || content === '<p></p>') {
       alert('제목과 내용을 입력해주세요.');
       return;
     }
 
     try {
       setIsUploading(true);
-
       const body = {
         paymentId,
         posts: [
           {
             title,
-            content: contentHTML,
+            content,
             cookId,
             images: imageList,
           },
@@ -77,24 +74,17 @@ function NewPostPage() {
       };
 
       const res = await axiosInstance.post(`/post-service/post/register`, body);
-
       const posts = res.data?.posts;
       if (posts && posts.length > 0 && posts[0].postId) {
-        const postId = posts[0].postId;
         alert('게시글이 등록되었습니다.');
-        navigate(`/user/post/${postId}`, { replace: true });
+        navigate(`/user/post/${posts[0].postId}`, { replace: true });
       } else {
         throw new Error('등록 응답이 올바르지 않습니다.');
       }
     } catch (err) {
-      if (err.response?.status === 404) {
-        alert('결제 정보가 존재하지 않습니다.');
-      } else if (err.response?.status === 500) {
-        alert('서버 통신 오류가 발생했습니다.');
-      } else {
-        console.error('업로드 실패:', err);
-        alert('게시글 업로드에 실패했습니다.');
-      }
+      if (err.response?.status === 404) alert('결제 정보가 존재하지 않습니다.');
+      else if (err.response?.status === 500) alert('서버 통신 오류가 발생했습니다.');
+      else alert('게시글 업로드에 실패했습니다.');
     } finally {
       setIsUploading(false);
     }
@@ -103,42 +93,21 @@ function NewPostPage() {
   return (
     <div className={styles['post-wrap']}>
       <h2 className={styles['cook-name']}>요리 이름: {cookName}</h2>
+      <div className={styles['title-group']}>
+        <label htmlFor="post-title" className={styles['title-label']}>
+          제목:
+        </label>
+        <input
+          type="text"
+          placeholder="제목을 입력하세요"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          className={styles['title-input']}
+        />
+      </div>
+      <TiptapEditor content={content} setContent={setContent} uploadImageToServer={uploadToS3} />
 
-      <input
-        type="text"
-        placeholder="제목을 입력하세요"
-        value={title}
-        onChange={e => setTitle(e.target.value)}
-        className={styles['title-input']}
-      />
-
-      <Editor
-        ref={editorRef}
-        previewStyle="vertical"
-        height="600px"
-        initialEditType="wysiwyg"
-        useCommandShortcut={true}
-        hooks={{
-          addImageBlobHook: async (blob, callback) => {
-            try {
-              const imageUrl = await uploadToS3(blob);
-
-              const newImage = {
-                imageUrl,
-                index: imageList.length + 1,
-              };
-
-              setImageList(prev => [...prev, newImage]);
-              callback(imageUrl, 'image');
-            } catch (err) {
-              alert('이미지 업로드에 실패했습니다.');
-              console.error('이미지 업로드 오류:', err);
-            }
-          },
-        }}
-      />
-
-      <Button onClick={handleSubmit} variant="BASIC" disabled={isUploading}>
+      <Button onClick={handleSubmit} variant="BASIC" className="flexible" disabled={isUploading}>
         {isUploading ? '업로드 중...' : '게시글 등록'}
       </Button>
     </div>

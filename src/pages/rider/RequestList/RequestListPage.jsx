@@ -45,14 +45,15 @@ function RequestListPage() {
       `/delivery-service/delivery/available-order?latitude=${position.latitude}&longitude=${position.longitude}&pageNo=${pageNo}&numOfRows=${numOfRows}`
     );
     console.log('response', response);
+    const orderList = response?.data?.data ?? []; // null일 경우 []로 대체
 
     if (pageNo === 1) {
-      setOrders(response.data.data);
+      setOrders(orderList);
     } else {
-      setOrders(prev => [...prev, ...response.data.data]);
+      setOrders(prev => [...prev, ...orderList]);
     }
 
-    if (response.data.data.length < numOfRows) {
+    if (orderList.length < numOfRows) {
       setIsEnd(true);
     }
     setIsLoading(false);
