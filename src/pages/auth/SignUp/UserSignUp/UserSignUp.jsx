@@ -32,7 +32,7 @@ function UserSignUp() {
     password: '',
     nickname: '',
     phone: '',
-    photo: '/photodefault.svg',
+    photo: '',
     roadFull: '',
     addrDetail: '',
   });
