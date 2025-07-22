@@ -28,6 +28,9 @@ axiosInstance.interceptors.request.use(
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
+     console.log('[axios 요청]', config.url);
+    console.log('[Authorization]', config.headers.Authorization);
+
     return config;
   },
   error => Promise.reject(error)

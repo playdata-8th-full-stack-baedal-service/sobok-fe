@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axiosInstance from '@/services/axios-config';
+import axios from 'axios';
 import styles from './EditPostPage.module.scss';
 import Button from '@/common/components/Button';
 import TiptapEditor from '@/common/forms/Post/TiptapEditor';
+import { API_BASE_URL } from '@/services/host-config';
 
 const EditPostPage = () => {
   const navigate = useNavigate();
@@ -35,6 +36,26 @@ const EditPostPage = () => {
     return imgs;
   };
 
+  const uploadImageToServer = async file => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const res = await axios.put(`${API_BASE_URL}/api-service/api/upload-image/post`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return res.data?.data;
+    } catch (err) {
+      console.error('이미지 업로드 실패', err);
+      alert('이미지 업로드에 실패했습니다.');
+      return '';
+    }
+  };
+
   const handleSubmit = async () => {
     if (!title || !content || content === '<p></p>') {
       alert('제목과 내용을 입력해주세요.');
@@ -53,7 +74,12 @@ const EditPostPage = () => {
         images,
       };
 
-      const res = await axiosInstance.put('/post-service/post/update', body);
+      const res = await axios.put(`${API_BASE_URL}/post-service/post/update`, body, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        },
+      });
+
       if (res.data?.success) {
         alert('게시글이 수정되었습니다.');
         navigate(`/user/post/${post.postId}`);
@@ -81,7 +107,11 @@ const EditPostPage = () => {
         placeholder="제목을 입력하세요"
       />
 
-      <TiptapEditor content={content} setContent={setContent} uploadImageToServer={() => {}} />
+      <TiptapEditor
+        content={content}
+        setContent={setContent}
+        uploadImageToServer={uploadImageToServer}
+      />
 
       <Button onClick={handleSubmit} variant="BASIC" disabled={isSubmitting}>
         {isSubmitting ? '수정 중...' : '수정 완료'}

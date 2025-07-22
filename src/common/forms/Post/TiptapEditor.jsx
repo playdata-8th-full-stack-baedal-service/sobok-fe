@@ -49,7 +49,7 @@ const TiptapEditor = ({ content, setContent, uploadImageToServer }) => {
     if (editor && content && content !== editor.getHTML()) {
       editor.commands.setContent(content);
     }
-  }, [editor]);
+  }, [editor, content]);
 
   const handleImageUpload = async e => {
     const file = e.target.files[0];
