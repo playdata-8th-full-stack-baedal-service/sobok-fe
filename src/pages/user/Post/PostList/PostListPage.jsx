@@ -135,7 +135,7 @@ function PostListPage() {
         ))}
       </Masonry>
 
-      {postList.length > 0 && !lastPage && (
+      {postList.length >= SIZE && !lastPage && (
         <button type="button" onClick={handleLoadMore} className={styles.loadMoreBtn}>
           {loading ? '로딩중...' : '더보기'}
         </button>
