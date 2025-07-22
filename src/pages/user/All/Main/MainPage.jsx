@@ -6,7 +6,7 @@ import PostListPage from '../../Post/PostList/PostListPage';
 function MainPage() {
   return (
     <div>
-      <PostListPage/>
+      메인페이지
     </div>
   );
 }
