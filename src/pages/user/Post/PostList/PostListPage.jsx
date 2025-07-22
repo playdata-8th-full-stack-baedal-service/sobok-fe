@@ -125,13 +125,17 @@ function PostListPage() {
             <div className={styles.info}>
               <h3>{post.title}</h3>
               <p>{post.cookName}</p>
+              <p>{post.nickName}</p>
+              <p className={styles.date}>
+                <strong>작성일</strong>: {new Date(post.updatedAt).toLocaleDateString('ko-KR')}
+              </p>
               <span>{post.likeCount}</span>
             </div>
           </div>
         ))}
       </Masonry>
 
-      {!lastPage && (
+      {postList.length > 0 && !lastPage && (
         <button type="button" onClick={handleLoadMore} className={styles.loadMoreBtn}>
           {loading ? '로딩중...' : '더보기'}
         </button>
