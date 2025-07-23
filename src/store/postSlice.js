@@ -23,19 +23,16 @@ export const registerPost = createAsyncThunk(
   'post/registerPost',
   async ({ paymentId, cookId, title, content, imageList }, thunkAPI) => {
     try {
+      console.log(paymentId, cookId, title, content, imageList);
       const body = {
         paymentId,
-        posts: [
-          {
-            title,
-            content,
-            cookId,
-            images: imageList.map((img, i) => ({
-              imageUrl: img.imageUrl,
-              index: i + 1,
-            })),
-          },
-        ],
+        cookId,
+        title,
+        content,
+        images: imageList.map((img, i) => ({
+          imageUrl: img.imageUrl,
+          index: i + 1,
+        })),
       };
       const res = await axiosInstance.post(`/post-service/post/register`, body);
       return res.data.posts[0];
