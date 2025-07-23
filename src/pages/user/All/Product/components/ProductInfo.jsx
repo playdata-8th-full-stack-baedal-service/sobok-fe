@@ -9,6 +9,9 @@ import { addBookmark, deleteBookmark, registerCart } from '../../../../../store/
 import { startPayment } from '../../../../../store/cartSlice';
 import { openModal } from '../../../../../store/modalSlice';
 import { arrayOf } from 'prop-types';
+import useToast from '@/common/hooks/useToast';
+
+const { showSuccess, showNegative, showInfo } = useToast();
 
 const categoryList = [
   {
@@ -104,8 +107,10 @@ const ProductInfo = () => {
   const handleBookmarkClick = () => {
     if (isBookmarked) {
       dispatch(deleteBookmark(product.cookId));
+      showSuccess('즐겨찾기가 해제되었습니다.');
     } else {
       dispatch(addBookmark(product.cookId));
+      showSuccess('즐겨찾기에 추가되었습니다.');
     }
   };
 
