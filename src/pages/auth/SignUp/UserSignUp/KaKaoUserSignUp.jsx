@@ -248,6 +248,7 @@ function UserSignUp() {
       email: getFullEmail() || null,
       roadFull: formData.roadFull.trim() === '' ? null : formData.roadFull,
       addrDetail: formData.addrDetail.trim() === '' ? null : formData.addrDetail,
+      inputCode: verificationCode,
     };
 
     try {
