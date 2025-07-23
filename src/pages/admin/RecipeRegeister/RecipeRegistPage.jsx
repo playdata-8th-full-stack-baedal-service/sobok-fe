@@ -190,10 +190,15 @@ function RecipeRegistPage() {
         onIngredientsChange={handleIngredientsChange}
         resetSignal={resetSignal}
       />
-      <RecipeSelection formData={formData} onChange={handleChangeInput} />
+      <RecipeSelection
+        formData={formData}
+        setFormData={setFormData}
+        uploadImageToServer={uploadToS3}
+      />
+
       <div className={style.buttonGroup}>
         <button type="button" onClick={handleResetClick} className={style.cleatbutton}>
-          <TbPencilCancel className={style.cancelicon}/>
+          <TbPencilCancel className={style.cancelicon} />
         </button>
         <button type="submit" className={style.uploadbutton}>
           업로드

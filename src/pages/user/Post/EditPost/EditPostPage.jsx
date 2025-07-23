@@ -13,7 +13,7 @@ const EditPostPage = () => {
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [cookName, setCookName] = useState(''); // ✅ 요리 이름 상태 추가
+  const [cookName, setCookName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const EditPostPage = () => {
 
     setTitle(post.title);
     setContent(post.content);
-    setCookName(post.cookName); // ✅ 요리 이름 설정
+    setCookName(post.cookName);
   }, [post, navigate]);
 
   const extractImagesFromContent = html => {
@@ -99,7 +99,6 @@ const EditPostPage = () => {
 
   return (
     <div className={styles['edit-wrap']}>
-      {/* ✅ 요리 이름 표시 */}
       <h2 className={styles['cook-name']}>요리 이름: {cookName}</h2>
 
       <div className={styles['title-group']}>
