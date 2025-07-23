@@ -51,20 +51,46 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
 
   const handleIngredientSelect = ingredient => {
     const existingIngredient = selectedIngredients.find(item => item.id === ingredient.id);
+    
     if (existingIngredient) {
-      // 이미 선택된 경우 기존 수량에 해당 식재료의 unit 값만큼 추가
+      // 이미 선택된 경우: 저장된 원본 unit 값만큼 추가
       const currentUnit = parseInt(existingIngredient.unit, 10) || 0;
-      const ingredientUnit = parseInt(ingredient.unit, 10) || 10;
+      const originalUnit = parseInt(existingIngredient.originalUnit, 10) || 10;
+      
       setSelectedIngredients(prev =>
         prev.map(item =>
           item.id === ingredient.id
-            ? { ...item, unit: (currentUnit + ingredientUnit).toString() }
+            ? { ...item, unit: (currentUnit + originalUnit).toString() }
             : item
         )
       );
     } else {
-      setSelectedIngredients(prev => [...prev, { ...ingredient, unit: ingredient.unit || '10' }]);
+      // 처음 선택하는 경우: 원본 unit 값으로 초기화하고 originalUnit 저장
+      const originalUnit = ingredient.unit || '10';
+      setSelectedIngredients(prev => [
+        ...prev, 
+        { 
+          ...ingredient, 
+          unit: originalUnit,
+          originalUnit: originalUnit // 원본 unit 값 저장
+        }
+      ]);
     }
+  };
+
+  // 감소 기능을 위한 함수 추가
+  const handleDecreaseIngredient = ingredientId => {
+    setSelectedIngredients(prev =>
+      prev.map(item => {
+        if (item.id === ingredientId) {
+          const currentUnit = parseInt(item.unit, 10) || 0;
+          const originalUnit = parseInt(item.originalUnit, 10) || 10;
+          const newUnit = Math.max(0, currentUnit - originalUnit);
+          return { ...item, unit: newUnit.toString() };
+        }
+        return item;
+      }).filter(item => parseInt(item.unit, 10) > 0) // 0이 되면 목록에서 제거
+    );
   };
 
   const handleRemoveIngredient = ingredientId => {
@@ -102,7 +128,7 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
                       value={ingredient.unit}
                       onChange={e => handleQuantityChange(ingredient.id, e.target.value)}
                       className={style.quantityInput}
-                      step={parseInt(ingredient.unit, 10) || 1}
+                      step={parseInt(ingredient.originalUnit, 10) || 1}
                     />
                     <span className={style.unitLabel}>g</span>
                   </div>
