@@ -77,6 +77,7 @@ function NewPostPage() {
 
       const images = extractImagesFromContent(content);
 
+      console.log(paymentId, cookId, title, content, images);
       const resultAction = await dispatch(
         registerPost({
           paymentId,
