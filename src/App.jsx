@@ -16,9 +16,13 @@ import SuccessPage from './pages/user/Pay/toss/TossSuccess';
 import SocialLoginListener from './pages/auth/SignIn/components/SocialLoginListener';
 import ScrollToTop from './common/components/ScrollToTop';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
   return (
     <>
+      <ToastContainer />
       <ScrollToTop />
       <SocialLoginListener />
       <Routes>
