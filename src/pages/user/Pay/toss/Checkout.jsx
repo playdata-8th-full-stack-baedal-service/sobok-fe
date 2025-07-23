@@ -2,9 +2,11 @@ import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import axiosInstance from '../../../../services/axios-config';
+import useToast from '@/common/hooks/useToast';
 
 const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
 const customerKey = 'fuvcoqV8JaQDkDPczoS_S';
+const { showSuccess, showNegative, showInfo } = useToast();
 
 export default function CheckoutPage({ orderer, shipping, ready, totalPrice }) {
   const [amount] = useState({
@@ -107,7 +109,7 @@ export default function CheckoutPage({ orderer, shipping, ready, totalPrice }) {
               });
             } catch (error) {
               // 에러 처리하기
-              alert('결제에 실패했습니다. 다시 시도해주세요.');
+              showNegative('결제에 실패했습니다. 다시 시도해주세요.');
               const res = await axiosInstance.delete(
                 `/payment-service/payment/fail-payment?orderId=${shipping.orderId}`
               );

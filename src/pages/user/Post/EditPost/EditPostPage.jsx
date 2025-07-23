@@ -5,11 +5,13 @@ import styles from './EditPostPage.module.scss';
 import Button from '@/common/components/Button';
 import TiptapEditor from '@/common/forms/Post/TiptapEditor';
 import { API_BASE_URL } from '@/services/host-config';
+import useToast from '@/common/hooks/useToast';
 
 const EditPostPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const post = location.state?.post;
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -18,7 +20,7 @@ const EditPostPage = () => {
 
   useEffect(() => {
     if (!post) {
-      alert('잘못된 접근입니다.');
+      showNegative('잘못된 접근입니다.');
       navigate(-1);
       return;
     }
@@ -53,14 +55,14 @@ const EditPostPage = () => {
       return res.data?.data;
     } catch (err) {
       console.error('이미지 업로드 실패', err);
-      alert('이미지 업로드에 실패했습니다.');
+      showNegative('이미지 업로드에 실패했습니다.');
       return '';
     }
   };
 
   const handleSubmit = async () => {
     if (!title || !content || content === '<p></p>') {
-      alert('제목과 내용을 입력해주세요.');
+      showNegative('제목과 내용을 입력해주세요.');
       return;
     }
 
@@ -83,15 +85,15 @@ const EditPostPage = () => {
       });
 
       if (res.data?.success) {
-        alert('게시글이 수정되었습니다.');
+        showSuccess('게시글이 수정되었습니다.');
         navigate(`/user/post/${post.postId}`);
       } else {
-        alert(res.data.message || '게시글 수정 실패');
+        showNegative(res.data.message || '게시글 수정 실패');
       }
     } catch (err) {
-      if (err.response?.status === 403) alert('권한이 없습니다.');
-      else if (err.response?.status === 404) alert('게시글이 존재하지 않습니다.');
-      else alert('서버 오류가 발생했습니다.');
+      if (err.response?.status === 403) showNegative('권한이 없습니다.');
+      else if (err.response?.status === 404) showNegative('게시글이 존재하지 않습니다.');
+      else showNegative('서버 오류가 발생했습니다.');
     } finally {
       setIsSubmitting(false);
     }

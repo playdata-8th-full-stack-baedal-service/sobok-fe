@@ -9,9 +9,12 @@ import {
 import Input from '../../../../../../common/components/Input';
 import Button from '../../../../../../common/components/Button';
 import styles from './ProfileSection.module.scss';
+import useToast from '@/common/hooks/useToast';
 
 function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = true }) {
   const dispatch = useDispatch();
+  const { showSuccess, showNegative, showInfo } = useToast();
+
   const {
     loading,
     nicknameCheckMessage,
@@ -28,7 +31,7 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
 
   const handleLoginIdCheck = async () => {
     if (!formData.loginId.trim()) {
-      alert('아이디를 입력해주세요.');
+      showNegative('아이디를 입력해주세요.');
       return;
     }
     try {
@@ -40,7 +43,7 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
 
   const handleNicknameCheck = async () => {
     if (!formData.nickname.trim()) {
-      alert('닉네임을 입력해주세요.');
+      showNegative('닉네임을 입력해주세요.');
       return;
     }
     try {
@@ -74,12 +77,12 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
     });
 
     if (!file.type.startsWith('image/')) {
-      alert('이미지 파일만 업로드 가능합니다.');
+      showNegative('이미지 파일만 업로드 가능합니다.');
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      alert('파일 크기는 5MB 이하여야 합니다.');
+      showNegative('파일 크기는 5MB 이하여야 합니다.');
       return;
     }
 
@@ -139,7 +142,13 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
                 onChange={handleLoginIdChange}
                 className={loginIdCheckError ? 'input-error' : ''}
               />
-              <Button type="button" variant="BASIC" onClick={handleLoginIdCheck} loading={loading} className={styles.overlapcheckbutton}>
+              <Button
+                type="button"
+                variant="BASIC"
+                onClick={handleLoginIdCheck}
+                loading={loading}
+                className={styles.overlapcheckbutton}
+              >
                 중복확인
               </Button>
             </div>
@@ -162,7 +171,13 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
               onChange={handleNicknameChange}
               className={nicknameCheckError ? styles.inputError : ''}
             />
-            <Button type="button" variant="BASIC" onClick={handleNicknameCheck} loading={loading} className={styles.overlapcheckbutton}>
+            <Button
+              type="button"
+              variant="BASIC"
+              onClick={handleNicknameCheck}
+              loading={loading}
+              className={styles.overlapcheckbutton}
+            >
               중복확인
             </Button>
           </div>

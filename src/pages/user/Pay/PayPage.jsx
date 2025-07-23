@@ -7,12 +7,15 @@ import generateRandomString from '../../../common/utils/paymentUtils';
 import { openModal } from '../../../store/modalSlice';
 import { setAddresses, setSelectedAddress } from '../../../store/cartSlice';
 import styles from './PayPage.module.scss';
+import useToast from '@/common/hooks/useToast';
 
 function PayPage() {
   const navigate = useNavigate();
   const [totalPrice, setTotalPrice] = useState(0);
   const [selectedItems, setSelectedItems] = useState([]);
   const dispatch = useDispatch();
+  const { showSuccess, showNegative, showInfo } = useToast();
+
   const { selectedAddress } = useSelector(state => state.cart);
   const [orderer, setOrderer] = useState({
     userId: 0,
@@ -68,7 +71,7 @@ function PayPage() {
         }));
 
         if (response.data.data.addresses === null || response.data.data.addresses.length < 1) {
-          alert('주소를 등록해주세요.');
+          showNegative('주소를 등록해주세요.');
           navigate('/user');
           return;
         }
@@ -80,7 +83,9 @@ function PayPage() {
         setSelectedItems(response.data.data.selectedItems);
       } catch (err) {
         console.log(err.response.data);
-        alert('주문자 정보를 불러오는 과정에서 오류가 발생하였습니다. 잠시 후 다시 시도해주세요.');
+        showNegative(
+          '주문자 정보를 불러오는 과정에서 오류가 발생하였습니다. 잠시 후 다시 시도해주세요.'
+        );
         navigate('/user/cart');
       }
     };
@@ -114,7 +119,7 @@ function PayPage() {
         letsgopay(true);
       } catch (err) {
         console.log(err.response.data);
-        alert('결제에 실패했습니다. 다시 시도해주세요.');
+        showNegative('결제에 실패했습니다. 다시 시도해주세요.');
         const res = await axiosInstance.delete(
           `/payment-service/payment/fail-payment?orderId=${shipping.orderId}`
         );

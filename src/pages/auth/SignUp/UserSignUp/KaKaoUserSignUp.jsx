@@ -16,6 +16,7 @@ import Button from '../../../../common/components/Button';
 import axios from 'axios';
 import { API_BASE_URL } from '@/services/host-config';
 import styles from './UserSignUp.module.scss';
+import useToast from '@/common/hooks/useToast';
 
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { kakaoSignUpUser } from '../../../../store/authSlice';
@@ -24,6 +25,7 @@ function UserSignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const ref = useRef();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const { loading, error, signUpSuccess } = useSelector(state => state.auth);
   const { isVerified } = useSelector(state => state.smsAuth);
@@ -160,30 +162,30 @@ function UserSignUp() {
     console.log('isSocialUser의 값', isSocialUser);
 
     if (!formData.loginId || !formData.password || !formData.nickname || !formData.phone) {
-      alert('필수 항목을 모두 입력해주세요.');
+      showNegative('필수 항목을 모두 입력해주세요.');
       ref.current?.focus();
       return false;
     }
 
     if (formData.password !== passwordConfirm) {
-      alert('비밀번호가 일치하지 않습니다.');
+      showNegative('비밀번호가 일치하지 않습니다.');
       return false;
     }
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,16}$/;
     if (!passwordRegex.test(formData.password)) {
-      alert('비밀번호는 대소문자, 숫자, 특수문자를 포함하여 8~16자로 입력해주세요.');
+      showNegative('비밀번호는 대소문자, 숫자, 특수문자를 포함하여 8~16자로 입력해주세요.');
       return false;
     }
 
     const phoneRegex = /^\d{11}$/;
     if (!phoneRegex.test(formData.phone)) {
-      alert('전화번호는 하이픈 없이 11자리 숫자로 입력해주세요.');
+      showNegative('전화번호는 하이픈 없이 11자리 숫자로 입력해주세요.');
       return false;
     }
 
     if (!isVerified) {
-      alert('휴대폰 인증을 완료해주세요.');
+      showNegative('휴대폰 인증을 완료해주세요.');
       return false;
     }
 
@@ -235,7 +237,7 @@ function UserSignUp() {
     e.preventDefault();
 
     if (!isNicknameChecked) {
-      alert('닉네임 중복확인을 해주세요.');
+      showNegative('닉네임 중복확인을 해주세요.');
       return;
     }
 
@@ -264,7 +266,7 @@ function UserSignUp() {
       await dispatch(kakaoSignUpUser(completeFormData)).unwrap();
     } catch (err) {
       console.error('회원가입 실패:', err);
-      alert(err || '회원가입에 실패했습니다.');
+      showNegative(err || '회원가입에 실패했습니다.');
     }
   };
 

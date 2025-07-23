@@ -7,11 +7,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import TiptapEditor from '@/common/forms/Post/TiptapEditor';
 import { useDispatch } from 'react-redux';
 import { registerPost } from '@/store/postSlice';
+import useToast from '@/common/hooks/useToast';
 
 function NewPostPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const paymentId = location.state?.paymentId;
   const cookId = location.state?.cookId;
@@ -23,7 +25,7 @@ function NewPostPage() {
 
   useEffect(() => {
     if (!paymentId || !cookId) {
-      alert('잘못된 접근입니다.');
+      showNegative('잘못된 접근입니다.');
       navigate(-1);
     }
 
@@ -55,7 +57,7 @@ function NewPostPage() {
   // 게시글 등록 요청
   const handleSubmit = async () => {
     if (!title || !content || content === '<p></p>') {
-      alert('제목과 내용을 입력해주세요.');
+      showNegative('제목과 내용을 입력해주세요.');
       return;
     }
 
@@ -87,13 +89,13 @@ function NewPostPage() {
 
       if (registerPost.fulfilled.match(resultAction)) {
         const { postId } = resultAction.payload;
-        alert('게시글이 등록되었습니다.');
+        showSuccess('게시글이 등록되었습니다.');
         navigate(`/user/post/${postId}`, { replace: true });
       } else {
         throw new Error(resultAction.payload || '등록 실패');
       }
     } catch (err) {
-      alert(err.message || '게시글 업로드에 실패했습니다.');
+      showNegative(err.message || '게시글 업로드에 실패했습니다.');
     } finally {
       setIsUploading(false);
     }

@@ -7,12 +7,14 @@ import axios from '../../../services/axios-config';
 import Header from '../Header';
 import styles from './UserHeader.module.scss';
 import MenuTest from './HamburgerMenu';
+import useToast from '@/common/hooks/useToast';
 
 function UserHeader() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const isLoggedIn = !!localStorage.getItem('ACCESS_TOKEN');
+  const { showSuccess } = useToast();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);

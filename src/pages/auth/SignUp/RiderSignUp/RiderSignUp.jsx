@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearSignUpSuccess, riderSignUp, checkPermission, clearPermissionCheck } from '@/store/riderSlice';
+import {
+  clearSignUpSuccess,
+  riderSignUp,
+  checkPermission,
+  clearPermissionCheck,
+} from '@/store/riderSlice';
 import { sendSMSCode, verifySMSCode, clearSMSAuth } from '../../../../store/smsAuthSlice';
 import { checkLoginId, clearLoginIdCheck } from '../../../../store/authSlice';
 import styles from './RiderSignUp.module.scss';
+import useToast from '@/common/hooks/useToast';
 
 function RiderSignUp() {
   const dispatch = useDispatch();
+  const { showSuccess, showNegative, showInfo } = useToast();
+
   const { loading, error, signUpSuccess } = useSelector(state => state.rider);
   const {
     permissionCheckLoading,
@@ -45,7 +53,7 @@ function RiderSignUp() {
 
   useEffect(() => {
     if (signUpSuccess) {
-      alert('회원가입 성공!');
+      showSuccess('회원가입 성공!');
       dispatch(clearSignUpSuccess());
       dispatch(clearSMSAuth());
       dispatch(clearLoginIdCheck());
@@ -103,7 +111,9 @@ function RiderSignUp() {
         break;
       case 'permissionNumber':
         if (form.permissionNumber && permissionCheckMessage) {
-          className = permissionCheckMessage.includes('사용 가능한') ? styles.valid : styles.invalid;
+          className = permissionCheckMessage.includes('사용 가능한')
+            ? styles.valid
+            : styles.invalid;
         }
         break;
       default:
@@ -150,7 +160,7 @@ function RiderSignUp() {
 
   const checkLoginIdAvailability = () => {
     if (!form.loginId.trim()) {
-      alert('아이디를 입력해주세요.');
+      showNegative('아이디를 입력해주세요.');
       return;
     }
     dispatch(checkLoginId(form.loginId));
@@ -158,11 +168,11 @@ function RiderSignUp() {
 
   const checkPermissionNumberAvailability = () => {
     if (!form.permissionNumber.trim()) {
-      alert('면허번호를 입력해주세요.');
+      showNegative('면허번호를 입력해주세요.');
       return;
     }
     if (!validatePermissionNumber(form.permissionNumber)) {
-      alert('면허번호는 숫자 12자리로 입력해주세요.');
+      showNegative('면허번호는 숫자 12자리로 입력해주세요.');
       return;
     }
     dispatch(checkPermission(form.permissionNumber));
@@ -170,7 +180,7 @@ function RiderSignUp() {
 
   const sendVerificationCode = () => {
     if (!form.phone.trim()) {
-      alert('휴대폰 번호를 입력해주세요.');
+      showNegative('휴대폰 번호를 입력해주세요.');
       return;
     }
     dispatch(sendSMSCode(form.phone));
@@ -178,7 +188,7 @@ function RiderSignUp() {
 
   const verifyCode = () => {
     if (!verificationCode.trim()) {
-      alert('인증번호를 입력해주세요.');
+      showNegative('인증번호를 입력해주세요.');
       return;
     }
     dispatch(verifySMSCode({ phoneNumber: form.phone, inputCode: verificationCode }));
@@ -188,32 +198,32 @@ function RiderSignUp() {
     e.preventDefault();
 
     if (!validation.passwordValid) {
-      alert('비밀번호는 8자 이상이며, 대문자, 특수문자, 숫자를 포함해야 합니다.');
+      showNegative('비밀번호는 8자 이상이며, 대문자, 특수문자, 숫자를 포함해야 합니다.');
       return;
     }
 
     if (!validation.passwordMatch) {
-      alert('비밀번호가 일치하지 않습니다.');
+      showNegative('비밀번호가 일치하지 않습니다.');
       return;
     }
 
     if (!isVerified) {
-      alert('휴대폰 인증을 완료해주세요.');
+      showNegative('휴대폰 인증을 완료해주세요.');
       return;
     }
 
     if (!validation.permissionNumberValid) {
-      alert('면허번호는 숫자 12자리로 정확히 입력해주세요.');
+      showNegative('면허번호는 숫자 12자리로 정확히 입력해주세요.');
       return;
     }
 
     if (!loginIdCheckMessage || !loginIdCheckMessage.includes('사용 가능한')) {
-      alert('아이디 중복 확인을 완료해주세요.');
+      showNegative('아이디 중복 확인을 완료해주세요.');
       return;
     }
 
     if (!permissionCheckMessage || !permissionCheckMessage.includes('사용 가능한')) {
-      alert('면허번호 중복 확인을 완료해주세요.');
+      showNegative('면허번호 중복 확인을 완료해주세요.');
       return;
     }
 
@@ -258,9 +268,7 @@ function RiderSignUp() {
               {loginIdCheckMessage}
             </div>
           )}
-          {loginIdCheckError && (
-            <div className={styles.errorMessage}>{loginIdCheckError}</div>
-          )}
+          {loginIdCheckError && <div className={styles.errorMessage}>{loginIdCheckError}</div>}
         </div>
 
         <div className={styles.formGroup}>

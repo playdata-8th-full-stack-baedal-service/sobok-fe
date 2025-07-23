@@ -17,12 +17,14 @@ import {
 import DuplicateCheckInput from '@/common/components/DuplicateCheckInput';
 import ModalController from '@/common/modals/ModalController';
 import { SquareX, Trash2, X } from 'lucide-react';
+import useToast from '@/common/hooks/useToast';
 
 function UserInfoPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userInfo, userInfoLoading, userInfoError } = useSelector(state => state.auth);
   const { loading: smsLoading, error: smsError, isVerified } = useSelector(state => state.smsAuth);
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   // 편집 상태
   const [editState, setEditState] = useState({
@@ -254,11 +256,11 @@ function UserInfoPage() {
           profileImage: uploadedUrl,
         }));
 
-        alert('프로필 사진이 성공적으로 변경되었습니다.');
+        showSuccess('프로필 사진이 성공적으로 변경되었습니다.');
         dispatch(closeModal());
       } catch (error) {
         console.error('프로필 사진 변경 실패:', error);
-        alert(`프로필 사진 변경에 실패했습니다: ${error.message}`);
+        showNegative(`프로필 사진 변경에 실패했습니다: ${error.message}`);
       }
     },
     [dispatch]
@@ -286,7 +288,7 @@ function UserInfoPage() {
 
       if (response.data.success && response.data.status === 200) {
         setLocalUserInfo(prev => ({ ...prev, email: editState.editEmail }));
-        alert('이메일이 성공적으로 변경되었습니다.');
+        showSuccess('이메일이 성공적으로 변경되었습니다.');
         updateEditState({ isEditingEmail: false });
       } else {
         updateErrorState({ emailError: response.data.message || '이메일 변경에 실패했습니다.' });
@@ -318,7 +320,7 @@ function UserInfoPage() {
 
       if (response.data.success && response.data.status === 200) {
         setLocalUserInfo(prev => ({ ...prev, phone: editState.editPhone }));
-        alert('전화번호가 성공적으로 변경되었습니다.');
+        showSuccess('전화번호가 성공적으로 변경되었습니다.');
         updateEditState({
           isEditingPhone: false,
           showVerificationInput: false,
@@ -360,7 +362,7 @@ function UserInfoPage() {
     try {
       await dispatch(sendSMSCode(editState.editPhone)).unwrap();
       updateEditState({ showVerificationInput: true });
-      alert('인증번호가 발송되었습니다.');
+      showInfo('인증번호가 발송되었습니다.');
     } catch (error) {
       updateErrorState({ phoneError: error || 'SMS 전송에 실패했습니다.' });
     }
@@ -529,7 +531,11 @@ function UserInfoPage() {
           <div className={styles.profileCard}>
             <div className={styles.cardHeader}>
               <h1>회원정보 조회</h1>
-              <button type="button" onClick={handlePasswordChangeClick} className={styles.resetpasswordbutton}>
+              <button
+                type="button"
+                onClick={handlePasswordChangeClick}
+                className={styles.resetpasswordbutton}
+              >
                 비밀번호 변경
               </button>
             </div>
@@ -614,9 +620,13 @@ function UserInfoPage() {
 
             <div className={styles.actionButtons}>
               <button type="button" className={styles.updateBtn} onClick={handleWithdrawalClick}>
-                <Trash2 className={styles.svgIcon}/>
+                <Trash2 className={styles.svgIcon} />
               </button>
-              <button type="button" onClick={() => navigate('/', {replace: true})} className={styles.checkbutton}>
+              <button
+                type="button"
+                onClick={() => navigate('/', { replace: true })}
+                className={styles.checkbutton}
+              >
                 변경완료
               </button>
             </div>

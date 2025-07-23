@@ -5,6 +5,7 @@ import axiosInstance from '../../../../services/axios-config';
 import CookGrid from '../component/CookGrid';
 import styles from './SearchPage.module.scss';
 import Button from '../../../../common/components/Button';
+import useToast from '@/common/hooks/useToast';
 
 const SearchPage = () => {
   const [items, setItems] = useState([]);
@@ -13,6 +14,7 @@ const SearchPage = () => {
   const [isFullLoaded, setIsFullLoaded] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   useEffect(() => {
     setItems([]);
@@ -22,7 +24,7 @@ const SearchPage = () => {
   useEffect(() => {
     async function fetchItems() {
       if (searchParams.get('keyword') === '') {
-        alert('검색어를 입력해주세요.');
+        showNegative('검색어를 입력해주세요.');
         navigate(-1);
         return;
       }
@@ -48,7 +50,7 @@ const SearchPage = () => {
     e.preventDefault();
     const keyword = e.target.keyword.value;
     if (keyword === '') {
-      alert('검색어를 입력해주세요.');
+      showNegative('검색어를 입력해주세요.');
       return;
     }
 

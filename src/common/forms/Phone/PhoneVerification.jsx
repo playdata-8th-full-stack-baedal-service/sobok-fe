@@ -41,7 +41,7 @@ function PhoneVerification({
   const defaultHandleSendSMS = () => {
     const phoneRegex = /^\d{11}$/;
     if (!phoneRegex.test(phone)) {
-      alert('전화번호는 하이픈 없이 11자리 숫자로 입력해주세요.');
+      showNegative('전화번호는 하이픈 없이 11자리 숫자로 입력해주세요.');
       return;
     }
     dispatch(sendSMSCode(phone));
@@ -87,7 +87,7 @@ function PhoneVerification({
 
   const handleVerifySMS = () => {
     if (!verificationCode.trim()) {
-      alert('인증번호를 입력해주세요.');
+      showNegative('인증번호를 입력해주세요.');
       return;
     }
     dispatch(

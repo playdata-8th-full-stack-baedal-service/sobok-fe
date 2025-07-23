@@ -8,15 +8,17 @@ import styles from './FindIDModal.module.scss';
 import Button from '../../../common/components/Button';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../services/host-config';
+import useToast from '@/common/hooks/useToast';
 
 function FindIDModal({ onClose }) {
   const [phone, setPhone] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const dispatch = useDispatch();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const handleFindID = async () => {
     if (!phone || !verificationCode) {
-      alert('전화번호와 인증번호를 모두 입력해주세요.');
+      showNegative('전화번호와 인증번호를 모두 입력해주세요.');
       return;
     }
 
@@ -42,10 +44,10 @@ function FindIDModal({ onClose }) {
           );
         }, 0);
       } else {
-        alert(response.data.message || '아이디를 찾을 수 없습니다.');
+        showNegative(response.data.message || '아이디를 찾을 수 없습니다.');
       }
     } catch (err) {
-      alert(err.response?.data?.message || '아이디 조회 중 오류가 발생했습니다.');
+      showNegative(err.response?.data?.message || '아이디 조회 중 오류가 발생했습니다.');
     }
   };
 

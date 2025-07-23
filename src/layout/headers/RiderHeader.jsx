@@ -29,11 +29,19 @@ const RiderHeader = () => {
     } finally {
       dispatch(logout());
       navigate('/');
-      alert('로그아웃 되었습니다.');
+      showSuccess('로그아웃 되었습니다.');
     }
   };
 
-  return <Header rightone={<button onClick={handleLogout} className={style.riderlogoutbutton}>로그아웃</button>} />;
+  return (
+    <Header
+      rightone={
+        <button onClick={handleLogout} className={style.riderlogoutbutton}>
+          로그아웃
+        </button>
+      }
+    />
+  );
 };
 
 export default RiderHeader;

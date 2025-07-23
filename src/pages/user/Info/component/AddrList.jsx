@@ -4,11 +4,13 @@ import { openModal, closeModal } from '@/store/modalSlice';
 import axiosInstance from '@/services/axios-config';
 import styles from '../UserInfo.module.scss';
 import Button from '../../../../common/components/Button';
+import useToast from '@/common/hooks/useToast';
 
 function AddrList({ addressList, onAddressUpdate, onAddressesChange, onAddressDelete }) {
   const dispatch = useDispatch();
   const [isUpdating, setIsUpdating] = useState(false);
   const [addresses, setAddresses] = useState(addressList);
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   useEffect(() => {
     setAddresses(addressList);
@@ -36,7 +38,7 @@ function AddrList({ addressList, onAddressUpdate, onAddressesChange, onAddressDe
   // 주소 검색 팝업 열기
   const openAddressSearch = addressId => {
     if (!window.daum || !window.daum.Postcode) {
-      alert('주소 검색 서비스를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+      showInfo('주소 검색 서비스를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
       return;
     }
     let initialDetailAddress = '';
@@ -91,7 +93,7 @@ function AddrList({ addressList, onAddressUpdate, onAddressesChange, onAddressDe
                     if (onAddressesChange) {
                       await onAddressesChange();
                     }
-                    alert(
+                    showSuccess(
                       response.data.message ||
                         (addressId
                           ? '주소가 성공적으로 변경되었습니다.'
@@ -99,16 +101,16 @@ function AddrList({ addressList, onAddressUpdate, onAddressesChange, onAddressDe
                     );
                     dispatch(closeModal());
                   } else {
-                    alert(
+                    showNegative(
                       response.data.message ||
                         (addressId ? '주소 변경에 실패했습니다.' : '주소 추가에 실패했습니다.')
                     );
                   }
                 } catch (error) {
                   if (error.response?.data?.message) {
-                    alert(error.response.data.message);
+                    showNegative(error.response.data.message);
                   } else {
-                    alert(
+                    showNegative(
                       addressId
                         ? '주소 변경 중 오류가 발생했습니다. 다시 시도해주세요.'
                         : '주소 추가 중 오류가 발생했습니다. 다시 시도해주세요.'
@@ -154,7 +156,7 @@ function AddrList({ addressList, onAddressUpdate, onAddressesChange, onAddressDe
 
       if (response.data.success) {
         console.log('주소 삭제 성공');
-        alert('주소가 성공적으로 삭제되었습니다.');
+        showSuccess('주소가 성공적으로 삭제되었습니다.');
 
         // 즉시 로컬 상태 업데이트
         if (onAddressDelete) {
@@ -162,12 +164,12 @@ function AddrList({ addressList, onAddressUpdate, onAddressesChange, onAddressDe
         }
       } else {
         console.log('삭제 실패:', response.data.message);
-        alert(response.data.message || '주소 삭제에 실패했습니다.');
+        showNegative(response.data.message || '주소 삭제에 실패했습니다.');
       }
     } catch (err) {
       console.log('삭제 실패:', err);
       const errorMessage = err.response?.data?.message || '주소 삭제 중 오류가 발생했습니다.';
-      alert(errorMessage);
+      showNegative(errorMessage);
     } finally {
       setIsUpdating(false);
     }

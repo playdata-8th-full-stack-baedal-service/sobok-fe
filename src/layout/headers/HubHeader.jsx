@@ -35,16 +35,28 @@ const RiderHeader = () => {
     } finally {
       dispatch(logout());
       navigate('/');
-      alert('로그아웃 되었습니다.');
+      showSuccess('로그아웃 되었습니다.');
     }
   };
 
   return (
     <Header
       lefttitle={null}
-      rightone={<button onClick={() => safeNavigate('/hub/history')} className={styles.orderbutton}>주문 처리 완료 내역</button>}
-      righttwo={<button onClick={() => safeNavigate('/hub/info')} className={styles.hubbutton}>가게 정보</button>}
-      rightthree={<button onClick={handleLogout} className={styles.logoutbuttonhub}>로그아웃</button>}
+      rightone={
+        <button onClick={() => safeNavigate('/hub/history')} className={styles.orderbutton}>
+          주문 처리 완료 내역
+        </button>
+      }
+      righttwo={
+        <button onClick={() => safeNavigate('/hub/info')} className={styles.hubbutton}>
+          가게 정보
+        </button>
+      }
+      rightthree={
+        <button onClick={handleLogout} className={styles.logoutbuttonhub}>
+          로그아웃
+        </button>
+      }
     />
   );
 };

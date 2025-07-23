@@ -47,13 +47,13 @@ function ImageandOverview({ formData, onFileSelect, onChange, resetSignal }) {
 
     if (!file.type.startsWith('image/')) {
       console.log('이미지 파일이 아니면 이게 뜹니다.');
-      alert('이미지 파일만 업로드 가능합니다. 다시 시도해주십시요');
+      showNegative('이미지 파일만 업로드 가능합니다. 다시 시도해주십시요');
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
       console.log('파일 크기 초과가 되면 이게 뜹니다.');
-      alert('파일 크기는 5MB 이하여만 합니다. 다시 시도해 주십시요');
+      showNegative('파일 크기는 5MB 이하여만 합니다. 다시 시도해 주십시요');
       return;
     }
 

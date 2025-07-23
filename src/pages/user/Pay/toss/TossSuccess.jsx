@@ -3,10 +3,12 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import axiosInstance from '../../../../services/axios-config';
 import styles from './TossSuccess.module.scss';
+import useToast from '@/common/hooks/useToast';
 
 export default function SuccessPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   useEffect(() => {
     // 쿼리 파라미터 값이 결제 요청할 때 보낸 데이터와 동일한지 반드시 확인하세요.
@@ -35,7 +37,7 @@ export default function SuccessPage() {
           console.log(err);
         }
 
-        alert('결제 실패! 다시 시도해주세요');
+        showNegative('결제 실패! 다시 시도해주세요');
         navigate('/user/cart');
       } else {
         // 결제 성공

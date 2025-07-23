@@ -4,6 +4,7 @@ import ModalWrapper from '@/common/modals/ModalWrapper';
 import styles from '../RecipeRegistPage.module.scss';
 import { API_BASE_URL } from '@/services/host-config';
 import axiosInstance from '../../../../services/axios-config';
+import useToast from '@/common/hooks/useToast';
 
 function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
   const [formData, setFormData] = useState({
@@ -12,6 +13,10 @@ function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
     origin: '',
     unit: '',
   });
+
+  const { showSuccess } = useToast();
+  const { showNegative } = useToast();
+  const { showInfo } = useToast();
 
   const handleInputChange = e => {
     const { name, value } = e.target;
@@ -59,14 +64,14 @@ function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
       !formData.origin.trim() ||
       !formData.unit.trim()
     ) {
-      alert('모든 필드를 입력해주세요.');
+      showNegative('모든 필드를 입력해주세요.');
       return;
     }
 
     // 가격 유효성 검증
     const price = parseInt(formData.price);
     if (price <= 0) {
-      alert('가격은 0보다 큰 숫자를 입력해주세요.');
+      showNegative('가격은 0보다 큰 숫자를 입력해주세요.');
       return;
     }
 
@@ -79,22 +84,19 @@ function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
 
       console.log(requestData);
 
-      const response = await axiosInstance.post(
-        `/cook-service/ingredient/register`,
-        requestData
-      );
+      const response = await axiosInstance.post(`/cook-service/ingredient/register`, requestData);
       console.log(response.data);
       if (response.data.success) {
-        alert('식재료가 등록되었습니다.');
+        showSuccess('식재료가 등록되었습니다.');
         if (onClose) onClose();
       } else {
-        alert(response.data.message);
+        showNegative(response.data.message);
       }
     } catch (error) {
       console.error(error);
       console.log(error.response.message);
 
-      alert('식재료 등록에 실패했습니다.');
+      showNegative('식재료 등록에 실패했습니다.');
     }
   };
 

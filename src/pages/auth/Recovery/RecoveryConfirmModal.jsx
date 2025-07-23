@@ -3,11 +3,13 @@ import ModalWrapper from '../../../common/modals/ModalWrapper';
 import styles from './RecoveryConfirmModal.module.scss';
 import axiosInstance from '../../../services/axios-config';
 import { useNavigate } from 'react-router-dom';
+import useToast from '@/common/hooks/useToast';
 
 function RecoveryConfirmModal({ onClose, id }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const handleRecover = async () => {
     setIsLoading(true);
@@ -15,7 +17,7 @@ function RecoveryConfirmModal({ onClose, id }) {
     try {
       const response = await axiosInstance.post(`/auth-service/auth/recover/${id}`);
       if (response.data.success) {
-        alert('복구가 완료되었습니다. 다시 로그인 하십시요');
+        showSuccess('복구가 완료되었습니다. 다시 로그인 하십시요');
         onClose();
         navigate('/');
       } else {
@@ -29,18 +31,13 @@ function RecoveryConfirmModal({ onClose, id }) {
   };
 
   return (
-    <ModalWrapper onClose={onClose} title="계정 복구 확인" size="lg" >
+    <ModalWrapper onClose={onClose} title="계정 복구 확인" size="lg">
       <div className={styles.RecoveryConfirmModal}>
         <p className={styles.description}>
           사용자님의 계정은 휴먼모드입니다. 계정을 복구 하시겠습니까?
         </p>
         <div className={styles.buttonGroup}>
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={isLoading}
-            className={styles.cancel}
-          >
+          <button type="button" onClick={onClose} disabled={isLoading} className={styles.cancel}>
             돌아가기
           </button>
           <button

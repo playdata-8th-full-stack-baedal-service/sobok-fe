@@ -35,7 +35,7 @@ function AdminHeader() {
     } finally {
       dispatch(logout());
       navigate('/');
-      alert('로그아웃 되었습니다.');
+      showSuccess('로그아웃 되었습니다.');
     }
   };
 

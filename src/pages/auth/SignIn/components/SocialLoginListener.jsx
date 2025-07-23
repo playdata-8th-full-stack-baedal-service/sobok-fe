@@ -1,8 +1,12 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useToast from '@/common/hooks/useToast';
 
 function SocialLoginListener() {
   const navigate = useNavigate();
+  const { showSuccess } = useToast();
+  const { showNegative } = useToast();
+  const { showInfo } = useToast();
 
   useEffect(() => {
     const handleMessage = event => {
@@ -16,26 +20,35 @@ function SocialLoginListener() {
 
       if (data.type === 'OAUTH_SUCCESS') {
         console.log('로그인 성공:', data);
+        showSuccess('로그인 되었습니다.');
         localStorage.setItem('ACCESS_TOKEN', data.accessToken);
         localStorage.setItem('REFRESH_TOKEN', data.refreshToken);
         localStorage.setItem('USER_ROLE', data.role);
         localStorage.setItem('USER_ID', data.userId);
         localStorage.setItem('RECOVERY_TARGET', data.recoveryTarget);
-        navigate('/admin');
+
+        // 역할에 따라 다른 경로로 이동
+        switch (data.role) {
+          case 'USER':
+            navigate('/user/main');
+            break;
+          case 'ADMIN':
+            navigate('/admin');
+            break;
+          case 'RIDER':
+            navigate('/rider');
+            break;
+          case 'HUB':
+            navigate('/hub');
+            break;
+          default:
+            navigate('/');
+        }
       }
 
       if (data.type === 'NEW_USER_SIGNUP') {
         console.log('🆕 신규 사용자, 회원가입 유도:', data);
 
-        // 회원가입 페이지로 이동하면서 카카오 정보를 쿼리로 전달
-        const queryParams = new URLSearchParams({
-          provider: data.provider,
-          oauthId: data.oauthId,
-          nickname: data.nickname,
-          email: data.email,
-        }).toString();
-
-        // navigate(`/auth/signup/usersignup?${queryParams}`);
         navigate('/auth/signup/kakao-usersignup', {
           state: {
             provider: data.provider,
@@ -48,11 +61,10 @@ function SocialLoginListener() {
     };
 
     window.addEventListener('message', handleMessage);
-
     return () => window.removeEventListener('message', handleMessage);
   }, [navigate]);
 
-  return null; // 화면 출력 없음
+  return null;
 }
 
 export default SocialLoginListener;
