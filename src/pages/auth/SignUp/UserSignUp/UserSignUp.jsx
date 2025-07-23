@@ -184,6 +184,8 @@ function UserSignUp() {
   const handleSubmit = async e => {
     e.preventDefault();
 
+    console.log('최종 인증번호:', verificationCode);
+
     if (!validateForm()) return;
 
     if (!isLoginIdChecked) {
@@ -204,6 +206,7 @@ function UserSignUp() {
       email: getFullEmail() || null,
       roadFull: formData.roadFull.trim() === '' ? null : formData.roadFull,
       addrDetail: formData.addrDetail.trim() === '' ? null : formData.addrDetail,
+      inputCode: verificationCode,
     };
 
     try {

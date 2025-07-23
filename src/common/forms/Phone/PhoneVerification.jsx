@@ -111,7 +111,7 @@ function PhoneVerification({
               onChange={onPhoneChange}
               placeholder="전화번호를 입력하세요."
               className={smsError ? styles.inputError : ''}
-              disabled={isCodeSent && timer > 0}
+              disabled={isCodeSent}
             />
             {/* 인증요청 버튼, 타이머, 재전송 버튼 분리 */}
             {!isCodeSent && (
