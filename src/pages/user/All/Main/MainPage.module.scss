@@ -294,6 +294,7 @@
     padding: 0;
     font-size: inherit;
     font-family: inherit;
+    margin-top: 100px;
   }
 
   .learnmore {
@@ -484,30 +485,35 @@
 }
 
 .categorybottomselection {
-  width: 65vw;
+  width: 100%; /* 상위 컨테이너와 동일한 너비 */
   display: grid;
-  margin: 0 auto;
+  margin: 0; /* auto 제거하여 부모 컨테이너에 맞춤 */
   grid-template-areas:
     'main main serveone servetwo'
     'main main servethree servefour';
+  gap: 10px; /* 그리드 아이템 간 간격 추가 (선택사항) */
 
   .grid1 {
     grid-area: main;
   }
-
   .grid2 {
     grid-area: serveone;
   }
-
   .grid3 {
     grid-area: servetwo;
   }
-
   .grid4 {
     grid-area: servethree;
   }
-
   .grid5 {
     grid-area: servefour;
+  }
+
+  /* 이미지와 텍스트 레이아웃 개선 */
+  .cookThumbnail {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px; /* 선택사항 */
   }
 }
