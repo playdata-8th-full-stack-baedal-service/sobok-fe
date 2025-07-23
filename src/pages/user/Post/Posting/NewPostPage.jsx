@@ -116,8 +116,8 @@ function NewPostPage() {
       </div>
       <TiptapEditor content={content} setContent={setContent} uploadImageToServer={uploadToS3} />
 
-      <Button onClick={handleSubmit} variant="BASIC" className="flexible" disabled={isUploading}>
-        {isUploading ? '업로드 중...' : '게시글 등록'}
+      <Button onClick={handleSubmit} variant="BASIC" disabled={isUploading}>
+        {isUploading ? '업로드 중...' : '등록하기'}
       </Button>
     </div>
   );

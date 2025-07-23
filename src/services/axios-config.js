@@ -28,6 +28,9 @@ axiosInstance.interceptors.request.use(
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
+     console.log('[axios 요청]', config.url);
+    console.log('[Authorization]', config.headers.Authorization);
+
     return config;
   },
   error => Promise.reject(error)
@@ -39,7 +42,7 @@ axiosInstance.interceptors.response.use(
     const errorStatus = error?.response?.data?.status;
     const originalRequest = error.config;
     const refreshToken = localStorage.getItem('REFRESH_TOKEN');
-    const userId = localStorage.getItem('USER_ID');
+    const userId = localStorage.getItem('USER_ID'); // 사실은 authId  
 
     if (errorStatus === 666) {
       try {

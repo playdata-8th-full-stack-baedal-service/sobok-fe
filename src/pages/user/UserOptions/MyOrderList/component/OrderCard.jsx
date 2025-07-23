@@ -19,6 +19,9 @@ const orderStatus = {
 
 const OrderCard = ({ order }) => {
   const dispatch = useDispatch();
+
+  if (order.orderState === 'ORDER_PENDING') return null;
+
   const orderDate = new Date(order.createdAt);
   const formattedDate = `${orderDate.getFullYear()}-${String(orderDate.getMonth() + 1).padStart(2, '0')}-${String(orderDate.getDate()).padStart(2, '0')}`;
 
@@ -42,12 +45,10 @@ const OrderCard = ({ order }) => {
       </div>
       <div className={styles.orderItems}>
         {order.cook.map(item => (
-
           <OrderItem
             key={`${order.orderId}-${item.cookName}`}
             item={{ ...item, paymentId: order.paymentId }}
           />
-
         ))}
       </div>
       <div className={styles.orderFooter}>

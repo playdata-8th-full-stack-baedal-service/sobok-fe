@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axiosInstance from '@/services/axios-config';
+import axios from 'axios';
 import styles from './EditPostPage.module.scss';
 import Button from '@/common/components/Button';
 import TiptapEditor from '@/common/forms/Post/TiptapEditor';
+import { API_BASE_URL } from '@/services/host-config';
 
 const EditPostPage = () => {
   const navigate = useNavigate();
@@ -11,8 +12,9 @@ const EditPostPage = () => {
   const post = location.state?.post;
 
   const [title, setTitle] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [content, setContent] = useState('');
+  const [cookName, setCookName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!post) {
@@ -20,11 +22,12 @@ const EditPostPage = () => {
       navigate(-1);
       return;
     }
+
     setTitle(post.title);
     setContent(post.content);
+    setCookName(post.cookName);
   }, [post, navigate]);
 
-  // content 내 이미지 태그에서 src만 추출
   const extractImagesFromContent = html => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
@@ -33,6 +36,26 @@ const EditPostPage = () => {
       index: i + 1,
     }));
     return imgs;
+  };
+
+  const uploadImageToServer = async file => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const res = await axios.put(`${API_BASE_URL}/api-service/api/upload-image/post`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return res.data?.data;
+    } catch (err) {
+      console.error('이미지 업로드 실패', err);
+      alert('이미지 업로드에 실패했습니다.');
+      return '';
+    }
   };
 
   const handleSubmit = async () => {
@@ -53,7 +76,12 @@ const EditPostPage = () => {
         images,
       };
 
-      const res = await axiosInstance.put('/post-service/post/update', body);
+      const res = await axios.put(`${API_BASE_URL}/post-service/post/update`, body, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+        },
+      });
+
       if (res.data?.success) {
         alert('게시글이 수정되었습니다.');
         navigate(`/user/post/${post.postId}`);
@@ -71,17 +99,27 @@ const EditPostPage = () => {
 
   return (
     <div className={styles['edit-wrap']}>
-      <h2>게시글 수정</h2>
+      <h2 className={styles['cook-name']}>요리 이름: {cookName}</h2>
 
-      <input
-        type="text"
-        value={title}
-        onChange={e => setTitle(e.target.value)}
-        className={styles['title-input']}
-        placeholder="제목을 입력하세요"
+      <div className={styles['title-group']}>
+        <label htmlFor="post-title" className={styles['title-label']}>
+          제목:
+        </label>
+        <input
+          type="text"
+          id="post-title"
+          placeholder="제목을 입력하세요"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          className={styles['title-input']}
+        />
+      </div>
+
+      <TiptapEditor
+        content={content}
+        setContent={setContent}
+        uploadImageToServer={uploadImageToServer}
       />
-
-      <TiptapEditor content={content} setContent={setContent} uploadImageToServer={() => {}} />
 
       <Button onClick={handleSubmit} variant="BASIC" disabled={isSubmitting}>
         {isSubmitting ? '수정 중...' : '수정 완료'}
