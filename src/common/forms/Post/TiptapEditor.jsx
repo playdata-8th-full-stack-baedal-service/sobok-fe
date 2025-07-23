@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import Image from '@tiptap/extension-image';
 import styles from './TiptapEditor.module.scss';
 
-const TiptapEditor = ({ content, setContent }) => {
+const TiptapEditor = ({ content, setContent, uploadImageToServer }) => {
   const [isEditorEmpty, setIsEditorEmpty] = useState(true);
 
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, Image.configure({ inline: false })],
     content: content || '<p></p>',
     onUpdate({ editor }) {
       const html = editor.getHTML();
@@ -50,6 +51,13 @@ const TiptapEditor = ({ content, setContent }) => {
     }
   }, [editor, content]);
 
+  const handleImageUpload = async e => {
+    const file = e.target.files[0];
+    if (!file || !editor) return;
+    const imageUrl = await uploadImageToServer(file);
+    editor.chain().focus().setImage({ src: imageUrl }).run();
+  };
+
   if (!editor) return null;
 
   return (
@@ -81,6 +89,10 @@ const TiptapEditor = ({ content, setContent }) => {
             {btn.label}
           </button>
         ))}
+        <label className={styles.uploadBtn}>
+          이미지
+          <input type="file" hidden accept="image/*" onChange={handleImageUpload} />
+        </label>
       </div>
 
       <div className={styles.editorBox}>
