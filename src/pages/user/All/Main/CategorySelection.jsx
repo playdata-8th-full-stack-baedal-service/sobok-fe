@@ -1,9 +1,49 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './MainPage.module.scss';
+import axiosInstance from '../../../../services/axios-config';
+
+const CATEGORY_MAP = {
+  한식: 'KOREAN',
+  일식: 'JAPANESE',
+  중식: 'CHINESE',
+  양식: 'WESTERN',
+  간식: 'SNACK',
+  야식: 'LATE_NIGHT',
+};
 
 function CategorySelection() {
+  const [cookList, setCookList] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('한식');
 
-  
+  // 카테고리별 데이터 불러오기 함수 (axiosInstance)
+  const fetchCategory = async korCategory => {
+    const category = CATEGORY_MAP[korCategory];
+    setSelectedCategory(korCategory);
+    try {
+      const res = await axiosInstance.get('/cook-service/cook/get-cook-category', {
+        params: {
+          category,
+          pageNo: 1,
+          numOfRows: 5,
+        },
+      });
+      console.log(res.data);
+      if (res.data.success) {
+        setCookList(res.data.data);
+      } else {
+        setCookList([]);
+      }
+    } catch (e) {
+      setCookList([]);
+    }
+  };
+
+  // 마운트 시 한식 자동 조회
+  useEffect(() => {
+    fetchCategory('한식');
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <div className={styles.CategorySelection}>
       <div className={styles.categorytopselection}>
@@ -16,53 +56,36 @@ function CategorySelection() {
       </div>
 
       <div className={styles.selectbuttonzone}>
-        <button type="button" className={styles.btn23}>
-          <span className={styles.text}>한식</span>
-          <span aria-hidden className={styles.marquee}>
-            한식
-          </span>
-        </button>
-        <button type="button" className={styles.btn23}>
-          <span className={styles.text}>일식</span>
-          <span aria-hidden className={styles.marquee}>
-            일식
-          </span>
-        </button>
-        <button type="button" className={styles.btn23}>
-          <span className={styles.text}>중식</span>
-          <span aria-hidden className={styles.marquee}>
-            중식
-          </span>
-        </button>
-        <button type="button" className={styles.btn23}>
-          <span className={styles.text}>양식</span>
-          <span aria-hidden className={styles.marquee}>
-            양식
-          </span>
-        </button>
-        <button type="button" className={styles.btn23}>
-          <span className={styles.text}>간식</span>
-          <span aria-hidden className={styles.marquee}>
-            간식
-          </span>
-        </button>
-        <button type="button" className={styles.btn23}>
-          <span className={styles.text}>야식</span>
-          <span aria-hidden className={styles.marquee}>
-            야식
-          </span>
-        </button>
+        {Object.keys(CATEGORY_MAP).map(kor => (
+          <button
+            type="button"
+            key={kor}
+            className={styles.btn23}
+            onClick={() => fetchCategory(kor)}
+            style={selectedCategory === kor ? { background: '#eee' } : {}}
+          >
+            <span className={styles.text}>{kor}</span>
+            <span aria-hidden className={styles.marquee}>
+              {kor}
+            </span>
+          </button>
+        ))}
       </div>
 
       <div className={styles.categorybottomselection}>
-        <div className={styles.grid1}>1</div>
-        <div className={styles.grid2}>2</div>
-        <div className={styles.grid3}>3</div>
-        <div className={styles.grid4}>4</div>
-        <div className={styles.grid5}>5</div>
+        {cookList.length === 0 ? (
+          <div style={{ gridColumn: '1 / 6', textAlign: 'center' }}>로딩중입니다...</div>
+        ) : (
+          cookList.slice(0, 5).map((cook, idx) => (
+            <div key={cook.id || idx} className={styles[`grid${idx + 1}`]}>
+              <img src={cook.thumbnail} className={styles.cookThumbnail} alt={cook.name} />
+              <div>{cook.name}</div>
+            </div>
+          ))
+        )}
       </div>
 
-      <button>더보기</button>
+      <button type="button">더보기</button>
     </div>
   );
 }
