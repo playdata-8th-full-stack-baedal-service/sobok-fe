@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '@/services/axios-config';
 import styles from './PostDetailPage.module.scss';
 import Button from '../../../../common/components/Button';
+import { Heart } from 'lucide-react';
 
 const PostDetailPage = () => {
   const { id } = useParams();
@@ -135,11 +136,7 @@ const PostDetailPage = () => {
             <strong>작성 날짜</strong> : {formatDate(post.updatedAt)}
           </p>
           <div className={styles.likeSection} onClick={handleLikePost}>
-            <img
-              src={isLiked ? '/icons/like-filled.svg' : '/icons/like.svg'}
-              className={styles.likeIcon}
-            />
-            <span>좋아요 수 : {post.likeCount}</span>
+            <span><Heart size={16} fill="red" color="red" /> 좋아요 수 : {post.likeCount}</span>
           </div>
         </div>
       </div>
