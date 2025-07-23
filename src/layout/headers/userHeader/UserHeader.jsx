@@ -8,17 +8,6 @@ import Header from '../Header';
 import styles from './UserHeader.module.scss';
 import MenuTest from './HamburgerMenu';
 
-// 테스트용
-/*
-    localStorage.setItem('accessToken', 'temp-access-token');
-    localStorage.setItem('refreshToken', 'temp-refresh-token');
-    localStorage.setItem('userRole', 'USER');
-    localStorage.setItem('userId', '/user1');
-
-     window.history.pushState({}, '', '/user');
-     window.dispatchEvent(new PopStateEvent('popstate'));
-*/
-
 function UserHeader() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,7 +31,7 @@ function UserHeader() {
     } finally {
       dispatch(logout());
       navigate('/');
-      alert('로그아웃 되었습니다.');
+      showSuccess('로그아웃 되었습니다.');
     }
   };
 

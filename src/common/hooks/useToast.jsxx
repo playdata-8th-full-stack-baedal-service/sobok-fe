@@ -1,0 +1,33 @@
+import { toast } from 'react-toastify';
+import ToastMessage from '../components/Toast/ToastMessage';
+
+const useToast = () => {
+  const showToast = (type, title, message) => {
+    toast(
+    ({ closeToast }) => (
+        <ToastMessage
+        type={type}
+        title={title}
+        message={message}
+        closeToast={closeToast}
+        />
+    ),
+    {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        transition: null, 
+    }
+    );
+  };
+
+  return {
+    showSuccess: (msg) => showToast('success', 'Success!', msg),
+    showError: (msg) => showToast('error', 'Error!', msg),
+    showInfo: (msg) => showToast('info', 'Note', msg),
+    showWarning: (msg) => showToast('warning', 'Warning', msg),
+  };
+};
+
+export default useToast;
