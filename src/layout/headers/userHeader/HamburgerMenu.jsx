@@ -64,7 +64,7 @@ function MenuTest() {
   };
 
   const handleGoToPostList = () => {
-    nav('post-list');
+    nav('/user/post-list');
   };
 
   return (
