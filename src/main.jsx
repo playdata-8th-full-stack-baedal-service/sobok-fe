@@ -5,9 +5,6 @@ import App from './App';
 import store from './store/store';
 import './common/styles/style.scss';
 import { BrowserRouter } from 'react-router-dom';
-import RiderInfoPage from './pages/rider/RiderInfo/RiderInfoPage';
-import HubInfoPage from './pages/hub/HubInfo/HubInfoPage';
-import PostListPage from './pages/user/Post/PostList/PostListPage';
 
 
 createRoot(document.getElementById('root')).render(
