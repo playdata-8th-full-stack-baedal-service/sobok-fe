@@ -7,23 +7,14 @@ import axios from '../../../services/axios-config';
 import Header from '../Header';
 import styles from './UserHeader.module.scss';
 import MenuTest from './HamburgerMenu';
-
-// 테스트용
-/*
-    localStorage.setItem('accessToken', 'temp-access-token');
-    localStorage.setItem('refreshToken', 'temp-refresh-token');
-    localStorage.setItem('userRole', 'USER');
-    localStorage.setItem('userId', '/user1');
-
-     window.history.pushState({}, '', '/user');
-     window.dispatchEvent(new PopStateEvent('popstate'));
-*/
+import useToast from '@/common/hooks/useToast';
 
 function UserHeader() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const isLoggedIn = !!localStorage.getItem('ACCESS_TOKEN');
+  const { showSuccess } = useToast();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -42,7 +33,7 @@ function UserHeader() {
     } finally {
       dispatch(logout());
       navigate('/');
-      alert('로그아웃 되었습니다.');
+      showSuccess('로그아웃 되었습니다.');
     }
   };
 

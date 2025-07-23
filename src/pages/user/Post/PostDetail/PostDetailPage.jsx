@@ -4,6 +4,7 @@ import axiosInstance from '@/services/axios-config';
 import styles from './PostDetailPage.module.scss';
 import Button from '../../../../common/components/Button';
 import { Heart } from 'lucide-react';
+import useToast from '@/common/hooks/useToast';
 
 const PostDetailPage = () => {
   const { id } = useParams();
@@ -11,6 +12,7 @@ const PostDetailPage = () => {
   const [error, setError] = useState('');
   const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const handleEditPost = () => {
     navigate('/user/edit-post', { state: { post } });
@@ -22,15 +24,15 @@ const PostDetailPage = () => {
 
     try {
       await axiosInstance.delete(`/post-service/post/delete/${id}`);
-      alert('게시글이 성공적으로 삭제되었습니다.');
+      showSuccess('게시글이 성공적으로 삭제되었습니다.');
       navigate('/user/my-posts');
     } catch (err) {
       if (err.response?.status === 403) {
-        alert('해당 게시글에 대한 권한이 없습니다.');
+        showNegative('해당 게시글에 대한 권한이 없습니다.');
       } else if (err.response?.status === 404) {
-        alert('게시글이 존재하지 않습니다.');
+        showNegative('게시글이 존재하지 않습니다.');
       } else {
-        alert('게시글 삭제 중 오류가 발생했습니다.');
+        showNegative('게시글 삭제 중 오류가 발생했습니다.');
       }
     }
   };
@@ -46,9 +48,9 @@ const PostDetailPage = () => {
         setPost(prev => ({ ...prev, likeCount: prev.likeCount - 1 }));
       } catch (err) {
         if (err.response?.status === 404) {
-          alert('좋아요 정보가 없습니다.');
+          showNegative('좋아요 정보가 없습니다.');
         } else {
-          alert('좋아요 해제 중 오류가 발생했습니다.');
+          showNegative('좋아요 해제 중 오류가 발생했습니다.');
         }
       }
     } else {
@@ -60,12 +62,12 @@ const PostDetailPage = () => {
         setPost(prev => ({ ...prev, likeCount: prev.likeCount + 1 }));
       } catch (err) {
         if (err.response?.data.status === 400) {
-          alert('이미 좋아요한 게시글입니다.');
+          showInfo('이미 좋아요한 게시글입니다.');
           setIsLiked(true);
         } else if (err.response?.status === 404) {
-          alert('게시글이 존재하지 않습니다.');
+          showNegative('게시글이 존재하지 않습니다.');
         } else {
-          alert('좋아요 등록 중 오류가 발생했습니다.');
+          showNegative('좋아요 등록 중 오류가 발생했습니다.');
         }
       }
     }
@@ -136,7 +138,9 @@ const PostDetailPage = () => {
             <strong>작성 날짜</strong> : {formatDate(post.updatedAt)}
           </p>
           <div className={styles.likeSection} onClick={handleLikePost}>
-            <span><Heart size={16} fill="red" color="red" /> 좋아요 수 : {post.likeCount}</span>
+            <span>
+              <Heart size={16} fill="red" color="red" /> 좋아요 수 : {post.likeCount}
+            </span>
           </div>
         </div>
       </div>

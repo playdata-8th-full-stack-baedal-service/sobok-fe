@@ -1,12 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { Camera, X } from 'lucide-react';
 import styles from './ProfilePhotoChangeModal.module.scss';
+import useToast from '@/common/hooks/useToast';
 
 function ProfilePhotoChangeModal({ currentPhoto, onSubmit, onClose }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(currentPhoto || '/photodefault.svg');
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const handleFileSelect = e => {
     const file = e.target.files[0];
@@ -14,12 +16,12 @@ function ProfilePhotoChangeModal({ currentPhoto, onSubmit, onClose }) {
 
     // 파일 유효성 검사
     if (!file.type.startsWith('image/')) {
-      alert('이미지 파일만 업로드 가능합니다.');
+      showNegative('이미지 파일만 업로드 가능합니다.');
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      alert('파일 크기는 5MB 이하여야 합니다.');
+      showNegative('파일 크기는 5MB 이하여야 합니다.');
       return;
     }
 
@@ -35,7 +37,7 @@ function ProfilePhotoChangeModal({ currentPhoto, onSubmit, onClose }) {
 
   const handleSubmit = async () => {
     if (!selectedFile) {
-      alert('변경할 이미지를 선택해주세요.');
+      showNegative('변경할 이미지를 선택해주세요.');
       return;
     }
 

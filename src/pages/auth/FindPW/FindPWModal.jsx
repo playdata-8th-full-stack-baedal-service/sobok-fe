@@ -9,6 +9,9 @@ import useSignInHandlers from '../SignIn/hooks/useSignInHandlers';
 import Button from '../../../common/components/Button';
 import PWChangedModal from './PWChangedModal';
 import styles from './FindPWModal.module.scss';
+import useToast from '@/common/hooks/useToast';
+
+const { showSuccess, showNegative, showInfo } = useToast();
 
 function FindPWModal({ onClose }) {
   const [id, setId] = useState('');
@@ -42,13 +45,13 @@ function FindPWModal({ onClose }) {
         userPhoneNumber: phone,
       });
       if (res.data.success) {
-        alert('인증번호가 전송되었습니다.');
+        showInfo('인증번호가 전송되었습니다.');
         setAuthId(res.data.data);
       } else {
-        alert(res.data.message);
+        showNegative(res.data.message);
       }
     } catch (e) {
-      alert(e.response?.data?.message || '인증 요청 실패');
+      showNegative(e.response?.data?.message || '인증 요청 실패');
     }
   };
 
@@ -59,13 +62,13 @@ function FindPWModal({ onClose }) {
         inputCode: verificationCode,
       });
       if (res.data.success) {
-        alert('인증이 완료되었습니다.');
+        showSuccess('인증이 완료되었습니다.');
         setShowPWChangedModal(true);
       } else {
-        alert(res.data.message || '인증 실패');
+        showNegative(res.data.message || '인증 실패');
       }
     } catch (e) {
-      alert(e.response?.data?.message || '인증 확인 실패');
+      showNegative(e.response?.data?.message || '인증 확인 실패');
     }
   };
 

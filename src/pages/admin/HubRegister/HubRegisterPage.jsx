@@ -6,10 +6,14 @@ import styled from './HubRegisterPage.module.scss';
 import axiosInstance from '../../../services/axios-config';
 // import DuplicateCheckInput from '@/common/components/DuplicateCheckInput';
 import ShopNameDuplicateCheckInput from './ShopNameDuplicateCheckInput';
+import useToast from '@/common/hooks/useToast';
 
 function HubRegisterPage() {
   const dispatch = useDispatch();
   const { isVerified, isCodeSent, error: smsError, loading } = useSelector(state => state.smsAuth);
+  const { showSuccess } = useToast();
+  const { showNegative } = useToast();
+  const { showInfo } = useToast();
 
   // authSlice에서 아이디 중복확인 관련 상태 가져오기
   const {
@@ -169,14 +173,14 @@ function HubRegisterPage() {
   // 아이디 중복확인 함수
   const handleCheckLoginId = () => {
     if (!formData.loginId.trim()) {
-      alert('아이디를 입력해주세요.');
+      showNegative('아이디를 입력해주세요.');
       return;
     }
 
     // 아이디 형식 검증 (영문자, 숫자만 허용, 4-20자)
     const loginIdRegex = /^[a-zA-Z0-9]{4,20}$/;
     if (!loginIdRegex.test(formData.loginId)) {
-      alert('아이디는 영문자와 숫자만 사용하여 4~20자로 입력해주세요.');
+      showNegative('아이디는 영문자와 숫자만 사용하여 4~20자로 입력해주세요.');
       return;
     }
 
@@ -186,7 +190,7 @@ function HubRegisterPage() {
   const handleSendSMS = () => {
     const phoneRegex = /^\d{11}$/;
     if (!phoneRegex.test(formData.phone)) {
-      alert('전화번호는 하이픈 없이 11자리 숫자로 입력해주세요.');
+      showNegative('전화번호는 하이픈 없이 11자리 숫자로 입력해주세요.');
       return;
     }
     dispatch(sendSMSCode(formData.phone));
@@ -194,7 +198,7 @@ function HubRegisterPage() {
 
   const handleVerifySMS = () => {
     if (!verificationCode.trim()) {
-      alert('인증번호를 입력해주세요.');
+      showNegative('인증번호를 입력해주세요.');
       return;
     }
     dispatch(
@@ -207,7 +211,7 @@ function HubRegisterPage() {
 
   const handleCheckShopName = async () => {
     if (!formData.shopName.trim()) {
-      alert('지점 이름을 입력하세요.');
+      showNegative('지점 이름을 입력하세요.');
       return;
     }
 
@@ -235,7 +239,7 @@ function HubRegisterPage() {
           loading: false,
           error: null,
         });
-        alert(response.data.message || '사용 가능한 지점명입니다.');
+        showSuccess(response.data.message || '사용 가능한 지점명입니다.');
       } else {
         // API 응답이 실패인 경우
         setShopNameCheck({
@@ -244,7 +248,7 @@ function HubRegisterPage() {
           loading: false,
           error: response.data.message || '이미 사용중인 지점명입니다.',
         });
-        alert(response.data.message || '이미 사용중인 지점명입니다.');
+        showNegative(response.data.message || '이미 사용중인 지점명입니다.');
       }
     } catch (error) {
       console.error('지점명 중복 확인 오류:', error);
@@ -258,7 +262,7 @@ function HubRegisterPage() {
           loading: false,
           error: errorMessage,
         });
-        alert(errorMessage);
+        showNegative(errorMessage);
       } else {
         // 네트워크 오류 등의 경우
         setShopNameCheck({
@@ -267,7 +271,7 @@ function HubRegisterPage() {
           loading: false,
           error: '중복 확인 중 오류가 발생했습니다.',
         });
-        alert('중복 확인 중 오류가 발생했습니다.');
+        showNegative('중복 확인 중 오류가 발생했습니다.');
       }
     }
   };
@@ -275,7 +279,7 @@ function HubRegisterPage() {
   // 주소 중복확인 함수 추가
   const handleCheckShopAddress = async () => {
     if (!formData.roadFull.trim()) {
-      alert('주소를 입력해주세요.');
+      showNegative('주소를 입력해주세요.');
       return;
     }
 
@@ -302,7 +306,7 @@ function HubRegisterPage() {
           loading: false,
           error: null,
         });
-        alert(response.data.message || '사용 가능한 주소입니다.');
+        showSuccess(response.data.message || '사용 가능한 주소입니다.');
       } else {
         // API 응답이 실패인 경우
         setShopAddressCheck({
@@ -311,7 +315,7 @@ function HubRegisterPage() {
           loading: false,
           error: response.data.message || '이미 사용중인 주소입니다.',
         });
-        alert(response.data.message || '이미 사용중인 주소입니다.');
+        showNegative(response.data.message || '이미 사용중인 주소입니다.');
       }
     } catch (error) {
       console.error('주소 중복 확인 오류:', error);
@@ -325,7 +329,7 @@ function HubRegisterPage() {
           loading: false,
           error: errorMessage,
         });
-        alert(errorMessage);
+        showNegative(errorMessage);
       } else {
         // 네트워크 오류 등의 경우
         setShopAddressCheck({
@@ -334,7 +338,7 @@ function HubRegisterPage() {
           loading: false,
           error: '주소 중복 확인 중 오류가 발생했습니다.',
         });
-        alert('주소 중복 확인 중 오류가 발생했습니다.');
+        showNegative('주소 중복 확인 중 오류가 발생했습니다.');
       }
     }
   };
@@ -342,7 +346,7 @@ function HubRegisterPage() {
   // 다음 주소검색 팝업 열기
   const handleAddressSearch = () => {
     if (!window.daum) {
-      alert('주소검색 서비스를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+      showInfo('주소검색 서비스를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
       return;
     }
 
@@ -410,39 +414,39 @@ function HubRegisterPage() {
       !formData.roadFull ||
       !formData.shopName
     ) {
-      alert('필수 항목을 모두 입력해주세요.');
+      showNegative('필수 항목을 모두 입력해주세요.');
       return false;
     }
 
     if (!passwordValidation.isValid) {
-      alert('비밀번호는 대소문자, 숫자, 특수문자를 포함하여 8~16자로 입력해주세요.');
+      showNegative('비밀번호는 대소문자, 숫자, 특수문자를 포함하여 8~16자로 입력해주세요.');
       return false;
     }
 
     if (!passwordValidation.isMatching) {
-      alert('비밀번호가 일치하지 않습니다.');
+      showNegative('비밀번호가 일치하지 않습니다.');
       return false;
     }
 
     if (!isVerified) {
-      alert('전화번호 인증을 완료해주세요.');
+      showNegative('전화번호 인증을 완료해주세요.');
       return false;
     }
 
     // 아이디 중복확인 체크
     if (!loginIdCheck.isChecked || !loginIdCheck.isAvailable) {
-      alert('아이디 중복 확인을 완료해주세요.');
+      showNegative('아이디 중복 확인을 완료해주세요.');
       return false;
     }
 
     if (!shopNameCheck.isChecked || !shopNameCheck.isAvailable) {
-      alert('지점 이름 중복 확인을 완료해주세요.');
+      showNegative('지점 이름 중복 확인을 완료해주세요.');
       return false;
     }
 
     // 주소 중복확인 체크 추가
     if (!shopAddressCheck.isChecked || !shopAddressCheck.isAvailable) {
-      alert('주소 중복 확인을 완료해주세요.');
+      showNegative('주소 중복 확인을 완료해주세요.');
       return false;
     }
 
@@ -504,16 +508,16 @@ function HubRegisterPage() {
       console.log(response.data);
 
       if (response.data.success) {
-        alert(
+        showSuccess(
           `가게 회원가입 성공!\n가게명: ${response.data.data.shopName}\nID: ${response.data.data.id}`
         );
         resetForm();
       } else {
-        alert(response.data.message || '가게 등록에 실패했습니다.');
+        showNegative(response.data.message || '가게 등록에 실패했습니다.');
       }
     } catch (error) {
       console.error('가게 등록 오류:', error);
-      alert(error.response?.data?.message || '가게 등록 중 오류가 발생했습니다.');
+      showNegative(error.response?.data?.message || '가게 등록 중 오류가 발생했습니다.');
     } finally {
       setSubmitLoading(false);
     }

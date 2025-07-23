@@ -2,10 +2,13 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../../store/authSlice';
 import { openModal } from '../../../../store/modalSlice';
+import useToast from '@/common/hooks/useToast';
+
 
 export default function useSignInHandlers({ id, password, setError, setPassword, idInputRef }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showSuccess } = useToast();
 
   const handleSignIn = async () => {
     setError('');
@@ -14,6 +17,8 @@ export default function useSignInHandlers({ id, password, setError, setPassword,
 
       if (loginUser.fulfilled.match(result)) {
         const { accessToken, role, userId, recoveryTarget } = result.payload;
+        showSuccess('로그인 되었습니다.');
+        
 
         // recoveryTarget이 있으면 복구 모달 띄우기
         if (recoveryTarget) {

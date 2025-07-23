@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '@/services/axios-config';
 import styles from './LikePostPage.module.scss';
 import { useNavigate } from 'react-router-dom';
+import useToast from '@/common/hooks/useToast';
 
 function LikePostPage() {
   const [likePosts, setLikePosts] = useState([]);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   useEffect(() => {
     fetchLikedPosts();
@@ -38,7 +40,7 @@ function LikePostPage() {
       });
       setLikePosts(prev => prev.filter(post => post.postId !== id)); // ← post.postId로 비교
     } catch (err) {
-      alert('좋아요 취소에 실패했습니다.');
+      showNegative('좋아요 취소에 실패했습니다.');
     }
   };
 

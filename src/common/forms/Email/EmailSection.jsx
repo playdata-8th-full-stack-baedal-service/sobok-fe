@@ -47,13 +47,13 @@ function EmailSection({
   const handleEmailCheck = async () => {
     const fullEmail = getFullEmail();
     if (!fullEmail) {
-      alert('이메일을 완전히 입력해주세요.');
+      showNegative('이메일을 완전히 입력해주세요.');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(fullEmail)) {
-      alert('올바른 이메일 형식이 아닙니다.');
+      showNegative('올바른 이메일 형식이 아닙니다.');
       return;
     }
 
@@ -87,7 +87,13 @@ function EmailSection({
             </option>
           ))}
         </select>
-        <Button type="button" variant="BASIC" onClick={handleEmailCheck} loading={loading} className={styles.overlapcheckbutton}>
+        <Button
+          type="button"
+          variant="BASIC"
+          onClick={handleEmailCheck}
+          loading={loading}
+          className={styles.overlapcheckbutton}
+        >
           중복확인
         </Button>
       </div>

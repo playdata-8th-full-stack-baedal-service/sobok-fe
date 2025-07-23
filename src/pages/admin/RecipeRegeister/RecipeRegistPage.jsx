@@ -8,9 +8,14 @@ import RecipeSelection from './units/RecipeSelection';
 import CategorySelectModal from './units/CategorySelectModal';
 import { closeModal } from '../../../store/modalSlice';
 import { TbPencilCancel } from 'react-icons/tb';
+import useToast from '@/common/hooks/useToast';
+import { useNavigate } from 'react-router-dom';
 
 function RecipeRegistPage() {
   const dispatch = useDispatch();
+  const { showSuccess, showNegative, showInfo } = useToast();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: '',
     allergy: '',
@@ -109,37 +114,37 @@ function RecipeRegistPage() {
 
     if (!formData.name.trim()) {
       console.log('이름을 빈값으로 넣었을 때, 이게 뜹니다.');
-      alert('요리 이름을 입력하세요.');
+      showNegative('요리 이름을 입력하세요.');
       return false;
     }
 
     if (!formData.allergy.trim()) {
       console.log('알러지 칸을 빈값으로 넣었을 때, 이게 뜹니다.');
-      alert('알러지 목록을 입력하세요.');
+      showNegative('알러지 목록을 입력하세요.');
       return false;
     }
 
     if (!formData.category.trim()) {
       console.log('카테고리를 선택하지 않았을 때, 이게 뜹니다.');
-      alert('카테고리를 선택하세요.');
+      showNegative('카테고리를 선택하세요.');
       return false;
     }
 
     if (formData.ingredients.length <= 0) {
       console.log('선택된 식재료가 없을 때, 이게 뜹니다.');
-      alert('식재료를 등록하세요.');
+      showNegative('식재료를 등록하세요.');
       return false;
     }
 
     if (!formData.recipe.trim()) {
       console.log('등록된 레시피가 없을 때, 이게 뜹니다.');
-      alert('레시피를 작성하세요.');
+      showNegative('레시피를 작성하세요.');
       return false;
     }
 
     if (!formData.thumbnailUrl.trim()) {
       console.log('썸네일 사진을 등록하지 않을 때, 이게 뜹니다.');
-      alert('사진을 등록해주세요.');
+      showNegative('사진을 등록해주세요.');
       return false;
     }
 
@@ -164,10 +169,13 @@ function RecipeRegistPage() {
       console.log(response.data);
       if (response.data.success) {
         // 성공 시 추가 동작 필요하면 여기에 작성
+        showSuccess('요리가 등록되었습니다.');
+        handleResetClick();
+        navigate(-1);
       }
       // 실패 시 메시지 처리
     } catch (err) {
-      alert('레시피 등록 실패!');
+      showNegative('레시피 등록 실패!');
       console.log(err.response?.data?.message);
     }
   };

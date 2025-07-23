@@ -1,5 +1,4 @@
 /* eslint-disable consistent-return */
-/* eslint-disable no-alert */
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Divider } from '@mui/material';
@@ -12,10 +11,14 @@ import { openModal } from '../../../store/modalSlice';
 import styles from './UserInfo.module.scss';
 import Button from '../../../common/components/Button';
 import AuthCodeEditableField from './component/AuthCodeEditableField';
+import { useNavigate } from 'react-router-dom';
+import useToast from '@/common/hooks/useToast';
 
 function UserInfo() {
   const { userInfo } = useSelector(state => state.userInfo);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const [targetPhone, setTargetPhone] = useState('');
   const [isModified, setIsModified] = useState(true);
@@ -30,7 +33,8 @@ function UserInfo() {
         await dispatch(lookupUser()).unwrap();
         setIsModified(false);
       } catch (err) {
-        alert(err);
+        showError('접근권한이 없습니다.');
+        navigate('/');
       }
     };
 
@@ -64,10 +68,10 @@ function UserInfo() {
     try {
       setTargetPhone(phone);
       await dispatch(sendAuthCode({ phone })).unwrap();
-      alert('인증번호가 발송되었습니다.');
+      showSuccess('인증번호가 발송되었습니다.');
       setTimer(180);
     } catch (err) {
-      alert(err);
+      showNegative(err);
       setTargetPhone('');
       setIsModified(true);
     }
@@ -77,10 +81,10 @@ function UserInfo() {
   const handlePhoneConfirm = async userInputCode => {
     try {
       await dispatch(editPhone({ phone: targetPhone, userInputCode })).unwrap();
-      alert('전화번호가 변경되었습니다.');
+      showSuccess('전화번호가 변경되었습니다.');
       setIsModified(true);
     } catch (err) {
-      alert(err);
+      alshowNegativeert(err);
       setIsModified(true);
     } finally {
       setTargetPhone('');
@@ -95,10 +99,10 @@ function UserInfo() {
 
     try {
       await dispatch(editEmail({ email })).unwrap();
-      alert('이메일이 변경되었습니다.');
+      showSuccess('이메일이 변경되었습니다.');
       setIsModified(true);
     } catch (err) {
-      alert(err);
+      showNegative(err);
       setIsModified(true);
     }
   };
