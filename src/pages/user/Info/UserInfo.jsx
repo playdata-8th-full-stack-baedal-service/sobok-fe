@@ -18,11 +18,11 @@ function UserInfo() {
   const { userInfo } = useSelector(state => state.userInfo);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const [targetPhone, setTargetPhone] = useState('');
   const [isModified, setIsModified] = useState(true);
   const [timer, setTimer] = useState(180);
-  const { showSuccess } = useToast();
 
   // 유저 정보 조회
   useEffect(() => {

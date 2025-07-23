@@ -47,7 +47,7 @@ const OrderCard = ({ order }) => {
         {order.cook.map(item => (
           <OrderItem
             key={`${order.orderId}-${item.cookName}`}
-            item={{ ...item, paymentId: order.paymentId }}
+            item={{ ...item, paymentId: order.paymentId, orderState: order.orderState }}
           />
         ))}
       </div>

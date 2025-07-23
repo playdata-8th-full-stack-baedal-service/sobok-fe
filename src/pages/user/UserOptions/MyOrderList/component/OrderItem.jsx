@@ -44,7 +44,7 @@ const OrderItem = ({ item }) => {
         <span>{item.cookName}</span>
       </div>
       <div className={styles.buttonWrapper}>
-        {isRegistered === false && (
+        {isRegistered === false && item.orderState === 'DELIVERY_COMPLETE' && (
           <Button type="button" variant="BASIC" className="flexible" onClick={handleWritePost}>
             나의 요리 공유하기
           </Button>

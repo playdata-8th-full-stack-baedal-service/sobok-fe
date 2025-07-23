@@ -8,9 +8,14 @@ import RecipeSelection from './units/RecipeSelection';
 import CategorySelectModal from './units/CategorySelectModal';
 import { closeModal } from '../../../store/modalSlice';
 import { TbPencilCancel } from 'react-icons/tb';
+import useToast from '@/common/hooks/useToast';
+import { useNavigate } from 'react-router-dom';
 
 function RecipeRegistPage() {
   const dispatch = useDispatch();
+  const { showSuccess, showNegative, showInfo } = useToast();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: '',
     allergy: '',
@@ -164,6 +169,9 @@ function RecipeRegistPage() {
       console.log(response.data);
       if (response.data.success) {
         // 성공 시 추가 동작 필요하면 여기에 작성
+        showSuccess('요리가 등록되었습니다.');
+        handleResetClick();
+        navigate(-1);
       }
       // 실패 시 메시지 처리
     } catch (err) {
