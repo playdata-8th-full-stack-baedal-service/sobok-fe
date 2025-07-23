@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Image from '@tiptap/extension-image';
 import styles from './TiptapEditor.module.scss';
 
-const TiptapEditor = ({ content, setContent, uploadImageToServer }) => {
+const TiptapEditor = ({ content, setContent }) => {
   const [isEditorEmpty, setIsEditorEmpty] = useState(true);
 
   const editor = useEditor({
-    extensions: [StarterKit, Image.configure({ inline: false })],
+    extensions: [StarterKit],
     content: content || '<p></p>',
     onUpdate({ editor }) {
-      setContent(editor.getHTML());
-      setIsEditorEmpty(editor.getText().trim().length === 0);
+      const html = editor.getHTML();
+      const text = editor.getText().trim();
+      setIsEditorEmpty(!text);
+      setContent(text ? html : '');
     },
     editorProps: {
       handleDOMEvents: {
@@ -21,20 +22,18 @@ const TiptapEditor = ({ content, setContent, uploadImageToServer }) => {
         keydown: (view, event) => {
           const { state } = view;
           const { selection } = state;
-
           const isInCodeBlock = editor?.isActive('codeBlock');
           const { $from } = selection;
 
-          // 코드블럭 내에서 엔터 2번 시 종료 + 일반 단락 삽입
           if (isInCodeBlock && event.key === 'Enter') {
             const prevLineText = $from.parent.textContent;
             const prevNodeEmpty = !prevLineText || prevLineText.trim() === '';
 
-            const grandParent = $from.node(-1); // 코드 블럭 전체
+            const grandParent = $from.node(-1);
             const isLastLine = $from.pos === grandParent.content.size + grandParent.content.size;
 
             if (prevNodeEmpty) {
-              editor.chain().focus().exitCode().run(); // 코드블럭 종료
+              editor.chain().focus().exitCode().run();
               return true;
             }
           }
@@ -46,17 +45,10 @@ const TiptapEditor = ({ content, setContent, uploadImageToServer }) => {
   });
 
   useEffect(() => {
-    if (editor && content && content !== editor.getHTML()) {
-      editor.commands.setContent(content);
+    if (editor && content !== editor.getHTML()) {
+      editor.commands.setContent(content || '<p></p>');
     }
-  }, [editor]);
-
-  const handleImageUpload = async e => {
-    const file = e.target.files[0];
-    if (!file || !editor) return;
-    const imageUrl = await uploadImageToServer(file);
-    editor.chain().focus().setImage({ src: imageUrl }).run();
-  };
+  }, [editor, content]);
 
   if (!editor) return null;
 
@@ -74,6 +66,7 @@ const TiptapEditor = ({ content, setContent, uploadImageToServer }) => {
         ].map(btn => (
           <button
             key={btn.label}
+            type="button"
             onMouseDown={e => e.preventDefault()}
             onClick={() => {
               const chain = editor.chain();
@@ -88,11 +81,6 @@ const TiptapEditor = ({ content, setContent, uploadImageToServer }) => {
             {btn.label}
           </button>
         ))}
-
-        <label className={styles.uploadBtn}>
-          이미지
-          <input type="file" hidden accept="image/*" onChange={handleImageUpload} />
-        </label>
       </div>
 
       <div className={styles.editorBox}>
