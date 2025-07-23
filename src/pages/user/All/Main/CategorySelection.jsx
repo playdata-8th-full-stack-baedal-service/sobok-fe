@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './MainPage.module.scss';
 import axiosInstance from '../../../../services/axios-config';
 
@@ -15,13 +16,14 @@ const CATEGORY_LIST = ['전체', ...Object.keys(CATEGORY_MAP)];
 
 function CategorySelection() {
   const [cookList, setCookList] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('한식');
+  const [selectedCategory, setSelectedCategory] = useState('전체');
+  const navigate = useNavigate();
 
   // 최신순 데이터 불러오기 (프론트에서 카테고리 필터링)
   const fetchLatest = async (categoryKor = selectedCategory) => {
     try {
       const res = await axiosInstance.get('/cook-service/cook/get-cook', {
-        params: { pageNo: 1, numOfRows: 20 }, // 넉넉히 받아서 필터링
+        params: { pageNo: 1, numOfRows: 20 },
       });
       let list = res.data.data;
       if (categoryKor !== '전체') {
@@ -30,6 +32,18 @@ function CategorySelection() {
       }
       setCookList(list.slice(0, 5));
       setSelectedCategory(categoryKor);
+    } catch (e) {
+      setCookList([]);
+    }
+  };
+
+  // 주문량순 데이터 불러오기 (전체에서만)
+  const fetchPopular = async () => {
+    try {
+      const res = await axiosInstance.post('/cook-service/cook/popular', null, {
+        params: { page: 1, size: 5 },
+      });
+      setCookList(res.data.content || []);
     } catch (e) {
       setCookList([]);
     }
@@ -61,9 +75,9 @@ function CategorySelection() {
     }
   };
 
-  // 마운트 시 한식 자동 조회
+  // 마운트 시 전체 자동 조회
   useEffect(() => {
-    fetchCategory('한식');
+    fetchCategory('전체');
     // eslint-disable-next-line
   }, []);
 
@@ -71,6 +85,28 @@ function CategorySelection() {
   const handleLatestKeyDown = e => {
     if (e.key === 'Enter' || e.key === ' ') {
       fetchLatest(selectedCategory);
+    }
+  };
+  // 주문량순 버튼 접근성 핸들러
+  const handlePopularKeyDown = e => {
+    if (selectedCategory === '전체' && (e.key === 'Enter' || e.key === ' ')) {
+      fetchPopular();
+    }
+  };
+
+  // 더보기 버튼 클릭 시 해당 카테고리 목록 페이지로 이동
+  const handleMoreClick = () => {
+    if (selectedCategory && selectedCategory !== '전체') {
+      const categoryCode = CATEGORY_MAP[selectedCategory];
+      navigate(`/user/category?category=${categoryCode}`);
+    }
+  };
+
+  // 요리 카드 클릭 시 상세페이지로 이동
+  const handleCookClick = cook => {
+    const id = cook.cookId || cook.id;
+    if (id) {
+      navigate(`/user/product?id=${id}`);
     }
   };
 
@@ -81,7 +117,7 @@ function CategorySelection() {
         <label htmlFor="filter" className={styles.switch} aria-label="Toggle Filter">
           <input type="checkbox" id="filter" />
           <span
-            style={{ cursor: 'pointer', fontWeight: 'bold', color: '#007bff' }}
+            style={{ cursor: 'pointer', fontWeight: 'bold', color: '#ffffff' }}
             onClick={() => fetchLatest(selectedCategory)}
             tabIndex={0}
             role="button"
@@ -90,7 +126,21 @@ function CategorySelection() {
           >
             최신순
           </span>
-          <span>주문량순</span>
+          <span
+            style={{
+              cursor: selectedCategory === '전체' ? 'pointer' : 'not-allowed',
+              fontWeight: 'bold',
+              color: selectedCategory === '전체' ? '#ffffff' : '#aaa',
+            }}
+            onClick={selectedCategory === '전체' ? fetchPopular : undefined}
+            tabIndex={selectedCategory === '전체' ? 0 : -1}
+            role="button"
+            aria-label="주문량순 정렬"
+            aria-disabled={selectedCategory !== '전체'}
+            onKeyDown={handlePopularKeyDown}
+          >
+            주문량순
+          </span>
         </label>
       </div>
 
@@ -115,16 +165,45 @@ function CategorySelection() {
         {cookList.length === 0 ? (
           <div style={{ gridColumn: '1 / 6', textAlign: 'center' }}>로딩중입니다...</div>
         ) : (
-          cookList.slice(0, 5).map((cook, idx) => (
-            <div key={cook.id || idx} className={styles[`grid${idx + 1}`]}>
-              <img src={cook.thumbnail} className={styles.cookThumbnail} alt={cook.name} />
-              <div>{cook.name}</div>
-            </div>
-          ))
+          cookList.slice(0, 5).map((cook, idx) => {
+            const id = cook.cookId || cook.id;
+            return (
+              <div
+                key={id || idx}
+                className={styles[`grid${idx + 1}`]}
+                onClick={() => handleCookClick(cook)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' || e.key === ' ') handleCookClick(cook);
+                }}
+                tabIndex={0}
+                role="button"
+                aria-label={`${cook.cookName || cook.name} 상세페이지로 이동`}
+                style={{ cursor: 'pointer' }}
+              >
+                <img
+                  src={cook.thumbnail}
+                  className={styles.cookThumbnail}
+                  alt={cook.cookName || cook.name}
+                />
+                <div>{cook.cookName || cook.name}</div>
+                {cook.orderCount !== undefined && <div>주문수: {cook.orderCount}</div>}
+              </div>
+            );
+          })
         )}
       </div>
 
-      <button type="button">더보기</button>
+      {/* 더보기 버튼: 전체 카테고리에서는 숨김, 카테고리별일 때만 보임 */}
+      {selectedCategory !== '전체' && (
+        <div className={styles.learnmoreBtnWrap}>
+          <button className={styles.learnmore} onClick={handleMoreClick} type="button">
+            <span className={styles.circle} aria-hidden="true">
+              <span className={`${styles.icon} ${styles.arrow}`} />
+            </span>
+            <span className={styles.buttontext}>더보기</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

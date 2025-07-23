@@ -42,7 +42,6 @@ function MainPage() {
                 style={{ cursor: 'pointer' }}
                 aria-label={`${cook.name} 상세페이지로 이동`}
               >
-                <img src={cook.thumbnail} alt={cook.name} />
                 <p>{cook.name}</p>
               </div>
             ))
