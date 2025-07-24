@@ -5,21 +5,12 @@ import { logout } from '../../store/authSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../services/axios-config';
 import style from './RiderHeader.module.scss';
-
-// 테스트용
-/*
-    localStorage.setItem('ACCESS_TOKEN', 'temp-access-token');
-    localStorage.setItem('REFRESH_TOKEN', 'temp-refresh-token');
-    localStorage.setItem('USER_ROLE', 'RIDER');
-    localStorage.setItem('USER_ID', 'rider1');
-
-    window.history.pushState({}, '', '/rider');
-    window.dispatchEvent(new PopStateEvent('popstate'));
-*/
+import useToast from '@/common/hooks/useToast';
 
 const RiderHeader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const handleLogout = async () => {
     try {

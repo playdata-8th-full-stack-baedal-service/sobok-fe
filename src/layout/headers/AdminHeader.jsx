@@ -5,21 +5,12 @@ import Header from './Header';
 import { logout } from '../../store/authSlice';
 import axios from '../../services/axios-config';
 import styles from './AdminHeader.module.scss';
-
-// 테스트용
-/*
-  localStorage.setItem('accessToken', 'temp-access-token');
-  localStorage.setItem('refreshToken', 'temp-refresh-token');
-  localStorage.setItem('userRole', 'ADMIN');
-  localStorage.setItem('userId', 'admin1');
-
-  window.history.pushState({}, '', '/admin');
-  window.dispatchEvent(new PopStateEvent('popstate'));
-*/
+import useToast from '@/common/hooks/useToast';
 
 function AdminHeader() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const safeNavigate = path => {
     if (location.pathname !== path) {

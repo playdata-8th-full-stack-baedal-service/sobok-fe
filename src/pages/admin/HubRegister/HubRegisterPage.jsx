@@ -508,9 +508,7 @@ function HubRegisterPage() {
       console.log(response.data);
 
       if (response.data.success) {
-        showSuccess(
-          `가게 회원가입 성공!\n가게명: ${response.data.data.shopName}\nID: ${response.data.data.id}`
-        );
+        showSuccess(`가게명: ${response.data.data.shopName} ID: ${response.data.data.id}`);
         resetForm();
       } else {
         showNegative(response.data.message || '가게 등록에 실패했습니다.');

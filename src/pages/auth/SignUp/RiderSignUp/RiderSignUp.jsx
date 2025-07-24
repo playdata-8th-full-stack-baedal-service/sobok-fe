@@ -53,7 +53,7 @@ function RiderSignUp() {
 
   useEffect(() => {
     if (signUpSuccess) {
-      showSuccess('회원가입 성공!');
+      showSuccess('회원가입 신청이 완료되었습니다!');
       dispatch(clearSignUpSuccess());
       dispatch(clearSMSAuth());
       dispatch(clearLoginIdCheck());
