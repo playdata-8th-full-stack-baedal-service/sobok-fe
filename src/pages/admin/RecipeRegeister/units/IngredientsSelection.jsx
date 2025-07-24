@@ -81,7 +81,7 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
           };
         }
         return item;
-      })
+      }).filter(item => parseFloat(item.unit) > 0) // unit이 0 이하면 목록에서 제거
     );
   };
 
