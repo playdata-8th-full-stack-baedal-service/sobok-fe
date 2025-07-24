@@ -32,118 +32,138 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
     setSelectedIngredients([]);
   }, [resetSignal]);
 
+  // 총합 가격 계산
+  const calculateTotalSumPrice = () => {
+    return selectedIngredients.reduce((sum, ingredient) => {
+      return sum + (parseFloat(ingredient.totalPrice) || 0);
+    }, 0);
+  };
+
   // 선택된 식재료가 변경될 때마다 부모 컴포넌트에 알림
   useEffect(() => {
     if (onIngredientsChange) {
       const formattedIngredients = selectedIngredients.map(ingredient => {
         const currentUnit = parseFloat(ingredient.unit) || 0; // 현재 그램 수
         const dbUnit = parseFloat(ingredient.dbUnit) || 1; // DB 기본 단위 (그램)
-        const unitQuantity = Math.round(currentUnit / dbUnit); // 몇 개의 단위인지 계산
-        
+        const unitQuantity = Math.round(currentUnit / dbUnit); // 단위 개수
+
         return {
           ingredientId: ingredient.id,
-          unitQuantity: unitQuantity, // DB에는 단위 개수로 저장
-          // 가격 계산을 위한 추가 정보
+          unitQuantity, // DB에 단위 개수로 저장
           pricePerUnit: ingredient.pricePerUnit, // 1g당 가격
           totalPrice: ingredient.totalPrice, // 총 가격
-          // 디버깅용 정보
-          currentGrams: currentUnit, // 현재 그램 수
-          dbUnitGrams: dbUnit // DB 기본 단위 그램
+          currentGrams: currentUnit, // 디버깅용
+          dbUnitGrams: dbUnit, // 디버깅용
         };
       });
       onIngredientsChange(formattedIngredients);
     }
   }, [selectedIngredients, onIngredientsChange]);
 
-  // 1g당 가격을 계산하는 함수
-  const calculatePricePerUnit = (originalPrice, originalUnit) => {
-    const price = parseFloat(originalPrice) || 0;
-    const unit = parseFloat(originalUnit) || 1;
-    return price / unit; // 1g당 가격
+  // 1g당 가격 계산 (price는 1g당 가격)
+  const calculatePricePerUnit = originalPrice => {
+    return parseFloat(originalPrice) || 0; // 1g당 가격은 originalPrice 그대로
   };
 
-  // 총 가격을 계산하는 함수
+  // 총 가격 계산
   const calculateTotalPrice = (pricePerUnit, currentUnit) => {
     const unitValue = parseFloat(currentUnit) || 0;
-    return Math.round(pricePerUnit * unitValue); // 반올림하여 정수로 반환
+    return Math.round(pricePerUnit * unitValue); // 1g당 가격 * 총 그램
   };
 
   const handleQuantityChange = (ingredientId, quantity) => {
-    setSelectedIngredients(prev =>
-      prev.map(item => {
-        if (item.id === ingredientId) {
-          const newUnit = quantity;
-          const totalPrice = calculateTotalPrice(item.pricePerUnit, newUnit);
-          return { 
-            ...item, 
-            unit: newUnit,
-            totalPrice: totalPrice
-          };
-        }
-        return item;
-      }).filter(item => parseFloat(item.unit) > 0) // unit이 0 이하면 목록에서 제거
+    setSelectedIngredients(
+      prev =>
+        prev
+          .map(item => {
+            if (item.id === ingredientId) {
+              const dbUnit = parseFloat(item.dbUnit) || 1;
+              // 입력값을 dbUnit의 배수로 제한
+              let newUnit = parseFloat(quantity) || 0;
+              newUnit = Math.round(newUnit / dbUnit) * dbUnit; // 가장 가까운 배수로 조정
+              if (newUnit < 0) newUnit = 0;
+
+              const unitQuantity = Math.round(newUnit / dbUnit); // 단위 개수 계산
+              const totalPrice = calculateTotalPrice(item.pricePerUnit, newUnit);
+              return {
+                ...item,
+                unit: newUnit.toString(),
+                unitQuantity,
+                totalPrice,
+              };
+            }
+            return item;
+          })
+          .filter(item => parseFloat(item.unit) > 0) // unit이 0 이하면 제거
     );
   };
 
   const handleIngredientSelect = ingredient => {
     const existingIngredient = selectedIngredients.find(item => item.id === ingredient.id);
-    
+
     if (existingIngredient) {
-      // 이미 선택된 경우: DB에 저장된 기본 단위만큼 추가
+      // 이미 선택된 경우: DB 기본 단위만큼 추가
       const currentUnit = parseFloat(existingIngredient.unit) || 0;
       const dbUnit = parseFloat(ingredient.unit) || 10; // DB에서 가져온 기본 단위
       const newUnit = currentUnit + dbUnit;
+      const unitQuantity = Math.round(newUnit / dbUnit); // 단위 개수 계산
       const totalPrice = calculateTotalPrice(existingIngredient.pricePerUnit, newUnit);
-      
+
       setSelectedIngredients(prev =>
         prev.map(item =>
           item.id === ingredient.id
-            ? { 
-                ...item, 
+            ? {
+                ...item,
                 unit: newUnit.toString(),
-                totalPrice: totalPrice
+                unitQuantity,
+                totalPrice,
               }
             : item
         )
       );
     } else {
-      // 처음 선택하는 경우: DB의 기본 단위로 초기화
+      // 처음 선택하는 경우: DB 기본 단위로 초기화
       const dbUnit = parseFloat(ingredient.unit) || 10; // DB에서 가져온 기본 단위
-      const originalPrice = parseFloat(ingredient.price) || 0; // API에서 받는 가격 필드명에 맞게 수정
-      const pricePerUnit = calculatePricePerUnit(originalPrice, dbUnit);
+      const originalPrice = parseFloat(ingredient.price) || 0; // 1g당 가격
+      const pricePerUnit = calculatePricePerUnit(originalPrice);
+      const unitQuantity = 1; // 처음 선택 시 1개 단위
       const totalPrice = calculateTotalPrice(pricePerUnit, dbUnit);
-      
+
       setSelectedIngredients(prev => [
-        ...prev, 
-        { 
-          ...ingredient, 
+        ...prev,
+        {
+          ...ingredient,
           unit: dbUnit.toString(), // DB 기본 단위로 설정
-          dbUnit: dbUnit, // DB 기본 단위 저장 (증가/감소 시 사용)
-          originalPrice: originalPrice, // 원본 가격 저장
-          pricePerUnit: pricePerUnit, // 1g당 가격
-          totalPrice: totalPrice // 총 가격
-        }
+          dbUnit, // DB 기본 단위 저장
+          originalPrice, // 1g당 가격 저장
+          pricePerUnit, // 1g당 가격
+          unitQuantity, // 단위 개수
+          totalPrice, // 총 가격
+        },
       ]);
     }
   };
 
-  // 감소 기능을 위한 함수 수정
   const handleDecreaseIngredient = ingredientId => {
     setSelectedIngredients(prev =>
-      prev.map(item => {
-        if (item.id === ingredientId) {
-          const currentUnit = parseFloat(item.unit) || 0;
-          const dbUnit = parseFloat(item.dbUnit) || 10; // DB 기본 단위 사용
-          const newUnit = Math.max(0, currentUnit - dbUnit);
-          const totalPrice = calculateTotalPrice(item.pricePerUnit, newUnit);
-          return { 
-            ...item, 
-            unit: newUnit.toString(),
-            totalPrice: totalPrice
-          };
-        }
-        return item;
-      }).filter(item => parseFloat(item.unit) > 0) // 0이 되면 목록에서 제거
+      prev
+        .map(item => {
+          if (item.id === ingredientId) {
+            const currentUnit = parseFloat(item.unit) || 0;
+            const dbUnit = parseFloat(item.dbUnit) || 10;
+            const newUnit = Math.max(0, currentUnit - dbUnit);
+            const unitQuantity = Math.round(newUnit / dbUnit);
+            const totalPrice = calculateTotalPrice(item.pricePerUnit, newUnit);
+            return {
+              ...item,
+              unit: newUnit.toString(),
+              unitQuantity,
+              totalPrice,
+            };
+          }
+          return item;
+        })
+        .filter(item => parseFloat(item.unit) > 0)
     );
   };
 
@@ -164,7 +184,10 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
       </div>
 
       <div className={style.ingredientlist}>
-        <h3 className={style.ingretitletwo}>선택한 식재료 목록</h3>
+        <div className={style.titlezone}>
+          <h3 className={style.ingretitletwo}>선택한 식재료 목록</h3>
+          <h4>총 가격: {calculateTotalSumPrice().toLocaleString()}원</h4>
+        </div>
         {selectedIngredients.length === 0 ? (
           <p>검색을 통해 식재료를 선택해주세요.</p>
         ) : (
@@ -174,10 +197,10 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
                 <div className={style.ingredientInfo}>
                   <span className={style.ingredientName}>{ingredient.ingreName}</span>
                   <span className={style.priceInfo}>
-                    {ingredient.totalPrice}원 (1g당 {ingredient.pricePerUnit.toFixed(1)}원)
+                    {ingredient.totalPrice.toLocaleString()}원 (1g당 {ingredient.pricePerUnit.toFixed(0)}원)
                   </span>
                   <span className={style.unitInfo}>
-                    단위 개수: {Math.round(parseFloat(ingredient.unit) / parseFloat(ingredient.dbUnit))}개
+                    개수: {ingredient.unitQuantity}개 ({ingredient.unit}g)
                   </span>
                 </div>
                 <div className={style.quantityControl}>
@@ -188,7 +211,7 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
                       value={ingredient.unit}
                       onChange={e => handleQuantityChange(ingredient.id, e.target.value)}
                       className={style.quantityInput}
-                      step={parseFloat(ingredient.dbUnit) || 1}
+                      step={parseFloat(ingredient.dbUnit) || 1} // dbUnit 배수로 입력 제한
                     />
                     <span className={style.unitLabel}>g</span>
                   </div>
