@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 // import { Search } from 'lucide-react';
 // import PostListPage from '../../Post/PostList/PostListPage';
@@ -23,6 +22,18 @@ function MainPage() {
     }
   };
 
+  // 더보기 클릭 핸들러 (로직은 나중에 구현)
+  const handleMoreClick = () => {
+    // TODO: 더보기 로직 구현
+  };
+
+  // 더보기 키보드 이벤트 핸들러
+  const handleMoreKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      handleMoreClick();
+    }
+  };
+
   return (
     <div className={styles.MainPage}>
       <SearchSelection searchState={searchState} setSearchState={setSearchState} />
@@ -31,20 +42,34 @@ function MainPage() {
           {searchState.results.length === 0 ? (
             <div>검색결과가 없습니다.</div>
           ) : (
-            searchState.results.map(cook => (
+            <>
+              {searchState.results.map(cook => (
+                <div
+                  key={cook.id}
+                  className={styles.searchResultItem}
+                  onClick={() => navigate(`/user/product?id=${cook.id}`)}
+                  onKeyDown={e => handleResultItemKeyDown(e, cook.id)}
+                  tabIndex={0}
+                  role="button"
+                  style={{ cursor: 'pointer' }}
+                  aria-label={`${cook.name} 상세페이지로 이동`}
+                >
+                  <p>{cook.name}</p>
+                </div>
+              ))}
+              {/* 더보기 항목 추가 */}
               <div
-                key={cook.id}
-                className={styles.searchResultItem}
-                onClick={() => navigate(`/user/product?id=${cook.id}`)}
-                onKeyDown={e => handleResultItemKeyDown(e, cook.id)}
+                className={styles.moreResultsItem}
+                onClick={handleMoreClick}
+                onKeyDown={handleMoreKeyDown}
                 tabIndex={0}
                 role="button"
                 style={{ cursor: 'pointer' }}
-                aria-label={`${cook.name} 상세페이지로 이동`}
+                aria-label="더 많은 검색 결과 보기"
               >
-                <p>{cook.name}</p>
+                <p>더보기</p>
               </div>
-            ))
+            </>
           )}
         </div>
       )}

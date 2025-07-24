@@ -40,10 +40,10 @@ function CategorySelection() {
   // 주문량순 데이터 불러오기 (전체에서만)
   const fetchPopular = async () => {
     try {
-      const res = await axiosInstance.post('/cook-service/cook/popular', null, {
+      const res = await axiosInstance.get('/cook-service/cook/popular', {
         params: { page: 1, size: 5 },
       });
-      setCookList(res.data.content || []);
+      setCookList(res.data.data || []);
     } catch (e) {
       setCookList([]);
     }

@@ -18,7 +18,7 @@ function SearchSelection({ setSearchState }) {
         params: {
           keyword: searchWord,
           pageNo: 1,
-          numOfRows: 10,
+          numOfRows: 5,
         },
       });
       if (res.data.success) {
