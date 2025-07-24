@@ -7,7 +7,7 @@ import UserInfoHeader from './component/UserInfoHeader';
 import ProfileImage from './component/ProfileImage';
 import EditableField from './component/EditableField';
 import AddrList from './component/AddrList';
-import { openModal } from '../../../store/modalSlice';
+import WithdrawalModal from '../../user/UserInfo/components/WithdrawalModal'; // 직접 임포트
 import styles from './UserInfo.module.scss';
 import Button from '../../../common/components/Button';
 import AuthCodeEditableField from './component/AuthCodeEditableField';
@@ -18,14 +18,14 @@ function UserInfo() {
   const { userInfo } = useSelector(state => state.userInfo);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { showSuccess, showNegative, showInfo } = useToast();
-
+  const { showSuccess, showNegative } = useToast();
   const [targetPhone, setTargetPhone] = useState('');
   const [isModified, setIsModified] = useState(true);
   const [timer, setTimer] = useState(180);
   const [loadingState, setLoadingState] = useState({
-    withdrawalLoading: false
+    withdrawalLoading: false,
   });
+  const [isWithdrawalModalOpen, setIsWithdrawalModalOpen] = useState(false); // 모달 상태 추가
 
   // 유저 정보 조회
   useEffect(() => {
@@ -36,7 +36,7 @@ function UserInfo() {
         await dispatch(lookupUser()).unwrap();
         setIsModified(false);
       } catch (err) {
-        showNegative('접근권한이 없습니다.'); // showError를 showNegative로 수정
+        showNegative('접근권한이 없습니다.');
         navigate('/');
       }
     };
@@ -48,7 +48,6 @@ function UserInfo() {
   useEffect(() => {
     if (timer === null || targetPhone === '') return;
     const interval = setInterval(() => {
-      console.log(timer);
       setTimer(prev => prev - 1);
     }, 1000);
 
@@ -87,7 +86,7 @@ function UserInfo() {
       showSuccess('전화번호가 변경되었습니다.');
       setIsModified(true);
     } catch (err) {
-      showNegative(err); // alshowNegativeert를 showNegative로 수정
+      showNegative(err);
       setIsModified(true);
     } finally {
       setTargetPhone('');
@@ -110,35 +109,34 @@ function UserInfo() {
     }
   };
 
-  // 회원탈퇴 처리 함수 (비밀번호 확인만 하고 toast는 표시하지 않음)
-  const handleWithdrawal = useCallback(async (password) => {
-    setLoadingState(prev => ({ ...prev, withdrawalLoading: true }));
-    try {
-      // 여기서 비밀번호 검증 API만 호출
-      // 예: await dispatch(verifyPassword({ password })).unwrap();
-      
-      // 성공시에는 toast를 표시하지 않고 success만 반환
-      return { success: true };
-    } catch (error) {
-      // 비밀번호가 틀렸을 때만 에러 toast 표시
-      showNegative(error.message || '비밀번호가 올바르지 않습니다.');
-      return { error: error.message || '비밀번호가 올바르지 않습니다.' };
-    } finally {
-      setLoadingState(prev => ({ ...prev, withdrawalLoading: false }));
-    }
-  }, [showNegative]);
+  // 회원탈퇴 처리 함수
+  const handleWithdrawal = useCallback(
+    async password => {
+      setLoadingState(prev => ({ ...prev, withdrawalLoading: true }));
+      try {
+        // 실제 비밀번호 검증 API 호출 (예시로 성공 반환)
+        await dispatch(verifyPassword({ password })).unwrap();
+        return { success: true };
+      } catch (error) {
+        showNegative('비밀번호가 올바르지 않습니다.');
+        setIsWithdrawalModalOpen(false);
+        return { error: '비밀번호가 올바르지 않습니다.' };
+      } finally {
+        setLoadingState(prev => ({ ...prev, withdrawalLoading: false }));
+      }
+    },
+    [showNegative]
+  );
 
+  // 회원탈퇴 모달 열기
   const handleWithdrawalClick = useCallback(() => {
-    dispatch(
-      openModal({
-        type: 'WITHDRAWAL',
-        props: {
-          onSubmit: handleWithdrawal,
-          loading: loadingState.withdrawalLoading,
-        },
-      })
-    );
-  }, [dispatch, handleWithdrawal, loadingState.withdrawalLoading]);
+    setIsWithdrawalModalOpen(true); // 모달 열기
+  }, []);
+
+  // 회원탈퇴 모달 닫기
+  const handleCloseWithdrawalModal = useCallback(() => {
+    setIsWithdrawalModalOpen(false); // 모달 닫기
+  }, []);
 
   return (
     <div className={styles.userInfoContainer}>
@@ -188,6 +186,14 @@ function UserInfo() {
       <Button className={styles.withdrawalButton} type="button" onClick={handleWithdrawalClick}>
         회원 탈퇴
       </Button>
+
+      {isWithdrawalModalOpen && (
+        <WithdrawalModal
+          onClose={handleCloseWithdrawalModal}
+          onSubmit={handleWithdrawal}
+          loading={loadingState.withdrawalLoading}
+        />
+      )}
     </div>
   );
 }
