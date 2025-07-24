@@ -63,6 +63,10 @@ function MenuTest() {
     closeSiderBar(); // 페이드 아웃 애니메이션과 함께 닫기
   };
 
+  const handleGoToPostList = () => {
+    nav('/user/post-list');
+  };
+
   return (
     <>
       <button ref={buttonRef} onClick={handleToggle} className={styles.menuButton}>
@@ -81,9 +85,12 @@ function MenuTest() {
       </button>
       {shouldRender && (
         <div ref={menuRef} className={`${styles.card} ${isClosing ? styles.fadeOut : ''}`}>
-          <span>음식 카테고리</span>
-          <span>선택</span>
+          <span>sobok</span>
+          <p>메뉴</p>
           <div className={styles.card__container}>
+            <p className={styles.element} onClick={handleGoToPostList}>
+              전체 게시글보기
+            </p>
             <p className={styles.element} onClick={() => handleCategoryClick('KOREAN')}>
               한식
             </p>

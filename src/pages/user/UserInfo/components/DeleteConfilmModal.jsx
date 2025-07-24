@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ModalWrapper from '../../../../common/modals/ModalWrapper';
 import { deleteUser } from '../../../../store/authSlice';
+import useToast from '@/common/hooks/useToast'; // toast hook import
 import styles from './DeleteConfilmModal.module.scss';
 
 function DeleteConfilmModal({ onClose, password }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showSuccess, showNegative } = useToast(); // toast 함수들 가져오기
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState('');
   const withdrawalLoading = useSelector(state => state.auth.loading);
@@ -19,13 +21,18 @@ function DeleteConfilmModal({ onClose, password }) {
     try {
       const resultAction = await dispatch(deleteUser({ password }));
       if (deleteUser.fulfilled.match(resultAction)) {
+        // 성공시 toast 표시하고 페이지 이동
+        showSuccess('회원탈퇴가 완료되었습니다.');
         onClose();
         navigate('/');
       } else {
         setError(resultAction.payload || '회원탈퇴에 실패했습니다.');
+        showNegative(resultAction.payload || '회원탈퇴에 실패했습니다.');
       }
     } catch (err) {
-      setError('회원탈퇴 중 오류가 발생했습니다.');
+      const errorMessage = '회원탈퇴 중 오류가 발생했습니다.';
+      setError(errorMessage);
+      showNegative(errorMessage);
     } finally {
       setIsLoading(false);
     }

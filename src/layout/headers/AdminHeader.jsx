@@ -32,6 +32,7 @@ function AdminHeader() {
 
   return (
     <Header
+    lefttitle={<p>관리자용 페이지</p>}
       rightthree={
         <button type="button" onClick={handleLogout} className={styles.adminlogoutbutton}>
           로그아웃
