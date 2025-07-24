@@ -41,14 +41,17 @@ function SearchSelection({ setSearchState }) {
         ...prev,
         showResults: false,
         results: [],
+        currentKeyword: '', // 🔥 키워드 초기화
         resultsRef,
       }));
       return;
     }
+
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {
       fetchSearch(keyword);
     }, 300);
+
     return () => clearTimeout(debounceTimer.current);
     // eslint-disable-next-line
   }, [keyword]);
@@ -59,6 +62,7 @@ function SearchSelection({ setSearchState }) {
       ...prev,
       showResults: !!keyword.trim(),
       results,
+      currentKeyword: keyword.trim(), // 🔥 현재 키워드 저장
       resultsRef,
     }));
     // eslint-disable-next-line
@@ -71,6 +75,7 @@ function SearchSelection({ setSearchState }) {
       fetchSearch();
     }
   };
+
   const handleButtonClick = () => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     fetchSearch();
@@ -84,10 +89,12 @@ function SearchSelection({ setSearchState }) {
           ...prev,
           showResults: false,
           results: [],
+          currentKeyword: prev.currentKeyword, // 🔥 키워드는 유지
           resultsRef,
         }));
       }
     };
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);

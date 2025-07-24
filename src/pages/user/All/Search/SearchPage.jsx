@@ -19,6 +19,7 @@ const SearchPage = () => {
   useEffect(() => {
     setItems([]);
     setIsFullLoaded(false);
+    setPageNo(1);
   }, [searchParams]);
 
   useEffect(() => {
@@ -29,32 +30,47 @@ const SearchPage = () => {
         return;
       }
 
-      const response = await axiosInstance.get('/cook-service/cook/search-cook', {
-        params: {
-          pageNo,
-          numOfRows,
-          keyword: searchParams.get('keyword'),
-        },
-      });
-      console.log(response.data.data);
-      setItems(prev => [...prev, ...(response.data.data || [])]);
-      if (response.data.data.length < numOfRows) {
+      try {
+        const response = await axiosInstance.get('/cook-service/cook/search-cook', {
+          params: {
+            pageNo,
+            numOfRows,
+            keyword: searchParams.get('keyword'),
+          },
+        });
+
+        console.log(response.data.data);
+        
+        // 🔥 첫 번째 페이지면 기존 결과 초기화, 그 이후는 누적
+        if (pageNo === 1) {
+          setItems(response.data.data || []);
+        } else {
+          setItems(prev => [...prev, ...(response.data.data || [])]);
+        }
+        
+        if (response.data.data.length < numOfRows) {
+          setIsFullLoaded(true);
+        }
+      } catch (error) {
+        console.error('검색 중 오류 발생:', error);
+        showNegative('검색 중 오류가 발생했습니다.');
         setIsFullLoaded(true);
       }
     }
 
     fetchItems();
-  }, [pageNo, numOfRows, searchParams, navigate]);
+  }, [pageNo, numOfRows, searchParams, navigate, showNegative]);
 
   const handleSearch = e => {
     e.preventDefault();
-    const keyword = e.target.keyword.value;
+    const keyword = e.target.keyword.value.trim();
+    
     if (keyword === '') {
       showNegative('검색어를 입력해주세요.');
       return;
     }
 
-    navigate(`/user/search?keyword=${keyword}`);
+    navigate(`/user/search?keyword=${encodeURIComponent(keyword)}`);
     setSearchParams({ keyword });
   };
 
@@ -68,10 +84,13 @@ const SearchPage = () => {
           <span> {items.length} 개</span>
         </h2>
         <form onSubmit={handleSearch}>
-          <input type="text" placeholder="검색어를 입력하세요." name="keyword" />
+          <input 
+            type="text" 
+            placeholder="검색어를 입력하세요." 
+            name="keyword" 
+          />
         </form>
       </div>
-
       <CookGrid items={items} />
       {!isFullLoaded && (
         <div className={styles.loadMoreButton}>
