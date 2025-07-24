@@ -35,6 +35,7 @@ const RiderHeader = () => {
 
   return (
     <Header
+    lefttitle={<p>라이더용 페이지</p>}
       rightone={
         <button onClick={handleLogout} className={style.riderlogoutbutton}>
           로그아웃
