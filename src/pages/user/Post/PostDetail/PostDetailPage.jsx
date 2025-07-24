@@ -45,6 +45,7 @@ const PostDetailPage = () => {
           data: { postId: Number(id) },
         });
         setIsLiked(false);
+        showInfo('좋아요가 취소되었습니다.');
         setPost(prev => ({ ...prev, likeCount: prev.likeCount - 1 }));
       } catch (err) {
         if (err.response?.status === 404) {
@@ -59,6 +60,7 @@ const PostDetailPage = () => {
           postId: Number(id),
         });
         setIsLiked(true);
+        showSuccess('좋아요 되었습니다.');
         setPost(prev => ({ ...prev, likeCount: prev.likeCount + 1 }));
       } catch (err) {
         if (err.response?.data.status === 400) {

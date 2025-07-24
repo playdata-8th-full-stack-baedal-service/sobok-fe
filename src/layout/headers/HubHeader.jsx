@@ -5,21 +5,12 @@ import { logout } from '../../store/authSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../services/axios-config';
 import styles from './HubHeader.module.scss';
-
-// 테스트용
-/*
-  localStorage.setItem('accessToken', 'temp-access-token');
-  localStorage.setItem('refreshToken', 'temp-refresh-token');
-  localStorage.setItem('userRole', 'HUB');
-  localStorage.setItem('userId', 'hub1');
-
-  window.history.pushState({}, '', '/hub');
-  window.dispatchEvent(new PopStateEvent('popstate'));
-*/
+import useToast from '@/common/hooks/useToast';
 
 const RiderHeader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const safeNavigate = path => {
     if (location.pathname !== path) {

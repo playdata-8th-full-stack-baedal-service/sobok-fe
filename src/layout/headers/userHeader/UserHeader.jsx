@@ -14,7 +14,7 @@ function UserHeader() {
   const location = useLocation();
   const dispatch = useDispatch();
   const isLoggedIn = !!localStorage.getItem('ACCESS_TOKEN');
-  const { showSuccess } = useToast();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -31,9 +31,9 @@ function UserHeader() {
     } catch (err) {
       console.error('서버 로그아웃 실패:', err);
     } finally {
+      showSuccess('로그아웃 되었습니다.');
       dispatch(logout());
       navigate('/');
-      showSuccess('로그아웃 되었습니다.');
     }
   };
 

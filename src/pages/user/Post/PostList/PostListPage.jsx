@@ -130,11 +130,15 @@ function PostListPage() {
               <p className={styles.date}>
                 <strong>작성일</strong>: {new Date(post.updatedAt).toLocaleDateString('ko-KR')}
               </p>
-              <span><Heart size={16} fill="red" color="red" /> {post.likeCount}</span>
+              <span>
+                <Heart size={16} fill="red" color="red" /> {post.likeCount}
+              </span>
             </div>
           </div>
         ))}
       </Masonry>
+
+      {!loading && postList.length === 0 && <p className={styles.emptyText}>게시물이 없습니다.</p>}
 
       {postList.length >= SIZE && !lastPage && (
         <button type="button" onClick={handleLoadMore} className={styles.loadMoreBtn}>

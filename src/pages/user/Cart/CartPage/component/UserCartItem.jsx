@@ -11,9 +11,11 @@ import {
 } from '../../../../../store/cartSlice';
 import { calculateItemTotal } from '../../../../../common/utils/cartUtils';
 import styles from './UserCartItem.module.scss';
+import useToast from '@/common/hooks/useToast';
 
 function UserCartItem({ item }) {
   const dispatch = useDispatch();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const { selectedItems, totalPrice } = useSelector(state => state.cart);
 
@@ -26,6 +28,7 @@ function UserCartItem({ item }) {
   const handleDeleteItem = () => {
     dispatch(deleteItem(item.id));
     dispatch(deleteCartItem({ id: item.id, totalPrice, selectedItems }));
+    showInfo('삭제되었습니다.');
   };
 
   // 카트 아이템 수량 증가

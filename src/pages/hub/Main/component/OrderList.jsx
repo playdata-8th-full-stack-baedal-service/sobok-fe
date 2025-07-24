@@ -1,4 +1,3 @@
-/* eslint-disable react/function-component-definition */
 import React from 'react';
 import { CircularProgress } from '@mui/material';
 import Button from '../../../../common/components/Button';
@@ -7,7 +6,15 @@ import styles from '../MainPage.module.scss';
 
 const OrderList = ({ loading, orders, isFullLoaded, onLoadMore, onOrderDetailClick }) => {
   if (loading) {
-    return <CircularProgress style={{ position: 'absolute', top: '50%', left: '50%' }} />;
+    return (
+      <div className={styles.loadingWrapper}>
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  if (!orders || orders.length === 0) {
+    return <p className={styles.emptyMessage}>주문이 없습니다!</p>;
   }
 
   return (

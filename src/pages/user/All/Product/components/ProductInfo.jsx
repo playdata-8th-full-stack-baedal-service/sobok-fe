@@ -65,9 +65,7 @@ const ProductInfo = () => {
       })
     );
 
-    if (window.confirm('선택하신 상품이 장바구니에 담겼습니다. \n장바구니로 이동할까요?')) {
-      navigate('/user/cart');
-    }
+    showSuccess('장바구니에 추가되었습니다.');
   };
 
   const handlePayClick = async () => {
