@@ -15,6 +15,7 @@ function RecipeRegistPage() {
   const dispatch = useDispatch();
   const { showSuccess, showNegative, showInfo } = useToast();
   const navigate = useNavigate();
+  
 
   const [formData, setFormData] = useState({
     name: '',
@@ -176,7 +177,6 @@ function RecipeRegistPage() {
       // 실패 시 메시지 처리
     } catch (err) {
       showNegative('레시피 등록 실패!');
-      console.log(err.response?.data?.message);
     }
   };
 

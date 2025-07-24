@@ -41,7 +41,7 @@ const RiderHeader = () => {
 
   return (
     <Header
-      lefttitle={null}
+      lefttitle={<p>가게용 페이지</p>}
       rightone={
         <button onClick={() => safeNavigate('/hub/history')} className={styles.orderbutton}>
           주문 처리 완료 내역

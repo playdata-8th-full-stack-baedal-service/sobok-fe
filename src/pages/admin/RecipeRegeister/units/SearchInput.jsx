@@ -100,6 +100,13 @@ function SearchInput({
     setQuery(value);
   };
 
+  // 엔터 키 이벤트 핸들러 추가
+  const handleKeyDown = e => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // form submit 방지
+    }
+  };
+
   const handleSelect = item => {
     setQuery(item.ingreName);
     setViewDropDown(false);
@@ -125,6 +132,7 @@ function SearchInput({
       <input
         onClick={handleInputClick}
         onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
         value={query}
         className={style.searchbar}
         type="text"

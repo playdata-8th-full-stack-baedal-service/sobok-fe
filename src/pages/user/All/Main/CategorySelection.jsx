@@ -40,10 +40,10 @@ function CategorySelection() {
   // 주문량순 데이터 불러오기 (전체에서만)
   const fetchPopular = async () => {
     try {
-      const res = await axiosInstance.post('/cook-service/cook/popular', null, {
+      const res = await axiosInstance.get('/cook-service/cook/popular', {
         params: { page: 1, size: 5 },
       });
-      setCookList(res.data.content || []);
+      setCookList(res.data.data || []);
     } catch (e) {
       setCookList([]);
     }
@@ -163,7 +163,7 @@ function CategorySelection() {
 
       <div className={styles.categorybottomselection}>
         {cookList.length === 0 ? (
-          <div style={{ gridColumn: '1 / 6', textAlign: 'center' }}>로딩중입니다...</div>
+          <div style={{ gridColumn: '1 / 6', textAlign: 'center' }}>검색 결과가 없습니다.</div>
         ) : (
           cookList.slice(0, 5).map((cook, idx) => {
             const id = cook.cookId || cook.id;
