@@ -163,7 +163,7 @@ function CategorySelection() {
 
       <div className={styles.categorybottomselection}>
         {cookList.length === 0 ? (
-          <div style={{ gridColumn: '1 / 6', textAlign: 'center' }}>로딩중입니다...</div>
+          <div style={{ gridColumn: '1 / 6', textAlign: 'center' }}>검색 결과가 없습니다.</div>
         ) : (
           cookList.slice(0, 5).map((cook, idx) => {
             const id = cook.cookId || cook.id;
