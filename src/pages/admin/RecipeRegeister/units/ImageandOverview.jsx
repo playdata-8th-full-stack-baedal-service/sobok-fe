@@ -90,6 +90,13 @@ function ImageandOverview({ formData, onFileSelect, onChange, resetSignal }) {
     return categoryMap[categoryValue] || categoryValue;
   };
 
+  // 엔터 키 입력 시 폼 제출 방지
+  const handleKeyDown = e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div className={style.ImageandOverview}>
       <div className={style.imageselection}>
@@ -122,6 +129,7 @@ function ImageandOverview({ formData, onFileSelect, onChange, resetSignal }) {
           name="name"
           value={formData.name}
           onChange={onChange}
+          onKeyDown={handleKeyDown}
           placeholder="음식이름을 입력하세요"
         />
         <div className={style.categorySection}>
