@@ -13,47 +13,54 @@ const ShopDeliveryPendingSection = ({ isOrderChanged, handleOpenOrderDetailModal
 
   // 완료된 주문 조회
   const fetchCompletedOrders = useCallback(async () => {
-    const response = await axiosInstance.get('/shop-service/shop/filtering-order', {
-      params: {
-        pageNo,
-        numOfRows,
-        orderState: 'READY_FOR_DELIVERY',
-      },
-    });
+    try {
+      const response = await axiosInstance.get('/shop-service/shop/filtering-order', {
+        params: {
+          pageNo,
+          numOfRows,
+          orderState: 'READY_FOR_DELIVERY',
+        },
+      });
 
-    if (pageNo === 1) {
-      setOrders(response.data.data);
-    } else {
-      setOrders(prev => [...prev, ...response.data.data]);
-    }
+      const data = response?.data?.data ?? []; // null이면 빈 배열로 처리
 
-    if (response.data.data.length < numOfRows) {
-      setIsFullLoaded(true);
+      if (pageNo === 1) {
+        setOrders(data);
+      } else {
+        setOrders(prev => [...prev, ...data]);
+      }
+
+      if (data.length < numOfRows) {
+        setIsFullLoaded(true);
+      }
+    } catch (error) {
+      console.error('주문 조회 중 에러 발생:', error);
+      setOrders([]); // 에러 시도 빈 배열로 초기화
+      setIsFullLoaded(true); // 더 이상 로딩하지 않도록 처리
     }
   }, [pageNo, numOfRows]);
 
   useEffect(() => {
     setLoading(true);
-    fetchCompletedOrders().then(() => {
+    fetchCompletedOrders().finally(() => {
       setLoading(false);
     });
-  }, [pageNo]);
+  }, [pageNo, fetchCompletedOrders]);
 
   useEffect(() => {
+    setIsFullLoaded(false);
     if (pageNo !== 1) {
       setPageNo(1);
     } else {
       setLoading(true);
-      fetchCompletedOrders().then(() => {
+      fetchCompletedOrders().finally(() => {
         setLoading(false);
       });
     }
-
-    setIsFullLoaded(false);
-  }, [isOrderChanged]);
+  }, [isOrderChanged, fetchCompletedOrders, pageNo]);
 
   const handleLoadMore = () => {
-    setPageNo(pageNo + 1);
+    setPageNo(prev => prev + 1);
   };
 
   return (
