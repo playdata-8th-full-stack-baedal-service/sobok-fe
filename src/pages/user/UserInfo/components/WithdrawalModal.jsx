@@ -4,12 +4,14 @@ import ModalWrapper from '../../../../common/modals/ModalWrapper';
 import PasswordInput from './PasswordInput';
 import DeleteConfilmModal from './DeleteConfilmModal';
 import styles from './WithdrawalModal.module.scss';
+import useToast from '@/common/hooks/useToast';
 
 function WithdrawalModal({ onClose, onSubmit, loading }) {
   const [withdrawalPassword, setWithdrawalPassword] = React.useState('');
   const [showWithdrawalPassword, setShowWithdrawalPassword] = React.useState(false);
   const [localError, setLocalError] = React.useState('');
   const [showConfirmModal, setShowConfirmModal] = React.useState(false);
+  const { showNegative } = useToast();
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -24,13 +26,15 @@ function WithdrawalModal({ onClose, onSubmit, loading }) {
     try {
       const result = await onSubmit(withdrawalPassword);
 
-      if (result?.error) {
-        setLocalError(result.error);
-      } else if (result?.success) {
-        setShowConfirmModal(true);
+      if (!result?.success) {
+        showNegative('잘못된 비밀번호입니다.');
+        onClose(); // 비밀번호가 틀리면 즉시 모달 닫기
+      } else {
+        setShowConfirmModal(true); // 성공 시에만 다음 모달 열기
       }
     } catch (err) {
-      setLocalError('회원탈퇴 중 오류가 발생했습니다.');
+      showNegative('잘못된 비밀번호입니다.');
+      onClose(); // 에러 발생 시 모달 닫기
     }
   };
 
