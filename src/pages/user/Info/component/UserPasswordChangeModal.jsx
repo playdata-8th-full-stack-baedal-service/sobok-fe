@@ -7,7 +7,7 @@ import Button from '../../../../common/components/Button';
 import PasswordInput from './PasswordInput';
 import PWChangedModal from '../../../auth/FindPW/PWChangedModal';
 import { isPasswordValid } from '../../../../common/utils/authUtils';
-import styles from '../UserInfo.module.scss';
+import styles from './UserPasswordChangeModal.module.scss';
 
 function UserPasswordChangeModal({ onClose }) {
   const [complete, setComplete] = useState(false);
@@ -44,18 +44,20 @@ function UserPasswordChangeModal({ onClose }) {
   ) : (
     <ModalWrapper title="비밀번호 변경" onClose={onClose} size="md">
       <div className={styles.passwordChangeModal}>
-        <p>새로운 비밀번호를 입력해주세요.</p>
+        {/* <p>새로운 비밀번호를 입력해주세요.</p> */}
 
         <PasswordInput
           value={newPassword}
           onChange={e => setNewPassword(e.target.value)}
           placeholder="새 비밀번호를 입력하세요"
+          showLabel={false}
         />
 
         <PasswordInput
           value={confirmPassword}
           onChange={e => setConfirmPassword(e.target.value)}
           placeholder="새 비밀번호를 다시 입력하세요"
+          showLabel={false}
         />
 
         {errorMessage && <p style={{ color: 'red', marginBottom: '10px' }}>{errorMessage}</p>}
@@ -69,7 +71,7 @@ function UserPasswordChangeModal({ onClose }) {
           </ul>
         </div>
 
-        <Button type="button" onClick={handleSubmit}>
+        <Button type="button" variant="BASIC" onClick={handleSubmit} className="confirm">
           변경
         </Button>
       </div>
