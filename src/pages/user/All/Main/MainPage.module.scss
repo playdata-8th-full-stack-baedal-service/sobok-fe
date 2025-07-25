@@ -25,9 +25,45 @@
 }
 
 .searchResults {
+  position: absolute; /* absolute positioning으로 변경 */
+  top: 32.5%; /* 검색창 바로 아래에 위치 */
+  left: 50%; /* 중앙 정렬을 위해 */
+  transform: translateX(-50%); /* 중앙 정렬 완성 */
   width: 400px;
-  outline: 1px solid rgb(0, 0, 0);
-  margin: -5.5px auto;
+  background: white; /* 배경색 추가 */
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 8px; /* 둥근 모서리 추가 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+  z-index: 1000; /* 높은 z-index로 다른 요소들 위에 표시 */
+  max-height: 400px; /* 최대 높이 설정 */
+  overflow-y: auto; /* 스크롤 가능하도록 */
+}
+
+/* 검색 결과 아이템 스타일링 추가 */
+.searchResultItem,
+.moreResultsItem {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  p {
+    margin: 0;
+    text-align: left;
+  }
+}
+
+.moreResultsItem {
+  font-weight: bold;
+  color: #007bff;
+  border-top: 1px solid #e0e0e0;
 }
 
 .searchbarcontainer {
@@ -35,6 +71,7 @@
   justify-content: center;
   align-items: center;
   gap: 15px;
+  position: relative; /* 검색 결과의 기준점 설정 */
 }
 
 .searchbarbutton {
@@ -158,10 +195,6 @@
   to {
     opacity: 1;
   }
-}
-
-.searchResults {
-  z-index: 100;
 }
 
 .bestPickSelection {
@@ -516,4 +549,9 @@
     object-fit: cover;
     border-radius: 8px; /* 선택사항 */
   }
+}
+
+.bestPickimg,
+.cookThumbnail {
+  object-fit: contain;
 }

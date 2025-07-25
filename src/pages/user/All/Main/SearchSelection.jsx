@@ -1,4 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styles from './MainPage.module.scss';
 import axiosInstance from '../../../../services/axios-config';
@@ -9,9 +10,19 @@ function SearchSelection({ setSearchState }) {
   const [loading, setLoading] = useState(false);
   const resultsRef = useRef(null);
   const debounceTimer = useRef(null);
+  const navigate = useNavigate();
 
-  // fetchSearch에서는 setResults만!
-  const fetchSearch = async (searchWord = keyword) => {
+  // Clear debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, []);
+
+  // Memoize fetchSearch to prevent unnecessary re-renders
+  const fetchSearch = useCallback(async (searchWord = keyword) => {
     setLoading(true);
     try {
       const res = await axiosInstance.get('/cook-service/cook/search-cook', {
@@ -27,13 +38,14 @@ function SearchSelection({ setSearchState }) {
         setResults([]);
       }
     } catch (e) {
+      console.error('Search error:', e);
       setResults([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [keyword]);
 
-  // keyword가 바뀔 때마다 자동 검색 (디바운스 적용)
+  // Debounced search when keyword changes
   useEffect(() => {
     if (!keyword.trim()) {
       setResults([]);
@@ -41,7 +53,7 @@ function SearchSelection({ setSearchState }) {
         ...prev,
         showResults: false,
         results: [],
-        currentKeyword: '', // 🔥 키워드 초기화
+        currentKeyword: '',
         resultsRef,
       }));
       return;
@@ -52,44 +64,51 @@ function SearchSelection({ setSearchState }) {
       fetchSearch(keyword);
     }, 300);
 
-    return () => clearTimeout(debounceTimer.current);
-    // eslint-disable-next-line
-  }, [keyword]);
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, [keyword, fetchSearch, setSearchState]);
 
-  // results가 바뀔 때마다 setSearchState로 부모에 전달
+  // Update parent state when results change
   useEffect(() => {
     setSearchState(prev => ({
       ...prev,
       showResults: !!keyword.trim(),
       results,
-      currentKeyword: keyword.trim(), // 🔥 현재 키워드 저장
+      currentKeyword: keyword.trim(),
       resultsRef,
     }));
-    // eslint-disable-next-line
-  }, [results, keyword]);
+  }, [results, keyword, setSearchState]);
 
-  // 엔터키/버튼 클릭 시 즉시 검색
-  const handleKeyDown = e => {
-    if (e.key === 'Enter') {
+  // Handle enter key press - 검색 페이지로 이동
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Enter' && keyword.trim()) {
       if (debounceTimer.current) clearTimeout(debounceTimer.current);
-      fetchSearch();
+      // 검색 페이지로 이동
+      navigate(`/user/search?keyword=${encodeURIComponent(keyword.trim())}`);
     }
-  };
+  }, [keyword, navigate]);
 
-  const handleButtonClick = () => {
-    if (debounceTimer.current) clearTimeout(debounceTimer.current);
-    fetchSearch();
-  };
+  // Handle search button click - 검색 페이지로 이동
+  const handleButtonClick = useCallback(() => {
+    if (keyword.trim()) {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+      // 검색 페이지로 이동
+      navigate(`/user/search?keyword=${encodeURIComponent(keyword.trim())}`);
+    }
+  }, [keyword, navigate]);
 
-  // 바깥 클릭 시 닫기
+  // Handle click outside to close results
   useEffect(() => {
-    const handleClickOutside = event => {
+    const handleClickOutside = (event) => {
       if (resultsRef.current && !resultsRef.current.contains(event.target)) {
         setSearchState(prev => ({
           ...prev,
           showResults: false,
           results: [],
-          currentKeyword: prev.currentKeyword, // 🔥 키워드는 유지
+          currentKeyword: prev.currentKeyword,
           resultsRef,
         }));
       }
@@ -98,12 +117,12 @@ function SearchSelection({ setSearchState }) {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      return undefined;
     };
-    // eslint-disable-next-line
-  }, []);
+  }, [setSearchState]);
 
-  const handleInputChange = e => setKeyword(e.target.value);
+  const handleInputChange = useCallback((e) => {
+    setKeyword(e.target.value);
+  }, []);
 
   return (
     <div className={styles.searchbarcontatiner}>
@@ -115,10 +134,11 @@ function SearchSelection({ setSearchState }) {
           value={keyword}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
+          onFocus={() => fetchSearch()}
         />
         <button
           type="button"
-          disabled={loading}
+          disabled={loading || !keyword.trim()} // 키워드가 없으면 버튼 비활성화
           className={styles.searchbarbutton}
           onClick={handleButtonClick}
         >

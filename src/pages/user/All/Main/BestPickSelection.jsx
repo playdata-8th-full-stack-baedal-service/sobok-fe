@@ -48,7 +48,7 @@ function BestPickSelection() {
             if (e.key === 'Enter' || e.key === ' ') handleClick();
           }}
         >
-          <img src={bestPick[0].thumbnail} alt={bestPick[0].title} style={{ display: 'block' }} />
+          <img src={bestPick[0].thumbnail} alt={bestPick[0].title} style={{ display: 'block' }} className={styles.bestPickimg}/>
         </div>
       )}
     </div>
