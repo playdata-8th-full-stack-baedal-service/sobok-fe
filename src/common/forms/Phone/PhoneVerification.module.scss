@@ -28,22 +28,7 @@
   min-width: 80px;
 }
 
-@media (max-width: 768px) {
-  .containerTop {
-    flex-direction: column;
-    align-items: stretch;
-  }
 
-  .inputButtonGroup {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .inputButtonGroup input,
-  .inputButtonGroup button {
-    width: 100%;
-  }
-}
 
 .verifynumberbutton {
   transition: all 0.3s ease-in-out;
