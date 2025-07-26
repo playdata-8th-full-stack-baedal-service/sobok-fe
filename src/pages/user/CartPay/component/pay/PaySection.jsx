@@ -1,60 +1,45 @@
-import React from 'react';
+/* eslint-disable react/function-component-definition */
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from '../../CartPayPage.module.scss';
-import CheckoutPage from '../../../Pay/toss/Checkout';
+import PayHeading from './PayHeading';
+import PayOrderer from './PayOrderer';
+import { fetchOrdererInfo, flipPayVisible } from '../../../../../store/cartPaySlice';
+import Checkout from './Checkout';
 
 const PaySection = () => {
+  const dispatch = useDispatch();
+  const { isPayVisible } = useSelector(state => state.pay);
+
+  useEffect(() => {
+    dispatch(fetchOrdererInfo());
+  }, [dispatch]);
+
+  const handlePayVisible = () => {
+    dispatch(flipPayVisible());
+  };
+
   return (
-    <div className={styles.paySection}>
-      {/* 주문자 정보 */}
-      <section>
-        <h3>주문자 정보</h3>
-        <div>
-          <div>
-            <label htmlFor="orderer">주문자</label>
-            <input id="orderer" type="text" value={orderer.nickname} readOnly />
-          </div>
-          <div>
-            <label htmlFor="phone">전화번호</label>
-            <input id="phone" type="text" value={orderer.phone} readOnly />
-          </div>
-        </div>
-      </section>
+    <div className={isPayVisible ? styles.paySection : styles.paySectionDisabled}>
+      <button type="button" className={styles.foldButton} onClick={handlePayVisible}>
+        {!isPayVisible ? '◀' : '▶'}
+      </button>
+      <div className={styles.payContent}>
+        <PayHeading />
 
-      {/* 배송 정보 */}
-      <section>
-        <h3>배송 정보</h3>
-        <div>
-          <textarea
-            value={
-              orderer.addresses.find(address => address.id === selectedAddress)?.roadFull || ''
-            }
-            readOnly
-          />
-          <button type="button" onClick={handleAddressChange}>
-            변경
-          </button>
-        </div>
-        <input
-          type="text"
-          placeholder="배달원 요청사항"
-          value={shipping.riderRequest}
-          onChange={e => setShipping(prev => ({ ...prev, riderRequest: e.target.value }))}
-        />
-      </section>
+        {/* 주문자 정보 */}
+        <PayOrderer />
 
-      {/* 결제 수단 */}
-      <section>
-        <CheckoutPage orderer={orderer} shipping={shipping} ready={goPay} totalPrice={totalPrice} />
-      </section>
-      {/* 결제 버튼 */}
-      {onRender && (
-        <footer>
-          <span>총 금액 {shipping.totalPrice.toLocaleString()} 원</span>
-          <button type="button" onClick={handlePayment}>
+        {/* 결제 수단 */}
+        <Checkout />
+        {/* 결제 버튼 */}
+        {/* <footer>
+          <span>총 금액 {totalPrice.toLocaleString()} 원</span>
+          <button type="button" onClick={() => {}}>
             결제 하기
           </button>
-        </footer>
-      )}
+        </footer> */}
+      </div>
     </div>
   );
 };
