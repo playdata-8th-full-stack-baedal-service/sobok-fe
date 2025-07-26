@@ -25,6 +25,7 @@ import PayPage from '../pages/user/Pay/PayPage';
 import PayCompletePage from '../pages/user/Pay/paycomplete/PayCompletePage';
 import UserInfo from '../pages/user/Info/UserInfo';
 import EditPostPage from '../pages/user/Post/EditPost/EditPostPage';
+import CartPayPage from '../pages/user/CartPay/CartPayPage';
 
 function UserRoutes() {
   return (
@@ -63,7 +64,7 @@ function UserRoutes() {
           path="cart"
           element={
             <RoleRoute role="USER">
-              <UserCartPage />
+              <CartPayPage />
             </RoleRoute>
           }
         />

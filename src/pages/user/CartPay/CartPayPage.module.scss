@@ -1,0 +1,11 @@
+.pageWrapper {
+  display: flex;
+
+  .cartSection {
+    flex: 7;
+  }
+
+  .paySection {
+    flex: 3;
+  }
+}
