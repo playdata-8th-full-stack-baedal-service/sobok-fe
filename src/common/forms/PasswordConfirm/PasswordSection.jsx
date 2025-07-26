@@ -28,6 +28,7 @@ function PasswordSection({
         required
         type="password"
         id="passwordConfirm"
+        name="passwordConfirm"
         value={passwordConfirm}
         onChange={onPasswordConfirmChange}
         disabled={disabled}
