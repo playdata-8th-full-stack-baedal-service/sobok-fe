@@ -6,8 +6,8 @@ import {
   checkPermission,
   clearPermissionCheck,
 } from '@/store/riderSlice';
-import { sendSMSCode, verifySMSCode, clearSMSAuth } from '../../../../store/smsAuthSlice';
-import { checkLoginId, clearLoginIdCheck } from '../../../../store/authSlice';
+import { sendSMSCode, verifySMSCode, clearSMSAuth } from '@/store/smsAuthSlice';
+import { checkLoginId, clearLoginIdCheck } from '@/store/authSlice';
 import styles from './RiderSignUp.module.scss';
 import useToast from '@/common/hooks/useToast';
 import PhoneVerification from '../../../../common/forms/Phone/PhoneVerification';
@@ -15,16 +15,11 @@ import PasswordSection from '../../../../common/forms/PasswordConfirm/PasswordSe
 
 function RiderSignUp() {
   const dispatch = useDispatch();
-  const { showSuccess, showNegative } = useToast();
+  const { showSuccess } = useToast();
 
-  const { loading, error, signUpSuccess } = useSelector(state => state.rider);
-  const {
-    permissionCheckLoading,
-    permissionCheckError,
-    permissionCheckSuccess,
-    permissionCheckMessage,
-  } = useSelector(state => state.rider);
-  const { isVerified, loading: smsLoading } = useSelector(state => state.smsAuth);
+  const { loading, error, signUpSuccess, permissionCheckMessage, permissionCheckError } =
+    useSelector(state => state.rider);
+  const { isVerified } = useSelector(state => state.smsAuth);
   const { loginIdCheckMessage, loginIdCheckError } = useSelector(state => state.auth);
 
   const [form, setForm] = useState({
@@ -36,15 +31,11 @@ function RiderSignUp() {
     permissionNumber: '',
   });
 
-  const [validation, setValidation] = useState({
-    passwordMatch: false,
-    passwordValid: false,
-    permissionNumberValid: false,
-  });
-
   const [verificationCode, setVerificationCode] = useState('');
   const loginIdTimer = useRef(null);
+  const permissionTimer = useRef(null);
 
+  // 회원가입 성공 시 초기화
   useEffect(() => {
     if (signUpSuccess) {
       showSuccess('회원가입 신청이 완료되었습니다!');
@@ -60,75 +51,39 @@ function RiderSignUp() {
         phone: '',
         permissionNumber: '',
       });
-      setValidation({
-        passwordMatch: false,
-        passwordValid: false,
-        permissionNumberValid: false,
-      });
       setVerificationCode('');
     }
-  }, [signUpSuccess, dispatch]);
+  }, [signUpSuccess, dispatch, showSuccess]);
 
+  // 아이디 자동 검사
   useEffect(() => {
+    if (loginIdTimer.current) clearTimeout(loginIdTimer.current);
     if (!form.loginId.trim()) {
-      if (loginIdTimer.current) clearTimeout(loginIdTimer.current);
       dispatch(clearLoginIdCheck());
       return;
     }
-
-    if (loginIdTimer.current) clearTimeout(loginIdTimer.current);
     loginIdTimer.current = setTimeout(() => {
       dispatch(checkLoginId(form.loginId.trim()));
     }, 400);
   }, [form.loginId, dispatch]);
 
-  const validatePassword = password => {
-    const regex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$/;
-    return regex.test(password);
-  };
-
-  const validatePermissionNumber = permissionNumber => {
-    const regex = /^\d{12}$/;
-    return regex.test(permissionNumber);
-  };
-
-  const getInputClassName = fieldName => {
-    let className = '';
-
-    switch (fieldName) {
-      case 'loginId':
-        if (form.loginId && loginIdCheckMessage) {
-          className = loginIdCheckMessage.includes('사용 가능한') ? styles.valid : styles.invalid;
-        }
-        break;
-      case 'password':
-        if (form.password) {
-          className = validation.passwordValid ? styles.valid : styles.invalid;
-        }
-        break;
-      case 'passwordConfirm':
-        if (form.passwordConfirm) {
-          className = validation.passwordMatch ? styles.valid : styles.invalid;
-        }
-        break;
-      case 'phone':
-        if (isVerified) {
-          className = styles.valid;
-        }
-        break;
-      case 'permissionNumber':
-        if (form.permissionNumber && permissionCheckMessage) {
-          className = permissionCheckMessage.includes('사용 가능한')
-            ? styles.valid
-            : styles.invalid;
-        }
-        break;
-      default:
-        break;
+  // 면허번호 자동 검사
+  useEffect(() => {
+    if (permissionTimer.current) clearTimeout(permissionTimer.current);
+    if (!form.permissionNumber.trim()) {
+      dispatch(clearPermissionCheck());
+      return;
     }
 
-    return className;
-  };
+    if (!/^\d{12}$/.test(form.permissionNumber)) {
+      dispatch(clearPermissionCheck());
+      return;
+    }
+
+    permissionTimer.current = setTimeout(() => {
+      dispatch(checkPermission(form.permissionNumber.trim()));
+    }, 400);
+  }, [form.permissionNumber, dispatch]);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -138,56 +93,6 @@ function RiderSignUp() {
       ...prev,
       [name]: value,
     }));
-
-    if (name === 'password') {
-      setValidation(prev => ({
-        ...prev,
-        passwordValid: validatePassword(value),
-        passwordMatch: value === form.passwordConfirm,
-      }));
-    }
-
-    if (name === 'passwordConfirm') {
-      setValidation(prev => ({
-        ...prev,
-        passwordMatch: form.password === value,
-      }));
-    }
-
-    if (name === 'permissionNumber') {
-      setValidation(prev => ({
-        ...prev,
-        permissionNumberValid: validatePermissionNumber(value),
-      }));
-    }
-  };
-
-  const checkPermissionNumberAvailability = () => {
-    if (!form.permissionNumber.trim()) {
-      showNegative('면허번호를 입력해주세요.');
-      return;
-    }
-    if (!validatePermissionNumber(form.permissionNumber)) {
-      showNegative('면허번호는 숫자 12자리로 입력해주세요.');
-      return;
-    }
-    dispatch(checkPermission(form.permissionNumber));
-  };
-
-  const sendVerificationCode = () => {
-    if (!form.phone.trim()) {
-      showNegative('휴대폰 번호를 입력해주세요.');
-      return;
-    }
-    dispatch(sendSMSCode(form.phone));
-  };
-
-  const verifyCode = () => {
-    if (!verificationCode.trim()) {
-      showNegative('인증번호를 입력해주세요.');
-      return;
-    }
-    dispatch(verifySMSCode({ phoneNumber: form.phone, inputCode: verificationCode }));
   };
 
   const handleSubmit = e => {
@@ -196,10 +101,24 @@ function RiderSignUp() {
     dispatch(riderSignUp(signUpData));
   };
 
+  const getInputClassName = fieldName => {
+    switch (fieldName) {
+      case 'loginId':
+        return loginIdCheckMessage?.includes('사용 가능한') ? styles.valid : styles.invalid;
+      case 'phone':
+        return isVerified ? styles.valid : '';
+      case 'permissionNumber':
+        return permissionCheckMessage?.includes('사용 가능한') ? styles.valid : styles.invalid;
+      default:
+        return '';
+    }
+  };
+
   return (
     <div className={styles.riderSignup}>
       <h2>회원가입 (라이더)</h2>
       <form onSubmit={handleSubmit} className={styles.signupForm}>
+        {/* 아이디 */}
         <div className={styles.formGroup}>
           <label htmlFor="loginId">아이디</label>
           <div className={styles.inputWrapper}>
@@ -228,6 +147,7 @@ function RiderSignUp() {
           {loginIdCheckError && <div className={styles.errorMessage}>{loginIdCheckError}</div>}
         </div>
 
+        {/* 이름 */}
         <div className={styles.formGroup}>
           <label htmlFor="name">이름</label>
           <div className={styles.inputWrapper}>
@@ -242,6 +162,7 @@ function RiderSignUp() {
           </div>
         </div>
 
+        {/* 비밀번호 */}
         <PasswordSection
           password={form.password}
           passwordConfirm={form.passwordConfirm}
@@ -249,6 +170,7 @@ function RiderSignUp() {
           onPasswordConfirmChange={handleChange}
         />
 
+        {/* 휴대폰 인증 */}
         <PhoneVerification
           phone={form.phone}
           verificationCode={verificationCode}
@@ -256,6 +178,7 @@ function RiderSignUp() {
           onVerificationCodeChange={e => setVerificationCode(e.target.value)}
         />
 
+        {/* 면허번호 */}
         <div className={styles.formGroup}>
           <label htmlFor="permissionNumber">면허번호</label>
           <div className={styles.inputWrapper}>
@@ -269,27 +192,31 @@ function RiderSignUp() {
               id="permissionNumber"
               maxLength={12}
             />
-            <button
-              type="button"
-              onClick={checkPermissionNumberAvailability}
-              className={styles.verifyButton}
-              disabled={permissionCheckLoading}
-            >
-              {permissionCheckLoading ? '확인 중...' : '중복확인'}
-            </button>
           </div>
-          {permissionCheckMessage && (
-            <div
-              className={`${styles.validationMessage} ${
-                permissionCheckMessage.includes('사용 가능한') ? styles.valid : styles.invalid
-              }`}
-            >
-              <span className={styles.icon}>
-                {permissionCheckMessage.includes('사용 가능한') ? '✓' : '✗'}
-              </span>
-              {permissionCheckMessage}
+
+          {form.permissionNumber && form.permissionNumber.length < 12 && (
+            <div className={`${styles.validationMessage} ${styles.invalid}`}>
+              <span className={styles.icon}>✗</span>
+              면허번호 12자리를 모두 입력해주세요.
             </div>
           )}
+
+          {/* 유효성 메시지 */}
+          {!form.permissionNumber || form.permissionNumber.length < 12
+            ? null
+            : permissionCheckMessage && (
+                <div
+                  className={`${styles.validationMessage} ${
+                    permissionCheckMessage.includes('사용 가능한') ? styles.valid : styles.invalid
+                  }`}
+                >
+                  <span className={styles.icon}>
+                    {permissionCheckMessage.includes('사용 가능한') ? '✓' : '✗'}
+                  </span>
+                  {permissionCheckMessage}
+                </div>
+              )}
+
           {permissionCheckError && (
             <div className={styles.errorMessage}>{permissionCheckError}</div>
           )}
