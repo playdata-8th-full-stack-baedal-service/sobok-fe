@@ -17,7 +17,7 @@ const CartPayPage = () => {
   useEffect(() => {
     if (error !== null) {
       showNegative(error);
-      dispatch(resetError);
+      dispatch(resetError());
     }
   }, [error, showNegative, dispatch]);
 

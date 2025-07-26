@@ -2,6 +2,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosInstance from '../services/axios-config';
 import { calculateTotalPrice } from '../pages/user/CartPay/utils/cartPayUtils';
+import generateRandomString from '../common/utils/paymentUtils';
+import { useDispatch } from 'react-redux';
 
 // 사용자의 카트 정보 조회
 export const fetchCartItem = createAsyncThunk('cart/fetch', async (_, thunkAPI) => {
@@ -24,7 +26,6 @@ export const editCartItemCount = createAsyncThunk('cart/edit', async ({ id, coun
     });
     return { res: response.data.data, id, count };
   } catch (err) {
-    console.log(err);
     const message = err.response?.data?.message || '오류';
     return thunkAPI.rejectWithValue(message);
   }
@@ -63,9 +64,35 @@ export const deleteAllCartItem = createAsyncThunk(
 export const fetchOrdererInfo = createAsyncThunk('pay/orderer-info', async (_, thunkAPI) => {
   try {
     const response = await axiosInstance.get(`/user-service/user/order-info`);
-    console.log(response.data.data);
     return response.data.data;
   } catch (err) {
+    const message = err.response?.data?.message || '오류';
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+// 주문 요청 실패
+export const restorePayment = createAsyncThunk('pay/restore', async ({ orderId }, thunkAPI) => {
+  try {
+    console.log('이거 왜 실행됨?');
+    const response = await axiosInstance.delete(
+      `/payment-service/payment/fail-payment?orderId=${orderId}`
+    );
+    return response.data.data;
+  } catch (err) {
+    const message = err.response?.data?.message || '오류';
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+// 주문 요청
+export const requestPayment = createAsyncThunk('pay/request', async (payload, thunkAPI) => {
+  try {
+    const response = await axiosInstance.post(`/payment-service/payment/register`, payload);
+    return response.data.data;
+  } catch (err) {
+    thunkAPI.dispatch(restorePayment({ orderId: payload.orderId }));
+
     const message = err.response?.data?.message || '오류';
     return thunkAPI.rejectWithValue(message);
   }
@@ -83,6 +110,9 @@ const paySlice = createSlice({
     selectedAddressId: 0,
     riderRequest: '',
     isPayVisible: false,
+    isReady: false,
+    payClick: false,
+    orderId: '',
   },
   reducers: {
     resetError: state => {
@@ -119,8 +149,15 @@ const paySlice = createSlice({
     },
 
     setSelectedAddressId: (state, action) => {
-      console.log(action.payload);
       state.selectedAddressId = action.payload;
+    },
+
+    setIsReady: (state, action) => {
+      state.isReady = action.payload;
+    },
+
+    setPayClick: (state, action) => {
+      state.payClick = action.payload;
     },
   },
   extraReducers: builder => {
@@ -137,9 +174,12 @@ const paySlice = createSlice({
         const key = sessionStorage.getItem('INSTANT_PAY');
         if (key) {
           state.selectedCartItemIds = [+key];
+          sessionStorage.removeItem('INSTANT_PAY');
+          state.isPayVisible = true;
+        } else {
+          state.selectedCartItemIds = action.payload.map(i => i.id);
         }
-        sessionStorage.removeItem('INSTANT_PAY');
-
+        state.orderId = generateRandomString();
         state.cartItems = action.payload.reverse();
         state.totalPrice = calculateTotalPrice(state.cartItems, state.selectedCartItemIds);
       })
@@ -220,6 +260,14 @@ const paySlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       });
+
+    builder
+      .addCase(restorePayment.pending, state => {
+        state.error = '야호';
+      })
+      .addCase(restorePayment.fulfilled, state => {
+        state.error = '결제에 실패했습니다. 다시 시도해주세요.';
+      });
   },
 });
 
@@ -231,6 +279,8 @@ export const {
   setError,
   flipPayVisible,
   setSelectedAddressId,
+  setIsReady,
+  setPayClick,
 } = paySlice.actions;
 
 export default paySlice.reducer;

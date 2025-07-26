@@ -4,12 +4,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from '../../CartPayPage.module.scss';
 import PayHeading from './PayHeading';
 import PayOrderer from './PayOrderer';
-import { fetchOrdererInfo, flipPayVisible } from '../../../../../store/cartPaySlice';
+import {
+  fetchOrdererInfo,
+  flipPayVisible,
+  requestPayment,
+  setPayClick,
+} from '../../../../../store/cartPaySlice';
 import Checkout from './Checkout';
 
 const PaySection = () => {
   const dispatch = useDispatch();
-  const { isPayVisible } = useSelector(state => state.pay);
+  const {
+    totalPrice,
+    isPayVisible,
+    isReady,
+    orderId,
+    riderRequest,
+    selectedAddressId,
+    selectedCartItemIds,
+    orderer,
+  } = useSelector(state => state.pay);
 
   useEffect(() => {
     dispatch(fetchOrdererInfo());
@@ -17,6 +31,19 @@ const PaySection = () => {
 
   const handlePayVisible = () => {
     dispatch(flipPayVisible());
+  };
+
+  const handleStartPayment = () => {
+    dispatch(
+      requestPayment({
+        orderId,
+        totalPrice,
+        riderRequest,
+        userAddressId: orderer.addresses[selectedAddressId].id,
+        cartCookIdList: selectedCartItemIds,
+      })
+    );
+    dispatch(setPayClick(true));
   };
 
   return (
@@ -30,15 +57,20 @@ const PaySection = () => {
         {/* 주문자 정보 */}
         <PayOrderer />
 
+        {/* <hr className={styles.hr} /> */}
         {/* 결제 수단 */}
         <Checkout />
         {/* 결제 버튼 */}
-        {/* <footer>
-          <span>총 금액 {totalPrice.toLocaleString()} 원</span>
-          <button type="button" onClick={() => {}}>
-            결제 하기
+        <footer>
+          <button
+            type="button"
+            onClick={handleStartPayment}
+            className={styles.btnPay}
+            disabled={totalPrice === 0 && isReady}
+          >
+            {totalPrice.toLocaleString()} 원 결제 하기
           </button>
-        </footer> */}
+        </footer>
       </div>
     </div>
   );
