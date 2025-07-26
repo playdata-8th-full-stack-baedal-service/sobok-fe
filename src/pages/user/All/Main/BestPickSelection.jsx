@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { EffectFade, Navigation, Pagination, Autoplay } from 'swiper/modules'; // Added missing imports
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import styles from './MainPage.module.scss';
 import axiosInstance from '../../../../services/axios-config';
 import 'swiper/css';
@@ -10,10 +10,12 @@ import 'swiper/css/pagination';
 
 function BestPickSelection() {
   const [bestPick, setBestPick] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const fetchBestPick = async () => {
     try {
+      setLoading(true);
       const res = await axiosInstance.get('post-service/post/post-list', {
         params: {
           page: 0,
@@ -21,11 +23,17 @@ function BestPickSelection() {
           sortBy: 'LIKE',
         },
       });
-      if (res.data.success) {
+
+     
+
+      if (res.data.success && res.data.data.content) {
         setBestPick(res.data.data.content);
+        
       }
     } catch (err) {
-      console.log(err);
+      console.error('API Error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,17 +45,32 @@ function BestPickSelection() {
     navigate(`/user/post/${postId}`);
   };
 
+  if (loading) {
+    return <div className={styles.bestPickSelection}>로딩 중...</div>;
+  }
+
   return (
     <div className={styles.bestPickSelection}>
       <p className={styles.bestPicktitle}>게시물 베스트 Pick</p>
+
       <Swiper
         spaceBetween={30}
+        slidesPerView={1} 
         navigation
         pagination={{ clickable: true }}
         loop={bestPick.length > 1}
-        autoplay={{ delay: 3000, disableOnInteraction: false }} // Fixed typo: autopaly -> autoplay
+        autoplay={bestPick.length > 1 ? { delay: 3000, disableOnInteraction: false } : false}
         modules={[Navigation, Pagination, Autoplay]}
         className={styles.mySwiper}
+        breakpoints={{
+          
+          768: {
+            slidesPerView: 1,
+          },
+          1024: {
+            slidesPerView: 1,
+          },
+        }}
       >
         {bestPick.map((post, ind) => (
           <SwiperSlide
@@ -57,10 +80,19 @@ function BestPickSelection() {
             role="button"
             aria-label={`${post.title} 게시글로 이동`}
             onKeyDown={e => {
-              if (e.key === 'Enter' || e.key === ' ') handleClick(post.postId);
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleClick(post.postId);
+              }
             }}
           >
-            <img src={post.thumbnail} />
+            <img 
+              src={post.thumbnail} 
+              onError={(e) => {
+                console.log('Image load error:', e.target.src);
+                e.target.style.display = 'none';
+              }}
+            />
             <div className={styles.infosection}>
               <p>{post.title}</p>
               <p>{post.nickName}</p>

@@ -136,6 +136,12 @@ function HubRegisterPage() {
 
   const handleInputChange = e => {
     const { name, value } = e.target;
+    
+    // roadFull은 주소검색을 통해서만 변경되도록 막음
+    if (name === 'roadFull') {
+      return;
+    }
+
     setFormData(prev => ({
       ...prev,
       [name]: value,
@@ -152,16 +158,6 @@ function HubRegisterPage() {
 
     if (name === 'shopName') {
       setShopNameCheck({
-        isChecked: false,
-        isAvailable: false,
-        loading: false,
-        error: null,
-      });
-    }
-
-    // 주소 입력값이 변경되면 중복확인 상태 초기화
-    if (name === 'roadFull') {
-      setShopAddressCheck({
         isChecked: false,
         isAvailable: false,
         loading: false,
@@ -727,6 +723,7 @@ function HubRegisterPage() {
               onChange={handleInputChange}
               placeholder="주소검색 버튼을 클릭해주세요"
               className={styled.addressinput}
+              readOnly  // 주소 입력 필드를 읽기전용으로 설정
             />
             <button type="button" onClick={handleAddressSearch} className={styled.addrbutton}>
               주소 검색

@@ -546,7 +546,7 @@
   .cookThumbnail {
     width: 100%;
     height: auto;
-    object-fit: cover;
+    object-fit: fill;
     border-radius: 8px; /* 선택사항 */
   }
 }

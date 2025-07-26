@@ -29,6 +29,13 @@ function AddressSection({ roadFull, addrDetail, onAddressChange }) {
     return () => document.head.removeChild(script);
   }, []);
 
+  // 도로명 주소가 없으면 상세주소 입력시 초기화
+  useEffect(() => {
+    if (!roadFull && addrDetail) {
+      onAddressChange('addrDetail', '');
+    }
+  }, [roadFull, addrDetail, onAddressChange]);
+
   return (
     <Input label="주소 (선택)" className={styles.addressGroup}>
       <div className={styles.addressSearch}>
@@ -39,11 +46,12 @@ function AddressSection({ roadFull, addrDetail, onAddressChange }) {
       </div>
       <input
         type="text"
-        name="addDetail"
+        name="addrDetail"
         value={addrDetail}
-        onChange={e => onAddressChange('addDetail', e.target.value)}
-        placeholder="상세주소를 입력하세요"
+        onChange={e => onAddressChange('addrDetail', e.target.value)}
+        placeholder={roadFull ? "상세주소를 입력하세요" : "먼저 도로명 주소를 검색해주세요"}
         className={styles.detailInput}
+        disabled={!roadFull}
       />
     </Input>
   );
