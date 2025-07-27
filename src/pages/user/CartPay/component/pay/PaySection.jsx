@@ -11,6 +11,7 @@ import {
   setPayClick,
 } from '../../../../../store/cartPaySlice';
 import Checkout from './Checkout';
+import axiosInstance from '../../../../../services/axios-config';
 
 const PaySection = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const PaySection = () => {
     selectedAddressId,
     selectedCartItemIds,
     orderer,
+    cartItems,
   } = useSelector(state => state.pay);
 
   useEffect(() => {
@@ -45,6 +47,25 @@ const PaySection = () => {
     );
     dispatch(setPayClick(true));
   };
+
+  useEffect(() => {
+    const fetchShop = async () => {
+      if (orderer?.addresses === null) return;
+      const response = await axiosInstance.post(
+        `/shop-service/shop/available?addressId=${orderer.addresses[selectedAddressId].id}`,
+        {
+          cartIngredientStockList: [
+            {
+              ingredientId: 1,
+              quantity: 1,
+            },
+          ],
+        }
+      );
+      console.log('가장 가까운 가능한 가게 이름 : ' + response.data.data[0].shopName);
+    };
+    fetchShop();
+  }, [orderer?.addresses, selectedAddressId, selectedCartItemIds, cartItems]);
 
   return (
     <div className={isPayVisible ? styles.paySection : styles.paySectionDisabled}>
