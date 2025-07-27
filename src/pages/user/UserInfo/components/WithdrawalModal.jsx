@@ -48,7 +48,7 @@ function WithdrawalModal({ onClose, onSubmit, loading }) {
   }
 
   return (
-    <ModalWrapper title="회원탈퇴" onClose={onClose} size="lg">
+    <ModalWrapper title="회원탈퇴" onClose={onClose} size="md">
       <div>
         <p className={styles.withdrawalDescription}>회원탈퇴를 위해 비밀번호를 입력해주세요.</p>
 
