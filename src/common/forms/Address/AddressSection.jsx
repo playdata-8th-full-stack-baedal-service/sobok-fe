@@ -29,7 +29,6 @@ function AddressSection({ roadFull, addrDetail, onAddressChange }) {
     return () => document.head.removeChild(script);
   }, []);
 
-  // 도로명 주소가 없으면 상세주소 입력시 초기화
   useEffect(() => {
     if (!roadFull && addrDetail) {
       onAddressChange('addrDetail', '');
@@ -37,28 +36,38 @@ function AddressSection({ roadFull, addrDetail, onAddressChange }) {
   }, [roadFull, addrDetail, onAddressChange]);
 
   return (
-    <Input label="주소" required className={styles.addressGroup}>
-      <div className={styles.addressSearch}>
-        <input type="text" value={roadFull} placeholder="주소검색 버튼을 클릭해주세요" readOnly />
-        <Button
-          type="button"
-          variant="BASIC"
-          onClick={openDaumPostcode}
-          className={styles.addrbutton}
-        >
-          주소검색
-        </Button>
-      </div>
-      <input
-        type="text"
+    <div className={styles.addressContainer}>
+      <Input label="주소" required>
+        <div className={styles.inputButtonGroup}>
+          <input
+            type="text"
+            name="roadFull"
+            value={roadFull}
+            placeholder="주소검색 버튼을 클릭해주세요"
+            readOnly
+          />
+          <Button
+            type="button"
+            variant="BASIC"
+            onClick={openDaumPostcode}
+            className={styles.addrbutton}
+          >
+            주소검색
+          </Button>
+        </div>
+      </Input>
+
+      <Input
+        label="상세주소"
         name="addrDetail"
+        type="text"
         value={addrDetail}
         onChange={e => onAddressChange('addrDetail', e.target.value)}
         placeholder={roadFull ? '상세주소를 입력하세요' : '먼저 도로명 주소를 검색해주세요'}
-        className={styles.detailInput}
         disabled={!roadFull}
+        className={styles.detailInput}
       />
-    </Input>
+    </div>
   );
 }
 

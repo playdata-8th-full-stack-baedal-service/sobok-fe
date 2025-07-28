@@ -109,7 +109,7 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
             <Button
               type="button"
               variant="BASIC"
-              className="small"
+              className={styles.profileButton}
               onClick={() => {
                 document.getElementById('profile-image-input').click();
               }}
