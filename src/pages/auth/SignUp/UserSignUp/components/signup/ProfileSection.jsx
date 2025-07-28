@@ -125,41 +125,31 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
           <Input
             label="아이디"
             required
+            type="text"
+            id="loginId"
+            name="loginId"
+            placeholder="아이디를 입력해주세요."
+            value={formData.loginId}
+            onChange={handleLoginIdChange}
             className={styles.inputWithButton}
             success={loginIdCheckMessage}
             error={loginIdCheckError}
-          >
-            <div className={styles.inputButtonGroup}>
-              <input
-                type="text"
-                id="loginId"
-                name="loginId"
-                value={formData.loginId}
-                onChange={handleLoginIdChange}
-                className={loginIdCheckError ? 'input-error' : ''}
-              />
-            </div>
-          </Input>
+          />
         )}
 
         <Input
           label="닉네임"
           required
+          type="text"
+          id="nickname"
+          name="nickname"
+          placeholder="닉네임을 입력해주세요."
+          value={formData.nickname}
+          onChange={handleNicknameChange}
           className={styles.inputWithButton}
           success={nicknameCheckMessage}
           error={nicknameCheckError}
-        >
-          <div className={styles.inputButtonGroup}>
-            <input
-              type="text"
-              id="nickname"
-              name="nickname"
-              value={formData.nickname}
-              onChange={handleNicknameChange}
-              className={nicknameCheckError ? styles.inputError : ''}
-            />
-          </div>
-        </Input>
+        />
       </div>
     </div>
   );
