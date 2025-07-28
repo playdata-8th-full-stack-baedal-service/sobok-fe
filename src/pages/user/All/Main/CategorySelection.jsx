@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './MainPage.module.scss';
@@ -17,88 +19,42 @@ const CATEGORY_LIST = ['전체', ...Object.keys(CATEGORY_MAP)];
 function CategorySelection() {
   const [cookList, setCookList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('전체');
+  const [sortByOrder, setSortByOrder] = useState(false);
   const navigate = useNavigate();
 
   // 최신순 데이터 불러오기 (프론트에서 카테고리 필터링)
-  const fetchLatest = async (categoryKor = selectedCategory) => {
+  const fetchLatest = async () => {
     try {
-      const res = await axiosInstance.get('/cook-service/cook/get-cook', {
-        params: { pageNo: 1, numOfRows: 20 },
+      console.log(selectedCategory);
+      console.log(sortByOrder ? 'order' : null);
+      const res = await axiosInstance.get('/cook-service/cooks', {
+        params: {
+          pageNo: 1,
+          numOfRows: 5,
+          category: selectedCategory === '전체' ? null : CATEGORY_MAP[selectedCategory],
+          sort: sortByOrder ? 'order' : null,
+        },
       });
-      let list = res.data.data;
-      if (categoryKor !== '전체') {
-        const categoryCode = CATEGORY_MAP[categoryKor];
-        list = list.filter(cook => cook.category === categoryCode);
-      }
-      setCookList(list.slice(0, 5));
-      setSelectedCategory(categoryKor);
+      setCookList(res.data.data);
     } catch (e) {
       setCookList([]);
     }
   };
 
-  // 주문량순 데이터 불러오기 (전체에서만)
-  const fetchPopular = async () => {
-    try {
-      const res = await axiosInstance.get('/cook-service/cook/popular', {
-        params: { page: 1, size: 5 },
-      });
-      setCookList(res.data.data || []);
-    } catch (e) {
-      setCookList([]);
-    }
-  };
+  useEffect(() => {
+    fetchLatest();
+  }, [selectedCategory, sortByOrder, fetchLatest]);
 
   // 카테고리별 데이터 불러오기 함수 (axiosInstance)
   const fetchCategory = async korCategory => {
-    if (korCategory === '전체') {
-      fetchLatest('전체');
-      return;
-    }
-    const category = CATEGORY_MAP[korCategory];
     setSelectedCategory(korCategory);
-    try {
-      const res = await axiosInstance.get('/cook-service/cook/get-cook-category', {
-        params: {
-          category,
-          pageNo: 1,
-          numOfRows: 5,
-        },
-      });
-      if (res.data.success) {
-        setCookList(res.data.data);
-      } else {
-        setCookList([]);
-      }
-    } catch (e) {
-      setCookList([]);
-    }
-  };
-
-  // 마운트 시 전체 자동 조회
-  useEffect(() => {
-    fetchCategory('전체');
-    // eslint-disable-next-line
-  }, []);
-
-  // 최신순 버튼 접근성 핸들러
-  const handleLatestKeyDown = e => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      fetchLatest(selectedCategory);
-    }
-  };
-  // 주문량순 버튼 접근성 핸들러
-  const handlePopularKeyDown = e => {
-    if (selectedCategory === '전체' && (e.key === 'Enter' || e.key === ' ')) {
-      fetchPopular();
-    }
   };
 
   // 더보기 버튼 클릭 시 해당 카테고리 목록 페이지로 이동
   const handleMoreClick = () => {
     if (selectedCategory && selectedCategory !== '전체') {
       const categoryCode = CATEGORY_MAP[selectedCategory];
-      navigate(`/user/category?category=${categoryCode}`);
+      navigate(`/category?category=${categoryCode}`);
     }
   };
 
@@ -106,7 +62,7 @@ function CategorySelection() {
   const handleCookClick = cook => {
     const id = cook.cookId || cook.id;
     if (id) {
-      navigate(`/user/product?id=${id}`);
+      navigate(`/product?id=${id}`);
     }
   };
 
@@ -118,26 +74,27 @@ function CategorySelection() {
           <input type="checkbox" id="filter" />
           <span
             style={{ cursor: 'pointer', fontWeight: 'bold', color: '#ffffff' }}
-            onClick={() => fetchLatest(selectedCategory)}
             tabIndex={0}
             role="button"
             aria-label="최신순 정렬"
-            onKeyDown={handleLatestKeyDown}
+            onClick={() => {
+              setSortByOrder(prev => !prev);
+            }}
           >
             최신순
           </span>
           <span
             style={{
-              cursor: selectedCategory === '전체' ? 'pointer' : 'not-allowed',
               fontWeight: 'bold',
               color: selectedCategory === '전체' ? '#ffffff' : '#aaa',
             }}
-            onClick={selectedCategory === '전체' ? fetchPopular : undefined}
             tabIndex={selectedCategory === '전체' ? 0 : -1}
             role="button"
             aria-label="주문량순 정렬"
             aria-disabled={selectedCategory !== '전체'}
-            onKeyDown={handlePopularKeyDown}
+            onClick={() => {
+              setSortByOrder(prev => !prev);
+            }}
           >
             주문량순
           </span>
@@ -185,7 +142,9 @@ function CategorySelection() {
                   className={styles.cookThumbnail}
                   alt={cook.cookName || cook.name}
                 />
-                <div className={styles.cooknametitle}><p className={styles.realtitle}>{cook.cookName || cook.name}</p></div>
+                <div className={styles.cooknametitle}>
+                  <p className={styles.realtitle}>{cook.cookName || cook.name}</p>
+                </div>
                 {cook.orderCount !== undefined && <div>주문수: {cook.orderCount}</div>}
               </div>
             );

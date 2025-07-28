@@ -19,19 +19,19 @@ function MainPage() {
   // 접근성: 키보드 엔터/스페이스로도 이동
   const handleResultItemKeyDown = (e, id) => {
     if (e.key === 'Enter' || e.key === ' ') {
-      navigate(`/user/product?id=${id}`);
+      navigate(`/product?id=${id}`);
     }
   };
 
   // 더보기 클릭 핸들러 - SearchPage로 이동
   const handleMoreClick = () => {
     if (searchState.currentKeyword) {
-      navigate(`/user/search?keyword=${encodeURIComponent(searchState.currentKeyword)}`);
+      navigate(`/search?keyword=${encodeURIComponent(searchState.currentKeyword)}`);
     }
   };
 
   // 더보기 키보드 이벤트 핸들러
-  const handleMoreKeyDown = (e) => {
+  const handleMoreKeyDown = e => {
     if (e.key === 'Enter' || e.key === ' ') {
       handleMoreClick();
     }
@@ -39,10 +39,7 @@ function MainPage() {
 
   return (
     <div className={styles.MainPage}>
-      <SearchSelection 
-        searchState={searchState} 
-        setSearchState={setSearchState} 
-      />
+      <SearchSelection searchState={searchState} setSearchState={setSearchState} />
       {searchState.showResults && (
         <div ref={searchState.resultsRef} className={styles.searchResults}>
           {searchState.results.length === 0 ? (
@@ -53,7 +50,7 @@ function MainPage() {
                 <div
                   key={cook.id}
                   className={styles.searchResultItem}
-                  onClick={() => navigate(`/user/product?id=${cook.id}`)}
+                  onClick={() => navigate(`/product?id=${cook.id}`)}
                   onKeyDown={e => handleResultItemKeyDown(e, cook.id)}
                   tabIndex={0}
                   role="button"
@@ -82,7 +79,7 @@ function MainPage() {
         </div>
       )}
       <BestPickSelection />
-      <hr/>
+      <hr />
       <CategorySelection />
     </div>
   );

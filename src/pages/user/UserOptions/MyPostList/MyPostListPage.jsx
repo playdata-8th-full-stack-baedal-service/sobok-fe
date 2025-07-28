@@ -32,7 +32,7 @@ const MyPostListPage = () => {
   };
 
   const handleCardClick = postId => {
-    navigate(`/user/post/${postId}`);
+    navigate(`/post/${postId}`);
   };
 
   const handlePrev = () => {

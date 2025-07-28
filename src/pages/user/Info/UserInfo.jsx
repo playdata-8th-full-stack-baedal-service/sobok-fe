@@ -3,16 +3,18 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Divider } from '@mui/material';
 import { editEmail, editPhone, lookupUser, sendAuthCode } from '../../../store/userInfoSlice';
+
 import UserInfoHeader from './component/UserInfoHeader';
 import ProfileImage from './component/ProfileImage';
 import EditableField from './component/EditableField';
 import AddrList from './component/AddrList';
-import WithdrawalModal from '../../user/UserInfo/components/WithdrawalModal'; // 직접 임포트
+import WithdrawalModal from '../../user/UserInfo/components/WithdrawalModal';
 import styles from './UserInfo.module.scss';
 import Button from '../../../common/components/Button';
 import AuthCodeEditableField from './component/AuthCodeEditableField';
 import { useNavigate } from 'react-router-dom';
 import useToast from '@/common/hooks/useToast';
+import axiosInstance from '../../../services/axios-config';
 
 function UserInfo() {
   const { userInfo } = useSelector(state => state.userInfo);
@@ -25,7 +27,7 @@ function UserInfo() {
   const [loadingState, setLoadingState] = useState({
     withdrawalLoading: false,
   });
-  const [isWithdrawalModalOpen, setIsWithdrawalModalOpen] = useState(false); // 모달 상태 추가
+  const [isWithdrawalModalOpen, setIsWithdrawalModalOpen] = useState(false);
 
   // 유저 정보 조회
   useEffect(() => {
@@ -109,18 +111,44 @@ function UserInfo() {
     }
   };
 
-  // 회원탈퇴 처리 함수
+  // 비밀번호 검증 함수
+  const verifyPassword = async (password) => {
+    try {
+      const response = await axiosInstance.post('/auth-service/auth/verify-password', {
+        password
+      });
+      return response.data.success;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  // 회원탈퇴 처리 함수 - 비밀번호 검증만 담당
   const handleWithdrawal = useCallback(
     async password => {
       setLoadingState(prev => ({ ...prev, withdrawalLoading: true }));
       try {
-        // 실제 비밀번호 검증 API 호출 (예시로 성공 반환)
-        await dispatch(verifyPassword({ password })).unwrap();
-        return { success: true };
+        // 비밀번호가 비어있으면 실패
+        if (!password || password.trim() === '') {
+          return { error: '비밀번호를 입력해주세요.' };
+        }
+        
+        // 직접 비밀번호 검증 API 호출
+        const isValidPassword = await verifyPassword(password);
+        
+        if (isValidPassword) {
+          return { success: true };
+        } else {
+          // 비밀번호가 틀렸을 때 토스트 메시지와 함께 모달 닫기
+          showNegative('비밀번호가 올바르지 않습니다.');
+          setIsWithdrawalModalOpen(false);
+          return { error: '비밀번호가 올바르지 않습니다.' };
+        }
       } catch (error) {
-        showNegative('비밀번호가 올바르지 않습니다.');
+        // API 에러 발생시에도 토스트 메시지와 함께 모달 닫기
+        showNegative('비밀번호 검증 중 오류가 발생했습니다.');
         setIsWithdrawalModalOpen(false);
-        return { error: '비밀번호가 올바르지 않습니다.' };
+        return { error: '비밀번호 검증 중 오류가 발생했습니다.' };
       } finally {
         setLoadingState(prev => ({ ...prev, withdrawalLoading: false }));
       }
@@ -130,12 +158,12 @@ function UserInfo() {
 
   // 회원탈퇴 모달 열기
   const handleWithdrawalClick = useCallback(() => {
-    setIsWithdrawalModalOpen(true); // 모달 열기
+    setIsWithdrawalModalOpen(true);
   }, []);
 
   // 회원탈퇴 모달 닫기
   const handleCloseWithdrawalModal = useCallback(() => {
-    setIsWithdrawalModalOpen(false); // 모달 닫기
+    setIsWithdrawalModalOpen(false);
   }, []);
 
   return (

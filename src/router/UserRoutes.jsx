@@ -25,6 +25,7 @@ import PayPage from '../pages/user/Pay/PayPage';
 import PayCompletePage from '../pages/user/Pay/paycomplete/PayCompletePage';
 import UserInfo from '../pages/user/Info/UserInfo';
 import EditPostPage from '../pages/user/Post/EditPost/EditPostPage';
+import CartPayPage from '../pages/user/CartPay/CartPayPage';
 
 function UserRoutes() {
   return (
@@ -32,13 +33,13 @@ function UserRoutes() {
       <UserHeader />
       <Routes>
         {/* 비회원도 접근 가능한 페이지 */}
-        <Route path="main" element={<MainPage />} />
+        {/* <Route path="main" element={<MainPage />} />
         <Route path="" element={<MainPage />} />
         <Route path="product" element={<ProductPage />} />
         <Route path="search" element={<SearchPage />} />
         <Route path="category" element={<CategoryPage />} />
         <Route path="post-list" element={<PostListPage />} />
-        <Route path="post/:id" element={<PostDetailPage />} />
+        <Route path="post/:id" element={<PostDetailPage />} /> */}
 
         {/* USER 권한 있어야 접근 가능한 페이지 */}
         <Route
@@ -63,7 +64,7 @@ function UserRoutes() {
           path="cart"
           element={
             <RoleRoute role="USER">
-              <UserCartPage />
+              <CartPayPage />
             </RoleRoute>
           }
         />
