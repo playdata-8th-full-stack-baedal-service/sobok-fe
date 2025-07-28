@@ -170,7 +170,7 @@ function CategorySelection() {
             return (
               <div
                 key={id || idx}
-                className={styles[`grid${idx + 1}`]}
+                className={`${styles.gridItem} ${styles[`grid${idx + 1}`]}`}
                 onClick={() => handleCookClick(cook)}
                 onKeyDown={e => {
                   if (e.key === 'Enter' || e.key === ' ') handleCookClick(cook);
@@ -185,7 +185,7 @@ function CategorySelection() {
                   className={styles.cookThumbnail}
                   alt={cook.cookName || cook.name}
                 />
-                <div>{cook.cookName || cook.name}</div>
+                <div className={styles.cooknametitle}><p className={styles.realtitle}>{cook.cookName || cook.name}</p></div>
                 {cook.orderCount !== undefined && <div>주문수: {cook.orderCount}</div>}
               </div>
             );
