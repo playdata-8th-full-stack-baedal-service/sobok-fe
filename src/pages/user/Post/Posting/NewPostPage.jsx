@@ -91,7 +91,7 @@ function NewPostPage() {
       if (registerPost.fulfilled.match(resultAction)) {
         const { postId } = resultAction.payload;
         showSuccess('게시글이 등록되었습니다.');
-        navigate(`/user/post/${postId}`, { replace: true });
+        navigate(`/post/${postId}`, { replace: true });
       } else {
         throw new Error(resultAction.payload || '등록 실패');
       }

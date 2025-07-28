@@ -13,7 +13,7 @@ function Footer() {
     } else if (role === 'ADMIN') {
       window.location.href = '/admin';
     } else if (role === 'USER') {
-      window.location.href = '/user/main';
+      window.location.href = '/main';
     } else {
       window.location.href = '/';
     }

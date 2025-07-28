@@ -86,7 +86,7 @@ function PostListPage() {
 
   // 카드 클릭 시 상세 페이지 이동
   const handleCardClick = postId => {
-    navigate(`/user/post/${postId}`);
+    navigate(`/post/${postId}`);
   };
 
   // 접근성: 엔터/스페이스로도 이동

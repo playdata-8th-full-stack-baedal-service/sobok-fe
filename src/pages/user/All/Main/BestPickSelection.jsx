@@ -45,7 +45,7 @@ function BestPickSelection() {
   }, [bestPick.length]);
 
   const handleClick = postId => {
-    navigate(`/user/post/${postId}`);
+    navigate(`/post/${postId}`);
   };
 
   const handleSlideClick = (index, postId) => {
@@ -80,7 +80,7 @@ function BestPickSelection() {
   return (
     <div className={styles.bestPickSelection}>
       <p className={styles.bestPicktitle}>게시물 베스트 Pick</p>
-      
+
       <div className={styles.customSliderContainer}>
         {bestPick.map((post, index) => (
           <div
@@ -90,12 +90,12 @@ function BestPickSelection() {
             tabIndex={0}
             role="button"
             aria-label={`${post.title} 게시글로 이동`}
-            onKeyDown={(e) => handleKeyDown(e, post.postId, index)}
+            onKeyDown={e => handleKeyDown(e, post.postId, index)}
           >
             <img
               src={post.thumbnail}
               alt={post.title}
-              onError={(e) => {
+              onError={e => {
                 console.log('Image load error:', e.target.src);
                 e.target.style.display = 'none';
               }}

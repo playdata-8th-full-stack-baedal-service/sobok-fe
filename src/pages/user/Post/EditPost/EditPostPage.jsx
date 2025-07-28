@@ -86,7 +86,7 @@ const EditPostPage = () => {
 
       if (res.data?.success) {
         showSuccess('게시글이 수정되었습니다.');
-        navigate(`/user/post/${post.postId}`);
+        navigate(`/post/${post.postId}`);
       } else {
         showNegative(res.data.message || '게시글 수정 실패');
       }

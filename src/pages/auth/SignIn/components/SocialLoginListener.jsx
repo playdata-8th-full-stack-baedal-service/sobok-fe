@@ -30,7 +30,7 @@ function SocialLoginListener() {
         // 역할에 따라 다른 경로로 이동
         switch (data.role) {
           case 'USER':
-            navigate('/user/main');
+            navigate('/main');
             break;
           case 'ADMIN':
             navigate('/admin');
