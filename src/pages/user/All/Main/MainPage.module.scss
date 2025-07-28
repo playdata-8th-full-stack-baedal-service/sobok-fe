@@ -528,7 +528,7 @@
 
   .grid1 {
     grid-area: main;
-    height: 500px;
+    
     
   }
   .grid2 {
@@ -547,7 +547,7 @@
   /* 이미지와 텍스트 레이아웃 개선 */
   .cookThumbnail {
     width: 100%;
-    height: 250px;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: 8px; /* 선택사항 */
   }
@@ -587,4 +587,31 @@
 .bestimg {
   max-height: 300px;
   object-fit: cover;
+}
+
+.cooknametitle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(255, 255, 255);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+
+  &:hover {
+    opacity: 1;
+    color: white;
+    background-color: rgba(104, 101, 101, 0.5);
+  }
+}
+
+.gridItem {
+  position: relative;
 }
