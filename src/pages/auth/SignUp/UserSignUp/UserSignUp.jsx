@@ -242,10 +242,8 @@ function UserSignUp() {
   useEffect(() => {
     if (signUpSuccess) {
       resetForm();
-      dispatch(clearSignUpSuccess());
-      dispatch(clearEmailCheck());
-      dispatch(clearNicknameCheck());
-      dispatch(clearLoginIdCheck());
+      dispatch(clearSMSAuth());
+      dispatch(clearAllChecks());
       navigate('/auth/signup/complete');
     }
   }, [signUpSuccess, dispatch]);

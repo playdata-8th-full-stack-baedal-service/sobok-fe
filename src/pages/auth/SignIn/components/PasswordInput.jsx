@@ -25,7 +25,7 @@ function PasswordInput({
         <Input showLabel={false}>
           <input
             id="password"
-            type={(showPassword = 'text')}
+            type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={e => setPassword(e.target.value)}
             onKeyDown={onKeyDown}
@@ -36,7 +36,7 @@ function PasswordInput({
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
           >
-            {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+            {showPassword ? <AiOutlineEye size={20} /> : <AiOutlineEyeInvisible size={20} />}
           </button>
         </Input>
       </div>

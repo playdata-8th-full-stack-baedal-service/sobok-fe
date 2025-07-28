@@ -3,7 +3,7 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import styles from './AddressSection.module.scss';
 
-function AddressSection({ roadFull, addrDetail, onAddressChange }) {
+function AddressSection({ roadFull, addrDetail, onAddressChange, showDetail }) {
   const openDaumPostcode = () => {
     new window.daum.Postcode({
       oncomplete(data) {
@@ -57,16 +57,18 @@ function AddressSection({ roadFull, addrDetail, onAddressChange }) {
         </div>
       </Input>
 
-      <Input
-        label="상세주소"
-        name="addrDetail"
-        type="text"
-        value={addrDetail}
-        onChange={e => onAddressChange('addrDetail', e.target.value)}
-        placeholder={roadFull ? '상세주소를 입력하세요' : '먼저 도로명 주소를 검색해주세요'}
-        disabled={!roadFull}
-        className={styles.detailInput}
-      />
+      {showDetail && (
+        <Input
+          label="상세주소"
+          name="addrDetail"
+          type="text"
+          value={addrDetail}
+          onChange={e => onAddressChange('addrDetail', e.target.value)}
+          placeholder={roadFull ? '상세주소를 입력하세요' : '먼저 도로명 주소를 검색해주세요'}
+          disabled={!roadFull}
+          className={styles.detailInput}
+        />
+      )}
     </div>
   );
 }

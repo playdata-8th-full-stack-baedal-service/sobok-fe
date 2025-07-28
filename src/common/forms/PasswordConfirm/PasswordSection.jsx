@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import Input from '../../components/Input';
+import styles from './PasswordSection.module.scss';
 
 function PasswordSection({
   password,
@@ -8,7 +10,6 @@ function PasswordSection({
   onPasswordConfirmChange,
   disabled,
 }) {
-  // 비밀번호 검증 상태 관리
   const [passwordValidation, setPasswordValidation] = useState({
     isValid: false,
     isMatching: false,
@@ -16,18 +17,19 @@ function PasswordSection({
     showMatchValidation: false,
   });
 
-  // 비밀번호 유효성 검사 함수
+  // ✅ 비밀번호 보이기/숨기기 상태
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const validatePassword = password => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,16}$/;
     return passwordRegex.test(password);
   };
 
-  // 비밀번호 입력 처리
   const handlePasswordChange = e => {
     const newPassword = e.target.value;
-    onPasswordChange(e); // 부모 컴포넌트의 핸들러 호출
+    onPasswordChange(e);
 
-    // 비밀번호 유효성 검사
     const isValid = validatePassword(newPassword);
     const isMatching = newPassword === passwordConfirm;
 
@@ -39,12 +41,10 @@ function PasswordSection({
     });
   };
 
-  // 비밀번호 확인 입력 처리
   const handlePasswordConfirmChange = e => {
     const newPasswordConfirm = e.target.value;
-    onPasswordConfirmChange(e); // 부모 컴포넌트의 핸들러 호출
+    onPasswordConfirmChange(e);
 
-    // 비밀번호 일치 확인
     const isMatching = password === newPasswordConfirm;
 
     setPasswordValidation(prev => ({
@@ -54,7 +54,6 @@ function PasswordSection({
     }));
   };
 
-  // password prop이 변경될 때 검증 상태 업데이트
   useEffect(() => {
     const isValid = validatePassword(password);
     const isMatching = password === passwordConfirm;
@@ -69,11 +68,12 @@ function PasswordSection({
 
   return (
     <>
+      {/* 비밀번호 */}
       <div style={{ position: 'relative' }}>
         <Input
           label="비밀번호"
           required
-          type="text"
+          type={showPassword ? 'text' : 'password'}
           id="password"
           name="password"
           value={password}
@@ -81,50 +81,64 @@ function PasswordSection({
           disabled={disabled}
           placeholder="대소문자, 숫자, 특수문자 포함 8~16자"
         />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+          className={styles.eyeButton}
+        >
+          {showPassword ? <AiOutlineEye size={20} /> : <AiOutlineEyeInvisible size={20} />}
+        </button>
         {passwordValidation.showValidation && (
-          <div style={{ marginTop: '10px', marginBottom: '10px' }}>
-            <p
-              style={{
-                color: passwordValidation.isValid ? 'green' : 'red',
-                fontSize: '13px',
-                fontWeight: 'bold',
-                margin: '0',
-              }}
-            >
-              {passwordValidation.isValid
-                ? '✓ 사용 가능한 비밀번호입니다!'
-                : '✗ 대소문자, 숫자, 특수문자(@$!%*?&)를 포함하여 8~16자로 입력해주세요.'}
-            </p>
-          </div>
+          <p
+            style={{
+              color: passwordValidation.isValid ? 'green' : 'red',
+              fontSize: '13px',
+              fontWeight: 'bold',
+              margin: '10px 0',
+            }}
+          >
+            {passwordValidation.isValid
+              ? '✓ 사용 가능한 비밀번호입니다!'
+              : '✗ 대소문자, 숫자, 특수문자(@$!%*?&)를 포함하여 8~16자로 입력해주세요.'}
+          </p>
         )}
       </div>
 
+      {/* 비밀번호 확인 */}
       <div style={{ position: 'relative' }}>
         <Input
           label="비밀번호 확인"
           required
-          type="text"
+          type={showConfirmPassword ? 'text' : 'password'}
           id="passwordConfirm"
+          name="passwordConfirm"
           value={passwordConfirm}
           onChange={handlePasswordConfirmChange}
           disabled={disabled}
           placeholder="비밀번호를 다시 입력해주세요"
         />
+        <button
+          type="button"
+          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          aria-label={showConfirmPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+          className={styles.eyeButton}
+        >
+          {showConfirmPassword ? <AiOutlineEye size={20} /> : <AiOutlineEyeInvisible size={20} />}
+        </button>
         {passwordValidation.showMatchValidation && (
-          <div style={{ marginTop: '10px', marginBottom: '10px' }}>
-            <p
-              style={{
-                color: passwordValidation.isMatching ? 'green' : 'red',
-                fontSize: '13px',
-                fontWeight: 'bold',
-                margin: '0',
-              }}
-            >
-              {passwordValidation.isMatching
-                ? '✓ 비밀번호가 일치합니다!'
-                : '✗ 비밀번호가 일치하지 않습니다.'}
-            </p>
-          </div>
+          <p
+            style={{
+              color: passwordValidation.isMatching ? 'green' : 'red',
+              fontSize: '13px',
+              fontWeight: 'bold',
+              margin: '10px 0',
+            }}
+          >
+            {passwordValidation.isMatching
+              ? '✓ 비밀번호가 일치합니다!'
+              : '✗ 비밀번호가 일치하지 않습니다.'}
+          </p>
         )}
       </div>
     </>

@@ -1,762 +1,207 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendSMSCode, verifySMSCode, resetSMSAuth } from '@/store/smsAuthSlice';
 import { checkLoginId, clearLoginIdCheck } from '@/store/authSlice';
-import styled from './HubRegisterPage.module.scss';
-import axiosInstance from '../../../services/axios-config';
-// import DuplicateCheckInput from '@/common/components/DuplicateCheckInput';
-import ShopNameDuplicateCheckInput from './ShopNameDuplicateCheckInput';
+import axiosInstance from '@/services/axios-config';
 import useToast from '@/common/hooks/useToast';
+import PasswordSection from '@/common/forms/PasswordConfirm/PasswordSection';
+import PhoneVerification from '@/common/forms/Phone/PhoneVerification';
+import AddressSection from '@/common/forms/Address/AddressSection';
+import Input from '@/common/components/Input';
+import styles from './HubRegisterPage.module.scss';
+import { useNavigate } from 'react-router-dom';
+import { clearAllChecks } from '@/store/authSlice';
+import { clearSMSAuth } from '@/store/smsAuthSlice';
 
 function HubRegisterPage() {
   const dispatch = useDispatch();
-  const { isVerified, isCodeSent, error: smsError, loading } = useSelector(state => state.smsAuth);
-  const { showSuccess } = useToast();
-  const { showNegative } = useToast();
-  const { showInfo } = useToast();
+  const { showSuccess, showNegative } = useToast();
+  const { loginIdCheckMessage, loginIdCheckError } = useSelector(state => state.auth);
+  const navigate = useNavigate();
 
-  // authSlice에서 아이디 중복확인 관련 상태 가져오기
-  const {
-    loginIdCheckMessage,
-    loginIdCheckError,
-    loading: authLoading,
-  } = useSelector(state => state.auth);
-
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
     loginId: '',
     password: '',
+    passwordConfirm: '',
     shopName: '',
     ownerName: '',
     phone: '',
     roadFull: '',
   });
-
-  const [passwordConfirm, setPasswordConfirm] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
-  const [submitLoading, setSubmitLoading] = useState(false);
 
-  // 아이디 중복확인 상태 관리
-  const [loginIdCheck, setLoginIdCheck] = useState({
-    isChecked: false,
-    isAvailable: false,
-  });
+  const [shopNameCheckMessage, setShopNameCheckMessage] = useState('');
+  const [shopNameCheckError, setShopNameCheckError] = useState('');
 
-  const [shopNameCheck, setShopNameCheck] = useState({
-    isChecked: false,
-    isAvailable: false,
-    loading: false,
-    error: null,
-  });
+  const [shopAddressCheckMessage, setShopAddressCheckMessage] = useState('');
+  const [shopAddressCheckError, setShopAddressCheckError] = useState('');
 
-  // 주소 중복확인 상태 관리 추가
-  const [shopAddressCheck, setShopAddressCheck] = useState({
-    isChecked: false,
-    isAvailable: false,
-    loading: false,
-    error: null,
-  });
+  const loginIdTimer = useRef(null);
+  const shopNameTimer = useRef(null);
+  const shopAddressTimer = useRef(null);
 
-  // 비밀번호 검증 상태 관리
-  const [passwordValidation, setPasswordValidation] = useState({
-    isValid: false,
-    isMatching: false,
-    showValidation: false,
-    showMatchValidation: false,
-  });
-
-  // 비밀번호 유효성 검사 함수
-  const validatePassword = password => {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,16}$/;
-    return passwordRegex.test(password);
-  };
-
-  // 비밀번호 입력 처리
-  const handlePasswordChange = e => {
-    const newPassword = e.target.value;
-    setFormData(prev => ({
-      ...prev,
-      password: newPassword,
-    }));
-
-    // 비밀번호 유효성 검사
-    const isValid = validatePassword(newPassword);
-    const isMatching = newPassword === passwordConfirm;
-
-    setPasswordValidation({
-      isValid,
-      isMatching,
-      showValidation: newPassword.length > 0,
-      showMatchValidation: passwordConfirm.length > 0,
-    });
-  };
-
-  // 비밀번호 확인 입력 처리
-  const handlePasswordConfirmChange = e => {
-    const newPasswordConfirm = e.target.value;
-    setPasswordConfirm(newPasswordConfirm);
-
-    // 비밀번호 일치 확인
-    const isMatching = formData.password === newPasswordConfirm;
-
-    setPasswordValidation(prev => ({
-      ...prev,
-      isMatching,
-      showMatchValidation: newPasswordConfirm.length > 0,
-    }));
-  };
-
-  // 아이디 중복확인 결과 처리
+  // 폼 클리어
   useEffect(() => {
-    if (loginIdCheckMessage) {
-      setLoginIdCheck({
-        isChecked: true,
-        isAvailable: true,
-      });
-    }
+    dispatch(clearAllChecks());
+    dispatch(clearSMSAuth());
+  }, [dispatch]);
 
-    if (loginIdCheckError) {
-      setLoginIdCheck({
-        isChecked: true,
-        isAvailable: false,
-      });
-    }
-  }, [loginIdCheckMessage, loginIdCheckError]);
-
-  // 다음 주소검색 API 스크립트 로드
+  // 자동 아이디 중복검사
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-    script.async = true;
-    document.head.appendChild(script);
-
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
-
-  const handleInputChange = e => {
-    const { name, value } = e.target;
-    
-    // roadFull은 주소검색을 통해서만 변경되도록 막음
-    if (name === 'roadFull') {
+    if (loginIdTimer.current) clearTimeout(loginIdTimer.current);
+    if (!form.loginId.trim()) {
+      dispatch(clearLoginIdCheck());
       return;
     }
+    loginIdTimer.current = setTimeout(() => {
+      dispatch(checkLoginId(form.loginId.trim()));
+    }, 400);
+  }, [form.loginId, dispatch]);
 
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    // 아이디 입력값이 변경되면 중복확인 상태 초기화
-    if (name === 'loginId') {
-      setLoginIdCheck({
-        isChecked: false,
-        isAvailable: false,
-      });
-      dispatch(clearLoginIdCheck()); // Redux 상태도 초기화
-    }
-
-    if (name === 'shopName') {
-      setShopNameCheck({
-        isChecked: false,
-        isAvailable: false,
-        loading: false,
-        error: null,
-      });
-    }
-  };
-
-  // 아이디 중복확인 함수
-  const handleCheckLoginId = () => {
-    if (!formData.loginId.trim()) {
-      showNegative('아이디를 입력해주세요.');
+  // 자동 지점명 중복검사
+  useEffect(() => {
+    if (shopNameTimer.current) clearTimeout(shopNameTimer.current);
+    if (!form.shopName.trim()) {
+      setShopNameCheckMessage('');
+      setShopNameCheckError('');
       return;
     }
-
-    // 아이디 형식 검증 (영문자, 숫자만 허용, 4-20자)
-    const loginIdRegex = /^[a-zA-Z0-9]{4,20}$/;
-    if (!loginIdRegex.test(formData.loginId)) {
-      showNegative('아이디는 영문자와 숫자만 사용하여 4~20자로 입력해주세요.');
-      return;
-    }
-
-    dispatch(checkLoginId(formData.loginId));
-  };
-
-  const handleSendSMS = () => {
-    const phoneRegex = /^\d{11}$/;
-    if (!phoneRegex.test(formData.phone)) {
-      showNegative('전화번호는 하이픈 없이 11자리 숫자로 입력해주세요.');
-      return;
-    }
-    dispatch(sendSMSCode(formData.phone));
-  };
-
-  const handleVerifySMS = () => {
-    if (!verificationCode.trim()) {
-      showNegative('인증번호를 입력해주세요.');
-      return;
-    }
-    dispatch(
-      verifySMSCode({
-        phoneNumber: formData.phone,
-        inputCode: verificationCode.trim(),
-      })
-    );
-  };
-
-  const handleCheckShopName = async () => {
-    if (!formData.shopName.trim()) {
-      showNegative('지점 이름을 입력하세요.');
-      return;
-    }
-
-    setShopNameCheck(prev => ({
-      ...prev,
-      loading: true,
-      error: null,
-    }));
-
-    try {
-      // axiosInstance를 사용하여 CORS 설정 적용
-      const response = await axiosInstance.get('/shop-service/shop/check-shopName', {
-        params: {
-          shopName: formData.shopName,
-        },
-      });
-
-      console.log('API 응답:', response.data); // 디버깅용 로그
-
-      // API 응답이 성공인 경우
-      if (response.data.success === true && response.data.status === 200) {
-        setShopNameCheck({
-          isChecked: true,
-          isAvailable: true,
-          loading: false,
-          error: null,
+    shopNameTimer.current = setTimeout(async () => {
+      try {
+        const response = await axiosInstance.get('/shop-service/shop/check-shopName', {
+          params: { shopName: form.shopName },
         });
-        showSuccess(response.data.message || '사용 가능한 지점명입니다.');
-      } else {
-        // API 응답이 실패인 경우
-        setShopNameCheck({
-          isChecked: true,
-          isAvailable: false,
-          loading: false,
-          error: response.data.message || '이미 사용중인 지점명입니다.',
-        });
-        showNegative(response.data.message || '이미 사용중인 지점명입니다.');
-      }
-    } catch (error) {
-      console.error('지점명 중복 확인 오류:', error);
-
-      // 서버에서 400, 409 등의 에러 응답을 보낸 경우
-      if (error.response && error.response.data) {
-        const errorMessage = error.response.data.message || '이미 사용중인 지점명입니다.';
-        setShopNameCheck({
-          isChecked: true,
-          isAvailable: false,
-          loading: false,
-          error: errorMessage,
-        });
-        showNegative(errorMessage);
-      } else {
-        // 네트워크 오류 등의 경우
-        setShopNameCheck({
-          isChecked: true,
-          isAvailable: false,
-          loading: false,
-          error: '중복 확인 중 오류가 발생했습니다.',
-        });
-        showNegative('중복 확인 중 오류가 발생했습니다.');
-      }
-    }
-  };
-
-  // 주소 중복확인 함수 추가
-  const handleCheckShopAddress = async () => {
-    if (!formData.roadFull.trim()) {
-      showNegative('주소를 입력해주세요.');
-      return;
-    }
-
-    setShopAddressCheck(prev => ({
-      ...prev,
-      loading: true,
-      error: null,
-    }));
-
-    try {
-      const response = await axiosInstance.get('/shop-service/shop/check-shopAddress', {
-        params: {
-          shopAddress: formData.roadFull,
-        },
-      });
-
-      console.log('주소 중복 확인 API 응답:', response.data);
-
-      // API 응답이 성공인 경우
-      if (response.data.success === true && response.data.status === 200) {
-        setShopAddressCheck({
-          isChecked: true,
-          isAvailable: true,
-          loading: false,
-          error: null,
-        });
-        showSuccess(response.data.message || '사용 가능한 주소입니다.');
-      } else {
-        // API 응답이 실패인 경우
-        setShopAddressCheck({
-          isChecked: true,
-          isAvailable: false,
-          loading: false,
-          error: response.data.message || '이미 사용중인 주소입니다.',
-        });
-        showNegative(response.data.message || '이미 사용중인 주소입니다.');
-      }
-    } catch (error) {
-      console.error('주소 중복 확인 오류:', error);
-
-      // 서버에서 400, 409 등의 에러 응답을 보낸 경우
-      if (error.response && error.response.data) {
-        const errorMessage = error.response.data.message || '이미 사용중인 주소입니다.';
-        setShopAddressCheck({
-          isChecked: true,
-          isAvailable: false,
-          loading: false,
-          error: errorMessage,
-        });
-        showNegative(errorMessage);
-      } else {
-        // 네트워크 오류 등의 경우
-        setShopAddressCheck({
-          isChecked: true,
-          isAvailable: false,
-          loading: false,
-          error: '주소 중복 확인 중 오류가 발생했습니다.',
-        });
-        showNegative('주소 중복 확인 중 오류가 발생했습니다.');
-      }
-    }
-  };
-
-  // 다음 주소검색 팝업 열기
-  const handleAddressSearch = () => {
-    if (!window.daum) {
-      showInfo('주소검색 서비스를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
-      return;
-    }
-
-    new window.daum.Postcode({
-      oncomplete(data) {
-        // 선택된 주소 타입에 따라 주소 설정
-        let addr = '';
-        let extraAddr = '';
-
-        // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-        if (data.userSelectedType === 'R') {
-          // 도로명 주소를 선택한 경우
-          addr = data.roadAddress;
+        if (response.data.success) {
+          setShopNameCheckMessage('사용 가능한 지점명입니다!');
+          setShopNameCheckError('');
         } else {
-          // 지번 주소를 선택한 경우(J)
-          addr = data.jibunAddress;
+          setShopNameCheckMessage('');
+          setShopNameCheckError('이미 사용중인 지점명입니다.');
         }
+      } catch (error) {
+        setShopNameCheckMessage('');
+        setShopNameCheckError(error.response?.data?.message || '중복 확인 오류');
+      }
+    }, 400);
+  }, [form.shopName]);
 
-        // 사용자가 선택한 주소가 도로명 타입일 때 참고항목을 조합한다.
-        if (data.userSelectedType === 'R') {
-          // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-          if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-            extraAddr += data.bname;
-          }
-          // 건물명이 있고, 공동주택일 경우 추가한다.
-          if (data.buildingName !== '' && data.apartment === 'Y') {
-            extraAddr += extraAddr !== '' ? `, ${data.buildingName}` : data.buildingName;
-          }
-          // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-          if (extraAddr !== '') {
-            extraAddr = ` (${extraAddr})`;
-          }
-        }
-
-        // 최종 주소 설정
-        const fullAddress = addr + extraAddr;
-
-        setFormData(prev => ({
-          ...prev,
-          roadFull: fullAddress,
-        }));
-
-        // 주소가 변경되었으므로 중복확인 상태 초기화
-        setShopAddressCheck({
-          isChecked: false,
-          isAvailable: false,
-          loading: false,
-          error: null,
+  // 자동 주소 중복검사
+  useEffect(() => {
+    if (shopAddressTimer.current) clearTimeout(shopAddressTimer.current);
+    if (!form.roadFull.trim()) {
+      setShopAddressCheckMessage('');
+      setShopAddressCheckError('');
+      return;
+    }
+    shopAddressTimer.current = setTimeout(async () => {
+      try {
+        const response = await axiosInstance.get('/shop-service/shop/check-shopAddress', {
+          params: { shopAddress: form.roadFull },
         });
-      },
-      // 팝업 크기 설정
-      width: '100%',
-      height: '100%',
-      // 검색 결과 항목 개수 설정
-      maxSuggestItems: 5,
-    }).open();
-  };
+        if (response.data.success) {
+          setShopAddressCheckMessage('사용 가능한 주소입니다!');
+          setShopAddressCheckError('');
+        } else {
+          setShopAddressCheckMessage('');
+          setShopAddressCheckError('이미 사용중인 주소입니다.');
+        }
+      } catch (error) {
+        setShopAddressCheckMessage('');
+        setShopAddressCheckError(error.response?.data?.message || '주소 중복 확인 오류');
+      }
+    }, 400);
+  }, [form.roadFull]);
 
-  const validateForm = () => {
-    if (
-      !formData.loginId ||
-      !formData.ownerName ||
-      !formData.password ||
-      !formData.phone ||
-      !formData.roadFull ||
-      !formData.shopName
-    ) {
-      showNegative('필수 항목을 모두 입력해주세요.');
-      return false;
-    }
-
-    if (!passwordValidation.isValid) {
-      showNegative('비밀번호는 대소문자, 숫자, 특수문자를 포함하여 8~16자로 입력해주세요.');
-      return false;
-    }
-
-    if (!passwordValidation.isMatching) {
-      showNegative('비밀번호가 일치하지 않습니다.');
-      return false;
-    }
-
-    if (!isVerified) {
-      showNegative('전화번호 인증을 완료해주세요.');
-      return false;
-    }
-
-    // 아이디 중복확인 체크
-    if (!loginIdCheck.isChecked || !loginIdCheck.isAvailable) {
-      showNegative('아이디 중복 확인을 완료해주세요.');
-      return false;
-    }
-
-    if (!shopNameCheck.isChecked || !shopNameCheck.isAvailable) {
-      showNegative('지점 이름 중복 확인을 완료해주세요.');
-      return false;
-    }
-
-    // 주소 중복확인 체크 추가
-    if (!shopAddressCheck.isChecked || !shopAddressCheck.isAvailable) {
-      showNegative('주소 중복 확인을 완료해주세요.');
-      return false;
-    }
-
-    return true;
-  };
-
-  const resetForm = () => {
-    setFormData({
-      loginId: '',
-      password: '',
-      shopName: '',
-      ownerName: '',
-      phone: '',
-      roadFull: '',
-    });
-    setPasswordConfirm('');
-    setVerificationCode('');
-    setLoginIdCheck({
-      isChecked: false,
-      isAvailable: false,
-    });
-    setShopNameCheck({
-      isChecked: false,
-      isAvailable: false,
-      loading: false,
-      error: null,
-    });
-    setShopAddressCheck({
-      isChecked: false,
-      isAvailable: false,
-      loading: false,
-      error: null,
-    });
-    setPasswordValidation({
-      isValid: false,
-      isMatching: false,
-      showValidation: false,
-      showMatchValidation: false,
-    });
-    dispatch(resetSMSAuth());
-    dispatch(clearLoginIdCheck());
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
-    if (!validateForm()) return;
-
-    setSubmitLoading(true);
-
     try {
       const response = await axiosInstance.post('/auth-service/auth/shop-signup', {
-        loginId: formData.loginId,
-        password: formData.password,
-        shopName: formData.shopName,
-        ownerName: formData.ownerName,
-        phone: formData.phone,
-        roadFull: formData.roadFull,
+        loginId: form.loginId,
+        password: form.password,
+        shopName: form.shopName,
+        ownerName: form.ownerName,
+        phone: form.phone,
+        roadFull: form.roadFull,
       });
-      console.log(response.data);
-
       if (response.data.success) {
-        showSuccess(`가게명: ${response.data.data.shopName} ID: ${response.data.data.id}`);
-        resetForm();
+        showSuccess(`가게명: ${response.data.data.shopName} 등록 완료`);
+        navigate(-1);
+        setForm({
+          loginId: '',
+          password: '',
+          passwordConfirm: '',
+          shopName: '',
+          ownerName: '',
+          phone: '',
+          roadFull: '',
+          addrDetail: '',
+        });
+        setVerificationCode('');
       } else {
         showNegative(response.data.message || '가게 등록에 실패했습니다.');
       }
     } catch (error) {
-      console.error('가게 등록 오류:', error);
-      showNegative(error.response?.data?.message || '가게 등록 중 오류가 발생했습니다.');
-    } finally {
-      setSubmitLoading(false);
+      showNegative(error.response?.data?.message || '가게 등록 중 오류 발생');
     }
   };
 
   return (
-    <div className={styled.HubRegisterPage}>
-      <h2 className={styled.hubregistertitle}>가게 등록</h2>
+    <div className={styles.HubRegisterPage}>
+      <h2>가게 등록</h2>
       <form onSubmit={handleSubmit}>
-        <div className={styled.idselection}>
-          <label htmlFor="loginId" className={styled.idtitle}>
-            아이디 <span>*</span>
-          </label>
-          <div className={styled.loginIdinput}>
-            <input
-              type="text"
-              name="loginId"
-              id="loginId"
-              value={formData.loginId}
-              onChange={handleInputChange}
-              placeholder="영문자, 숫자 4~20자"
-              className={styled.idinput}
-            />
-            <button
-              type="button"
-              onClick={handleCheckLoginId}
-              disabled={authLoading || !formData.loginId.trim()}
-              className={styled.idcheckbutton}
-            >
-              {authLoading ? '확인 중...' : '중복 확인'}
-            </button>
-          </div>
-          {loginIdCheck.isChecked && loginIdCheck.isAvailable && (
-            <p className={styled.corretshopname}>✓ 사용 가능한 아이디입니다!</p>
-          )}
-          {loginIdCheck.isChecked && !loginIdCheck.isAvailable && (
-            <p className={styled.notshopname}>이미 사용중인 아이디입니다.</p>
-          )}
-        </div>
-
-        {/* 지점명 중복확인 인풋+버튼+상태 메시지 */}
-        <ShopNameDuplicateCheckInput
-          value={formData.shopName}
-          onChange={e => {
-            handleInputChange(e);
-            setShopNameCheck({
-              isChecked: false,
-              isAvailable: false,
-              loading: false,
-              error: null,
-            });
-          }}
-          onCheck={handleCheckShopName}
-          loading={shopNameCheck.loading}
-          isChecked={shopNameCheck.isChecked}
-          isAvailable={shopNameCheck.isAvailable}
-          error={shopNameCheck.error}
+        <Input
+          label="아이디"
+          required
+          type="text"
+          name="loginId"
+          value={form.loginId}
+          onChange={handleChange}
+          error={loginIdCheckError}
+          success={loginIdCheckMessage}
         />
-
-        <div className={styled.ownernameselection}>
-          <label htmlFor="ownerName" className={styled.ownerNametitle}>
-            대표자 이름 <span>*</span>
-          </label>
-          <input
-            type="text"
-            name="ownerName"
-            id="ownerName"
-            value={formData.ownerName}
-            onChange={handleInputChange}
-            className={styled.ownerinput}
-          />
-        </div>
-
-        <div className={styled.passwordselection}>
-          <label htmlFor="password" className={styled.passwordtitle}>
-            비밀번호 <span>*</span>
-          </label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={formData.password}
-            onChange={handlePasswordChange}
-            placeholder="대소문자, 숫자, 특수문자 포함 8~16자"
-            className={styled.passwordinput}
-          />
-          {passwordValidation.showValidation && (
-            <div style={{ marginTop: '-30px', whiteSpace: 'nowrap' }}>
-              <p
-                style={{
-                  color: passwordValidation.isValid ? 'green' : 'red',
-                  fontSize: '13px',
-                  fontWeight: 'bold',
-                }}
-              >
-                {passwordValidation.isValid
-                  ? '✓ 사용 가능한 비밀번호입니다!'
-                  : '✗ 대소문자, 숫자, 특수문자(@$!%*?&)를 포함하여 8~16자로 입력해주세요.'}
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div className={styled.passwordconfirmselection}>
-          <label htmlFor="passwordConfirm" className={styled.passwordConfirmtitle}>
-            비밀번호 확인 <span>*</span>
-          </label>
-          <input
-            type="password"
-            id="passwordConfirm"
-            value={passwordConfirm}
-            onChange={handlePasswordConfirmChange}
-            placeholder="비밀번호를 다시 입력해주세요"
-            className={styled.passwordConfirminput}
-          />
-          {passwordValidation.showMatchValidation && (
-            <div style={{ marginTop: '-30px' }}>
-              <p
-                style={{
-                  color: passwordValidation.isMatching ? 'green' : 'red',
-                  fontSize: '13px',
-                  fontWeight: 'bold',
-                }}
-              >
-                {passwordValidation.isMatching
-                  ? '✓ 비밀번호가 일치합니다!'
-                  : '✗ 비밀번호가 일치하지 않습니다.'}
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div className={styled.phoneNumberSelection}>
-          <label htmlFor="phone" className={styled.phonenumbertitle}>
-            전화 번호 <span>*</span>
-          </label>
-          <div className={styled.phoneinput}>
-            <input
-              type="text"
-              name="phone"
-              id="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              disabled={isVerified}
-              className={styled.phoneNumberinput}
-            />
-            <button
-              type="button"
-              onClick={handleSendSMS}
-              disabled={loading || isVerified}
-              className={styled.phonenumberbutton}
-            >
-              {loading ? '전송 중...' : isCodeSent ? '재전송' : '인증하기'}
-            </button>
-          </div>
-          {isCodeSent && !isVerified && (
-            <p style={{ color: 'green', fontSize: '13px', marginTop: '-30px', fontWeight: 'bold' }}>
-              인증번호가 전송되었습니다.
-            </p>
-          )}
-        </div>
-
-        {isCodeSent && !isVerified && (
-          <div className={styled.passwordconfirmselection}>
-            <label htmlFor="phonevalid" className={styled.passwordValidationtitle}>
-              인증 번호 <span>*</span>
-            </label>
-            <div className={styled.phoneinput}>
-              <input
-                type="text"
-                id="phonevalid"
-                value={verificationCode}
-                onChange={e => setVerificationCode(e.target.value)}
-                placeholder="인증번호를 입력하세요"
-                className={styled.phoneNumbervaildinput}
-              />
-              <button
-                type="button"
-                onClick={handleVerifySMS}
-                disabled={loading}
-                className={styled.phoneNumbervaildbutton}
-              >
-                {loading ? '확인 중...' : '확인'}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {isVerified && (
-          <div style={{ color: 'green', fontSize: '13px', marginTop: '-30px', fontWeight: 'bold' }}>
-            ✓ 인증이 완료되었습니다.
-          </div>
-        )}
-
-        {smsError && (
-          <div style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{smsError}</div>
-        )}
-
-        <div className={styled.addrselection}>
-          <label htmlFor="roadFull" className={styled.addrtitle}>
-            지점 주소 <span>*</span>
-          </label>
-          <div className={styled.addrinput}>
-            <input
-              type="text"
-              name="roadFull"
-              id="roadFull"
-              value={formData.roadFull}
-              onChange={handleInputChange}
-              placeholder="주소검색 버튼을 클릭해주세요"
-              className={styled.addressinput}
-              readOnly  // 주소 입력 필드를 읽기전용으로 설정
-            />
-            <button type="button" onClick={handleAddressSearch} className={styled.addrbutton}>
-              주소 검색
-            </button>
-          </div>
-          {/* 주소 중복 확인 버튼 및 상태 표시 추가 */}
-          {formData.roadFull && (
-            <div className={styled.addrinput} style={{ marginTop: '-20px' }}>
-              <input
-                type="text"
-                value={formData.roadFull}
-                placeholder="선택된 주소"
-                readOnly
-                className={styled.addrvaildinput}
-              />
-              <button
-                type="button"
-                onClick={handleCheckShopAddress}
-                disabled={shopAddressCheck.loading || !formData.roadFull.trim()}
-                className={styled.addrcheckbutton}
-              >
-                {shopAddressCheck.loading ? '처리 중...' : '중복 확인'}
-              </button>
-            </div>
-          )}
-          {shopAddressCheck.isChecked && shopAddressCheck.isAvailable && (
-            <p className={styled.corretshopname}>✓ 사용 가능한 주소입니다!</p>
-          )}
-          {shopAddressCheck.error && <p className={styled.notshopname}>{shopAddressCheck.error}</p>}
-        </div>
-
-        <button type="submit" className={styled.submitButton} disabled={submitLoading}>
-          {submitLoading ? '등록 중...' : '가게 등록'}
+        <Input
+          label="지점명"
+          required
+          type="text"
+          name="shopName"
+          value={form.shopName}
+          onChange={handleChange}
+          error={shopNameCheckError}
+          success={shopNameCheckMessage}
+        />
+        <Input
+          label="대표자 이름"
+          required
+          type="text"
+          name="ownerName"
+          value={form.ownerName}
+          onChange={handleChange}
+        />
+        <PasswordSection
+          password={form.password}
+          passwordConfirm={form.passwordConfirm}
+          onPasswordChange={handleChange}
+          onPasswordConfirmChange={handleChange}
+        />
+        <PhoneVerification
+          phone={form.phone}
+          verificationCode={verificationCode}
+          onPhoneChange={handleChange}
+          onVerificationCodeChange={e => setVerificationCode(e.target.value)}
+        />
+        <AddressSection
+          address={form.roadFull}
+          roadFull={form.roadFull}
+          addrDetail={form.addrDetail || ''}
+          onAddressChange={(field, value) => setForm(prev => ({ ...prev, [field]: value }))}
+          showDetail={false}
+        />
+        <button type="submit" className={styles.submitButton}>
+          가게 등록
         </button>
       </form>
     </div>
