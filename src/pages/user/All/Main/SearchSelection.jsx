@@ -22,28 +22,31 @@ function SearchSelection({ setSearchState }) {
   }, []);
 
   // Memoize fetchSearch to prevent unnecessary re-renders
-  const fetchSearch = useCallback(async (searchWord = keyword) => {
-    setLoading(true);
-    try {
-      const res = await axiosInstance.get('/cook-service/cook/search-cook', {
-        params: {
-          keyword: searchWord,
-          pageNo: 1,
-          numOfRows: 5,
-        },
-      });
-      if (res.data.success) {
-        setResults(res.data.data);
-      } else {
+  const fetchSearch = useCallback(
+    async (searchWord = keyword) => {
+      setLoading(true);
+      try {
+        const res = await axiosInstance.get('/cook-service/cook/search-cook', {
+          params: {
+            keyword: searchWord,
+            pageNo: 1,
+            numOfRows: 5,
+          },
+        });
+        if (res.data.success) {
+          setResults(res.data.data);
+        } else {
+          setResults([]);
+        }
+      } catch (e) {
+        console.error('Search error:', e);
         setResults([]);
+      } finally {
+        setLoading(false);
       }
-    } catch (e) {
-      console.error('Search error:', e);
-      setResults([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [keyword]);
+    },
+    [keyword]
+  );
 
   // Debounced search when keyword changes
   useEffect(() => {
@@ -83,26 +86,29 @@ function SearchSelection({ setSearchState }) {
   }, [results, keyword, setSearchState]);
 
   // Handle enter key press - 검색 페이지로 이동
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Enter' && keyword.trim()) {
-      if (debounceTimer.current) clearTimeout(debounceTimer.current);
-      // 검색 페이지로 이동
-      navigate(`/user/search?keyword=${encodeURIComponent(keyword.trim())}`);
-    }
-  }, [keyword, navigate]);
+  const handleKeyDown = useCallback(
+    e => {
+      if (e.key === 'Enter' && keyword.trim()) {
+        if (debounceTimer.current) clearTimeout(debounceTimer.current);
+        // 검색 페이지로 이동
+        navigate(`/search?keyword=${encodeURIComponent(keyword.trim())}`);
+      }
+    },
+    [keyword, navigate]
+  );
 
   // Handle search button click - 검색 페이지로 이동
   const handleButtonClick = useCallback(() => {
     if (keyword.trim()) {
       if (debounceTimer.current) clearTimeout(debounceTimer.current);
       // 검색 페이지로 이동
-      navigate(`/user/search?keyword=${encodeURIComponent(keyword.trim())}`);
+      navigate(`/search?keyword=${encodeURIComponent(keyword.trim())}`);
     }
   }, [keyword, navigate]);
 
   // Handle click outside to close results
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = event => {
       if (resultsRef.current && !resultsRef.current.contains(event.target)) {
         setSearchState(prev => ({
           ...prev,
@@ -120,7 +126,7 @@ function SearchSelection({ setSearchState }) {
     };
   }, [setSearchState]);
 
-  const handleInputChange = useCallback((e) => {
+  const handleInputChange = useCallback(e => {
     setKeyword(e.target.value);
   }, []);
 

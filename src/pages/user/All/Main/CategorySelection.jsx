@@ -98,7 +98,7 @@ function CategorySelection() {
   const handleMoreClick = () => {
     if (selectedCategory && selectedCategory !== '전체') {
       const categoryCode = CATEGORY_MAP[selectedCategory];
-      navigate(`/user/category?category=${categoryCode}`);
+      navigate(`/category?category=${categoryCode}`);
     }
   };
 
@@ -106,7 +106,7 @@ function CategorySelection() {
   const handleCookClick = cook => {
     const id = cook.cookId || cook.id;
     if (id) {
-      navigate(`/user/product?id=${id}`);
+      navigate(`/product?id=${id}`);
     }
   };
 
@@ -185,7 +185,9 @@ function CategorySelection() {
                   className={styles.cookThumbnail}
                   alt={cook.cookName || cook.name}
                 />
-                <div className={styles.cooknametitle}><p className={styles.realtitle}>{cook.cookName || cook.name}</p></div>
+                <div className={styles.cooknametitle}>
+                  <p className={styles.realtitle}>{cook.cookName || cook.name}</p>
+                </div>
                 {cook.orderCount !== undefined && <div>주문수: {cook.orderCount}</div>}
               </div>
             );

@@ -40,14 +40,14 @@ const SearchPage = () => {
         });
 
         console.log(response.data.data);
-        
+
         // 🔥 첫 번째 페이지면 기존 결과 초기화, 그 이후는 누적
         if (pageNo === 1) {
           setItems(response.data.data || []);
         } else {
           setItems(prev => [...prev, ...(response.data.data || [])]);
         }
-        
+
         if (response.data.data.length < numOfRows) {
           setIsFullLoaded(true);
         }
@@ -64,13 +64,13 @@ const SearchPage = () => {
   const handleSearch = e => {
     e.preventDefault();
     const keyword = e.target.keyword.value.trim();
-    
+
     if (keyword === '') {
       showNegative('검색어를 입력해주세요.');
       return;
     }
 
-    navigate(`/user/search?keyword=${encodeURIComponent(keyword)}`);
+    navigate(`/search?keyword=${encodeURIComponent(keyword)}`);
     setSearchParams({ keyword });
   };
 
@@ -84,11 +84,7 @@ const SearchPage = () => {
           <span> {items.length} 개</span>
         </h2>
         <form onSubmit={handleSearch}>
-          <input 
-            type="text" 
-            placeholder="검색어를 입력하세요." 
-            name="keyword" 
-          />
+          <input type="text" placeholder="검색어를 입력하세요." name="keyword" />
         </form>
       </div>
       <CookGrid items={items} />
