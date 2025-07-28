@@ -26,7 +26,7 @@
 
 .searchResults {
   position: absolute; /* absolute positioning으로 변경 */
-  top: 32.5%; /* 검색창 바로 아래에 위치 */
+  top: 23.5%; /* 검색창 바로 아래에 위치 */
   left: 50%; /* 중앙 정렬을 위해 */
   transform: translateX(-50%); /* 중앙 정렬 완성 */
   width: 400px;
@@ -528,6 +528,8 @@
 
   .grid1 {
     grid-area: main;
+    height: 500px;
+    
   }
   .grid2 {
     grid-area: serveone;
@@ -545,8 +547,8 @@
   /* 이미지와 텍스트 레이아웃 개선 */
   .cookThumbnail {
     width: 100%;
-    height: auto;
-    object-fit: fill;
+    height: 250px;
+    object-fit: cover;
     border-radius: 8px; /* 선택사항 */
   }
 }
@@ -574,8 +576,15 @@
 
 .infosection {
   margin-top: 10px;
+  text-align: left;
+  margin-left: 132px;
 }
 
 .bestPicktitle {
   margin-bottom: 20px;
+}
+
+.bestimg {
+  max-height: 300px;
+  object-fit: cover;
 }
