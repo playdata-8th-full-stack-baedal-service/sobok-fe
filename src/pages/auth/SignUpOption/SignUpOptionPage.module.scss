@@ -1,7 +1,7 @@
 .SignUpOption {
     font-size: 20px;
     white-space: nowrap;
-    margin: 150px auto;
+    margin: 60px auto;
     width: 100vw;
 
     .SignupTitle {
@@ -11,9 +11,10 @@
 
     .OptionBlock {
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
         align-items: center;
-        margin-top: 150px;
+        margin-top: 60px;
+        gap: 20px;
 
         div {
             display: flex;
@@ -22,8 +23,8 @@
             justify-content: center;
             outline: 1px solid black;
             border-radius: 10px;
-            height: 70vh;
-            width: 40vw;
+            height: 50vh;
+            width: 30vw;
 
             img {
                 object-fit: cover;
@@ -32,25 +33,27 @@
             p {
                 font-size: 1.5em;
                 margin-top: 60px;
+                text-align: center;
             }
         }
     }
 }
 
-.card {
+.cardone {
   width: 100vw;
-  height: 260px;
+  height: 250px;
   background: rgb(255, 255, 255);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
+  font-size: 18px;
   color: #333;
   border-radius: 40px;
   cursor: pointer;
   position: relative;
   transition: all 0.7s ease-in-out;
   overflow: hidden;
+  text-align: center;
 
   &::before {
     content: "";
@@ -67,6 +70,56 @@
 
   .txt {
     z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &:hover {
+    color: #f3f3f3;
+
+    &::before {
+      transform: scale(7) translate(-20px);
+    }
+  }
+}
+
+.cardtwo {
+  width: 100vw;
+  height: 250px;
+  background: rgb(255, 255, 255);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #333333;
+  border-radius: 40px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.7s ease-in-out;
+  overflow: hidden;
+  text-align: center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    height: 30%;
+    width: 100%;
+    background-color: #00aeff;
+    bottom: 0;
+    right: 0;
+    transform: translateY(70px);
+    border-radius: 100%;
+    transition: all 0.7s ease-in-out;
+  }
+
+  .txt {
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
   }
 
   &:hover {

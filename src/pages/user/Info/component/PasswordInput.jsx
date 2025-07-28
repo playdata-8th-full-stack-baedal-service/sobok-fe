@@ -6,7 +6,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import PropTypes from 'prop-types';
 import styles from '../UserInfo.module.scss';
 
-function PasswordInput({ placeholder, onChange, value }) {
+function PasswordInput({ placeholder, onChange, value, showLabel = true }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const onTogglePassword = () => {
@@ -15,13 +15,14 @@ function PasswordInput({ placeholder, onChange, value }) {
 
   return (
     <div className={styles.passwordInput}>
-      <label>비밀번호</label>
-      <div>
+      <label className={styles.passwordInputtitle}>비밀번호</label>
+      <div className={styles.passwordInputzone}>
         <input
           type={showPassword ? 'text' : 'password'}
           value={value}
           onChange={onChange}
           placeholder={placeholder}
+          className={styles.passwordInputmain}
         />
         <button type="button" onClick={onTogglePassword}>
           {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -35,6 +36,7 @@ PasswordInput.propTypes = {
   placeholder: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
+  showLabel: PropTypes.bool, // 새로 추가됨
 };
 
 export default PasswordInput;

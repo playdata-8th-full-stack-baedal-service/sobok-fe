@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  // gap: 24px;
 }
 
 .inputWithButton {
@@ -15,7 +16,7 @@
   display: flex;
   align-items: flex-end;
   gap: 12px;
-  width: 100%;
+  // width: 100%;
   margin-bottom: 0px;
 }
 
@@ -28,22 +29,7 @@
   min-width: 80px;
 }
 
-@media (max-width: 768px) {
-  .containerTop {
-    flex-direction: column;
-    align-items: stretch;
-  }
 
-  .inputButtonGroup {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .inputButtonGroup input,
-  .inputButtonGroup button {
-    width: 100%;
-  }
-}
 
 .verifynumberbutton {
   transition: all 0.3s ease-in-out;

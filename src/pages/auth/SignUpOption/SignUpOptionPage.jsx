@@ -12,14 +12,14 @@ function SignUpOptionPage() {
         <p>가입하시려는 회원의 유형을 선택해주세요.</p>
       </div>
       <div className={signsupoption.OptionBlock}>
-        <div onClick={() => nav('/auth/signup/usersignup')} className={signsupoption.card}>
+        <div onClick={() => nav('/auth/signup/usersignup')} className={signsupoption.cardone}>
           <p className={signsupoption.txt}>
-            <Smile size={48} /> 사용자 회원가입
+            <Smile size={40} /> 사용자 회원가입
           </p>
         </div>
-        <div onClick={() => nav('/auth/signup/ridersignup')} className={signsupoption.card}>
+        <div onClick={() => nav('/auth/signup/ridersignup')} className={signsupoption.cardtwo}>
           <p className={signsupoption.txt}>
-            <Truck size={48} /> 배달원 회원가입
+            <Truck size={40} /> 배달원 회원가입
           </p>
         </div>
       </div>

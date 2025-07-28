@@ -39,7 +39,7 @@ function DeleteConfilmModal({ onClose, password }) {
   };
 
   return (
-    <ModalWrapper title="회원탈퇴 확인" onClose={onClose} size="lg">
+    <ModalWrapper title="회원탈퇴 확인" onClose={onClose} size="md">
       <div className={styles.formcheck}>
         <p className={styles.description}>정말로 탈퇴하시겠습니까?</p>
         <p className={styles.warning}>탈퇴 후에는 계정을 복구할 수 없습니다.</p>

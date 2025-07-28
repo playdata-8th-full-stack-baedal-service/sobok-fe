@@ -7,7 +7,7 @@ import Button from '../../../../common/components/Button';
 import PasswordInput from './PasswordInput';
 import PWChangedModal from '../../../auth/FindPW/PWChangedModal';
 import { isPasswordValid } from '../../../../common/utils/authUtils';
-import styles from '../UserInfo.module.scss';
+import styles from './UserPasswordChangeModal.module.scss';
 
 function UserPasswordChangeModal({ onClose }) {
   const [complete, setComplete] = useState(false);
@@ -44,32 +44,36 @@ function UserPasswordChangeModal({ onClose }) {
   ) : (
     <ModalWrapper title="비밀번호 변경" onClose={onClose} size="md">
       <div className={styles.passwordChangeModal}>
-        <p>새로운 비밀번호를 입력해주세요.</p>
+        <p className={styles.passwordchangetitle}>새로운 비밀번호를 입력해주세요.</p>
 
         <PasswordInput
           value={newPassword}
           onChange={e => setNewPassword(e.target.value)}
           placeholder="새 비밀번호를 입력하세요"
+          showLabel={false}
         />
 
         <PasswordInput
           value={confirmPassword}
           onChange={e => setConfirmPassword(e.target.value)}
           placeholder="새 비밀번호를 다시 입력하세요"
+          showLabel={false}
         />
 
-        {errorMessage && <p style={{ color: 'red', marginBottom: '10px' }}>{errorMessage}</p>}
+        {errorMessage && (
+          <p style={{ color: 'red', marginBottom: '10px', fontSize: '10px' }}>{errorMessage}</p>
+        )}
 
-        <div>
+        <div className={styles.vaildpasswordcard}>
           <p>비밀번호 요구사항:</p>
-          <ul>
+          <ul className={styles.detailpasswordvaild}>
             <li>최소 8자 이상</li>
             <li>대문자, 소문자, 숫자, 특수문자 포함</li>
             <li>기존 비밀번호와 다른 비밀번호</li>
           </ul>
         </div>
 
-        <Button type="button" onClick={handleSubmit}>
+        <Button type="button" onClick={handleSubmit} className={styles.changebutton}>
           변경
         </Button>
       </div>

@@ -99,7 +99,7 @@ function PhoneVerification({
   };
 
   return (
-    <div className={`${styles.phoneWrapper} ${wrapperClassName}`}>
+    <div className={styles.phoneWrapper}>
       <div className={styles.inputWithButton}>
         <Input label="전화번호" required error={smsError} showLabel={showLabel}>
           <div className={styles.inputButtonGroup}>
