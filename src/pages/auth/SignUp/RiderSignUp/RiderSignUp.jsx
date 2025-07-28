@@ -14,8 +14,6 @@ import PhoneVerification from '../../../../common/forms/Phone/PhoneVerification'
 import PasswordSection from '../../../../common/forms/PasswordConfirm/PasswordSection';
 import Input from '../../../../common/components/Input';
 import { clearAllChecks } from '@/store/authSlice';
-import { clearSMSAuth } from '@/store/smsAuthSlice';
-
 function RiderSignUp() {
   const dispatch = useDispatch();
   const { showSuccess } = useToast();
