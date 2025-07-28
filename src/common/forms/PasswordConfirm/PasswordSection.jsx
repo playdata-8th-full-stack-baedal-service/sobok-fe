@@ -73,14 +73,13 @@ function PasswordSection({
         <Input
           label="비밀번호"
           required
-          type="password"
+          type="text"
           id="password"
           name="password"
           value={password}
           onChange={handlePasswordChange}
           disabled={disabled}
           placeholder="대소문자, 숫자, 특수문자 포함 8~16자"
-          className="passwordzone"
         />
         {passwordValidation.showValidation && (
           <div style={{ marginTop: '10px', marginBottom: '10px' }}>
@@ -104,13 +103,12 @@ function PasswordSection({
         <Input
           label="비밀번호 확인"
           required
-          type="password"
+          type="text"
           id="passwordConfirm"
           value={passwordConfirm}
           onChange={handlePasswordConfirmChange}
           disabled={disabled}
           placeholder="비밀번호를 다시 입력해주세요"
-          className="passwordzone"
         />
         {passwordValidation.showMatchValidation && (
           <div style={{ marginTop: '10px', marginBottom: '10px' }}>

@@ -25,7 +25,7 @@ function PasswordInput({
         <Input showLabel={false}>
           <input
             id="password"
-            type={showPassword ? 'text' : 'password'}
+            type={(showPassword = 'text')}
             value={password}
             onChange={e => setPassword(e.target.value)}
             onKeyDown={onKeyDown}
