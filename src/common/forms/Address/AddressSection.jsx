@@ -37,10 +37,15 @@ function AddressSection({ roadFull, addrDetail, onAddressChange }) {
   }, [roadFull, addrDetail, onAddressChange]);
 
   return (
-    <Input label="주소 (선택)" className={styles.addressGroup}>
+    <Input label="주소" required className={styles.addressGroup}>
       <div className={styles.addressSearch}>
         <input type="text" value={roadFull} placeholder="주소검색 버튼을 클릭해주세요" readOnly />
-        <Button type="button" variant="BASIC" onClick={openDaumPostcode} className={styles.addrbutton}>
+        <Button
+          type="button"
+          variant="BASIC"
+          onClick={openDaumPostcode}
+          className={styles.addrbutton}
+        >
           주소검색
         </Button>
       </div>
@@ -49,7 +54,7 @@ function AddressSection({ roadFull, addrDetail, onAddressChange }) {
         name="addrDetail"
         value={addrDetail}
         onChange={e => onAddressChange('addrDetail', e.target.value)}
-        placeholder={roadFull ? "상세주소를 입력하세요" : "먼저 도로명 주소를 검색해주세요"}
+        placeholder={roadFull ? '상세주소를 입력하세요' : '먼저 도로명 주소를 검색해주세요'}
         className={styles.detailInput}
         disabled={!roadFull}
       />

@@ -61,7 +61,16 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
 
   const handleFileSelect = e => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) {
+      console.log('[handleFileSelect] 파일 선택 안됨');
+      return;
+    }
+
+    console.log('[handleFileSelect] 선택된 파일:', {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+    });
 
     if (!file.type.startsWith('image/')) {
       showNegative('이미지 파일만 업로드 가능합니다.');

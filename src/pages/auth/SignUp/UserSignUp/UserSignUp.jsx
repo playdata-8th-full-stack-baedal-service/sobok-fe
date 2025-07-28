@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { API_BASE_URL } from '@/services/host-config';
+
 import {
   signUpUser,
   clearSignUpSuccess,
@@ -21,10 +24,16 @@ import useToast from '@/common/hooks/useToast';
 function UserSignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { showSuccess, showNegative } = useToast();
+  const ref = useRef();
+  const { showSuccess, showNegative, showInfo } = useToast();
 
   const { loading, error, signUpSuccess } = useSelector(state => state.auth);
   const { isVerified } = useSelector(state => state.smsAuth);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileSelect = file => {
+    setSelectedFile(file);
+  };
 
   const [formData, setFormData] = useState({
     loginId: '',
@@ -63,6 +72,8 @@ function UserSignUp() {
 
   const handleDomainChange = selected => {
     if (selected === '직접입력') {
+      setSelectedFile(null);
+
       setIsCustomDomain(true);
       setEmailDomain('');
     } else {
@@ -137,6 +148,51 @@ function UserSignUp() {
     return true;
   };
 
+  const getTempToken = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/auth-service/auth/temp-token`);
+
+      console.log(response.data.data);
+
+      if (response.data.success && response.data.status === 200) {
+        return response.data.data;
+      }
+      throw new Error(response.data.message || '임시 토큰 발급 실패');
+    } catch (error) {
+      console.log(error);
+
+      console.error('임시 토큰 발급 실패:', error);
+
+      throw error;
+    }
+  };
+
+  const uploadToS3 = async (file, tempToken) => {
+    const formImageData = new FormData();
+    formImageData.append('image', file);
+
+    try {
+      const response = await axios.put(
+        `${API_BASE_URL}/api-service/api/upload-image/profile`,
+        formImageData,
+        {
+          headers: {
+            Authorization: `Bearer ${tempToken}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      if (response.data.success && response.data.data) {
+        return response.data.data;
+      }
+      throw new Error(response.data.message || 'Presigned URL 생성 실패');
+    } catch (error) {
+      console.error('Presigned URL 요청 실패:', error);
+      throw error;
+    }
+  };
+
   const { isLoginIdChecked, isNicknameChecked, isEmailChecked } = useSelector(state => state.auth);
 
   const handleSubmit = async e => {
@@ -166,6 +222,15 @@ function UserSignUp() {
     };
 
     try {
+      if (selectedFile) {
+        const tempToken = await getTempToken();
+        const uploadedUrl = await uploadToS3(selectedFile, tempToken);
+        completeFormData = {
+          ...completeFormData,
+          photo: uploadedUrl,
+        };
+      }
+      console.log(completeFormData);
       await dispatch(signUpUser(completeFormData)).unwrap();
     } catch (err) {
       console.error('회원가입 실패:', err);
@@ -195,7 +260,11 @@ function UserSignUp() {
           <h2>회원가입</h2>
         </div>
         <form onSubmit={handleSubmit} className={styles['signup-form']}>
-          <ProfileSection formData={formData} onChange={handleInputChange} />
+          <ProfileSection
+            formData={formData}
+            onChange={handleInputChange}
+            onFileSelect={handleFileSelect}
+          />
 
           <PasswordSection
             password={formData.password}
