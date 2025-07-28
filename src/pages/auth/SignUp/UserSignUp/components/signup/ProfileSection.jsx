@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   checkNickName,
@@ -13,7 +13,7 @@ import useToast from '@/common/hooks/useToast';
 
 function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = true }) {
   const dispatch = useDispatch();
-  const { showSuccess, showNegative, showInfo } = useToast();
+  const { showNegative } = useToast();
 
   const {
     loading,
@@ -25,56 +25,43 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
 
   const [imagePreview, setImagePreview] = useState(formData.photo || '/photodefault.svg');
 
+  // 디바운스용 타이머 ref
+  const loginIdTimer = useRef(null);
+  const nicknameTimer = useRef(null);
+
   useEffect(() => {
     setImagePreview(formData.photo || '/photodefault.svg');
   }, [formData.photo]);
 
-  const handleLoginIdCheck = async () => {
-    if (!formData.loginId.trim()) {
-      showNegative('아이디를 입력해주세요.');
-      return;
-    }
-    try {
-      await dispatch(checkLoginId(formData.loginId)).unwrap();
-    } catch (error) {
-      console.error('아이디 중복 확인 실패:', error);
-    }
-  };
-
-  const handleNicknameCheck = async () => {
-    if (!formData.nickname.trim()) {
-      showNegative('닉네임을 입력해주세요.');
-      return;
-    }
-    try {
-      await dispatch(checkNickName(formData.nickname)).unwrap();
-    } catch (error) {
-      console.error('닉네임 중복 확인 실패:', error);
-    }
-  };
-
   const handleLoginIdChange = e => {
     dispatch(clearLoginIdCheck());
     onChange(e);
+
+    if (loginIdTimer.current) clearTimeout(loginIdTimer.current);
+
+    loginIdTimer.current = setTimeout(() => {
+      if (e.target.value.trim()) {
+        dispatch(checkLoginId(e.target.value.trim()));
+      }
+    }, 800);
   };
 
   const handleNicknameChange = e => {
     dispatch(clearNicknameCheck());
     onChange(e);
+
+    if (nicknameTimer.current) clearTimeout(nicknameTimer.current);
+
+    nicknameTimer.current = setTimeout(() => {
+      if (e.target.value.trim()) {
+        dispatch(checkNickName(e.target.value.trim()));
+      }
+    }, 800);
   };
 
   const handleFileSelect = e => {
     const file = e.target.files[0];
-    if (!file) {
-      console.log('[handleFileSelect] 파일 선택 안됨');
-      return;
-    }
-
-    console.log('[handleFileSelect] 선택된 파일:', {
-      name: file.name,
-      type: file.type,
-      size: file.size,
-    });
+    if (!file) return;
 
     if (!file.type.startsWith('image/')) {
       showNegative('이미지 파일만 업로드 가능합니다.');
@@ -142,15 +129,6 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
                 onChange={handleLoginIdChange}
                 className={loginIdCheckError ? 'input-error' : ''}
               />
-              <Button
-                type="button"
-                variant="BASIC"
-                onClick={handleLoginIdCheck}
-                loading={loading}
-                className={styles.overlapcheckbutton}
-              >
-                중복확인
-              </Button>
             </div>
           </Input>
         )}
@@ -171,15 +149,6 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
               onChange={handleNicknameChange}
               className={nicknameCheckError ? styles.inputError : ''}
             />
-            <Button
-              type="button"
-              variant="BASIC"
-              onClick={handleNicknameCheck}
-              loading={loading}
-              className={styles.overlapcheckbutton}
-            >
-              중복확인
-            </Button>
           </div>
         </Input>
       </div>

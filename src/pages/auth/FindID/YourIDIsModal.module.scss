@@ -5,23 +5,23 @@
 }
 
 .label {
-  font-size: 16px;
+  font-size: 23px;
   margin-bottom: 10px;
 }
 
 .userid {
-  font-size: 16px;
+  font-size: 25px;
   margin-bottom: 20px;
 
   strong {
-    font-size: 22px;
+    font-size: 25px;
     font-weight: bold;
   }
 }
 
 .buttonGroup {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-direction: row;
+  gap: 13px;
   align-items: center;
 }

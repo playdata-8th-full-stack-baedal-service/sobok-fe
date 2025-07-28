@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Input from '../../components/Input';
 
-
 function PasswordSection({
   password,
   passwordConfirm,
@@ -81,7 +80,7 @@ function PasswordSection({
           onChange={handlePasswordChange}
           disabled={disabled}
           placeholder="대소문자, 숫자, 특수문자 포함 8~16자"
-          className='passwordzone'
+          className="passwordzone"
         />
         {passwordValidation.showValidation && (
           <div style={{ marginTop: '10px', marginBottom: '10px' }}>
@@ -111,7 +110,7 @@ function PasswordSection({
           onChange={handlePasswordConfirmChange}
           disabled={disabled}
           placeholder="비밀번호를 다시 입력해주세요"
-          className='passwordzone'
+          className="passwordzone"
         />
         {passwordValidation.showMatchValidation && (
           <div style={{ marginTop: '10px', marginBottom: '10px' }}>

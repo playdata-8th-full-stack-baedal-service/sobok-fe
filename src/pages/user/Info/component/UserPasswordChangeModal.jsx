@@ -7,7 +7,7 @@ import Button from '../../../../common/components/Button';
 import PasswordInput from './PasswordInput';
 import PWChangedModal from '../../../auth/FindPW/PWChangedModal';
 import { isPasswordValid } from '../../../../common/utils/authUtils';
-import styles from '../UserInfo.module.scss';
+import styles from './UserPasswordChangeModal.module.scss';
 
 function UserPasswordChangeModal({ onClose }) {
   const [complete, setComplete] = useState(false);
@@ -50,15 +50,19 @@ function UserPasswordChangeModal({ onClose }) {
           value={newPassword}
           onChange={e => setNewPassword(e.target.value)}
           placeholder="새 비밀번호를 입력하세요"
+          showLabel={false}
         />
 
         <PasswordInput
           value={confirmPassword}
           onChange={e => setConfirmPassword(e.target.value)}
           placeholder="새 비밀번호를 다시 입력하세요"
+          showLabel={false}
         />
 
-        {errorMessage && <p style={{ color: 'red', marginBottom: '10px', fontSize: '10px'}}>{errorMessage}</p>}
+        {errorMessage && (
+          <p style={{ color: 'red', marginBottom: '10px', fontSize: '10px' }}>{errorMessage}</p>
+        )}
 
         <div className={styles.vaildpasswordcard}>
           <p>비밀번호 요구사항:</p>

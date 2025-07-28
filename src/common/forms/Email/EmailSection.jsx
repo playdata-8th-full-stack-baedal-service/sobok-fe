@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkEmail, clearEmailCheck } from '@/store/authSlice';
 import Input from '../../components/Input';
-import Button from '../../components/Button';
 import styles from './EmailSection.module.scss';
+import useToast from '@/common/hooks/useToast';
 
 function EmailSection({
   emailLocal,
@@ -17,7 +17,8 @@ function EmailSection({
   disabled,
 }) {
   const dispatch = useDispatch();
-  const { loading, emailCheckMessage, emailCheckError } = useSelector(state => state.auth);
+  const { showNegative } = useToast();
+  const { emailCheckMessage, emailCheckError } = useSelector(state => state.auth);
 
   const domainOptions = [
     'gmail.com',
@@ -28,10 +29,30 @@ function EmailSection({
     '직접입력',
   ];
 
+  const emailTimer = useRef(null);
+
+  // 이메일 주소 변경 시 중복 확인 디바운스 처리
+  useEffect(() => {
+    if (emailTimer.current) clearTimeout(emailTimer.current);
+
+    const fullEmail = getFullEmail();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!fullEmail || !emailRegex.test(fullEmail)) {
+      dispatch(clearEmailCheck());
+      return;
+    }
+
+    emailTimer.current = setTimeout(() => {
+      dispatch(checkEmail(fullEmail));
+    }, 800);
+
+    return () => clearTimeout(emailTimer.current);
+  }, [emailLocal, emailDomain, customDomain, isCustomDomain]);
+
   const handleDomainChange = e => {
-    const selected = e.target.value;
     dispatch(clearEmailCheck());
-    onDomainChange(selected);
+    onDomainChange(e.target.value);
   };
 
   const handleEmailLocalChange = e => {
@@ -42,26 +63,6 @@ function EmailSection({
   const handleCustomDomainChange = e => {
     dispatch(clearEmailCheck());
     onCustomDomainChange(e);
-  };
-
-  const handleEmailCheck = async () => {
-    const fullEmail = getFullEmail();
-    if (!fullEmail) {
-      showNegative('이메일을 완전히 입력해주세요.');
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(fullEmail)) {
-      showNegative('올바른 이메일 형식이 아닙니다.');
-      return;
-    }
-
-    try {
-      await dispatch(checkEmail(fullEmail)).unwrap();
-    } catch (error) {
-      console.error('이메일 중복 확인 실패:', error);
-    }
   };
 
   return (
@@ -87,16 +88,8 @@ function EmailSection({
             </option>
           ))}
         </select>
-        <Button
-          type="button"
-          variant="BASIC"
-          onClick={handleEmailCheck}
-          loading={loading}
-          className={styles.overlapcheckbutton}
-        >
-          중복확인
-        </Button>
       </div>
+
       {isCustomDomain && (
         <input
           type="text"
@@ -107,6 +100,7 @@ function EmailSection({
           disabled={disabled}
         />
       )}
+
       {getFullEmail() && <p className={styles.emailPreview}>완성된 이메일: {getFullEmail()}</p>}
     </Input>
   );
