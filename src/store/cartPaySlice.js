@@ -1,7 +1,10 @@
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosInstance from '../services/axios-config';
-import { calculateTotalPrice } from '../pages/user/CartPay/utils/cartPayUtils';
+import {
+  calculateCartIngredientStockList,
+  calculateTotalPrice,
+} from '../pages/user/CartPay/utils/cartPayUtils';
 import generateRandomString from '../common/utils/paymentUtils';
 import { useDispatch } from 'react-redux';
 
@@ -98,6 +101,26 @@ export const requestPayment = createAsyncThunk('pay/request', async (payload, th
   }
 });
 
+// 가게 정보 가져오기
+export const fetchShopInfo = createAsyncThunk(
+  'pay/shop-info',
+  async ({ addressId, cartIngredientStockList }, thunkAPI) => {
+    try {
+      const response = await axiosInstance.post(
+        `/shop-service/shop/available?addressId=${addressId}`,
+        {
+          cartIngredientStockList,
+        }
+      );
+      console.log(response.data.data);
+      return response.data.data;
+    } catch (err) {
+      const message = err.response?.data?.message || '오류';
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const paySlice = createSlice({
   name: 'pay',
   initialState: {
@@ -113,6 +136,8 @@ const paySlice = createSlice({
     isReady: false,
     payClick: false,
     orderId: '',
+    cartIngredientStockList: [],
+    shopList: [],
   },
   reducers: {
     resetError: state => {
@@ -125,6 +150,10 @@ const paySlice = createSlice({
     // 선택 상품 갱신
     updateSelectedCartItems: (state, action) => {
       state.selectedCartItemIds = action.payload;
+      state.cartIngredientStockList = calculateCartIngredientStockList(
+        state.cartItems,
+        state.selectedCartItemIds
+      );
       state.totalPrice = calculateTotalPrice(state.cartItems, state.selectedCartItemIds);
     },
 
@@ -135,6 +164,11 @@ const paySlice = createSlice({
       } else {
         state.selectedCartItemIds = [...state.selectedCartItemIds, action.payload];
       }
+
+      state.cartIngredientStockList = calculateCartIngredientStockList(
+        state.cartItems,
+        state.selectedCartItemIds
+      );
 
       state.totalPrice = calculateTotalPrice(state.cartItems, state.selectedCartItemIds);
     },
@@ -182,6 +216,10 @@ const paySlice = createSlice({
         state.orderId = generateRandomString();
         state.cartItems = action.payload.reverse();
         state.totalPrice = calculateTotalPrice(state.cartItems, state.selectedCartItemIds);
+        state.cartIngredientStockList = calculateCartIngredientStockList(
+          state.cartItems,
+          state.selectedCartItemIds
+        );
       })
       .addCase(fetchCartItem.rejected, (state, action) => {
         state.loading = false;
@@ -202,7 +240,16 @@ const paySlice = createSlice({
         const idx = state.cartItems.findIndex(i => i.id === action.payload.id);
         state.cartItems[idx].quantity = action.payload.count;
 
+        state.cartIngredientStockList = calculateCartIngredientStockList(
+          state.cartItems,
+          state.selectedCartItemIds
+        );
+
         state.totalPrice = calculateTotalPrice(state.cartItems, state.selectedCartItemIds);
+        state.cartIngredientStockList = calculateCartIngredientStockList(
+          state.cartItems,
+          state.selectedCartItemIds
+        );
       })
       .addCase(editCartItemCount.rejected, (state, action) => {
         state.loading = false;
@@ -221,6 +268,10 @@ const paySlice = createSlice({
         state.selectedCartItemIds = state.selectedCartItemIds.filter(i => i !== action.payload);
         state.cartItems = state.cartItems.filter(i => i.id !== action.payload);
         state.totalPrice = calculateTotalPrice(state.cartItems, state.selectedCartItemIds);
+        state.cartIngredientStockList = calculateCartIngredientStockList(
+          state.cartItems,
+          state.selectedCartItemIds
+        );
       })
       .addCase(deleteCartItem.rejected, (state, action) => {
         state.loading = false;
@@ -239,13 +290,14 @@ const paySlice = createSlice({
         state.cartItems = state.cartItems.filter(i => !state.selectedCartItemIds.includes(i.id));
         state.selectedCartItemIds = [];
         state.totalPrice = 0;
+        state.cartIngredientStockList = [];
       })
       .addCase(deleteAllCartItem.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
 
-    // 카트 상품 삭제
+    // 주문자 정보 가져오기
     builder
       .addCase(fetchOrdererInfo.pending, state => {
         state.loading = true;
@@ -268,6 +320,21 @@ const paySlice = createSlice({
       .addCase(restorePayment.fulfilled, state => {
         state.error = '결제에 실패했습니다. 다시 시도해주세요.';
       });
+
+    // 가게 정보 가져오기
+    builder.addCase(fetchShopInfo.pending, state => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchShopInfo.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = null;
+      state.shopInfo = action.payload;
+    });
+    builder.addCase(fetchShopInfo.rejected, state => {
+      state.loading = false;
+      state.shopInfo = [];
+    });
   },
 });
 

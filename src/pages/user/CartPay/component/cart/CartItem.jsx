@@ -93,7 +93,7 @@ function CartItem({ item }) {
             +
           </button>
         </div>
-        <div>{calculateItemTotal(item).toLocaleString()} ₩</div>
+        <div className={styles.price}>{calculateItemTotal(item).toLocaleString()} ₩</div>
       </div>
     </li>
   );

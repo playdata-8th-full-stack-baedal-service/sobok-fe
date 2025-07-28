@@ -5,7 +5,7 @@
   // flex-direction: column;
   position: relative;
   gap: 20px;
-  font-family: 'Font2';
+  font-family: 'Font1';
   min-height: 1000px;
 
   // CartSection 정의
@@ -74,6 +74,12 @@
         position: relative;
         // height: 10rem;
 
+        .price {
+          font-weight: bold;
+          font-size: 1rem;
+          color: #222;
+          justify-content: flex-end;
+        }
         .masking {
           position: absolute;
           top: 0;
@@ -201,13 +207,15 @@
     transition: width 0.4s ease;
     box-shadow: -8px 0 12px -6px rgba(0, 0, 0, 0.15);
     border-radius: 10px;
+    // overflow-y: auto;
+    // overflow-x:visible;
 
     padding: 30px;
     margin: 30px auto;
     position: absolute;
     top: 0;
-    right: 0;
-    width: 70%;
+    right: 0px;
+    width: 75%;
     height: 90%; // 원하는 영역만큼 조절 가능
     background: rgba(255, 255, 255, 1); // 반투명 효과 예시
     z-index: 50;
@@ -215,6 +223,9 @@
     .payContent {
       transition: opacity 0.8s ease;
       opacity: 1;
+      overflow: auto;
+      height: 100%;
+      padding-right: 20px;
 
       footer {
         .btnPay {
@@ -338,12 +349,13 @@
           font-size: 1rem;
           padding-left: 10px;
           padding-right: 10px;
-          border: 1px solid #aaa;
+          border: 2px solid #aaa;
           border-radius: 10px;
 
           &:hover {
             color: white;
             background-color: rgb(17, 17, 17);
+            border: none;
           }
         }
       }

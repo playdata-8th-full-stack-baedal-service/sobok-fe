@@ -7,7 +7,7 @@ import { openModal } from '../../../../../store/modalSlice';
 
 const PayOrderer = () => {
   const dispatch = useDispatch();
-  const { orderer, selectedAddressId, error } = useSelector(state => state.pay);
+  const { orderer, selectedAddressId, shopInfo } = useSelector(state => state.pay);
 
   const handleChangeAddress = () => {
     dispatch(openModal('PAY_ADDRESS_CHANGE'));
@@ -36,6 +36,21 @@ const PayOrderer = () => {
           </div>
 
           {/* 가게 정보 */}
+          <h4>배달 가능한 가게 정보</h4>
+          <div style={{ display: 'flex', color: '#61a059' }}>
+            {shopInfo?.map((shop, index) =>
+              index === 0 ? (
+                <div key={shop.shopId}>{shop.shopName}</div>
+              ) : (
+                <div key={shop.shopId}>,&nbsp;{shop.shopName}</div>
+              )
+            )}
+            {shopInfo?.length === 0 && (
+              <div style={{ color: 'crimson', fontWeight: '500' }}>
+                배달 가능한 가게가 없습니다.
+              </div>
+            )}
+          </div>
 
           {/* 라이더 요청사항 */}
           <h4>라이더 요청사항</h4>

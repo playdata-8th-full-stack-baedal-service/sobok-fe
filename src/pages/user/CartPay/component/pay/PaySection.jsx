@@ -6,6 +6,7 @@ import PayHeading from './PayHeading';
 import PayOrderer from './PayOrderer';
 import {
   fetchOrdererInfo,
+  fetchShopInfo,
   flipPayVisible,
   requestPayment,
   setPayClick,
@@ -24,7 +25,8 @@ const PaySection = () => {
     selectedAddressId,
     selectedCartItemIds,
     orderer,
-    cartItems,
+    cartIngredientStockList,
+    shopInfo,
   } = useSelector(state => state.pay);
 
   useEffect(() => {
@@ -49,23 +51,14 @@ const PaySection = () => {
   };
 
   useEffect(() => {
-    const fetchShop = async () => {
-      if (orderer?.addresses === null) return;
-      const response = await axiosInstance.post(
-        `/shop-service/shop/available?addressId=${orderer.addresses[selectedAddressId].id}`,
-        {
-          cartIngredientStockList: [
-            {
-              ingredientId: 1,
-              quantity: 1,
-            },
-          ],
-        }
-      );
-      console.log('가장 가까운 가능한 가게 이름 : ' + response.data.data[0].shopName);
-    };
-    fetchShop();
-  }, [orderer?.addresses, selectedAddressId, selectedCartItemIds, cartItems]);
+    if (orderer?.addresses == null || orderer.addresses[selectedAddressId]?.id == null) return;
+    dispatch(
+      fetchShopInfo({
+        addressId: orderer.addresses[selectedAddressId].id,
+        cartIngredientStockList,
+      })
+    );
+  }, [orderer?.addresses, selectedAddressId, cartIngredientStockList, dispatch]);
 
   return (
     <div className={isPayVisible ? styles.paySection : styles.paySectionDisabled}>
@@ -77,8 +70,6 @@ const PaySection = () => {
 
         {/* 주문자 정보 */}
         <PayOrderer />
-
-        {/* <hr className={styles.hr} /> */}
         {/* 결제 수단 */}
         <Checkout />
         {/* 결제 버튼 */}
@@ -87,7 +78,7 @@ const PaySection = () => {
             type="button"
             onClick={handleStartPayment}
             className={styles.btnPay}
-            disabled={totalPrice === 0 && isReady}
+            disabled={totalPrice === 0 || !isReady || shopInfo.length === 0}
           >
             {totalPrice.toLocaleString()} 원 결제 하기
           </button>
