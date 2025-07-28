@@ -39,17 +39,20 @@ const CategoryPage = () => {
   const [pageNo, setPageNo] = useState(1);
   const [numOfRows] = useState(12);
   const [isFullLoaded, setIsFullLoaded] = useState(false);
+  const [sortByOrder, setSortByOrder] = useState(false);
 
   // path 파라미터가 있으면 우선 사용, 없으면 쿼리스트링 사용
   useEffect(() => {
     console.log('useEffect 호출!');
     async function fetchItems() {
       if (isFullLoaded) return;
-      const response = await axiosInstance.get(`/cook-service/cook/get-cook-category`, {
+
+      const response = await axiosInstance.get(`/cook-service/cooks`, {
         params: {
-          category: searchParams.get('category') || '',
+          category: searchParams.get('category') === 'all' ? null : searchParams.get('category'),
           pageNo,
           numOfRows,
+          sort: sortByOrder ? 'order' : null,
         },
       });
 
@@ -64,13 +67,22 @@ const CategoryPage = () => {
       }
     }
     fetchItems();
-  }, [pageNo]);
+  }, [pageNo, sortByOrder]);
 
   return (
     <div className={styles.categoryCookPage}>
       <div className={styles.categoryHeader}>
-        <h2>{categoryList.find(c => c.en === searchParams.get('category'))?.name || '카테고리'}</h2>
-        <Button className={styles.sortButton}>최신순/주문량순</Button>
+        <h2>{categoryList.find(c => c.en === searchParams.get('category'))?.name || '전체'}</h2>
+        <Button
+          className={styles.sortButton}
+          onClick={() => {
+            setPageNo(1);
+            setSortByOrder(prev => !prev);
+            setIsFullLoaded(false);
+          }}
+        >
+          {sortByOrder ? '주문량순' : '최신순'}
+        </Button>
       </div>
       <CookGrid items={items} />
       {!isFullLoaded && (
