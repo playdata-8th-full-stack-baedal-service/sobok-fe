@@ -29,7 +29,7 @@ function LikePostPage() {
   };
 
   const handlePostClick = postId => {
-    navigate(`/user/post/${postId}`);
+    navigate(`/post/${postId}`);
   };
 
   const handleUnlike = async (e, id) => {

@@ -13,7 +13,6 @@ import PWChangedModal from '../../pages/auth/FindPW/PWChangedModal';
 // 모달들은 모두 추가해두어야함
 
 import { closeModal } from '../../store/modalSlice';
-import PayAddressChange from '../../pages/user/Pay/component/PayAddressChange';
 import CategorySelectModal from '../../pages/admin/RecipeRegeister/units/CategorySelectModal';
 import IngredientRegisterModal from '../../pages/admin/RecipeRegeister/units/ingredientRegisterModal';
 import DeleteConfilmModal from '../../pages/user/UserInfo/components/DeleteConfilmModal';
@@ -23,6 +22,7 @@ import UserPasswordChangeModal from '../../pages/user/Info/component/UserPasswor
 import AdminOrderDetailModal from '../../pages/admin/AllOrder/modals/AdminOrderDetailModal';
 import RecoveryConfirmModal from '../../pages/auth/Recovery/RecoveryConfirmModal';
 import ShopOrderDetailModal from '../../pages/hub/Main/modals/ShopOrderDetailModal';
+import PayAddressChange from '../../pages/user/CartPay/component/pay/PayAddressChange';
 
 function ModalController() {
   const { modalType, modalProps } = useSelector(state => state.modal);
@@ -58,8 +58,8 @@ function ModalController() {
     case 'PAY_ADDRESS_CHANGE':
       return <PayAddressChange onClose={handleClose} />;
 
-    // case 'NEW_PW':
-    //   return <NewPWModal onClose={handleClose} />;
+    case 'NEW_PW':
+      return <NewPWModal onClose={handleClose} />;
     case 'PW_CHANGED':
       return <PWChangedModal onClose={handleClose} />;
     case 'DEL_USER':
@@ -72,7 +72,7 @@ function ModalController() {
       return <UserPasswordChangeModal onClose={handleClose} />;
     case 'ADMIN_ORDER_DETAIL':
       return <AdminOrderDetailModal onClose={handleClose} order={modalProps.order} />;
-    case 'USER_RESTORE' :
+    case 'USER_RESTORE':
       return <RecoveryConfirmModal onClose={handleClose} {...modalProps} />;
     case 'SHOP_ORDER_DETAIL':
       return <ShopOrderDetailModal onClose={handleClose} order={modalProps.order} />;

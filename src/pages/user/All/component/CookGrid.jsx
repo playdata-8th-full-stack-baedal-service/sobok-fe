@@ -14,7 +14,7 @@ const CookGrid = ({ items }) => {
           key={item.id}
           item={item}
           onClick={() => {
-            navigate(`/user/product?id=${item.id || item.cookId}`);
+            navigate(`/product?id=${item.id || item.cookId}`);
           }}
         />
       ))}

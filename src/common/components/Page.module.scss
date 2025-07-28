@@ -1,0 +1,11 @@
+// Page.module.scss
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  align-content: center;
+
+  // 자식 요소들도 같은 max-width 적용
+  * {
+    max-width: 100%;
+  }
+}
