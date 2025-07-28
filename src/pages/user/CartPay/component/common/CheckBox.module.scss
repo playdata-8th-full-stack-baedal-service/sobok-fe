@@ -16,8 +16,8 @@
     &::after {
       content: '';
       position: absolute;
-      top: 2px;
-      left: 4px;
+      top: 4px;
+      left: 7px;
       width: 6px;
       height: 10px;
       border: solid white;
@@ -26,5 +26,4 @@
       pointer-events: none;
     }
   }
-
 }

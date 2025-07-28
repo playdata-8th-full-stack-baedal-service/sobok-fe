@@ -4,32 +4,70 @@
 @use '../../layout/headers/header';
 
 @font-face {
-  font-family: 'Font1';
-  src: url('/Font1.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
+  font-family: 'SobokFont';
+  src: url('/GmarketSansLight.otf') format('opentype');
+  font-weight: 100; // light
+  font-display: swap;
 }
+
 @font-face {
-  font-family: 'Font2';
-  src: url('/Font2.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
+  font-family: 'SobokFont';
+  src: url('/GmarketSansLight.otf') format('opentype');
+  font-weight: 200; // light
+  font-display: swap;
 }
+
 @font-face {
-  font-family: 'Font3';
-  src: url('/Font3.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
+  font-family: 'SobokFont';
+  src: url('/GmarketSansLight.otf') format('opentype');
+  font-weight: 300; // light
+  font-display: swap;
 }
+
 @font-face {
-  font-family: 'Font4';
-  src: url('/Font4.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
+  font-family: 'SobokFont';
+  src: url('/GmarketSansMedium.otf') format('opentype');
+  font-weight: 400; // normal
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SobokFont';
+  src: url('/GmarketSansMedium.otf') format('opentype');
+  font-weight: 500; // normal
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SobokFont';
+  src: url('/GmarketSansMedium.otf') format('opentype');
+  font-weight: 600; // normal
+  font-display: swap;
+} 
+
+@font-face {
+  font-family: 'SobokFont';
+  src: url('/GmarketSansBold.otf') format('opentype');
+  font-weight: 700; // bold
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SobokFont';
+  src: url('/GmarketSansBold.otf') format('opentype');
+  font-weight: 800; // bold
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SobokFont';
+  src: url('/GmarketSansBold.otf') format('opentype');
+  font-weight: 900; // bold
+  font-display: swap;
 }
 
 body,
 html,
 #root {
-  font-family: 'Font1', 'Font2', 'Font3', 'Font4', sans-serif;
+  font-family: 'SobokFont', sans-serif;
 }
