@@ -13,6 +13,8 @@ import useToast from '@/common/hooks/useToast';
 import PhoneVerification from '../../../../common/forms/Phone/PhoneVerification';
 import PasswordSection from '../../../../common/forms/PasswordConfirm/PasswordSection';
 import Input from '../../../../common/components/Input';
+import { clearAllChecks } from '@/store/authSlice';
+import { clearSMSAuth } from '@/store/smsAuthSlice';
 
 function RiderSignUp() {
   const dispatch = useDispatch();
@@ -35,6 +37,12 @@ function RiderSignUp() {
   const [verificationCode, setVerificationCode] = useState('');
   const loginIdTimer = useRef(null);
   const permissionTimer = useRef(null);
+
+  // 폼 클리어
+  useEffect(() => {
+    dispatch(clearAllChecks());
+    dispatch(clearSMSAuth());
+  }, [dispatch]);
 
   // 회원가입 성공 시 초기화
   useEffect(() => {
