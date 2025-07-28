@@ -58,8 +58,8 @@ function ModalController() {
     case 'PAY_ADDRESS_CHANGE':
       return <PayAddressChange onClose={handleClose} />;
 
-    // case 'NEW_PW':
-    //   return <NewPWModal onClose={handleClose} />;
+    case 'NEW_PW':
+      return <NewPWModal onClose={handleClose} />;
     case 'PW_CHANGED':
       return <PWChangedModal onClose={handleClose} />;
     case 'DEL_USER':
@@ -72,7 +72,7 @@ function ModalController() {
       return <UserPasswordChangeModal onClose={handleClose} />;
     case 'ADMIN_ORDER_DETAIL':
       return <AdminOrderDetailModal onClose={handleClose} order={modalProps.order} />;
-    case 'USER_RESTORE' :
+    case 'USER_RESTORE':
       return <RecoveryConfirmModal onClose={handleClose} {...modalProps} />;
     case 'SHOP_ORDER_DETAIL':
       return <ShopOrderDetailModal onClose={handleClose} order={modalProps.order} />;

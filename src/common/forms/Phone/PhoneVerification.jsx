@@ -10,7 +10,6 @@ function PhoneVerification({
   verificationCode,
   onPhoneChange,
   onVerificationCodeChange,
-  wrapperClassName = '',
   showLabel = true,
   showButton = true,
   onRequestVerification,

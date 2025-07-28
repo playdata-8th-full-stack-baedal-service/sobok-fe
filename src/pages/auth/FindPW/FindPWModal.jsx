@@ -4,10 +4,9 @@ import axiosInstance from '../../../services/axios-config';
 import { resetSMSAuth } from '../../../store/smsAuthSlice';
 import ModalWrapper from '../../../common/modals/ModalWrapper';
 import IDInput from '../SignIn/components/IDInput';
-import PhoneVerification from '../../../common/forms/Phone/PhoneVerification';
-import useSignInHandlers from '../SignIn/hooks/useSignInHandlers';
+import Input from '../../../common/components/Input';
 import Button from '../../../common/components/Button';
-import PWChangedModal from './PWChangedModal';
+import NewPWModal from './NewPWModal';
 import styles from './FindPWModal.module.scss';
 import useToast from '@/common/hooks/useToast';
 
@@ -18,17 +17,12 @@ function FindPWModal({ onClose }) {
   const [phone, setPhone] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [authId, setAuthId] = useState(null);
-  const [showPWChangedModal, setShowPWChangedModal] = useState(false);
+  const [showNewPWModal, setShowNewPWModal] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const timerRef = useRef(null);
 
   const idInputRef = useRef();
   const dispatch = useDispatch();
-
-  const { handleKeyDown } = useSignInHandlers({
-    id,
-    password: '',
-    setError: () => {},
-    idInputRef,
-  });
 
   const handleCloseWithReset = () => {
     setPhone('');
@@ -36,6 +30,26 @@ function FindPWModal({ onClose }) {
     setAuthId(null);
     dispatch(resetSMSAuth());
     onClose();
+  };
+
+  const startTimer = () => {
+    setTimer(180);
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setTimer(prev => {
+        if (prev <= 1) {
+          clearInterval(timerRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const formatTime = sec => {
+    const m = String(Math.floor(sec / 60)).padStart(2, '0');
+    const s = String(sec % 60).padStart(2, '0');
+    return `${m}:${s}`;
   };
 
   const handleRequestVerification = async () => {
@@ -47,6 +61,7 @@ function FindPWModal({ onClose }) {
       if (res.data.success) {
         showInfo('인증번호가 전송되었습니다.');
         setAuthId(res.data.data);
+        startTimer();
       } else {
         showNegative(res.data.message);
       }
@@ -63,7 +78,7 @@ function FindPWModal({ onClose }) {
       });
       if (res.data.success) {
         showSuccess('인증이 완료되었습니다.');
-        setShowPWChangedModal(true);
+        setShowNewPWModal(true);
       } else {
         showNegative(res.data.message || '인증 실패');
       }
@@ -72,8 +87,8 @@ function FindPWModal({ onClose }) {
     }
   };
 
-  if (showPWChangedModal) {
-    return <PWChangedModal onClose={onClose} authId={authId} />;
+  if (showNewPWModal) {
+    return <NewPWModal onClose={onClose} authId={authId} inputCode={verificationCode} />;
   }
 
   return (
@@ -84,7 +99,6 @@ function FindPWModal({ onClose }) {
           setId={setId}
           rememberMe={false}
           setRememberMe={() => {}}
-          onKeyDown={handleKeyDown}
           inputRef={idInputRef}
           showLabel={false}
           showRememberMe={false}
@@ -92,15 +106,35 @@ function FindPWModal({ onClose }) {
           placeholder="아이디를 입력해 주세요."
         />
 
-        <PhoneVerification
-          phone={phone}
-          verificationCode={verificationCode}
-          onPhoneChange={e => setPhone(e.target.value)}
-          onVerificationCodeChange={e => setVerificationCode(e.target.value)}
-          showLabel={false}
-          showButton={false}
-          onRequestVerification={handleRequestVerification}
-        />
+        <Input label="전화번호" required showLabel={false}>
+          <div className={styles.inputButtonGroup}>
+            <input
+              type="text"
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
+              placeholder="전화번호를 입력하세요."
+              disabled={timer > 0}
+            />
+            {timer === 0 ? (
+              <Button type="button" variant="BASIC" onClick={handleRequestVerification}>
+                인증요청
+              </Button>
+            ) : (
+              <div className={styles.timerText}>{formatTime(timer)}</div>
+            )}
+          </div>
+        </Input>
+
+        <Input label="인증번호" required showLabel={false}>
+          <div className={styles.inputButtonGroup}>
+            <input
+              type="text"
+              value={verificationCode}
+              onChange={e => setVerificationCode(e.target.value)}
+              placeholder="인증번호를 입력하세요."
+            />
+          </div>
+        </Input>
 
         <Button type="button" variant="BASIC" onClick={handleVerifyCode} className="confirm">
           인증번호 확인
