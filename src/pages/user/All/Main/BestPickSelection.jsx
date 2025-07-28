@@ -92,6 +92,7 @@ function BestPickSelection() {
                 console.log('Image load error:', e.target.src);
                 e.target.style.display = 'none';
               }}
+              className={styles.bestimg}
             />
             <div className={styles.infosection}>
               <p>{post.title}</p>
