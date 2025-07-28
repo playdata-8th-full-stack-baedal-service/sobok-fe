@@ -6,7 +6,9 @@ import styles from './RecipeModal.module.scss'; // SCSS 연결
 const RecipeModal = ({ onClose, recipe }) => {
   return (
     <ModalWrapper title="레시피" onClose={onClose}>
-      <div className={styles.tiptap} dangerouslySetInnerHTML={{ __html: recipe }} />
+      <div className={styles.contatiner}>
+        <div className={styles.tiptap} dangerouslySetInnerHTML={{ __html: recipe }} />
+      </div>
     </ModalWrapper>
   );
 };

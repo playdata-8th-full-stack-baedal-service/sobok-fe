@@ -44,7 +44,7 @@ function UserPasswordChangeModal({ onClose }) {
   ) : (
     <ModalWrapper title="비밀번호 변경" onClose={onClose} size="md">
       <div className={styles.passwordChangeModal}>
-        {/* <p>새로운 비밀번호를 입력해주세요.</p> */}
+        <p className={styles.passwordchangetitle}>새로운 비밀번호를 입력해주세요.</p>
 
         <PasswordInput
           value={newPassword}
@@ -60,18 +60,20 @@ function UserPasswordChangeModal({ onClose }) {
           showLabel={false}
         />
 
-        {errorMessage && <p style={{ color: 'red', marginBottom: '10px' }}>{errorMessage}</p>}
+        {errorMessage && (
+          <p style={{ color: 'red', marginBottom: '10px', fontSize: '10px' }}>{errorMessage}</p>
+        )}
 
-        <div>
+        <div className={styles.vaildpasswordcard}>
           <p>비밀번호 요구사항:</p>
-          <ul>
+          <ul className={styles.detailpasswordvaild}>
             <li>최소 8자 이상</li>
             <li>대문자, 소문자, 숫자, 특수문자 포함</li>
             <li>기존 비밀번호와 다른 비밀번호</li>
           </ul>
         </div>
 
-        <Button type="button" variant="BASIC" onClick={handleSubmit} className="confirm">
+        <Button type="button" onClick={handleSubmit} className={styles.changebutton}>
           변경
         </Button>
       </div>

@@ -82,6 +82,7 @@ function MainPage() {
         </div>
       )}
       <BestPickSelection />
+      <hr/>
       <CategorySelection />
     </div>
   );

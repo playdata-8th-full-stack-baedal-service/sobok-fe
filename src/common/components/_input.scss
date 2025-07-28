@@ -53,7 +53,6 @@
 
 
 input[type='text'],
-input[type='password'],
 input[type='file'],
 select {
   height: 35px;
@@ -76,4 +75,23 @@ select {
 input.input-error,
 select.input-error {
   border-color: #d32f2f;
+}
+
+input[type='password'] {
+  flex: 1;
+  height: 35px;
+  padding: 0px 14px;
+  font-size: 14px;
+  border: 1.5px solid #000;
+  border-radius: 50px;
+  box-shadow: 2.5px 3px 0 #000;
+  outline: none;
+  transition: ease 0.25s;
+  width: 40vw;
+  min-height: 30px;
+  margin-top: 5px;
+
+  &:focus {
+    box-shadow: 5.5px 7px 0 black;
+  }
 }
