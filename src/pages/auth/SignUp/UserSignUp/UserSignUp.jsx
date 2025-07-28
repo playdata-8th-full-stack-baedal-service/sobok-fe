@@ -10,6 +10,7 @@ import {
   clearEmailCheck,
   clearLoginIdCheck,
   clearNicknameCheck,
+  clearAllChecks,
 } from '@/store/authSlice';
 import { clearSMSAuth } from '@/store/smsAuthSlice';
 import ProfileSection from './components/signup/ProfileSection';
@@ -251,6 +252,7 @@ function UserSignUp() {
 
   useEffect(() => {
     dispatch(clearSMSAuth());
+    dispatch(clearAllChecks());
   }, []);
 
   return (
