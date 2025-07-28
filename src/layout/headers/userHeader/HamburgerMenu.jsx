@@ -86,11 +86,13 @@ function MenuTest() {
       {shouldRender && (
         <div ref={menuRef} className={`${styles.card} ${isClosing ? styles.fadeOut : ''}`}>
           <span>sobok</span>
-          <p>메뉴</p>
+          <p className={styles.menutitle}>메뉴</p>
           <div className={styles.card__container}>
+            <p className={styles.posttitle}>POST</p>
             <p className={styles.element} onClick={handleGoToPostList}>
-              전체 게시글보기
+              전체 게시글
             </p>
+            <p className={styles.cooktitle}>COOK</p>
             <p className={styles.element} onClick={() => handleCategoryClick('KOREAN')}>
               한식
             </p>

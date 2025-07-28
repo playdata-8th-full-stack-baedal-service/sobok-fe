@@ -7,17 +7,15 @@ import ModalWrapper from '../../../common/modals/ModalWrapper';
 function HubInfoPage() {
   const [shopInfo, setShopInfo] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(true);
   const [error, setError] = useState('');
 
-  const handlePasswordSubmit = async password => {
+  const handlePasswordSubmit = async shopId => {
     setLoading(true);
     setError('');
     try {
-      const response = await axiosInstance.post('/auth-service/auth/get-info', { password });
+      const response = await axiosInstance.get('/shop-service/api/shop-info-all', { shopId });
       if (response.data.success) {
         setShopInfo(response.data.data);
-        setShowModal(false);
       } else {
         setError(response.data.message || '비밀번호가 올바르지 않습니다.');
       }
@@ -28,23 +26,10 @@ function HubInfoPage() {
     }
   };
 
-  const handleModalClose = () => {
-    setShowModal(false);
-  };
 
   return (
     <div className={style.HubInfoPage}>
-      {showModal && (
-        <ModalWrapper title="비밀번호 입력" onClose={handleModalClose} size="sm">
-          <PasswordModal
-            onSubmit={handlePasswordSubmit}
-            onClose={handleModalClose}
-            loading={loading}
-            error={error}
-          />
-        </ModalWrapper>
-      )}
-      {!showModal && shopInfo && (
+      {shopInfo && (
         <>
           <h2 className={style.HubInfoPagetitle}>가게 정보</h2>
           <div className={style.Hubinfocontainer}>

@@ -92,7 +92,7 @@
 .card {
   position: absolute;
   width: 250px;
-  height: 290px;
+  height: 350px;
   border-radius: 15px;
   background: rgb(255, 255, 255);
   color: rgb(0, 0, 0);
@@ -101,9 +101,9 @@
   padding: 15px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  
   border: 1px solid black;
-  z-index: 999999;
+  z-index: 99999999;
 
   animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 
@@ -128,4 +128,21 @@
   &:hover:not(.active) {
     color: #3775bb;
   }
+}
+
+.menutitle {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.posttitle {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  color: rgb(10, 145, 245);
+}
+
+.cooktitle {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: rgb(10, 145, 245);
 }
