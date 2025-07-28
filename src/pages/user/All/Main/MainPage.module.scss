@@ -25,21 +25,20 @@
 }
 
 .searchResults {
-  position: absolute; /* absolute positioning으로 변경 */
-  top: 23.5%; /* 검색창 바로 아래에 위치 */
-  left: 50%; /* 중앙 정렬을 위해 */
-  transform: translateX(-50%); /* 중앙 정렬 완성 */
+  position: absolute;
+  top: 23.5%;
+  left: 50%;
+  transform: translateX(-50%);
   width: 400px;
-  background: white; /* 배경색 추가 */
+  background: white;
   border: 1px solid rgb(0, 0, 0);
-  border-radius: 8px; /* 둥근 모서리 추가 */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
-  z-index: 1000; /* 높은 z-index로 다른 요소들 위에 표시 */
-  max-height: 400px; /* 최대 높이 설정 */
-  overflow-y: auto; /* 스크롤 가능하도록 */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
-/* 검색 결과 아이템 스타일링 추가 */
 .searchResultItem,
 .moreResultsItem {
   padding: 12px 16px;
@@ -71,7 +70,7 @@
   justify-content: center;
   align-items: center;
   gap: 15px;
-  position: relative; /* 검색 결과의 기준점 설정 */
+  position: relative;
 }
 
 .searchbarbutton {
@@ -198,11 +197,114 @@
 }
 
 .bestPickSelection {
-  outline: 1px solid rgb(0, 0, 0);
   width: 65vw;
   margin: 50px auto 50px;
   padding: 25px 50px;
   border-radius: 20px;
+}
+
+// 커스텀 슬라이더 스타일
+.customSliderContainer {
+  width: 100%;
+  display: flex;
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.customSlide {
+  position: relative;
+  cursor: pointer;
+  color: #fff;
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: all 0.7s ease-in-out;
+  filter: blur(4px);
+  opacity: 0.7;
+  
+  &:hover {
+    transform: scale(1.02);
+  }
+  
+  &.active {
+    flex: 3;
+    filter: blur(0px);
+    opacity: 1;
+    
+    .slideInfoSection {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .slideImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+  
+  .slideInfoSection {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease-in-out 0.2s;
+    text-align: left;
+    
+    .slideTitle {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 0 0 8px 0;
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    .slideAuthor {
+      font-size: 0.9rem;
+      margin: 0;
+      color: #000000;
+      opacity: 0.9;
+    }
+  }
+}
+
+.slideNavigation {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  
+  .navDot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.5);
+      transform: scale(1.2);
+    }
+    
+    &.activeDot {
+      background: #007bff;
+      transform: scale(1.3);
+    }
+  }
 }
 
 .CategorySelection {
@@ -518,18 +620,16 @@
 }
 
 .categorybottomselection {
-  width: 100%; /* 상위 컨테이너와 동일한 너비 */
+  width: 100%;
   display: grid;
-  margin: 0; /* auto 제거하여 부모 컨테이너에 맞춤 */
+  margin: 0;
   grid-template-areas:
     'main main serveone servetwo'
     'main main servethree servefour';
-  gap: 10px; /* 그리드 아이템 간 간격 추가 (선택사항) */
+  gap: 10px;
 
   .grid1 {
     grid-area: main;
-    
-    
   }
   .grid2 {
     grid-area: serveone;
@@ -544,12 +644,12 @@
     grid-area: servefour;
   }
 
-  /* 이미지와 텍스트 레이아웃 개선 */
   .cookThumbnail {
     width: 100%;
+    height: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
-    border-radius: 8px; /* 선택사항 */
+    border-radius: 8px;
   }
 }
 
@@ -604,7 +704,6 @@
   justify-content: center;
   align-items: center;
 
-
   &:hover {
     opacity: 1;
     color: white;
@@ -614,4 +713,152 @@
 
 .gridItem {
   position: relative;
+}
+
+// 반응형 디자인
+@media screen and (max-width: 768px) {
+  .bestPickSelection {
+    width: 90vw;
+    padding: 20px 25px;
+    margin: 30px auto;
+  }
+
+  .customSliderContainer {
+    height: 250px;
+    flex-direction: row;
+    
+    .customSlide {
+      min-height: 250px;
+      flex: 1;
+      
+      &.active {
+        flex: 2;
+      }
+      
+      .slideInfoSection {
+        bottom: 15px;
+        left: 15px;
+        right: 15px;
+        padding: 10px;
+        
+        .slideTitle {
+          font-size: 0.9rem;
+          margin-bottom: 5px;
+        }
+        
+        .slideAuthor {
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
+
+  .slideNavigation {
+    margin-top: 15px;
+    
+    .navDot {
+      width: 10px;
+      height: 10px;
+    }
+  }
+
+  .searchbarcontatiner .searchbarinput {
+    width: 300px;
+    
+    &:focus {
+      width: 350px;
+    }
+  }
+
+  .CategorySelection {
+    width: 90vw;
+  }
+
+  .selectbuttonzone {
+    flex-direction: column;
+    gap: 20px;
+    
+    .btn23 {
+      padding: 0.6rem 2rem;
+      font-size: 14px;
+    }
+  }
+
+  .categorybottomselection {
+    grid-template-areas:
+      'main main'
+      'serveone servetwo'
+      'servethree servefour';
+    gap: 8px;
+  }
+}
+
+// 더 작은 화면 (480px 이하)
+@media screen and (max-width: 480px) {
+  .MainPage {
+    margin: 40px auto;
+  }
+
+  .bestPickSelection {
+    width: 95vw;
+    padding: 15px 20px;
+    margin: 20px auto;
+  }
+
+  .customSliderContainer {
+    height: 200px;
+    
+    .customSlide {
+      min-height: 200px;
+      
+      .slideInfoSection {
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        padding: 8px;
+        
+        .slideTitle {
+          font-size: 0.8rem;
+          margin-bottom: 3px;
+        }
+        
+        .slideAuthor {
+          font-size: 0.7rem;
+        }
+      }
+    }
+  }
+
+  .bestPicktitle {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+
+  .searchbarcontatiner .searchbarinput {
+    width: 250px;
+    padding: 8px 0px 8px 30px;
+    height: 35px;
+    
+    &:focus {
+      width: 280px;
+    }
+  }
+
+  .CategorySelection {
+    width: 95vw;
+  }
+
+  .switch {
+    --_label-padding: 0.8rem 1.5rem;
+    font-size: 14px;
+  }
+
+  .categorybottomselection {
+    grid-template-areas:
+      'main'
+      'serveone'
+      'servetwo' 
+      'servethree'
+      'servefour';
+  }
 }
