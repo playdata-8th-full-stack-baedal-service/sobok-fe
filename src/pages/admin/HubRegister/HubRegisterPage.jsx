@@ -16,6 +16,7 @@ function HubRegisterPage() {
   const dispatch = useDispatch();
   const { showSuccess, showNegative } = useToast();
   const { loginIdCheckMessage, loginIdCheckError } = useSelector(state => state.auth);
+
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -28,12 +29,10 @@ function HubRegisterPage() {
     roadFull: '',
   });
   const [verificationCode, setVerificationCode] = useState('');
-
-  const [shopNameCheckMessage, setShopNameCheckMessage] = useState('');
-  const [shopNameCheckError, setShopNameCheckError] = useState('');
-
   const [shopAddressCheckMessage, setShopAddressCheckMessage] = useState('');
   const [shopAddressCheckError, setShopAddressCheckError] = useState('');
+  const [shopNameCheckMessage, setShopNameCheckMessage] = useState('');
+  const [shopNameCheckError, setShopNameCheckError] = useState('');
 
   const loginIdTimer = useRef(null);
   const shopNameTimer = useRef(null);
@@ -116,8 +115,29 @@ function HubRegisterPage() {
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
+  const validateForm = () => {
+    const { loginId, password, passwordConfirm, shopName, ownerName, phone, roadFull } = form;
+
+    if (
+      !loginId ||
+      !password ||
+      !passwordConfirm ||
+      !shopName ||
+      !ownerName ||
+      !phone ||
+      !roadFull
+    ) {
+      showNegative('필수 항목을 모두 입력해주세요.');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async e => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     try {
       const response = await axiosInstance.post('/auth-service/auth/shop-signup', {
         loginId: form.loginId,
@@ -141,6 +161,8 @@ function HubRegisterPage() {
           addrDetail: '',
         });
         setVerificationCode('');
+        dispatch(clearSMSAuth());
+        dispatch(clearAllChecks());
       } else {
         showNegative(response.data.message || '가게 등록에 실패했습니다.');
       }

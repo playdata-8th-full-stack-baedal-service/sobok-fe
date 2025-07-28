@@ -6,17 +6,17 @@ import {
   checkPermission,
   clearPermissionCheck,
 } from '@/store/riderSlice';
-import { sendSMSCode, verifySMSCode, clearSMSAuth } from '@/store/smsAuthSlice';
-import { checkLoginId, clearLoginIdCheck } from '@/store/authSlice';
+import { clearSMSAuth } from '@/store/smsAuthSlice';
+import { checkLoginId, clearLoginIdCheck, clearAllChecks } from '@/store/authSlice';
 import styles from './RiderSignUp.module.scss';
 import useToast from '@/common/hooks/useToast';
 import PhoneVerification from '../../../../common/forms/Phone/PhoneVerification';
 import PasswordSection from '../../../../common/forms/PasswordConfirm/PasswordSection';
 import Input from '../../../../common/components/Input';
-import { clearAllChecks } from '@/store/authSlice';
+
 function RiderSignUp() {
   const dispatch = useDispatch();
-  const { showSuccess } = useToast();
+  const { showSuccess, showNegative } = useToast();
 
   const { loading, error, signUpSuccess, permissionCheckMessage, permissionCheckError } =
     useSelector(state => state.rider);
@@ -36,7 +36,7 @@ function RiderSignUp() {
   const loginIdTimer = useRef(null);
   const permissionTimer = useRef(null);
 
-  // 폼 클리어
+  // 폼 초기화
   useEffect(() => {
     dispatch(clearAllChecks());
     dispatch(clearSMSAuth());
@@ -102,8 +102,28 @@ function RiderSignUp() {
     }));
   };
 
+  // 필수 입력값 및 인증 체크
+  const validateForm = () => {
+    const { loginId, password, passwordConfirm, name, phone, permissionNumber } = form;
+
+    if (!loginId || !password || !passwordConfirm || !name || !phone || !permissionNumber) {
+      showNegative('필수 항목을 모두 입력해주세요.');
+      return false;
+    }
+
+    if (!isVerified) {
+      showNegative('휴대폰 인증을 완료해주세요.');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = e => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     const { passwordConfirm, ...signUpData } = form;
     dispatch(riderSignUp(signUpData));
   };
