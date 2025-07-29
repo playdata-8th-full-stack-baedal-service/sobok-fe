@@ -13,7 +13,7 @@ function NewPostPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const { showSuccess, showNegative, showInfo } = useToast();
+  const { showSuccess, showNegative } = useToast();
 
   const paymentId = location.state?.paymentId;
   const cookId = location.state?.cookId;
@@ -38,7 +38,6 @@ function NewPostPage() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [paymentId, cookId, navigate]);
 
-  // 이미지 업로드 + 서버에 저장
   const uploadToS3 = async file => {
     const formData = new FormData();
     formData.append('image', file);
@@ -50,11 +49,9 @@ function NewPostPage() {
       },
     });
 
-    const imageUrl = res.data.data;
-    return imageUrl;
+    return res.data.data;
   };
 
-  // 게시글 등록 요청
   const handleSubmit = async () => {
     if (!title || !content || content === '<p></p>') {
       showNegative('제목과 내용을 입력해주세요.');
@@ -64,20 +61,17 @@ function NewPostPage() {
     try {
       setIsUploading(true);
 
-      // 본문 내 이미지 src 추출
       const extractImagesFromContent = html => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
-        const imgs = Array.from(doc.querySelectorAll('img')).map((img, i) => ({
+        return Array.from(doc.querySelectorAll('img')).map((img, i) => ({
           imageUrl: img.getAttribute('src'),
           index: i + 1,
         }));
-        return imgs;
       };
 
       const images = extractImagesFromContent(content);
 
-      console.log(paymentId, cookId, title, content, images);
       const resultAction = await dispatch(
         registerPost({
           paymentId,
@@ -117,7 +111,24 @@ function NewPostPage() {
           className={styles['title-input']}
         />
       </div>
-      <TiptapEditor content={content} setContent={setContent} uploadImageToServer={uploadToS3} />
+
+      {/* 작성 & 미리보기 영역 */}
+      <div className={styles['editor-preview-container']}>
+        <div className={styles['editor-section']}>
+          <TiptapEditor
+            content={content}
+            setContent={setContent}
+            uploadImageToServer={uploadToS3}
+          />
+        </div>
+        <div className={styles['preview-section']}>
+          <h3>미리보기</h3>
+          <div
+            className={styles['preview-content']}
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
+        </div>
+      </div>
 
       <Button onClick={handleSubmit} variant="BASIC" disabled={isUploading}>
         {isUploading ? '업로드 중...' : '등록하기'}

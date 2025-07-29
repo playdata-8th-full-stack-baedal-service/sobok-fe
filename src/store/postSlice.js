@@ -35,9 +35,21 @@ export const registerPost = createAsyncThunk(
         })),
       };
       const res = await axiosInstance.post(`/post-service/post/register`, body);
-      return res.data.posts[0];
+      const postId =
+        res.data?.postId || // 일반적인 케이스
+        res.data?.data?.postId || // data 객체 안에 있는 경우
+        res.data?.posts?.[0]?.postId || // 기존 코드가 기대한 경우
+        null;
+
+      if (!postId) {
+        return thunkAPI.rejectWithValue('게시글 등록 응답에 postId가 없습니다.');
+      }
+
+      return { postId };
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data?.message || '게시글 등록 실패');
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || '게시글 등록 실패'
+      );
     }
   }
 );

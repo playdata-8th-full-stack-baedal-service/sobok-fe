@@ -8,7 +8,12 @@ const TiptapEditor = ({ content, setContent, uploadImageToServer }) => {
   const [isEditorEmpty, setIsEditorEmpty] = useState(true);
 
   const editor = useEditor({
-    extensions: [StarterKit, Image.configure({ inline: false })],
+    extensions: [
+      StarterKit.configure({
+        orderedList: false, // ✅ 숫자 자동 리스트 변환 비활성화
+      }),
+      Image.configure({ inline: false }),
+    ],
     content: content || '<p></p>',
     onUpdate({ editor }) {
       const html = editor.getHTML();
@@ -62,7 +67,6 @@ const TiptapEditor = ({ content, setContent, uploadImageToServer }) => {
 
   return (
     <div className={styles.wrapper} onClick={() => editor?.commands?.focus()}>
-      {/* 툴바 */}
       <div className={styles.toolbar}>
         {[
           { cmd: 'toggleBold', label: '굵게', mark: 'bold' },
