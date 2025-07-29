@@ -15,7 +15,7 @@ function BestPickSelection() {
       const res = await axiosInstance.get('post-service/post/post-list', {
         params: {
           page: 0,
-          size: 3,
+          size: 5,
           sortBy: 'LIKE',
         },
       });
@@ -77,6 +77,11 @@ function BestPickSelection() {
     return <div className={styles.bestPickSelection}>베스트 픽 게시물이 없습니다.</div>;
   }
 
+  const formatDate = timestamp => {
+    const date = new Date(timestamp);
+    return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
+  };
+
   return (
     <div className={styles.bestPickSelection}>
       <p className={styles.bestPicktitle}>게시물 베스트 Pick</p>
@@ -104,6 +109,10 @@ function BestPickSelection() {
             <div className={styles.slideInfoSection}>
               <p className={styles.slideTitle}>{post.title}</p>
               <p className={styles.slideAuthor}>{post.nickName}</p>
+              <div className={styles.subinfo}>
+                <p>좋아요 수 : <span className={styles.liketext}>{post.likeCount}</span></p>
+                <p>작성일시: {formatDate(post.updatedAt)}</p>
+              </div>
             </div>
           </div>
         ))}

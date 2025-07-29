@@ -84,7 +84,7 @@ function CategorySelection() {
           <span
             style={{
               fontWeight: 'bold',
-              color: selectedCategory === '전체' ? '#ffffff' : '#aaa',
+              // color: selectedCategory === '전체' ? '#ffffff' : '#aaa',
             }}
             tabIndex={selectedCategory === '전체' ? 0 : -1}
             role="button"
