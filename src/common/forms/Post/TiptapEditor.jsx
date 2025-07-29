@@ -14,9 +14,12 @@ const TiptapEditor = forwardRef(({ content, setContent, uploadImageToServer }, r
     onUpdate({ editor }) {
       const html = editor.getHTML();
       const text = editor.getText().trim();
-      setIsEditorEmpty(!text);
-      setContent(text ? html : '');
+      const hasImage = editor.getJSON().content?.some(node => node.type === 'image');
+
+      setIsEditorEmpty(!text && !hasImage);
+      setContent(text || hasImage ? html : '');
     },
+
     editorProps: {
       handleDOMEvents: {
         keydown: (view, event) => {
@@ -38,7 +41,6 @@ const TiptapEditor = forwardRef(({ content, setContent, uploadImageToServer }, r
     },
   });
 
-  // ✅ 부모에서 focus()와 editor 객체 접근 가능
   useImperativeHandle(ref, () => ({
     focus: () => editor?.commands.focus(),
     getEditor: () => editor,

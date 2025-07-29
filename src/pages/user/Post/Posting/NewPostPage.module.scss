@@ -68,15 +68,16 @@
 
 .preview-section {
   flex: 1;
-  border: 1px solid #ddd;
+  border: 3px solid #ddd;
   padding: 16px;
   border-radius: 8px;
-  background: #fafafa;
+  background: #ffffff;
   overflow-y: auto;
 
   h3 {
     font-size: 18px;
-    margin-bottom: 12px;
+    margin-bottom: 17px;
+    text-align: center;
   }
 }
 
@@ -85,9 +86,12 @@
   line-height: 1.6;
 
   img {
+    display: block;
+    margin: 1em auto;
     max-width: 100%;
+    height: auto;
     border-radius: 4px;
-    margin: 10px 0;
+    text-align: center;
   }
 
   pre {

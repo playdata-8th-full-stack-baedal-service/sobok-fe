@@ -53,32 +53,41 @@ function NewPostPage() {
 
     return res.data.data;
   };
+
   const handleSubmit = async () => {
-    if (!title || !content || content === '<p></p>') {
-      showNegative('제목과 내용을 입력해주세요.');
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
+    const images = Array.from(doc.querySelectorAll('img')).map(img => ({
+      imageUrl: img.getAttribute('src'),
+    }));
+
+    if (!title.trim()) {
+      showNegative('제목을 입력해주세요.');
+      return;
+    }
+
+    const textOnly = doc.body.textContent.trim();
+    if (!textOnly && images.length === 0) {
+      showNegative('내용을 입력해주세요.');
       return;
     }
 
     try {
       setIsUploading(true);
 
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(content, 'text/html');
-      const images = Array.from(doc.querySelectorAll('img')).map((img, i) => ({
-        imageUrl: img.getAttribute('src'),
+      // 최종적으로 index 부여
+      const indexedImages = images.map((img, i) => ({
+        ...img,
         index: i + 1,
       }));
-
-      // ✅ 콘솔로 데이터 확인
-      console.log('📸 업로드할 이미지 리스트:', images);
 
       const resultAction = await dispatch(
         registerPost({
           paymentId,
           cookId,
           title,
-          content,
-          images,
+          content: content || '<p></p>',
+          images: indexedImages,
         })
       );
 

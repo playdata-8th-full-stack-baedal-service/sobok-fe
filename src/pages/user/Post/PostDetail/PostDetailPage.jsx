@@ -16,6 +16,8 @@ const PostDetailPage = () => {
   const [error, setError] = useState('');
   const [isLiked, setIsLiked] = useState(false);
 
+  const currentUserId = localStorage.getItem('USER_ID');
+
   // 게시글 수정
   const handleEditPost = () => {
     navigate('/user/edit-post', { state: { post } });
@@ -95,6 +97,8 @@ const PostDetailPage = () => {
     return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
   };
 
+  console.log(post.authId, currentUserId);
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -144,14 +148,16 @@ const PostDetailPage = () => {
       </div>
 
       <div className={styles.buttonSection}>
-        <div className={styles.buttonWrapper}>
-          <Button type="button" variant="BASIC" className="flexible" onClick={handleEditPost}>
-            수정하기
-          </Button>
-          <Button type="button" variant="BASIC" className="flexible" onClick={handleDeletePost}>
-            삭제하기
-          </Button>
-        </div>
+        {String(post.authId) === String(currentUserId) && (
+          <div className={styles.buttonWrapper}>
+            <Button type="button" variant="BASIC" className="flexible" onClick={handleEditPost}>
+              수정하기
+            </Button>
+            <Button type="button" variant="BASIC" className="flexible" onClick={handleDeletePost}>
+              삭제하기
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

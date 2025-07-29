@@ -125,7 +125,7 @@ const EditPostPage = () => {
         />
       </div>
 
-      <Button onClick={handleSubmit} variant="BASIC" disabled={isSubmitting}>
+      <Button onClick={handleSubmit} variant="BASIC" className="flexible" disabled={isSubmitting}>
         {isSubmitting ? '수정 중...' : '수정 완료'}
       </Button>
     </div>
