@@ -41,7 +41,7 @@ function CategorySelection() {
 
   useEffect(() => {
     fetchLatest();
-  }, [selectedCategory, sortByOrder, fetchLatest]);
+  }, [selectedCategory, sortByOrder]);
 
   // 카테고리별 데이터 불러오기 함수 (axiosInstance)
   const fetchCategory = async korCategory => {
