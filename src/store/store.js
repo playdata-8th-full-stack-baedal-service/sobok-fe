@@ -11,6 +11,7 @@ import productReducer from './productSlice';
 import userInfoReducer from './userInfoSlice';
 import postReducer from './postSlice';
 import payReducer from './cartPaySlice';
+import stockReducer from './stockSlice';
 
 const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
     userInfo: userInfoReducer,
     post: postReducer,
     pay: payReducer,
+    stock: stockReducer,
   },
 });
 
