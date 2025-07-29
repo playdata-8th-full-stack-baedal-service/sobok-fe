@@ -9,6 +9,7 @@ function PasswordSection({
   onPasswordChange,
   onPasswordConfirmChange,
   disabled,
+  reset,
 }) {
   const [passwordValidation, setPasswordValidation] = useState({
     isValid: false,
@@ -16,6 +17,18 @@ function PasswordSection({
     showValidation: false,
     showMatchValidation: false,
   });
+
+  // 패스워드 리셋
+  useEffect(() => {
+    if (reset) {
+      setPasswordValidation({
+        isValid: false,
+        isMatching: false,
+        showValidation: false,
+        showMatchValidation: false,
+      });
+    }
+  }, [reset]);
 
   // ✅ 비밀번호 보이기/숨기기 상태
   const [showPassword, setShowPassword] = useState(false);
@@ -80,6 +93,12 @@ function PasswordSection({
           onChange={handlePasswordChange}
           disabled={disabled}
           placeholder="대소문자, 숫자, 특수문자 포함 8~16자"
+          success={passwordValidation.isValid ? '사용 가능한 비밀번호입니다.' : ''}
+          error={
+            !passwordValidation.isValid && passwordValidation.showValidation
+              ? '대소문자, 숫자, 특수문자 포함 8~16자'
+              : ''
+          }
         />
         <button
           type="button"
@@ -89,20 +108,6 @@ function PasswordSection({
         >
           {showPassword ? <AiOutlineEye size={20} /> : <AiOutlineEyeInvisible size={20} />}
         </button>
-        {passwordValidation.showValidation && (
-          <p
-            style={{
-              color: passwordValidation.isValid ? 'green' : 'red',
-              fontSize: '13px',
-              fontWeight: 'bold',
-              margin: '10px 0',
-            }}
-          >
-            {passwordValidation.isValid
-              ? '✓ 사용 가능한 비밀번호입니다!'
-              : '✗ 대소문자, 숫자, 특수문자(@$!%*?&)를 포함하여 8~16자로 입력해주세요.'}
-          </p>
-        )}
       </div>
 
       {/* 비밀번호 확인 */}
@@ -117,6 +122,12 @@ function PasswordSection({
           onChange={handlePasswordConfirmChange}
           disabled={disabled}
           placeholder="비밀번호를 다시 입력해주세요"
+          success={passwordValidation.isValid ? '비밀번호가 일치합니다.' : ''}
+          error={
+            !passwordValidation.isValid && passwordValidation.showValidation
+              ? '비밀번호가 일치하지 않습니다.'
+              : ''
+          }
         />
         <button
           type="button"
@@ -126,20 +137,6 @@ function PasswordSection({
         >
           {showConfirmPassword ? <AiOutlineEye size={20} /> : <AiOutlineEyeInvisible size={20} />}
         </button>
-        {passwordValidation.showMatchValidation && (
-          <p
-            style={{
-              color: passwordValidation.isMatching ? 'green' : 'red',
-              fontSize: '13px',
-              fontWeight: 'bold',
-              margin: '10px 0',
-            }}
-          >
-            {passwordValidation.isMatching
-              ? '✓ 비밀번호가 일치합니다!'
-              : '✗ 비밀번호가 일치하지 않습니다.'}
-          </p>
-        )}
       </div>
     </>
   );
