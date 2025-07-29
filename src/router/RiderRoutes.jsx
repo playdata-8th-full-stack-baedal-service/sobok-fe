@@ -9,6 +9,7 @@ import RequestListPage from '../pages/rider/RequestList/RequestListPage';
 import AcceptedListPage from '../pages/rider/AcceptedList/AcceptedListPage';
 
 import RiderHeader from '../layout/headers/RiderHeader';
+import RiderMainDashboard from '../pages/rider/RiderMainDashboard/RiderMainDashboard';
 
 function RiderRoutes() {
   return (
@@ -16,13 +17,12 @@ function RiderRoutes() {
       <RiderHeader />
       <Routes>
         <Route path="" element={<MainPage />}>
+          <Route index element={<RiderMainDashboard />} />
           <Route path="request-list" element={<RequestListPage />} />
           <Route path="accepted-list" element={<AcceptedListPage />} />
           <Route path="/history" element={<DelivaryHistoryPage />} />
           <Route path="/info" element={<RiderInfoPage />} />
         </Route>
-        
-        
       </Routes>
     </>
   );

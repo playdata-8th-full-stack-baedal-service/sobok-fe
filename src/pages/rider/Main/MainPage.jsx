@@ -100,8 +100,8 @@ const MainPage = () => {
 
             {/* 개인정보 조회 */}
             <li className={styles.nav__item}>
-              <button onClick={handleRiderInfoPagetClick} className={`${styles.nav__item_box} ${styles.nav__item_box_red}`} href="#" title="Segments (24)">
-                <span className={`${styles.nav__item_icon} ${styles.nav__item_icon_badge}`}>
+              <button onClick={handleRiderInfoPagetClick} className={styles.nav__item_box} title="Segments">
+                <span className={styles.nav__item_icon}>
                   <svg width="24px" height="24px" aria-hidden="true">
                     <g fill="currentColor">
                       <path d="M23.635,10.056,23.23,8.921l-9.2,3.284-.2.527a1.948,1.948,0,0,1-.689.932,1.982,1.982,0,0,1-3.162-1.621,2.318,2.318,0,0,1,.568-1.5l.243-.325V0L9.324.327A11.759,11.759,0,0,0,2.8,4.34,11.989,11.989,0,1,0,24,12A7.175,7.175,0,0,0,23.635,10.056Zm-4.905,8.8a9.478,9.478,0,0,1-6.771,2.8A9.553,9.553,0,0,1,4.622,5.962a9.774,9.774,0,0,1,3.77-2.757V9.489a4.664,4.664,0,0,0-.811,2.594,4.353,4.353,0,0,0,1.3,3.122A4.462,4.462,0,0,0,12,16.5a4.33,4.33,0,0,0,2.6-.851,4.159,4.159,0,0,0,1.3-1.5l5.676-2.027A9.664,9.964,0,0,1,18.73,18.854Z"/>
@@ -109,7 +109,7 @@ const MainPage = () => {
                     </g>
                   </svg>
                 </span>
-                <span className={styles.nav__item_text}>개인정보 조회<strong className={styles.nav__item_badge}>24</strong></span>
+                <span className={styles.nav__item_text}>개인정보 조회</span>
               </button>
             </li>
           </ul>

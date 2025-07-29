@@ -28,7 +28,7 @@ function RiderInfoPage() {
 
   useEffect(() => {
     riderListFetch()
-  });
+  },[]);
 
   const handleOpenModal = () => {
     dispatch(openModal('USER_INFO_PASSWORD_CHANGE'));
