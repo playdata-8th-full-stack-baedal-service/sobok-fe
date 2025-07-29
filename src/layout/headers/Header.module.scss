@@ -25,15 +25,22 @@
 .Logo {
   position: absolute;
   left: 48%;
-  z-index: 0; 
+  z-index: 0;
   cursor: pointer;
+  transform: translateX(-50%);
 
   img {
-    height: 140px; 
+    height: 140px;
     object-fit: cover;
     margin: 10px auto;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
   }
 }
-
-
-
