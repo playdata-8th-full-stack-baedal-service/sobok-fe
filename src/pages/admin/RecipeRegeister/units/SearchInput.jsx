@@ -133,6 +133,7 @@ function SearchInput({
         onClick={handleInputClick}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
+        onFocus={handleInputClick}
         value={query}
         className={style.searchbar}
         type="text"
