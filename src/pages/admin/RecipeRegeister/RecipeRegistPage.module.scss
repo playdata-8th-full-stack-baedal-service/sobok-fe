@@ -438,13 +438,17 @@
   }
 }
 
+// 레시피 등록 페이지 전용 Tiptap wrapper 스타일
 .RecipeSelection {
+  align-items: center;
   padding: 30px 20px;
+  margin: auto;
   margin-top: 25px;
-  width: 100vw;
+  width: 100%;
+  // max-width: 1000px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
   border-top: 1px solid black;
 
   .Recipetitle {
@@ -452,27 +456,51 @@
     font-weight: bold;
   }
 
-  .RecipeTextarea {
-    width: 100%;
-    padding: 15px;
-    border: 1px solid #ddd;
+  // Tiptap wrapper
+  .editorWrapper {
+    width: 600px;
+    background: #ffffff;
+    border: 1px solid #a4a2a2;
     border-radius: 8px;
-    font-size: 14px;
-    line-height: 1.6;
-    resize: vertical;
-    outline: none;
-    transition: border-color 0.3s ease;
+    padding: 15px;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
-    &:focus {
-      border-color: #007bff;
-      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+    // 툴바
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+
+      button {
+        padding: 6px 10px;
+        font-size: 14px;
+        background-color: #f8f8f8;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #eee;
+        }
+      }
     }
 
-    &::placeholder {
-      color: #999;
+    // 에디터 본문
+    .editorBox {
+      flex: 1;
+      min-height: 300px;
+      border: none;
+      outline: none;
+      background-color: #fff;
+      padding: 10px;
+      overflow-y: auto;
     }
   }
 }
+
 
 .buttonGroup {
   display: flex;

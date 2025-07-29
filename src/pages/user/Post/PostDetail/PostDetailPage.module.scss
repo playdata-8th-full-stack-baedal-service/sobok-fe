@@ -1,78 +1,98 @@
 .container {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 20px 10px 20px;
 }
 
-/* ---------------------------
-   📰 헤더 정보 (제목, 작성자, 날짜)
-   --------------------------- */
+/* 상단 */
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
   margin-bottom: 20px;
 
-  .left p,
-  .right p {
-    margin: 4px 0;
+  .leftTop {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
   }
-}
 
-.ingredientsSection {
-  margin-top: 10px;
-
-  ul {
-    margin-top: 4px;
-    padding-left: 20px;
-
-    li {
-      list-style: disc;
-      font-size: 14px;
-      margin-bottom: 2px;
-    }
+  .rightTop {
+  display: flex;
+  flex-direction: column; 
+  gap: 15px;              
+  align-items: flex-end;
   }
 }
 
 .likeSection {
-  margin-top: 10px;
   cursor: pointer;
+  border: 1px solid black;
+  border-radius: 20px;
+  padding: 4px 10px;
+  display: inline-flex;   
+  align-items: center;
+  justify-content: center;
+  width: fit-content;           /* 내용에 맞게 width 자동 */
+  background-color: white;
 
   span {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 4px;
     font-size: 14px;
+    white-space: nowrap;  /* 줄바꿈 방지 */
   }
 }
 
-/* ---------------------------
-   📄 본문 내용
-   --------------------------- */
+
+/* 본문 */
 .contentSection {
   border-top: 1px solid #ddd;
   padding-top: 20px;
-
-  /* 기존 inner 제거, 공통 postContent 스타일 사용 */
+  padding-bottom: 20px;
 }
 
-/* ---------------------------
-   🔘 버튼 영역
-   --------------------------- */
-.buttonSection {
+/* 하단 */
+.bottom {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
+  justify-content: space-between;
+  margin-top: 30px;
 
-  .buttonWrapper {
+ .leftBottom {
+  display: flex;
+  align-items: center; 
+  gap: 10px;  
+
+    ul {
+      margin-top: 4px;
+      padding-left: 20px;
+
+      li {
+        list-style: disc;
+        font-size: 14px;
+        margin-bottom: 2px;
+      }
+    }
+
+    .noIngredient {
+      font-size: 14px;
+      color: #888;
+      margin-left: 8px;
+    }
+  }
+
+  .rightBottom {
     display: flex;
-    gap: 10px;
+    align-items: flex-start;
+
+    .buttonWrapper {
+      display: flex;
+      gap: 10px;
+    }
   }
 }
 
-/* ---------------------------
-   ⏳ 로딩 & 에러 메시지
-   --------------------------- */
+/* 로딩, 에러 */
 .loading,
 .error {
   text-align: center;

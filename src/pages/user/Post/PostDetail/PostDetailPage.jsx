@@ -97,49 +97,35 @@ const PostDetailPage = () => {
     return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
   };
 
-  console.log(post.authId, currentUserId);
-
   return (
     <div className={styles.container}>
+      {/* 상단 영역 */}
       <div className={styles.header}>
-        <div className={styles.left}>
+        <div className={styles.leftTop}>
           <p>
             <strong>요리 이름</strong> : {post.cookName}
           </p>
           <p>
             <strong>제목</strong> : {post.title}
           </p>
-
-          {post.baseIngredients?.length > 0 && (
-            <div className={styles.ingredientsSection}>
-              <strong>작성자 주문 내역:</strong>
-              <ul>
-                {post.baseIngredients.map(item => (
-                  <li key={item.ingredientId}>
-                    {item.ingredientName}({item.origin}) {item.quantity}g
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <div className={styles.likeSection} onClick={handleLikePost}>
+            <span>
+              <Heart size={16} fill={isLiked ? 'red' : 'white'} color="red" />
+              좋아요 {post.likeCount}
+            </span>
+          </div>
         </div>
-
-        <div className={styles.right}>
+        <div className={styles.rightTop}>
           <p>
             <strong>작성자</strong> : {post.nickname}
           </p>
           <p>
             <strong>작성 날짜</strong> : {formatDate(post.updatedAt)}
           </p>
-          <div className={styles.likeSection} onClick={handleLikePost}>
-            <span>
-              <Heart size={16} fill={isLiked ? 'red' : 'white'} color="red" />
-              좋아요 수 : {post.likeCount}
-            </span>
-          </div>
         </div>
       </div>
 
+      {/* 본문 */}
       <div className={styles.contentSection}>
         <div
           className={commonStyles.postContent}
@@ -147,17 +133,35 @@ const PostDetailPage = () => {
         />
       </div>
 
-      <div className={styles.buttonSection}>
-        {String(post.authId) === String(currentUserId) && (
-          <div className={styles.buttonWrapper}>
-            <Button type="button" variant="BASIC" className="flexible" onClick={handleEditPost}>
-              수정하기
-            </Button>
-            <Button type="button" variant="BASIC" className="flexible" onClick={handleDeletePost}>
-              삭제하기
-            </Button>
-          </div>
-        )}
+      {/* 하단 영역 */}
+      <div className={styles.bottom}>
+        <div className={styles.leftBottom}>
+          <strong>주문된 추가 식재료 :</strong>
+          {post.additionalIngredients?.length > 0 ? (
+            <ul>
+              {post.additionalIngredients.map(item => (
+                <li key={item.ingredientId}>
+                  {item.ingredientName}({item.origin}) {item.quantity}g
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <span className={styles.noIngredient}>없음</span>
+          )}
+        </div>
+
+        <div className={styles.rightBottom}>
+          {String(post.authId) === String(currentUserId) && (
+            <div className={styles.buttonWrapper}>
+              <Button type="button" variant="BASIC" onClick={handleEditPost}>
+                수정하기
+              </Button>
+              <Button type="button" variant="BASIC" onClick={handleDeletePost}>
+                삭제하기
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
