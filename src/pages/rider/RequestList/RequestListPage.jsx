@@ -16,6 +16,7 @@ function RequestListPage() {
 
   // 위치 정보 가져오기
   const getPosition = () => {
+    console.log('getPosition');
     navigator.geolocation.getCurrentPosition(
       pos => {
         setPosition({
@@ -61,6 +62,7 @@ function RequestListPage() {
 
   // 주문 목록 가져오기
   useEffect(() => {
+    console.log('useEffect');
     const fetchData = async () => {
       setIsLoading(true);
       if (!position) {

@@ -6,7 +6,6 @@ import {
   calculateTotalPrice,
 } from '../pages/user/CartPay/utils/cartPayUtils';
 import generateRandomString from '../common/utils/paymentUtils';
-import { useDispatch } from 'react-redux';
 
 // 사용자의 카트 정보 조회
 export const fetchCartItem = createAsyncThunk('cart/fetch', async (_, thunkAPI) => {
