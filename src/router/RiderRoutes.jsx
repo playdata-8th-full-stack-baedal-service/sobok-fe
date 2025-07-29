@@ -15,11 +15,14 @@ function RiderRoutes() {
     <>
       <RiderHeader />
       <Routes>
-        <Route path="" element={<MainPage />} />
-        <Route path="/info" element={<RiderInfoPage />} />
-        <Route path="/history" element={<DelivaryHistoryPage />} />
-        <Route path="/request-list" element={<RequestListPage />} />
-        <Route path="/accepted-list" element={<AcceptedListPage />} />
+        <Route path="" element={<MainPage />}>
+          <Route path="request-list" element={<RequestListPage />} />
+          <Route path="accepted-list" element={<AcceptedListPage />} />
+          <Route path="/history" element={<DelivaryHistoryPage />} />
+          <Route path="/info" element={<RiderInfoPage />} />
+        </Route>
+        
+        
       </Routes>
     </>
   );
