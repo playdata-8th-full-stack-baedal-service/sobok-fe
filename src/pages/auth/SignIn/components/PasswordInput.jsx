@@ -36,7 +36,7 @@ function PasswordInput({
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
           >
-            {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+            {showPassword ? <AiOutlineEye size={20} /> : <AiOutlineEyeInvisible size={20} />}
           </button>
         </Input>
       </div>

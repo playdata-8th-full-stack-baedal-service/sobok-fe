@@ -13,7 +13,7 @@ function HubInfoPage() {
     setLoading(true);
     setError('');
     try {
-      const response = await axiosInstance.get('/shop-service/api/shop-info-all', { shopId });
+      const response = await axiosInstance.get('/auth-service/auth/get-info');
       if (response.data.success) {
         setShopInfo(response.data.data);
       } else {

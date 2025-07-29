@@ -318,7 +318,7 @@ function UserSignUp() {
             onDomainChange={handleDomainChange}
             onCustomDomainChange={e => setCustomDomain(e.target.value)}
             getFullEmail={getFullEmail}
-            disabled={true}
+            disabled={false}
           />
 
           <AddressSection

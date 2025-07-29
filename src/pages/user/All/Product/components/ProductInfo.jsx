@@ -81,14 +81,9 @@ const ProductInfo = () => {
     );
 
     const cartCookId = response.payload;
-    await dispatch(
-      startPayment({
-        selectedItems: [cartCookId],
-        totalPrice,
-      })
-    );
+    sessionStorage.setItem('INSTANT_PAY', cartCookId);
 
-    navigate('/user/pay');
+    navigate('/user/cart');
   };
 
   const handleRecipeClick = () => {

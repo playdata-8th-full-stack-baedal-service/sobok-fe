@@ -9,12 +9,16 @@ import { openModal } from '../../../store/modalSlice';
 function RiderInfoPage() {
   const dispatch = useDispatch();
   const [riderList, setRiderList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(true);
+  const [error, setError] = useState('');
 
   const riderListFetch = async () => {
+    setLoading(true);
+    setError('');
     try {
-      const response = await axiosInstance.get('/delivery-service/api/rider-info');
-      console.log('API 응답:', response);
-      if (response.success) {
+      const response = await axiosInstance.get('/auth-service/auth/get-info');
+      if (response.data.success) {
         setRiderList(response.data.data);
       }
     } catch (error) {

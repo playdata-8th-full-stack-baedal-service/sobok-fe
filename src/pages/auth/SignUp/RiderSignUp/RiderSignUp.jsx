@@ -6,16 +6,17 @@ import {
   checkPermission,
   clearPermissionCheck,
 } from '@/store/riderSlice';
-import { sendSMSCode, verifySMSCode, clearSMSAuth } from '@/store/smsAuthSlice';
-import { checkLoginId, clearLoginIdCheck } from '@/store/authSlice';
+import { clearSMSAuth } from '@/store/smsAuthSlice';
+import { checkLoginId, clearLoginIdCheck, clearAllChecks } from '@/store/authSlice';
 import styles from './RiderSignUp.module.scss';
 import useToast from '@/common/hooks/useToast';
 import PhoneVerification from '../../../../common/forms/Phone/PhoneVerification';
 import PasswordSection from '../../../../common/forms/PasswordConfirm/PasswordSection';
+import Input from '../../../../common/components/Input';
 
 function RiderSignUp() {
   const dispatch = useDispatch();
-  const { showSuccess } = useToast();
+  const { showSuccess, showNegative } = useToast();
 
   const { loading, error, signUpSuccess, permissionCheckMessage, permissionCheckError } =
     useSelector(state => state.rider);
@@ -34,6 +35,12 @@ function RiderSignUp() {
   const [verificationCode, setVerificationCode] = useState('');
   const loginIdTimer = useRef(null);
   const permissionTimer = useRef(null);
+
+  // 폼 초기화
+  useEffect(() => {
+    dispatch(clearAllChecks());
+    dispatch(clearSMSAuth());
+  }, [dispatch]);
 
   // 회원가입 성공 시 초기화
   useEffect(() => {
@@ -95,8 +102,28 @@ function RiderSignUp() {
     }));
   };
 
+  // 필수 입력값 및 인증 체크
+  const validateForm = () => {
+    const { loginId, password, passwordConfirm, name, phone, permissionNumber } = form;
+
+    if (!loginId || !password || !passwordConfirm || !name || !phone || !permissionNumber) {
+      showNegative('필수 항목을 모두 입력해주세요.');
+      return false;
+    }
+
+    if (!isVerified) {
+      showNegative('휴대폰 인증을 완료해주세요.');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = e => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     const { passwordConfirm, ...signUpData } = form;
     dispatch(riderSignUp(signUpData));
   };
@@ -119,48 +146,31 @@ function RiderSignUp() {
       <h2>회원가입 (라이더)</h2>
       <form onSubmit={handleSubmit} className={styles.signupForm}>
         {/* 아이디 */}
-        <div className={styles.formGroup}>
-          <label htmlFor="loginId">아이디</label>
-          <div className={styles.inputWrapper}>
-            <input
-              name="loginId"
-              placeholder="아이디를 입력하세요"
-              value={form.loginId}
-              onChange={handleChange}
-              required
-              id="loginId"
-              className={getInputClassName('loginId')}
-            />
-          </div>
-          {loginIdCheckMessage && (
-            <div
-              className={`${styles.validationMessage} ${
-                loginIdCheckMessage.includes('사용 가능한') ? styles.valid : styles.invalid
-              }`}
-            >
-              <span className={styles.icon}>
-                {loginIdCheckMessage.includes('사용 가능한') ? '✓' : '✗'}
-              </span>
-              {loginIdCheckMessage}
-            </div>
-          )}
-          {loginIdCheckError && <div className={styles.errorMessage}>{loginIdCheckError}</div>}
-        </div>
+        <Input
+          label="아이디"
+          required
+          type="text"
+          id="loginId"
+          name="loginId"
+          placeholder="아이디를 입력하세요"
+          value={form.loginId}
+          onChange={handleChange}
+          error={loginIdCheckError}
+          success={loginIdCheckMessage}
+          className={getInputClassName('loginId')}
+        />
 
         {/* 이름 */}
-        <div className={styles.formGroup}>
-          <label htmlFor="name">이름</label>
-          <div className={styles.inputWrapper}>
-            <input
-              name="name"
-              placeholder="이름을 입력하세요"
-              value={form.name}
-              onChange={handleChange}
-              required
-              id="name"
-            />
-          </div>
-        </div>
+        <Input
+          label="이름"
+          required
+          type="text"
+          id="name"
+          name="name"
+          placeholder="이름을 입력하세요"
+          value={form.name}
+          onChange={handleChange}
+        />
 
         {/* 비밀번호 */}
         <PasswordSection
@@ -179,48 +189,24 @@ function RiderSignUp() {
         />
 
         {/* 면허번호 */}
-        <div className={styles.formGroup}>
-          <label htmlFor="permissionNumber">면허번호</label>
-          <div className={styles.inputWrapper}>
-            <input
-              name="permissionNumber"
-              placeholder="면허번호를 입력하세요 (12자리 숫자)"
-              value={form.permissionNumber}
-              onChange={handleChange}
-              className={getInputClassName('permissionNumber')}
-              required
-              id="permissionNumber"
-              maxLength={12}
-            />
-          </div>
-
-          {form.permissionNumber && form.permissionNumber.length < 12 && (
-            <div className={`${styles.validationMessage} ${styles.invalid}`}>
-              <span className={styles.icon}>✗</span>
-              면허번호 12자리를 모두 입력해주세요.
-            </div>
-          )}
-
-          {/* 유효성 메시지 */}
-          {!form.permissionNumber || form.permissionNumber.length < 12
-            ? null
-            : permissionCheckMessage && (
-                <div
-                  className={`${styles.validationMessage} ${
-                    permissionCheckMessage.includes('사용 가능한') ? styles.valid : styles.invalid
-                  }`}
-                >
-                  <span className={styles.icon}>
-                    {permissionCheckMessage.includes('사용 가능한') ? '✓' : '✗'}
-                  </span>
-                  {permissionCheckMessage}
-                </div>
-              )}
-
-          {permissionCheckError && (
-            <div className={styles.errorMessage}>{permissionCheckError}</div>
-          )}
-        </div>
+        <Input
+          label="면허번호"
+          required
+          type="text"
+          id="permissionNumber"
+          name="permissionNumber"
+          placeholder="면허번호를 입력하세요 (12자리 숫자)"
+          value={form.permissionNumber}
+          onChange={handleChange}
+          maxLength={12}
+          error={
+            form.permissionNumber && form.permissionNumber.length < 12
+              ? '면허번호 12자리를 모두 입력해주세요.'
+              : permissionCheckError
+          }
+          success={form.permissionNumber.length === 12 ? permissionCheckMessage : ''}
+          className={getInputClassName('permissionNumber')}
+        />
 
         <button type="submit" disabled={loading} className={styles.submitButton}>
           {loading ? '처리 중...' : '회원가입'}

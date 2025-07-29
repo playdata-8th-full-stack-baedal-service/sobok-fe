@@ -18,6 +18,11 @@ import ScrollToTop from './common/components/ScrollToTop';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ProductPage from './pages/user/All/Product/ProductPage';
+import SearchPage from './pages/user/All/Search/SearchPage';
+import CategoryPage from './pages/user/All/Category/CategoryPage';
+import PostListPage from './pages/user/Post/PostList/PostListPage';
+import PostDetailPage from './pages/user/Post/PostDetail/PostDetailPage';
 
 function App() {
   return (
@@ -34,6 +39,71 @@ function App() {
             <>
               <UserHeader />
               <MainPage />
+            </>
+          }
+        />
+
+        {/* 공용 페이지 */}
+        <Route
+          path="/main"
+          element={
+            <>
+              <UserHeader />
+              <MainPage />
+            </>
+          }
+        />
+        <Route
+          path=""
+          element={
+            <>
+              <UserHeader />
+              <MainPage />
+            </>
+          }
+        />
+        <Route
+          path="/product"
+          element={
+            <>
+              <UserHeader />
+              <ProductPage />
+            </>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <>
+              <UserHeader />
+              <SearchPage />
+            </>
+          }
+        />
+        <Route
+          path="/category"
+          element={
+            <>
+              <UserHeader />
+              <CategoryPage />
+            </>
+          }
+        />
+        <Route
+          path="/post-list"
+          element={
+            <>
+              <UserHeader />
+              <PostListPage />
+            </>
+          }
+        />
+        <Route
+          path="/post/:id"
+          element={
+            <>
+              <UserHeader />
+              <PostDetailPage />
             </>
           }
         />

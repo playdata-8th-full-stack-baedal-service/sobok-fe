@@ -70,7 +70,7 @@ const ProductPage = () => {
   }, [dispatch, product?.cookId]);
 
   const handlePostClick = postId => {
-    window.location.href = `/user/post/${postId}`;
+    window.location.href = `/post/${postId}`;
   };
 
   return (

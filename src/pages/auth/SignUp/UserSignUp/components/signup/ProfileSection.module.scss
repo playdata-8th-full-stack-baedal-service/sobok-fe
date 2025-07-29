@@ -1,10 +1,10 @@
 .containerTop {
   display: flex;
-  gap: 28px;
+  gap: 14px;
   width: 100%;
-  align-items: center;
+  // align-items: center;
   justify-content: flex-start; 
-  margin-bottom: 20px;
+  // margin-bottom: 10px;
   height: 160px;
 }
 
@@ -13,7 +13,8 @@
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
-  width: 120px; 
+  // width: 120px; 
+  margin-right: 10px;
   padding-left: 10px; 
 }
 
@@ -23,6 +24,10 @@
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #ddd;
+}
+
+.profileImage {
+  margin-bottom: 5px;
 }
 
 .profileImageUpload {
@@ -35,6 +40,26 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+}
+
+.profileButton {
+  transition: all 0.3s ease-in-out;
+  width: 100px;
+  height: 30px;
+  border-radius: 50px;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+  font-size: 15px;
+  color: rgba(0, 0, 0);
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgba(0, 0, 0);
+  padding: 0 10px !important;
+
+  &:active {
+    opacity: 0.5;
+  }
 }
 
 .inputWithButton .inputButtonGroup {
