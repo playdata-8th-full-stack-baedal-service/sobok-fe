@@ -8,6 +8,7 @@ import HubHistoryPage from '../pages/hub/HubHistory/HubHistoryPage';
 import HubInfoPage from '../pages/hub/HubInfo/HubInfoPage';
 
 import HubHeader from '../layout/headers/HubHeader';
+import ManageStock from '../pages/hub/ManageStock/ManageStock';
 
 function HubRoutes() {
   return (
@@ -18,6 +19,7 @@ function HubRoutes() {
         <Route path="/order-detail" element={<OrderDetailPage />} />
         <Route path="/history" element={<HubHistoryPage />} />
         <Route path="/info" element={<HubInfoPage />} />
+        <Route path="/stock" element={<ManageStock />} />
       </Routes>
     </>
   );
