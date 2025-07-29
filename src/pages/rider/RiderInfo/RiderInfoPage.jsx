@@ -11,22 +11,21 @@ function RiderInfoPage() {
   const [riderList, setRiderList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(true);
-  const [error, setError] = useState(''); 
+  const [error, setError] = useState('');
 
-  const riderListFetch = async password => {
+  const riderListFetch = async () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axiosInstance.post('/auth-service/auth/get-info', { password });
-      console.log(response.data);
+      const response = await axiosInstance.get('/auth-service/auth/get-info');
       if (response.data.success) {
         setRiderList(response.data.data);
         setShowModal(false);
       } else {
         setError(response.data.message);
       }
-    } catch (error) {
-      setError(error.response.data.message);
+    } catch (err) {
+      setError(err.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -37,10 +36,8 @@ function RiderInfoPage() {
   };
 
   const handleOpenModal = () => {
-    dispatch(openModal(
-      'USER_INFO_PASSWORD_CHANGE'
-    ))
-  }
+    dispatch(openModal('USER_INFO_PASSWORD_CHANGE'));
+  };
   return (
     <div className={style.RiderInfoPage}>
       {showModal && (
@@ -57,16 +54,18 @@ function RiderInfoPage() {
         <>
           <div className={style.RiderInfoTitle}>
             <h2 className={style.ridercontainertitle}>개인 정보</h2>
-            <button className={style.riderbutton} onClick={handleOpenModal}>비밀번호 변경</button>
+            <button className={style.riderbutton} onClick={handleOpenModal}>
+              비밀번호 변경
+            </button>
           </div>
           <div className={style.ridercontatiner}>
             <div>
               <label htmlFor="loginId">아이디</label>
-              <input type="text" id="loginId" value={riderList.loginId}/>
+              <input type="text" id="loginId" value={riderList.loginId} />
             </div>
             <div>
               <label htmlFor="phoneNumber">전화번호</label>
-              <input type="text" id="phoneNumber" value={riderList.phone}/>
+              <input type="text" id="phoneNumber" value={riderList.phone} />
             </div>
             <div>
               <label htmlFor="permissionNumber">면허번호</label>

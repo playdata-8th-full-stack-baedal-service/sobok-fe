@@ -25,8 +25,6 @@ function CategorySelection() {
   // 최신순 데이터 불러오기 (프론트에서 카테고리 필터링)
   const fetchLatest = async () => {
     try {
-      console.log(selectedCategory);
-      console.log(sortByOrder ? 'order' : null);
       const res = await axiosInstance.get('/cook-service/cooks', {
         params: {
           pageNo: 1,

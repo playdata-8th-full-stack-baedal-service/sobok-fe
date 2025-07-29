@@ -5,9 +5,11 @@ const ManageStock = () => {
   return (
     <Page>
       {/* 검색창 */}
-      
+           
       {/* 요리 */}
+
       {/* 재고 */}
+
     </Page>
   );
 };

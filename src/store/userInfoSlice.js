@@ -6,9 +6,7 @@ export const lookupUser = createAsyncThunk(
   'userInfo/lookupUser',
   async (_, thunkAPI) => {
     try {
-      const response = await axiosInstance.post('/auth-service/auth/get-info');
-
-      console.log(response.data.data);
+      const response = await axiosInstance.get('/auth-service/auth/get-info');
       return response.data.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e.response?.data?.message || '회원 조회에 실패했습니다.');
@@ -26,7 +24,6 @@ export const editUserProfile = createAsyncThunk(
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log(response.data.data);
       return response.data.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(

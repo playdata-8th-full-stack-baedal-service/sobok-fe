@@ -43,7 +43,6 @@ const CategoryPage = () => {
 
   // path 파라미터가 있으면 우선 사용, 없으면 쿼리스트링 사용
   useEffect(() => {
-    console.log('useEffect 호출!');
     async function fetchItems() {
       if (isFullLoaded) return;
 
