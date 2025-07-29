@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import styles from './TiptapEditor.module.scss';
+import commonStyles from './PostContent.module.scss';
 
-const TiptapEditor = ({ content, setContent, uploadImageToServer }) => {
+const TiptapEditor = forwardRef(({ content, setContent, uploadImageToServer }, ref) => {
   const [isEditorEmpty, setIsEditorEmpty] = useState(true);
 
   const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        orderedList: false, // ✅ 숫자 자동 리스트 변환 비활성화
-      }),
-      Image.configure({ inline: false }),
-    ],
+    extensions: [StarterKit.configure({ orderedList: false }), Image.configure({ inline: false })],
     content: content || '<p></p>',
     onUpdate({ editor }) {
       const html = editor.getHTML();
@@ -23,32 +19,30 @@ const TiptapEditor = ({ content, setContent, uploadImageToServer }) => {
     },
     editorProps: {
       handleDOMEvents: {
-        compositionend: () => false,
-        beforeinput: () => false,
         keydown: (view, event) => {
-          const { state } = view;
-          const { selection } = state;
           const isInCodeBlock = editor?.isActive('codeBlock');
-          const { $from } = selection;
+          const { $from } = view.state.selection;
 
           if (isInCodeBlock && event.key === 'Enter') {
             const prevLineText = $from.parent.textContent;
             const prevNodeEmpty = !prevLineText || prevLineText.trim() === '';
-
-            const grandParent = $from.node(-1);
-            const isLastLine = $from.pos === grandParent.content.size + grandParent.content.size;
 
             if (prevNodeEmpty) {
               editor.chain().focus().exitCode().run();
               return true;
             }
           }
-
           return false;
         },
       },
     },
   });
+
+  // ✅ 부모에서 focus()와 editor 객체 접근 가능
+  useImperativeHandle(ref, () => ({
+    focus: () => editor?.commands.focus(),
+    getEditor: () => editor,
+  }));
 
   useEffect(() => {
     if (editor && content !== editor.getHTML()) {
@@ -66,7 +60,7 @@ const TiptapEditor = ({ content, setContent, uploadImageToServer }) => {
   if (!editor) return null;
 
   return (
-    <div className={styles.wrapper} onClick={() => editor?.commands?.focus()}>
+    <div>
       <div className={styles.toolbar}>
         {[
           { cmd: 'toggleBold', label: '굵게', mark: 'bold' },
@@ -93,21 +87,32 @@ const TiptapEditor = ({ content, setContent, uploadImageToServer }) => {
             {btn.label}
           </button>
         ))}
-        <label className={styles.uploadBtn}>
+
+        <button
+          type="button"
+          className={styles.uploadBtn}
+          onClick={() => document.getElementById('imageUploadInput').click()}
+        >
           이미지
-          <input type="file" hidden accept="image/*" onChange={handleImageUpload} />
-        </label>
+        </button>
+        <input
+          id="imageUploadInput"
+          type="file"
+          hidden
+          accept="image/*"
+          onChange={handleImageUpload}
+        />
       </div>
 
-      <div className={styles.editorBox}>
+      <div className={`${styles.editorBox} ${commonStyles.postContent}`}>
         <EditorContent
           editor={editor}
-          className={`${styles.editor} ${isEditorEmpty ? 'is-editor-empty' : ''}`}
+          className={isEditorEmpty ? 'is-editor-empty' : ''}
           data-placeholder="내용을 입력하세요..."
         />
       </div>
     </div>
   );
-};
+});
 
 export default TiptapEditor;

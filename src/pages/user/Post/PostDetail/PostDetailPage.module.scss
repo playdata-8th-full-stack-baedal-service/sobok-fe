@@ -1,156 +1,81 @@
 .container {
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 20px;
 }
 
+/* ---------------------------
+   📰 헤더 정보 (제목, 작성자, 날짜)
+   --------------------------- */
 .header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 20px;
-}
 
-.left,
-.right {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.likeSection {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 8px;
-  cursor: pointer;
+  .left p,
+  .right p {
+    margin: 4px 0;
+  }
 }
 
 .ingredientsSection {
   margin-top: 10px;
-  font-size: 14px;
 
   ul {
-    margin-top: 5px;
+    margin-top: 4px;
     padding-left: 20px;
 
     li {
-      line-height: 1.6;
+      list-style: disc;
+      font-size: 14px;
+      margin-bottom: 2px;
     }
   }
 }
 
-.contentSection {
-  margin: 20px 0;
+.likeSection {
+  margin-top: 10px;
+  cursor: pointer;
 
-  .textContent {
+  span {
     display: flex;
-    justify-content: center;
-    margin-bottom: 16px;
-
-    .inner {
-      max-width: 600px;
-      margin: 0 auto;
-      font-size: 16px;
-      line-height: 1.6;
-      text-align: center;
-
-      // 일반 텍스트는 가운데 정렬
-      > * {
-        text-align: center;
-      }
-
-      // 텍스트 속성들
-      strong {
-        font-weight: bold;
-      }
-
-      em {
-        font-style: italic;
-      }
-
-      s {
-        text-decoration: line-through;
-      }
-
-      h2 {
-        font-size: 1.25rem;
-        font-weight: bold;
-        margin: 1em 0 0.5em;
-      }
-
-      p {
-        margin: 0;
-        padding: 0;
-      }
-
-      // 리스트 스타일
-      ul,
-      ol {
-        display: table;              // 리스트 박스를 가운데 정렬 가능하게
-        margin: 1em auto;            // 수직 마진 + 수평 가운데 정렬
-        text-align: left;            // 내부 항목 왼쪽 정렬
-        list-style-type: disc;
-        list-style-position: outside; // 기본값 권장
-        padding-left: 1.4em;         // 점과 텍스트 사이 여백 확보
-      }
-
-      li {
-        margin: 0.3em 0;
-      }
-
-      li p {
-        margin: 0;
-        padding: 0;
-      }
-
-      // 코드 블럭
-      pre {
-        background: #f4f4f4;
-        padding: 10px;
-        font-family: 'SobokFont', monospace;
-        border-radius: 4px;
-        overflow-x: auto;
-      }
-
-      // 이미지
-      img {
-        max-width: 100%;
-        height: auto;
-        margin: 1em 0;
-        border-radius: 4px;
-        display: block;
-      }
-    }
-  }
-
-  .images img {
-    max-width: 200px;
-    margin-right: 10px;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
   }
 }
 
-.ingredients {
-  margin-top: 20px;
+/* ---------------------------
+   📄 본문 내용
+   --------------------------- */
+.contentSection {
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
 
-  h3 {
-    margin-bottom: 6px;
-  }
-
-  ul {
-    list-style: disc;
-    margin-left: 20px;
-  }
+  /* 기존 inner 제거, 공통 postContent 스타일 사용 */
 }
 
+/* ---------------------------
+   🔘 버튼 영역
+   --------------------------- */
 .buttonSection {
-  margin-top: 20px;
   display: flex;
-  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+
+  .buttonWrapper {
+    display: flex;
+    gap: 10px;
+  }
 }
 
+/* ---------------------------
+   ⏳ 로딩 & 에러 메시지
+   --------------------------- */
+.loading,
 .error {
-  color: red;
-  padding: 20px;
-}
-
-.loading {
-  padding: 20px;
+  text-align: center;
+  font-size: 16px;
+  margin-top: 50px;
 }

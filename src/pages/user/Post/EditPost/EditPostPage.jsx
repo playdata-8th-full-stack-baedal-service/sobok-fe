@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './EditPostPage.module.scss';
@@ -11,8 +11,9 @@ const EditPostPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const post = location.state?.post;
-  const { showSuccess, showNegative, showInfo } = useToast();
+  const { showSuccess, showNegative } = useToast();
 
+  const editorRef = useRef();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [cookName, setCookName] = useState('');
@@ -33,11 +34,10 @@ const EditPostPage = () => {
   const extractImagesFromContent = html => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
-    const imgs = Array.from(doc.querySelectorAll('img')).map((img, i) => ({
+    return Array.from(doc.querySelectorAll('img')).map((img, i) => ({
       imageUrl: img.getAttribute('src'),
       index: i + 1,
     }));
-    return imgs;
   };
 
   const uploadImageToServer = async file => {
@@ -70,12 +70,11 @@ const EditPostPage = () => {
       setIsSubmitting(true);
 
       const images = extractImagesFromContent(content);
-
       const body = {
         postId: post.postId,
         title,
         content,
-        images,
+        images, // ✅ index 포함
       };
 
       const res = await axios.put(`${API_BASE_URL}/post-service/post/update`, body, {
@@ -117,11 +116,14 @@ const EditPostPage = () => {
         />
       </div>
 
-      <TiptapEditor
-        content={content}
-        setContent={setContent}
-        uploadImageToServer={uploadImageToServer}
-      />
+      <div className={styles['editor-container']} onClick={() => editorRef.current?.focus()}>
+        <TiptapEditor
+          ref={editorRef}
+          content={content}
+          setContent={setContent}
+          uploadImageToServer={uploadImageToServer}
+        />
+      </div>
 
       <Button onClick={handleSubmit} variant="BASIC" disabled={isSubmitting}>
         {isSubmitting ? '수정 중...' : '수정 완료'}

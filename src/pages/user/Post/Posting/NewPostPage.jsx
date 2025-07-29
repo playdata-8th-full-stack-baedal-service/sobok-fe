@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import styles from './NewPostPage.module.scss';
 import Button from '@/common/components/Button';
@@ -8,6 +8,7 @@ import TiptapEditor from '@/common/forms/Post/TiptapEditor';
 import { useDispatch } from 'react-redux';
 import { registerPost } from '@/store/postSlice';
 import useToast from '@/common/hooks/useToast';
+import commonStyles from '@/common/forms/Post/PostContent.module.scss';
 
 function NewPostPage() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ function NewPostPage() {
   const paymentId = location.state?.paymentId;
   const cookId = location.state?.cookId;
   const cookName = location.state?.cookName;
+  const editorRef = useRef();
 
   const [title, setTitle] = useState('');
   const [isUploading, setIsUploading] = useState(false);
@@ -51,7 +53,6 @@ function NewPostPage() {
 
     return res.data.data;
   };
-
   const handleSubmit = async () => {
     if (!title || !content || content === '<p></p>') {
       showNegative('제목과 내용을 입력해주세요.');
@@ -61,16 +62,15 @@ function NewPostPage() {
     try {
       setIsUploading(true);
 
-      const extractImagesFromContent = html => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        return Array.from(doc.querySelectorAll('img')).map((img, i) => ({
-          imageUrl: img.getAttribute('src'),
-          index: i + 1,
-        }));
-      };
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(content, 'text/html');
+      const images = Array.from(doc.querySelectorAll('img')).map((img, i) => ({
+        imageUrl: img.getAttribute('src'),
+        index: i + 1,
+      }));
 
-      const images = extractImagesFromContent(content);
+      // ✅ 콘솔로 데이터 확인
+      console.log('📸 업로드할 이미지 리스트:', images);
 
       const resultAction = await dispatch(
         registerPost({
@@ -78,7 +78,7 @@ function NewPostPage() {
           cookId,
           title,
           content,
-          imageList: images,
+          images,
         })
       );
 
@@ -112,19 +112,20 @@ function NewPostPage() {
         />
       </div>
 
-      {/* 작성 & 미리보기 영역 */}
       <div className={styles['editor-preview-container']}>
-        <div className={styles['editor-section']}>
+        <div className={styles['editor-container']} onClick={() => editorRef.current?.focus()}>
           <TiptapEditor
+            ref={editorRef}
             content={content}
             setContent={setContent}
             uploadImageToServer={uploadToS3}
           />
         </div>
+
         <div className={styles['preview-section']}>
           <h3>미리보기</h3>
           <div
-            className={styles['preview-content']}
+            className={`${styles['preview-content']} ${commonStyles.postContent}`}
             dangerouslySetInnerHTML={{ __html: content }}
           />
         </div>

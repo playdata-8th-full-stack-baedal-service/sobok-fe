@@ -1,0 +1,76 @@
+.postContent {
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 16px;
+  line-height: 1.6;
+  text-align: center;
+
+  > * {
+    text-align: center;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  s {
+    text-decoration: line-through;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 1em 0 0.5em;
+  }
+
+  /* ✅ 줄바꿈 문제 해결 */
+  p {
+    margin: 0 0 1em 0;
+    padding: 0;
+  }
+
+  br {
+    display: block;
+    margin-bottom: 0.8em;
+    content: '';
+  }
+
+  ul,
+  ol {
+    display: table;
+    margin: 1em auto;
+    text-align: left;
+    list-style: disc outside;
+    padding-left: 1.4em;
+  }
+
+  li {
+    margin: 0.3em 0;
+  }
+
+  li p {
+    margin: 0;
+    padding: 0;
+  }
+
+  pre {
+    background: #f4f4f4;
+    padding: 10px;
+    font-family: 'SobokFont', monospace;
+    border-radius: 4px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    margin: 1em 0;
+    border-radius: 4px;
+    display: block;
+  }
+}
