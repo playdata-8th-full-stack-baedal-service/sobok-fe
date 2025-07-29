@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Masonry from 'react-masonry-css';
 import { useNavigate } from 'react-router-dom';
+import { Heart } from 'lucide-react';
 import styles from './PostListPage.module.scss';
 import axiosInstance from '../../../../services/axios-config';
-import { Heart } from 'lucide-react';
+import 'react-loading-skeleton/dist/skeleton.css';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 function PostListPage() {
   const [postList, setPostList] = useState([]);
   const [page, setPage] = useState(0);
   const [lastPage, setLastPage] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [sortBy, setSortBy] = useState(''); // 최신순이 기본값
   const SIZE = 16;
   const navigate = useNavigate();
@@ -30,7 +33,12 @@ function PostListPage() {
   }, [sortBy]);
 
   const fetchPostList = async (pageNum, forceSortBy = sortBy) => {
-    setLoading(true);
+    if (pageNum === 0) {
+      setLoading(true);
+    } else {
+      setLoadingMore(true);
+    }
+
     try {
       const params = {
         page: pageNum,
@@ -70,6 +78,7 @@ function PostListPage() {
       console.error(error);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   };
 
@@ -96,6 +105,22 @@ function PostListPage() {
     }
   };
 
+  // 스켈레톤 카드 렌더링
+  const renderSkeletonCards = () => {
+    return Array.from({ length: SIZE }, (_, index) => (
+      <div key={`skeleton-${index}`} className={styles.card}>
+        <Skeleton height={200} />
+        <div className={styles.info}>
+          <Skeleton height={24} style={{ marginBottom: '8px' }} />
+          <Skeleton height={16} width="70%" style={{ marginBottom: '4px' }} />
+          <Skeleton height={16} width="50%" style={{ marginBottom: '4px' }} />
+          <Skeleton height={14} width="60%" style={{ marginBottom: '8px' }} />
+          <Skeleton height={16} width="35%" />
+        </div>
+      </div>
+    ));
+  };
+
   return (
     <div className={styles.wrap}>
       <div className={styles.sortBar}>
@@ -106,43 +131,53 @@ function PostListPage() {
         </select>
       </div>
 
-      <Masonry
-        breakpointCols={breakpointColumnsObj}
-        className={styles.masonryGrid}
-        columnClassName={styles.masonryColumn}
-      >
-        {postList.map(post => (
-          <div
-            key={post.postId}
-            className={styles.card}
-            tabIndex={0}
-            role="button"
-            onClick={() => handleCardClick(post.postId)}
-            onKeyDown={e => handleCardKeyDown(e, post.postId)}
-            style={{ cursor: 'pointer', outline: 'none' }}
-            aria-label={`${post.title} 상세페이지로 이동`}
-          >
-            <img src={post.thumbnail} alt={post.title} />
-            <div className={styles.info}>
-              <h3>{post.title}</h3>
-              <p>{post.cookName}</p>
-              <p>{post.nickName}</p>
-              <p className={styles.date}>
-                <strong>작성일</strong>: {new Date(post.updatedAt).toLocaleDateString('ko-KR')}
-              </p>
-              <span>
-                <Heart size={16} fill="red" color="red" /> {post.likeCount}
-              </span>
-            </div>
-          </div>
-        ))}
-      </Masonry>
+      <SkeletonTheme baseColor="#f0f0f0" highlightColor="#f8f8f8">
+        <Masonry
+          breakpointCols={breakpointColumnsObj}
+          className={styles.masonryGrid}
+          columnClassName={styles.masonryColumn}
+        >
+          {loading
+            ? renderSkeletonCards()
+            : postList.map(post => (
+                <div
+                  key={post.postId}
+                  className={styles.card}
+                  tabIndex={0}
+                  role="button"
+                  onClick={() => handleCardClick(post.postId)}
+                  onKeyDown={e => handleCardKeyDown(e, post.postId)}
+                  style={{ cursor: 'pointer', outline: 'none' }}
+                  aria-label={`${post.title} 상세페이지로 이동`}
+                >
+                  <img src={post.thumbnail} alt={post.title} />
+                  <div className={styles.info}>
+                    <h3>{post.title}</h3>
+                    <p>{post.cookName}</p>
+                    <p>{post.nickName}</p>
+                    <p className={styles.date}>
+                      <strong>작성일</strong>:{' '}
+                      {new Date(post.updatedAt).toLocaleDateString('ko-KR')}
+                    </p>
+                    <span>
+                      <Heart size={16} fill="red" color="red" /> {post.likeCount}
+                    </span>
+                  </div>
+                </div>
+              ))}
+        </Masonry>
+      </SkeletonTheme>
 
       {!loading && postList.length === 0 && <p className={styles.emptyText}>게시물이 없습니다.</p>}
 
       {postList.length >= SIZE && !lastPage && (
-        <button type="button" onClick={handleLoadMore} className={styles.loadMoreBtn}>
-          {loading ? '로딩중...' : '더보기'}
+        <button
+          type="button"
+          onClick={handleLoadMore}
+          className={styles.loadMoreBtn}
+          disabled={loadingMore}
+        >
+          {loadingMore ? <Skeleton width={60} height={20} /> : '더보기'}
         </button>
       )}
     </div>
