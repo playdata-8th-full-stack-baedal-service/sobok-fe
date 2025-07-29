@@ -207,6 +207,17 @@ const authSlice = createSlice({
       state.userInfo = null;
       state.userInfoError = null;
     },
+    clearAllChecks: state => {
+      state.emailCheckMessage = null;
+      state.emailCheckError = null;
+      state.nicknameCheckMessage = null;
+      state.nicknameCheckError = null;
+      state.loginIdCheckMessage = null;
+      state.loginIdCheckError = null;
+      state.isLoginIdChecked = false;
+      state.isNicknameChecked = false;
+      state.isEmailChecked = false;
+    },
   },
   extraReducers: builder => {
     builder
@@ -327,6 +338,7 @@ export const {
   clearNicknameCheck,
   clearLoginIdCheck,
   clearUserInfo,
+  clearAllChecks,
 } = authSlice.actions;
 
 export default authSlice.reducer;

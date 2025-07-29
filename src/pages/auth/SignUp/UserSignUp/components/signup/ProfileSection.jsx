@@ -61,7 +61,16 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
 
   const handleFileSelect = e => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) {
+      console.log('[handleFileSelect] 파일 선택 안됨');
+      return;
+    }
+
+    console.log('[handleFileSelect] 선택된 파일:', {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+    });
 
     if (!file.type.startsWith('image/')) {
       showNegative('이미지 파일만 업로드 가능합니다.');
@@ -100,7 +109,7 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
             <Button
               type="button"
               variant="BASIC"
-              className="small"
+              className={styles.profileButton}
               onClick={() => {
                 document.getElementById('profile-image-input').click();
               }}
@@ -116,41 +125,31 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
           <Input
             label="아이디"
             required
+            type="text"
+            id="loginId"
+            name="loginId"
+            placeholder="아이디를 입력해주세요."
+            value={formData.loginId}
+            onChange={handleLoginIdChange}
             className={styles.inputWithButton}
             success={loginIdCheckMessage}
             error={loginIdCheckError}
-          >
-            <div className={styles.inputButtonGroup}>
-              <input
-                type="text"
-                id="loginId"
-                name="loginId"
-                value={formData.loginId}
-                onChange={handleLoginIdChange}
-                className={loginIdCheckError ? 'input-error' : ''}
-              />
-            </div>
-          </Input>
+          />
         )}
 
         <Input
           label="닉네임"
           required
+          type="text"
+          id="nickname"
+          name="nickname"
+          placeholder="닉네임을 입력해주세요."
+          value={formData.nickname}
+          onChange={handleNicknameChange}
           className={styles.inputWithButton}
           success={nicknameCheckMessage}
           error={nicknameCheckError}
-        >
-          <div className={styles.inputButtonGroup}>
-            <input
-              type="text"
-              id="nickname"
-              name="nickname"
-              value={formData.nickname}
-              onChange={handleNicknameChange}
-              className={nicknameCheckError ? styles.inputError : ''}
-            />
-          </div>
-        </Input>
+        />
       </div>
     </div>
   );
