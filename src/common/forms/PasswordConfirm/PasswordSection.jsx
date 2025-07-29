@@ -122,9 +122,13 @@ function PasswordSection({
           onChange={handlePasswordConfirmChange}
           disabled={disabled}
           placeholder="비밀번호를 다시 입력해주세요"
-          success={passwordValidation.isValid ? '비밀번호가 일치합니다.' : ''}
+          success={
+            passwordValidation.isMatching && passwordValidation.showMatchValidation
+              ? '비밀번호가 일치합니다.'
+              : ''
+          }
           error={
-            !passwordValidation.isValid && passwordValidation.showValidation
+            !passwordValidation.isMatching && passwordValidation.showMatchValidation
               ? '비밀번호가 일치하지 않습니다.'
               : ''
           }
