@@ -13,10 +13,13 @@ import useToast from '@/common/hooks/useToast';
 import PhoneVerification from '../../../../common/forms/Phone/PhoneVerification';
 import PasswordSection from '../../../../common/forms/PasswordConfirm/PasswordSection';
 import Input from '../../../../common/components/Input';
+import { useNavigate } from 'react-router-dom';
 
 function RiderSignUp() {
+  const [resetPasswordValidation, setResetPasswordValidation] = useState(false);
   const dispatch = useDispatch();
   const { showSuccess, showNegative } = useToast();
+  const navigate = useNavigate();
 
   const { loading, error, signUpSuccess, permissionCheckMessage, permissionCheckError } =
     useSelector(state => state.rider);
@@ -46,6 +49,7 @@ function RiderSignUp() {
   useEffect(() => {
     if (signUpSuccess) {
       showSuccess('회원가입 신청이 완료되었습니다!');
+      navigate(-1);
       dispatch(clearSignUpSuccess());
       dispatch(clearSMSAuth());
       dispatch(clearLoginIdCheck());
@@ -59,6 +63,7 @@ function RiderSignUp() {
         permissionNumber: '',
       });
       setVerificationCode('');
+      setResetPasswordValidation(prev => !prev);
     }
   }, [signUpSuccess, dispatch, showSuccess]);
 
@@ -178,6 +183,7 @@ function RiderSignUp() {
           passwordConfirm={form.passwordConfirm}
           onPasswordChange={handleChange}
           onPasswordConfirmChange={handleChange}
+          reset={resetPasswordValidation}
         />
 
         {/* 휴대폰 인증 */}

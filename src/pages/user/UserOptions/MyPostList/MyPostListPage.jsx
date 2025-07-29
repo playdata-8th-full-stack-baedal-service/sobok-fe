@@ -65,11 +65,7 @@ const MyPostListPage = () => {
               className={styles.card}
               onClick={() => handleCardClick(post.postId)}
             >
-              <img
-                src={post.thumbnail || '/default-thumbnail.jpg'}
-                alt="썸네일"
-                className={styles.thumbnail}
-              />
+              <img src={post.thumbnail} alt="썸네일" className={styles.thumbnail} />
 
               <div className={styles.centerContent}>
                 <div className={styles.titleBox}>

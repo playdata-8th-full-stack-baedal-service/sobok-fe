@@ -21,23 +21,28 @@ export const fetchCookPostsByLike = createAsyncThunk(
 // 게시글 등록 thunk
 export const registerPost = createAsyncThunk(
   'post/registerPost',
-  async ({ paymentId, cookId, title, content, imageList }, thunkAPI) => {
+  async ({ paymentId, cookId, title, content, images }, thunkAPI) => {
     try {
-      console.log(paymentId, cookId, title, content, imageList);
+      console.log(paymentId, cookId, title, content, images);
       const body = {
         paymentId,
         cookId,
         title,
         content,
-        images: imageList.map((img, i) => ({
-          imageUrl: img.imageUrl,
-          index: i + 1,
-        })),
+        images, // ✅ index는 이미 계산되어 있음
       };
       const res = await axiosInstance.post(`/post-service/post/register`, body);
-      return res.data.posts[0];
+      const postId = res.data?.postId || null;
+
+      if (!postId) {
+        return thunkAPI.rejectWithValue('게시글 등록 응답에 postId가 없습니다.');
+      }
+
+      return { postId };
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data?.message || '게시글 등록 실패');
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || '게시글 등록 실패'
+      );
     }
   }
 );

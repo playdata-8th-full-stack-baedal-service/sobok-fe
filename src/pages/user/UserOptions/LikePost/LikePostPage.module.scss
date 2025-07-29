@@ -1,15 +1,12 @@
 .container {
-  width: 100%;
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 0 20px;
-  font-family: 'SobokFont', sans-serif;
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .title {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 24px;
   text-align: center;
 }
 
@@ -22,9 +19,10 @@
 
 .empty {
   text-align: center;
-  color: #666;
-  font-size: 16px;
-  padding: 40px 0;
+  font-size: 18px;
+  color: #888;
+  margin-top: 80px;
+  margin-bottom: 80px;
 }
 
 .list {
@@ -33,6 +31,7 @@
 
    .card:first-child {
     border-top: 1px solid #e0e0e0;
+    margin-top: 34px;
   }
 }
 

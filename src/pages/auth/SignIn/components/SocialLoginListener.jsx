@@ -24,8 +24,10 @@ function SocialLoginListener() {
         localStorage.setItem('ACCESS_TOKEN', data.accessToken);
         localStorage.setItem('REFRESH_TOKEN', data.refreshToken);
         localStorage.setItem('USER_ROLE', data.role);
-        localStorage.setItem('USER_ID', data.userId);
+        localStorage.setItem('USER_ID', data.id);
         localStorage.setItem('RECOVERY_TARGET', data.recoveryTarget);
+        console.log('수신 데이터:', event.data);
+        console.log('ID 값:', event.data.id);
 
         // 역할에 따라 다른 경로로 이동
         switch (data.role) {

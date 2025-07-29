@@ -48,7 +48,7 @@ function LikePostPage() {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>내가 좋아요한 게시글</h2>
+      <h2 className={styles.title}>좋아요한 게시글</h2>
       <div className={styles.list}>
         {likePosts.length === 0 ? (
           <p className={styles.empty}>좋아요한 게시글이 없습니다.</p>

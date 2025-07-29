@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import styles from './NewPostPage.module.scss';
 import Button from '@/common/components/Button';
@@ -8,16 +8,18 @@ import TiptapEditor from '@/common/forms/Post/TiptapEditor';
 import { useDispatch } from 'react-redux';
 import { registerPost } from '@/store/postSlice';
 import useToast from '@/common/hooks/useToast';
+import commonStyles from '@/common/forms/Post/PostContent.module.scss';
 
 function NewPostPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const { showSuccess, showNegative, showInfo } = useToast();
+  const { showSuccess, showNegative } = useToast();
 
   const paymentId = location.state?.paymentId;
   const cookId = location.state?.cookId;
   const cookName = location.state?.cookName;
+  const editorRef = useRef();
 
   const [title, setTitle] = useState('');
   const [isUploading, setIsUploading] = useState(false);
@@ -38,7 +40,6 @@ function NewPostPage() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [paymentId, cookId, navigate]);
 
-  // 이미지 업로드 + 서버에 저장
   const uploadToS3 = async file => {
     const formData = new FormData();
     formData.append('image', file);
@@ -50,41 +51,43 @@ function NewPostPage() {
       },
     });
 
-    const imageUrl = res.data.data;
-    return imageUrl;
+    return res.data.data;
   };
 
-  // 게시글 등록 요청
   const handleSubmit = async () => {
-    if (!title || !content || content === '<p></p>') {
-      showNegative('제목과 내용을 입력해주세요.');
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
+    const images = Array.from(doc.querySelectorAll('img')).map(img => ({
+      imageUrl: img.getAttribute('src'),
+    }));
+
+    if (!title.trim()) {
+      showNegative('제목을 입력해주세요.');
+      return;
+    }
+
+    const textOnly = doc.body.textContent.trim();
+    if (!textOnly && images.length === 0) {
+      showNegative('내용을 입력해주세요.');
       return;
     }
 
     try {
       setIsUploading(true);
 
-      // 본문 내 이미지 src 추출
-      const extractImagesFromContent = html => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const imgs = Array.from(doc.querySelectorAll('img')).map((img, i) => ({
-          imageUrl: img.getAttribute('src'),
-          index: i + 1,
-        }));
-        return imgs;
-      };
+      // 최종적으로 index 부여
+      const indexedImages = images.map((img, i) => ({
+        ...img,
+        index: i + 1,
+      }));
 
-      const images = extractImagesFromContent(content);
-
-      console.log(paymentId, cookId, title, content, images);
       const resultAction = await dispatch(
         registerPost({
           paymentId,
           cookId,
           title,
-          content,
-          imageList: images,
+          content: content || '<p></p>',
+          images: indexedImages,
         })
       );
 
@@ -117,7 +120,25 @@ function NewPostPage() {
           className={styles['title-input']}
         />
       </div>
-      <TiptapEditor content={content} setContent={setContent} uploadImageToServer={uploadToS3} />
+
+      <div className={styles['editor-preview-container']}>
+        <div className={styles['editor-container']} onClick={() => editorRef.current?.focus()}>
+          <TiptapEditor
+            ref={editorRef}
+            content={content}
+            setContent={setContent}
+            uploadImageToServer={uploadToS3}
+          />
+        </div>
+
+        <div className={styles['preview-section']}>
+          <h3>미리보기</h3>
+          <div
+            className={`${styles['preview-content']} ${commonStyles.postContent}`}
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
+        </div>
+      </div>
 
       <Button onClick={handleSubmit} variant="BASIC" disabled={isUploading}>
         {isUploading ? '업로드 중...' : '등록하기'}

@@ -25,13 +25,20 @@ function BookmarkRecipePage() {
   return (
     <div className={styles.bookmarkRecipePage}>
       <div className={styles.bookmarkHeader}>
-        <h2>북마크한 요리</h2>
+        <h2>즐겨찾기한 요리</h2>
       </div>
-      <CookGrid items={bookmarkList} />
-      {!isFullLoaded && (
-        <div className={styles.loadMoreButton}>
-          <Button onClick={() => setPageNo(pageNo + 1)}>더보기 +</Button>
-        </div>
+
+      {bookmarkList.length === 0 ? (
+        <p className={styles.empty}>즐겨찾기한 요리가 없습니다.</p>
+      ) : (
+        <>
+          <CookGrid items={bookmarkList} />
+          {!isFullLoaded && (
+            <div className={styles.loadMoreButton}>
+              <Button onClick={() => setPageNo(pageNo + 1)}>더보기 +</Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

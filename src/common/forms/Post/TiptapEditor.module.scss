@@ -1,21 +1,10 @@
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #fafafa;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-}
-
 .toolbar {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  margin-bottom: 10px;
 
-  button,
-  .image-upload-btn {
+  button {
     padding: 6px 10px;
     font-size: 14px;
     background-color: #f8f8f8;
@@ -26,6 +15,10 @@
     align-items: center;
     justify-content: center;
     height: 32px;
+
+    &:hover {
+      background-color: #eee;
+    }
   }
 }
 
@@ -40,81 +33,21 @@
   align-items: center;
   justify-content: center;
   height: 32px;
+
+  &:hover {
+    background-color: #eee;
+  }
 }
 
 .editorBox {
-  min-height: 250px;
+  width: 100%;
+  min-height: 400px;
   padding: 14px;
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 6px;
-}
-
-.editor {
-  outline: none;
-  border: none;
-  font-size: 16px;
-  line-height: 1.6;
-  color: #222;
-
-  * {
-    caret-color: black;
-  }
-
-  strong {
-    font-weight: bold;
-  }
-
-  em {
-    font-style: italic;
-  }
-
-  s {
-    text-decoration: line-through;
-  }
-
-  pre {
-    background: #f4f4f4;
-    padding: 10px;
-    font-family: 'SobokFont', monospace;
-    overflow-x: auto;
-    border-radius: 4px;
-    white-space: pre-wrap; // 코드 블럭 자동 줄바꿈
-  }
-
-  h2 {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin: 1em 0 0.5em;
-  }
-
-  ul {
-    padding-left: 1.2em;
-    list-style: disc;
-  }
-
-  p {
-    margin: 0;
-    padding: 0;
-    border: none;
-    outline: none;
-  }
-
-  img {
-    max-width: 100%;
-    height: auto;
-    margin: 1em 0;
-    border-radius: 4px;
-  }
-
-  &.is-editor-empty::before {
-    content: attr(data-placeholder);
-    color: #aaa;
-    font-size: 16px;
-    float: left;
-    height: 0;
-    pointer-events: none;
-  }
+  overflow-y: auto;
+  word-break: break-word;
 }
 
 .ProseMirror,
