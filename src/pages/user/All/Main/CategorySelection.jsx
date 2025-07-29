@@ -139,6 +139,10 @@ function CategorySelection() {
                   src={cook.thumbnail}
                   className={styles.cookThumbnail}
                   alt={cook.cookName || cook.name}
+                  onError={e => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = './soboklogo.png';
+                  }}
                 />
                 <div className={styles.cooknametitle}>
                   <p className={styles.realtitle}>{cook.cookName || cook.name}</p>
