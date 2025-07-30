@@ -72,7 +72,7 @@ function RequestListPage() {
     };
 
     fetchData();
-  }, [pageNo, numOfRows, position]);
+  }, [pageNo, numOfRows, position, refresh]);
 
   // 위치 정보 갱신 버튼 클릭 시 호출
   const handleRefresh = () => {

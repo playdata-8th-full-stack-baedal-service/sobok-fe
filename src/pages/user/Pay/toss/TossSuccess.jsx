@@ -20,28 +20,25 @@ export default function SuccessPage() {
     };
 
     async function confirm() {
-      const response = await axiosInstance.post('/api-service/api/confirm', requestData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      try {
+        const response = await axiosInstance.post('/api-service/api/confirm', requestData, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-      console.log(response);
-      if (!response.data.success) {
-        // 결제 실패 비즈니스 로직을 구현하세요.
+        navigate(`/user/paycomplete`);
+      } catch (err) {
         try {
           await axiosInstance.delete(
             `/payment-service/payment/delete-payment?orderId=${searchParams.get('orderId')}`
           );
-        } catch (err) {
-          console.log(err);
+        } catch (e) {
+          console.log(e);
         }
 
         showNegative('결제 실패! 다시 시도해주세요');
         navigate('/user/cart');
-      } else {
-        // 결제 성공
-        navigate(`/user/paycomplete`);
       }
     }
     confirm();
