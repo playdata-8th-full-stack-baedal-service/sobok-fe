@@ -10,7 +10,7 @@ function RiderListPage() {
 
   useEffect(() => {
     const fetchRiders = async () => {
-      const response = await axiosInstance.get('/admin-service/admin/pending-rider');
+      const response = await axiosInstance.get('/delivery-service/delivery/pending-rider');
       console.log(response.data.data);
       setPendingRiders(response.data.data);
     };
@@ -20,7 +20,7 @@ function RiderListPage() {
 
   useEffect(() => {
     const fetchRiders = async () => {
-      const response = await axiosInstance.get('/admin-service/admin/riders');
+      const response = await axiosInstance.get('/delivery-service/delivery/all');
       setAllRiders(response.data.data);
     };
     fetchRiders();
@@ -30,7 +30,7 @@ function RiderListPage() {
   const handleApprove = async id => {
     try {
       console.log(id);
-      await axiosInstance.put(`/admin-service/admin/rider-active?authId=${id}`);
+      await axiosInstance.put(`/auth-service/auth/rider-active?authId=${id}`);
       setClickedActiveRider(true);
     } catch (error) {
       console.error('배달원 활성화 실패:', error);
