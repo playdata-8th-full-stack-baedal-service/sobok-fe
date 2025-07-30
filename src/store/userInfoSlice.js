@@ -104,16 +104,13 @@ const userInfoSlice = createSlice({
     errorMessage: null,
   },
   reducers: {
-    // userInfo 정보 설정
-    setUserInfo: (state, action) => ({
-      ...state,
-      userInfo: action.payload,
-    }),
-    // 에러 메시지 설정
-    setErrorMessage: (state, action) => ({
-      ...state,
-      errorMessage: action.payload,
-    }),
+    // 유저인포 정보 설정
+    setUserInfo: (state, action) => {
+      state.userInfo = action.payload;
+    },
+    setErrorMessage: (state, action) => {
+      state.errorMessage = action.payload;
+    },
   },
   extraReducers: builder => {
     // 회원 정보 조회

@@ -1,8 +1,10 @@
 @use '../base/index' as *;
 
+/* =======================
+   기본 버튼 스타일
+   ======================= */
 .button {
-  @include button-set($default-button-color, $all-button-radius) {
-  }
+  @include button-set($default-button-color, $all-button-radius);
   cursor: pointer;
   color: $primary_font;
   padding: 10px 20px;
@@ -12,10 +14,13 @@
 
   &:hover {
     @include button-hover($default-button-hover-color, $all-button-radius);
-    color: rgb(255, 255, 255);
+    color: #fff;
   }
 }
 
+/* =======================
+   긍정(승인) 버튼
+   ======================= */
 .button_POSITIVE {
   @include positive-button-set($positive-button-color, $all-button-radius);
   white-space: nowrap;
@@ -30,6 +35,9 @@
   }
 }
 
+/* =======================
+   부정(취소/삭제) 버튼
+   ======================= */
 .button_NEGATIVE {
   @include negative-button-set($negative-button-color, $all-button-radius);
   white-space: nowrap;
@@ -44,11 +52,14 @@
   }
 }
 
+/* =======================
+   기본 테두리형 버튼 (흰 배경 + 검정 테두리)
+   ======================= */
 .button_BASIC {
   cursor: pointer;
   width: 102px;
   height: 35px;
-  padding: 0 16px;
+  padding: auto 16px;
   font-size: $d-button-text;
   font-weight: 600;
   white-space: nowrap;
@@ -56,14 +67,15 @@
   color: black;
   transition: all 0.3s;
   border-radius: 50px;
-  background-color: rgb(224, 224, 224);
+  background-color: #fff;
   border: 1px solid black;
   align-items: center;
   align-content: center;
 
   &:hover {
-    background-color: rgb(0, 0, 0);
-    color: rgb(255, 255, 255);
+    background-color: #000;
+    color: #fff;
+    border-radius: 50px;
   }
 
   &:disabled {
@@ -72,9 +84,12 @@
   }
 }
 
+/* =======================
+   작은 크기 버튼
+   ======================= */
 .small {
   @extend .button_BASIC;
-  padding: 0px 9px;
+  padding: 0 9px;
   font-size: 15px;
 
   &:hover {
@@ -84,18 +99,15 @@
   }
 }
 
+/* =======================
+   와이드 버튼 (넓은 폭, 호버 시 배경 슬라이드)
+   ======================= */
 .wide {
-  $btn-color: #000000;
-  $hover-text-color: #ffffff;
-  $btn-shadow: 1px 1px 12px #000000;
   display: inline-block;
   min-width: 50%;
-
-  // font-family: sans-serif;
-
   font-weight: 600;
   font-size: 16px;
-  color: $btn-color;
+  color: #000;
   margin: 1rem auto;
   padding: 0.7rem 2rem;
   border-radius: 30em;
@@ -103,12 +115,10 @@
   position: relative;
   z-index: 1;
   overflow: hidden;
-  text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 2px;
   background-color: transparent;
-  box-shadow: $btn-shadow;
-
+  box-shadow: 1px 1px 12px #000;
 
   &::before {
     content: '';
@@ -117,15 +127,15 @@
     position: absolute;
     top: 0;
     left: 0;
-    background-color: $btn-color;
+    background-color: #000;
     transform: translateX(-101%);
     transition: all 0.3s ease;
     z-index: -1;
   }
 
   &:hover {
-    color: $hover-text-color;
-    transition: all 0.3s ease;
+    color: #fff;
+    border-radius: 50px;
 
     &::before {
       transform: translateX(0);
@@ -133,17 +143,22 @@
   }
 }
 
-
+/* =======================
+   확인 버튼 (100% 폭, BASIC 스타일 확장)
+   ======================= */
 .confirm {
   @extend .button_BASIC;
   width: 100%;
-  align-items: center;
-  margin-top: 10px;
+  // margin-top: 10px;
+  box-shadow: 1px 3px 1px #000;
 }
 
+/* =======================
+   크기 유동 버튼 (텍스트 길이에 맞춤)
+   ======================= */
 .flexible {
   @extend .button_BASIC;
-  background-color: white;
+  background-color: #fff;
   width: auto;
   font-size: 14px;
   height: auto;
@@ -151,28 +166,31 @@
   padding: 5px 10px;
 }
 
+/* =======================
+   메인페이지 버튼
+   ======================= */
 .button_MAINPAGE {
   cursor: pointer;
   font-weight: 600;
   font-size: 15px;
-  border: 5px solid black;
   white-space: nowrap;
   letter-spacing: $letter-spacing;
   color: black;
   transition: all 0.3s;
-  background-color: rgb(255, 255, 255);
+  background-color: #fff;
   border: none;
   border-radius: 50px;
-  align-items: center;
-  align-content: center;
 }
 
+/* =======================
+   관리자 메인 버튼 (큰 카드 스타일)
+   ======================= */
 .adminMain {
   font-size: 17px;
   background: transparent;
   border: none;
   padding: 1em 1.5em;
-  color: rgb(0, 0, 0);
+  color: #000;
   text-transform: uppercase;
   position: relative;
   transition: 0.5s ease;
@@ -188,12 +206,12 @@
     bottom: 0;
     height: 2px;
     width: 0;
-    background-color: rgb(0, 0, 0);
+    background-color: #000;
     transition: 0.5s ease;
   }
 
   &:hover {
-    color: rgb(255, 255, 255);
+    color: #fff;
     transition-delay: 0.5s;
 
     &::before {
@@ -203,7 +221,6 @@
     &::after {
       height: 100%;
       transition-delay: 0.4s;
-      color: aliceblue;
     }
   }
 
@@ -214,14 +231,15 @@
     bottom: 0;
     height: 0;
     width: 100%;
-    background-color: rgb(0, 0, 0);
+    background-color: #000;
     transition: 0.4s ease;
     z-index: -1;
   }
 }
 
-
-
+/* =======================
+   라이더 메인 버튼 (세로로 긴 카드)
+   ======================= */
 .riderMain {
   @extend .button_MAINPAGE;
   min-width: 250px;
@@ -229,10 +247,11 @@
   justify-content: center;
 }
 
+/* =======================
+   완료 버튼
+   ======================= */
 .complete {
   @extend .button_MAINPAGE;
   min-width: 250px;
   height: 45px;
 }
-
-
