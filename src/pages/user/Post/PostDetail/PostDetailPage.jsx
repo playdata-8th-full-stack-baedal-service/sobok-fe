@@ -19,9 +19,9 @@ const PostDetailPage = () => {
   const currentUserId = localStorage.getItem('USER_ID');
 
   // // 해당 요리 페이지로 이동
-  // const handleCookPage = () => {
-  //   navigate('/product?id=');
-  // };
+  const handleCookPage = () => {
+    navigate(`/product?id=${post.cookId}`);
+  };
 
   // 게시글 수정
   const handleEditPost = () => {
@@ -107,9 +107,12 @@ const PostDetailPage = () => {
       {/* 상단 영역 */}
       <div className={styles.header}>
         <div className={styles.leftTop}>
-          <p>
+          {/* <p>
             <strong>요리 이름</strong> : {post.cookName}
-          </p>
+          </p> */}
+          <Button type="button" variant="BASIC" className="flexible" onClick={handleCookPage}>
+            {post.cookName}
+          </Button>
           <p>
             <strong>제목</strong> : {post.title}
           </p>
