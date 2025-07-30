@@ -18,6 +18,11 @@ const PostDetailPage = () => {
 
   const currentUserId = localStorage.getItem('USER_ID');
 
+  // // 해당 요리 페이지로 이동
+  // const handleCookPage = () => {
+  //   navigate('/product?id=');
+  // };
+
   // 게시글 수정
   const handleEditPost = () => {
     navigate('/user/edit-post', { state: { post } });
