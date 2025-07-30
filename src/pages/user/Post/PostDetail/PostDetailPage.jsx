@@ -1,3 +1,4 @@
+/* eslint-disable react/function-component-definition */
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '@/services/axios-config';
@@ -73,6 +74,17 @@ const PostDetailPage = () => {
     }
   };
 
+  const fetchCheckLike = async () => {
+    try {
+      const res = await axiosInstance.get(`/user-service/user/check-like?postId=${id}`);
+      setIsLiked(res.data.data);
+    } catch (err) {
+      const status = err.response?.status;
+      if (status === 404) setError('존재하지 않는 게시글입니다.');
+      else setError('게시글을 불러오는 중 오류가 발생했습니다.');
+    }
+  };
+
   // 게시글 상세 조회
   useEffect(() => {
     const fetchPostDetail = async () => {
@@ -87,6 +99,7 @@ const PostDetailPage = () => {
     };
 
     fetchPostDetail();
+    fetchCheckLike();
   }, [id]);
 
   if (error) return <div className={styles.error}>{error}</div>;
