@@ -1,42 +1,40 @@
-/* eslint-disable jsx-a11y/mouse-events-have-key-events */
-/* eslint-disable no-return-assign */
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import PropTypes from 'prop-types';
-import styles from '../UserInfo.module.scss';
+import styles from './PasswordInput.module.scss';
 
-function PasswordInput({ placeholder, onChange, value, showLabel = true }) {
-  const [showPassword, setShowPassword] = useState(false);
-
-  const onTogglePassword = () => {
-    setShowPassword(!showPassword);
-  };
-
+function PasswordInput({
+  value,
+  onChange,
+  showPassword,
+  onTogglePassword,
+  placeholder,
+  error,
+  id = 'password',
+  hideLabel = false,
+}) {
   return (
-    <div className={styles.passwordInput}>
-      <label className={styles.passwordInputtitle}>비밀번호</label>
-      <div className={styles.passwordInputzone}>
+    <div className={styles.container}>
+      {!hideLabel && (
+        <label htmlFor={id} className={styles.label}>
+          비밀번호
+        </label>
+      )}
+      <div className={styles.inputWrapper}>
         <input
+          id={id}
           type={showPassword ? 'text' : 'password'}
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className={styles.passwordInputmain}
+          className={styles.input}
         />
-        <button type="button" onClick={onTogglePassword}>
+        <button type="button" onClick={onTogglePassword} className={styles.toggleButton}>
           {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
         </button>
       </div>
+      {error && <p className={styles.error}>{error}</p>}
     </div>
   );
 }
-
-PasswordInput.propTypes = {
-  placeholder: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
-  showLabel: PropTypes.bool, // 새로 추가됨
-};
 
 export default PasswordInput;
