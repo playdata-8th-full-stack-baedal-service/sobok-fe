@@ -4,17 +4,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Divider } from '@mui/material';
 import { editEmail, editPhone, lookupUser, sendAuthCode } from '../../../store/userInfoSlice';
 
+// 컴포넌트 import
 import UserInfoHeader from './component/UserInfoHeader';
 import ProfileImage from './component/ProfileImage';
 import EditableField from './component/EditableField';
-import AddrList from './component/AddrList';
-import WithdrawalModal from '../../user/UserInfo/components/WithdrawalModal';
-import styles from './UserInfo.module.scss';
-import Button from '../../../common/components/Button';
+import AddrList from './component/Address/AddrList';
+import WithdrawalModal from './component/Delete/WithdrawalModal';
 import AuthCodeEditableField from './component/AuthCodeEditableField';
+
 import { useNavigate } from 'react-router-dom';
 import useToast from '@/common/hooks/useToast';
 import axiosInstance from '../../../services/axios-config';
+import Button from '../../../common/components/Button';
+import styles from './UserInfo.module.scss';
 
 function UserInfo() {
   const { userInfo } = useSelector(state => state.userInfo);
@@ -112,10 +114,10 @@ function UserInfo() {
   };
 
   // 비밀번호 검증 함수
-  const verifyPassword = async (password) => {
+  const verifyPassword = async password => {
     try {
       const response = await axiosInstance.post('/auth-service/auth/verify-password', {
-        password
+        password,
       });
       return response.data.success;
     } catch (error) {
@@ -132,10 +134,10 @@ function UserInfo() {
         if (!password || password.trim() === '') {
           return { error: '비밀번호를 입력해주세요.' };
         }
-        
+
         // 직접 비밀번호 검증 API 호출
         const isValidPassword = await verifyPassword(password);
-        
+
         if (isValidPassword) {
           return { success: true };
         } else {

@@ -10,8 +10,8 @@
 .withdrawalDescription {
   text-align: center;
   font-weight: bold;
-  font-size: 20px;
-  margin-bottom: 50px;
+  font-size: 18px;
+  margin-bottom: 30px;
 }
 
 .withdrawalButton {
@@ -27,6 +27,7 @@
   background: var(--bg);
   transition: 0.2s;
   width: 70%;
+  margin-top: 15px;
 
   &:hover {
     color: var(--hover-text);

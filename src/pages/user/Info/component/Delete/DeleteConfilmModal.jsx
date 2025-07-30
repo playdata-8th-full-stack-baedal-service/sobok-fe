@@ -2,8 +2,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import ModalWrapper from '../../../../common/modals/ModalWrapper';
-import { deleteUser } from '../../../../store/authSlice';
+import ModalWrapper from '@/common/modals/ModalWrapper';
+import { deleteUser } from '@/store/authSlice';
 import useToast from '@/common/hooks/useToast'; // toast hook import
 import styles from './DeleteConfilmModal.module.scss';
 

@@ -21,7 +21,7 @@ function RoleRoute({ role, children }) {
     // 역할에 따른 메인 페이지 경로 지정
     const redirectPath =
       {
-        USER: '/user',
+        USER: '/',
         RIDER: '/rider',
         HUB: '/hub',
         ADMIN: '/admin',

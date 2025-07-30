@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { openModal, closeModal } from '@/store/modalSlice';
 import axiosInstance from '@/services/axios-config';
-import styles from '../UserInfo.module.scss';
-import Button from '../../../../common/components/Button';
+import styles from '../../UserInfo.module.scss';
+import Button from '../../../../../common/components/Button';
 import useToast from '@/common/hooks/useToast';
 
 function AddrList({ addressList, onAddressUpdate, onAddressesChange, onAddressDelete }) {
