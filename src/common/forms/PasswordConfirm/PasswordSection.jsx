@@ -10,6 +10,8 @@ function PasswordSection({
   onPasswordConfirmChange,
   disabled,
   reset,
+  hideLabels = false,
+  showrequired = true,
 }) {
   const [passwordValidation, setPasswordValidation] = useState({
     isValid: false,
@@ -30,7 +32,7 @@ function PasswordSection({
     }
   }, [reset]);
 
-  // ✅ 비밀번호 보이기/숨기기 상태
+  // 비밀번호 보이기/숨기기 상태
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -82,10 +84,10 @@ function PasswordSection({
   return (
     <>
       {/* 비밀번호 */}
-      <div style={{ position: 'relative' }}>
+      <div style={{ position: 'relative' }} className={hideLabels ? styles.noLabelWrapper : ''}>
         <Input
-          label="비밀번호"
-          required
+          label={hideLabels ? '' : '비밀번호'}
+          required={showrequired}
           type={showPassword ? 'text' : 'password'}
           id="password"
           name="password"
@@ -111,10 +113,10 @@ function PasswordSection({
       </div>
 
       {/* 비밀번호 확인 */}
-      <div style={{ position: 'relative' }}>
+      <div style={{ position: 'relative' }} className={hideLabels ? styles.noLabelWrapper : ''}>
         <Input
-          label="비밀번호 확인"
-          required
+          label={hideLabels ? '' : '비밀번호 확인'}
+          required={showrequired}
           type={showConfirmPassword ? 'text' : 'password'}
           id="passwordConfirm"
           name="passwordConfirm"

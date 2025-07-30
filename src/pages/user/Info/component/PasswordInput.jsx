@@ -29,7 +29,7 @@ function PasswordInput({
           className={styles.input}
         />
         <button type="button" onClick={onTogglePassword} className={styles.toggleButton}>
-          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
         </button>
       </div>
       {error && <p className={styles.error}>{error}</p>}
