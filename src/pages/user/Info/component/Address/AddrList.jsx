@@ -143,6 +143,11 @@ function AddrList({ addressList, onAddressUpdate, onAddressesChange, onAddressDe
 
   // 주소 삭제
   const handleDeleteAddr = async id => {
+    // 주소가 1개 이하면 삭제 막음
+    if (addresses.length <= 1) {
+      showNegative('최소 1개 이상의 주소는 남겨두어야 합니다.');
+      return;
+    }
     // 삭제 확인
     if (!window.confirm('정말로 이 주소를 삭제하시겠습니까?')) {
       return;

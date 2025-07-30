@@ -179,7 +179,10 @@ function UserInfo() {
 
         <div className={styles.rightSection}>
           <EditableField label="닉네임" value={userInfo.nickname || ''} disabled />
-          <EditableField label="아이디" value={userInfo.loginId || ''} disabled />
+          {/* 소셜로그인 시 숨김처리*/}
+          {!userInfo.socialUser && (
+            <EditableField label="아이디" value={userInfo.loginId || ''} disabled />
+          )}{' '}
           <EditableField
             label="전화번호"
             value={targetPhone || userInfo.phone || ''}
@@ -213,9 +216,12 @@ function UserInfo() {
         />
       </div>
 
-      <Button className={styles.withdrawalButton} type="button" onClick={handleWithdrawalClick}>
-        회원 탈퇴
-      </Button>
+      {/* 소셜로그인 시 숨김처리 */}
+      {!userInfo.socialUser && (
+        <Button className={styles.withdrawalButton} type="button" onClick={handleWithdrawalClick}>
+          회원 탈퇴
+        </Button>
+      )}
 
       {isWithdrawalModalOpen && (
         <WithdrawalModal
