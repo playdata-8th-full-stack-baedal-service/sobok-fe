@@ -5,18 +5,19 @@ import { editUserPassword, setErrorMessage } from '../../../../store/userInfoSli
 import ModalWrapper from '../../../../common/modals/ModalWrapper';
 import Button from '../../../../common/components/Button';
 import PasswordInput from './PasswordInput';
-import PWChangedModal from '../../../auth/FindPW/PWChangedModal';
 import { isPasswordValid } from '../../../../common/utils/authUtils';
 import styles from './UserPasswordChangeModal.module.scss';
+import useToast from '@/common/hooks/useToast';
 
 function UserPasswordChangeModal({ onClose }) {
-  const [complete, setComplete] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword1, setShowPassword1] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
 
   const dispatch = useDispatch();
-
   const { errorMessage } = useSelector(state => state.userInfo);
+  const { showSuccess, showNegative } = useToast();
 
   const isButtonEnabled =
     newPassword &&
@@ -33,15 +34,16 @@ function UserPasswordChangeModal({ onClose }) {
       return;
     }
 
-    dispatch(editUserPassword({ password: newPassword }));
-    if (!errorMessage) {
-      setComplete(true);
+    try {
+      await dispatch(editUserPassword({ password: newPassword })).unwrap();
+      showSuccess('비밀번호가 변경되었습니다.');
+      onClose(); // 모달 닫기
+    } catch (err) {
+      showNegative('비밀번호 변경에 실패했습니다.');
     }
   };
 
-  return complete ? (
-    <PWChangedModal onClose={onClose} showSimpleClose={complete} />
-  ) : (
+  return (
     <ModalWrapper title="비밀번호 변경" onClose={onClose} size="md">
       <div className={styles.passwordChangeModal}>
         <p className={styles.passwordchangetitle}>새로운 비밀번호를 입력해주세요.</p>
@@ -50,14 +52,18 @@ function UserPasswordChangeModal({ onClose }) {
           value={newPassword}
           onChange={e => setNewPassword(e.target.value)}
           placeholder="새 비밀번호를 입력하세요"
-          showLabel={false}
+          showPassword={showPassword1}
+          onTogglePassword={() => setShowPassword1(prev => !prev)}
+          hideLabel={true}
         />
 
         <PasswordInput
           value={confirmPassword}
           onChange={e => setConfirmPassword(e.target.value)}
           placeholder="새 비밀번호를 다시 입력하세요"
-          showLabel={false}
+          showPassword={showPassword2}
+          onTogglePassword={() => setShowPassword2(prev => !prev)}
+          hideLabel={true}
         />
 
         {errorMessage && (

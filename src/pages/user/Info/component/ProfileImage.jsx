@@ -4,8 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { editUserProfile } from '../../../../store/userInfoSlice';
 import styles from '../UserInfo.module.scss';
 import Button from '../../../../common/components/Button';
+import useToast from '@/common/hooks/useToast';
 
 function ProfileImage() {
+  const { showSuccess, showNegative, showInfo } = useToast();
+
   const { userInfo } = useSelector(state => state.userInfo);
   const fileInputRef = useRef(null);
   const dispatch = useDispatch();
@@ -22,6 +25,8 @@ function ProfileImage() {
     formData.append('image', file);
 
     const result = await dispatch(editUserProfile({ formData }));
+    showSuccess('프로필 사진이 변경되었습니다.');
+
     console.log(result);
   };
 

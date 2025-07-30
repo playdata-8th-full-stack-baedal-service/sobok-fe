@@ -17,15 +17,13 @@ export default function useSignInHandlers({ id, password, setError, setPassword,
 
       if (loginUser.fulfilled.match(result)) {
         const { accessToken, role, userId, recoveryTarget } = result.payload;
-        showSuccess('로그인 되었습니다.');
-        
 
         // recoveryTarget이 있으면 복구 모달 띄우기
         if (recoveryTarget) {
           dispatch(openModal({ type: 'USER_RESTORE', props: { id: Number(userId) } }));
           return;
         }
-
+        showSuccess('로그인 되었습니다.');
         // role에 따라 라우팅
         switch (role) {
           case 'ADMIN':

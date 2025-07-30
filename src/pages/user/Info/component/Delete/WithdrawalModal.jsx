@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ModalWrapper from '../../../../common/modals/ModalWrapper';
-import PasswordInput from './PasswordInput';
+import ModalWrapper from '../../../../../common/modals/ModalWrapper';
+import PasswordInput from '../PasswordInput';
 import DeleteConfilmModal from './DeleteConfilmModal';
 import styles from './WithdrawalModal.module.scss';
 import useToast from '@/common/hooks/useToast';
@@ -61,6 +61,7 @@ function WithdrawalModal({ onClose, onSubmit, loading }) {
             placeholder="비밀번호를 입력하세요"
             error={localError}
             id="withdrawalPassword"
+            hideLabel={true}
           />
 
           <button type="submit" disabled={loading} className={styles.withdrawalButton}>

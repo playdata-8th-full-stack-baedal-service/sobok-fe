@@ -3,19 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import FindIDModal from '../../pages/auth/FindID/FindIDModal';
 import YourIDIsModal from '../../pages/auth/FindID/YourIDisModal';
 
-import PasswordConfirmModal from '../../pages/user/UserInfo/components/PasswordConfirmModal';
-import PasswordChangeModal from '../../pages/user/UserInfo/components/PasswordChangeModal';
-import WithdrawalModal from '../../pages/user/UserInfo/components/WithdrawalModal';
-import AddrConfirmModal from '../../pages/user/UserInfo/components/AddrConfirmModal';
-import ProfilePhotoChangeModal from '../../pages/user/UserInfo/components/ProfilePhotoChangeModal';
+import WithdrawalModal from '../../pages/user/Info/component/Delete/WithdrawalModal';
+import AddrConfirmModal from '../../pages/user/Info/component/Address/AddrConfirmModal';
 import FindPWModal from '../../pages/auth/FindPW/FindPWModal';
 import PWChangedModal from '../../pages/auth/FindPW/PWChangedModal';
-// 모달들은 모두 추가해두어야함
-
 import { closeModal } from '../../store/modalSlice';
 import CategorySelectModal from '../../pages/admin/RecipeRegeister/units/CategorySelectModal';
 import IngredientRegisterModal from '../../pages/admin/RecipeRegeister/units/ingredientRegisterModal';
-import DeleteConfilmModal from '../../pages/user/UserInfo/components/DeleteConfilmModal';
+import DeleteConfilmModal from '../../pages/user/Info/component/Delete/DeleteConfilmModal';
 import RecipeModal from '../../pages/user/All/Product/modals/RecipeModal';
 import MyOrderDetailPage from '../../pages/user/UserOptions/MyOrderDetail/MyOrderDetailPage';
 import UserPasswordChangeModal from '../../pages/user/Info/component/UserPasswordChangeModal';
