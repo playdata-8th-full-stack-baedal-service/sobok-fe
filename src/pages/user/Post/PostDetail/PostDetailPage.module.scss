@@ -35,6 +35,13 @@
   width: fit-content;           /* 내용에 맞게 width 자동 */
   background-color: white;
 
+   &:hover {
+    color: black ;
+    border-radius: 50px;
+    background-color: rgb(255, 223, 223); 
+  }
+
+
   span {
     display: inline-flex;
     align-items: center;
