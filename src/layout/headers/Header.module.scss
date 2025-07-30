@@ -30,10 +30,11 @@
   transform: translateX(-50%);
 
   img {
-    height: 140px;
-    object-fit: cover;
-    margin: 10px auto;
+    height: 50px;
+    object-fit: fill;
+    margin: 10px 0;
     transition: transform 0.3s ease;
+    
 
     &:hover {
       transform: scale(1.05);

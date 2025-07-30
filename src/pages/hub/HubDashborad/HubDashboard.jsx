@@ -5,33 +5,36 @@ import { openModal } from '../../../store/modalSlice';
 import axiosInstance from '../../../services/axios-config';
 import ShopOrderSection from '../Main/component/ShopOrderSection';
 import ShopDeliveryPendingSection from '../Main/component/ShopDeliveryPendingSection';
+import AnimatedText from '../MainText/AnimatedText';
+
 
 function HubDashboard() {
   const dispatch = useDispatch();
   const [isOrderChanged, setIsOrderChanged] = useState(false);
 
-  // 주문 상세 모달 열기
   const handleOpenOrderDetailModal = order => {
     dispatch(
       openModal({
         type: 'SHOP_ORDER_DETAIL',
-        props: {
-          order,
-        },
+        props: { order },
       })
     );
   };
 
-  // 주문 상태 변경
   const handleStatusChange = async order => {
     if (order) {
-      await axiosInstance.patch(`/payment-service/payment/change-orderState?id=${order.paymentId}`);
+      try {
+        await axiosInstance.patch(`/payment-service/payment/change-orderState?id=${order.paymentId}`);
+        setIsOrderChanged(prev => !prev);
+      } catch (err) {
+        console.error('주문 상태 변경 실패:', err);
+      }
     }
-    setIsOrderChanged(prev => !prev);
   };
 
   return (
     <div>
+      <AnimatedText/>
       <ShopOrderSection
         handleStatusChange={handleStatusChange}
         handleOpenOrderDetailModal={handleOpenOrderDetailModal}
