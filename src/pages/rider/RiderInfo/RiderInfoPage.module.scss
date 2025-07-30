@@ -1,40 +1,64 @@
-.RiderInfoPage {
+.card {
+  width: 65vw;
+  height: 400px;
+  border-radius: 20px;
+  background: #f5f5f5;
+  position: relative;
+  padding: 1.8rem;
+  border: 2px solid #c3c6ce;
+  transition: 0.5s ease-out;
+  overflow: visible;
+  margin: 130px auto;
+
+  .carddetails {
+    color: rgb(0, 0, 0);
+    height: 100%;
+    gap: 0.5em;
+    display: grid;
+    place-content: center;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .cardbutton {
+    text-decoration: none;
     text-align: center;
-    width: 70vw;
-    margin: 200px auto;
+    transform: translate(-50%, 125%);
+    width: 70%;
+    border-radius: 1rem;
+    border: none;
+    background-color: #000000;
+    color: #fff;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    opacity: 0;
+    transition: 0.3s ease-out;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+  }
 
-    .RiderInfoTitle {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-        align-items: center;
+  &:hover {
+    border-color: #000000;
+    box-shadow: 10px 5px 18px 0 rgba(255, 255, 255, 0.877);
 
-        .ridercontainertitle {
-            font-weight: bold;
-            font-size: 1.6rem;
-        }
-
-        .riderbutton {
-            border: none;
-            color: rgb(0, 0, 0);
-            background-color: rgb(255, 255, 255);
-            cursor: pointer;
-            font-size: 15px;
-
-            &:hover {
-                color: rgb(255, 255, 255);
-                background-color: rgb(0, 0, 0);
-                border-radius: 25px;
-            }
-        }
+    .cardbutton {
+      transform: translate(-50%, 50%);
+      opacity: 1;
     }
-
-    .ridercontatiner {
-        outline: 1px solid rgb(0, 0, 0);
-        border-radius: 25px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-        height: 300px;
-    }
+  }
 }
+
+.textbody {
+  color: rgb(0, 0, 0);
+  margin: 20px 0;
+  text-align: center;
+}
+
+.texttitle {
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+

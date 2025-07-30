@@ -1,9 +1,256 @@
+// Variables
+$hue: 223;
+$hue2: 13;
+$trans-dur: 0.3s;
+
+// 메인 레이아웃 스타일
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+}
+
+.layoutWrapper {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.sidebarContainer {
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.mainContent {
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+// 사이드바 스타일
+.nav {
+  background-color: hsl(0, 0%, 100%);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+  width: 16em;
+  transition: 
+    background-color $trans-dur,
+    width $trans-dur ease-in-out;
+
+  &.collapsed {
+    width: 6.5em;
+
+    .nav__heading_text {
+      transform: translateX(calc(2em - 50%));
+    }
+
+    .nav__item_box {
+      width: 3em;
+    }
+
+    .nav__item_icon--badge::before {
+      transform: scale(1);
+    }
+
+    .nav__item_text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .nav__logo {
+      transform: translateX(0);
+    }
+
+    .rotated {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.nav__main {
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 2.5em 1.75em;
+  width: inherit;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: 8px;
+  scrollbar-color: transparent transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 4px;
+  }
+
+  &:hover {
+    scrollbar-color: hsla(0, 0%, 0%, 0.2) transparent;
+
+    &::-webkit-scrollbar-thumb {
+      background-color: hsla(0, 0%, 0%, 0.2);
+    }
+  }
+}
+
+.nav__bottom {
+  background-color: inherit;
+  box-shadow: 0 1px 0 hsl($hue, 10%, 80%) inset;
+  padding: 1em 1.75em;
+  transition: box-shadow $trans-dur;
+}
+
+.nav__heading {
+  color: hsl($hue, 10%, 45%);
+  display: block;
+  font-size: 0.75em;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  transition: color $trans-dur;
+}
+
+.nav__heading_text {
+  display: inline-block;
+  transform: translateX(1em);
+  transition: transform $trans-dur ease-in-out;
+}
+
+.nav__items {
+  list-style: none;
+  margin: 0 0 3em 0;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.nav__item_box {
+  background-color: hsla($hue, 90%, 55%, 0);
+  border-radius: 0.75em;
+  color: hsl($hue, 20%, 55%);
+  display: flex;
+  align-items: center;
+  padding: 0.75em;
+  text-align: left;
+  text-decoration: none;
+  transition:
+    background-color $trans-dur ease-in-out,
+    color $trans-dur,
+    width $trans-dur ease-in-out;
+  width: 12.5em;
+  min-width: 3em;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+
+  &:focus,
+  &:hover {
+    background-color: hsla($hue, 90%, 55%, 0.1);
+    color: hsl($hue, 90%, 55%);
+  }
+
+  &:focus {
+    outline: transparent;
+  }
+}
+
+.nav__item_icon {
+  display: block;
+  width: 1.5em;
+  height: 1.5em;
+  flex-shrink: 0;
+  position: relative;
+  text-align: center;
+  transition: transform $trans-dur ease-in-out;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  &--badge::before {
+    background-color: hsl($hue, 90%, 55%);
+    border-radius: 50%;
+    box-shadow: 0 0 0 0.1em hsl(0, 0%, 100%);
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0.5em;
+    height: 0.5em;
+    transform: scale(0);
+    transition:
+      box-shadow $trans-dur,
+      transform $trans-dur ease-in-out;
+  }
+}
+
+.nav__item_text {
+  margin-left: 0.75em;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  transition:
+    opacity $trans-dur ease-in-out,
+    width $trans-dur ease-in-out;
+}
+
+.nav__item_badge {
+  background-color: hsla($hue, 90%, 55%, 0.1);
+  border-radius: 0.75rem;
+  color: hsl($hue, 90%, 55%);
+  font-size: 0.75em;
+  line-height: 1;
+  margin-left: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  transition:
+    background-color $trans-dur,
+    color $trans-dur;
+}
+
+.nav__logo {
+  background-color: hsl($hue, 90%, 55%);
+  border-radius: 0.75em;
+  color: hsl(0, 0%, 100%);
+  display: flex;
+  margin-bottom: 2.5em;
+  width: 3em;
+  height: 3em;
+  transform: translateX(0.75em);
+  transition:
+    background-color $trans-dur,
+    color $trans-dur,
+    transform $trans-dur ease-in-out;
+
+  svg {
+    display: block;
+    margin: auto;
+    width: 2em;
+    height: 2em;
+  }
+}
+
+.rotated {
+  transform: rotate(0deg);
+  transition: transform $trans-dur;
+}
+
+// 기존 MainPage 콘텐츠 스타일
 .hubMainPage {
   padding: 40px 24px;
   max-width: 900px;
   margin: 0 auto;
   min-height: 100vh;
-  
 }
 
 .main {
@@ -17,12 +264,12 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 24px;
-
+  
   h2 {
     font-size: 20px;
     font-weight: bold;
   }
-
+  
   .refreshButton {
     cursor: pointer;
     color: #222;
@@ -47,7 +294,7 @@
 .orderMeta {
   display: flex;
   gap: 12px;
-
+  
   span {
     font-size: 14px;
     color: #222;
@@ -63,7 +310,7 @@
   display: flex;
   justify-content: center;
   margin-top: 32px;
-
+  
   button {
     font-size: 15px;
     padding: 10px 20px;
@@ -74,7 +321,7 @@
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     transition: background-color 0.2s ease;
-
+    
     &:hover {
       background-color: #1b6dc1;
     }
@@ -93,7 +340,7 @@
   overflow: hidden;
   height: 50vh;
   z-index: 100;
-
+  
   .value {
     font-size: 15px;
     background-color: transparent;
@@ -107,7 +354,7 @@
     border-radius: 10px;
     transition: 1s;
     box-sizing: border-box;
-
+    
     &:not(:active):hover,
     &:focus {
       display: flex;
@@ -115,14 +362,14 @@
       border: 2px solid #1a1f24;
       color: #ffffff;
     }
-
+    
     &:focus,
     &:active {
       background-color: #1a1f24;
       outline: none;
       margin-left: 17px;
     }
-
+    
     &::before {
       content: "";
       position: absolute;
@@ -135,17 +382,17 @@
       opacity: 0;
       transition: 1s;
     }
-
+    
     &:focus::before,
     &:active::before {
       opacity: 1;
     }
-
+    
     svg {
       width: 20px;
     }
   }
-
+  
   &:hover > :not(.value:hover) {
     transition: 300ms;
     filter: blur(1.5px);
@@ -153,3 +400,52 @@
   }
 }
 
+// Dark theme
+@media (prefers-color-scheme: dark) {
+  .nav {
+    background-color: hsl($hue, 10%, 10%);
+  }
+
+  .nav__main {
+    &:hover {
+      scrollbar-color: hsla(0, 0%, 100%, 0.2) transparent;
+
+      &::-webkit-scrollbar-thumb {
+        background-color: hsla(0, 0%, 100%, 0.2);
+      }
+    }
+  }
+
+  .nav__bottom {
+    box-shadow: 0 1px 0 hsl($hue, 10%, 30%) inset;
+  }
+
+  .nav__heading {
+    color: hsl($hue, 10%, 65%);
+  }
+
+  .nav__item_box {
+    background-color: hsla(0, 0%, 100%, 0);
+    color: hsl($hue, 20%, 75%);
+
+    &:focus,
+    &:hover {
+      background-color: hsla(0, 0%, 100%, 0.1);
+      color: hsl(0, 0%, 100%);
+    }
+  }
+
+  .nav__item_icon--badge::before {
+    box-shadow: 0 0 0 0.1em hsl($hue, 10%, 10%);
+  }
+
+  .nav__item_badge {
+    background-color: hsl($hue, 90%, 55%);
+    color: hsl(0, 0%, 100%);
+  }
+
+  .nav__logo {
+    background-color: hsl(0, 0%, 100%);
+    color: hsl($hue, 90%, 55%);
+  }
+}
