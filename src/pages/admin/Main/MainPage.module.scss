@@ -1,11 +1,220 @@
-.container{
-width: 100%;
-padding: 30px 50px 30px 50px;
+CSS 변수 정의
+:root {
+  --hue: 223;
+  --hue2: 13;
+  --bg: hsl(var(--hue), 10%, 90%);
+  --fg: hsl(var(--hue), 10%, 10%);
+  --primary: hsl(var(--hue), 90%, 55%);
+  --red: hsl(var(--hue2), 90%, 55%);
+  --trans-dur: 0.3s;
+  font-size: calc(16px + (20 - 16) * (100vw - 320px) / (1280 - 320));
+}
+
+// 메인 레이아웃
+.mainLayout {
+  display: flex;
+  height: 100vh;
+  
+}
+
+// 사이드바 스타일
+.nav {
+  background-color: hsl(0, 0%, 100%);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+  width: 16em;
+  transition:
+    background-color var(--trans-dur),
+    width var(--trans-dur) ease-in-out;
+  flex-shrink: 0;
+
+  &[data-expanded="false"] {
+    width: 6.5em;
+
+    .navHeadingText {
+      transform: translateX(calc(2em - 50%));
+    }
+
+    .navItemBox {
+      width: 3em;
+    }
+
+    .navItemIconBadge::before {
+      transform: scale(1);
+    }
+
+    .navItemText {
+      opacity: 0;
+      width: 0;
+    }
+
+    .navLogo {
+      transform: translateX(0);
+    }
+
+    .navItemIcon {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.navMain {
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 2.5em 1.75em;
+  width: inherit;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: 8px;
+  scrollbar-color: transparent transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 4px;
+  }
+
+  &:hover {
+    scrollbar-color: hsla(0, 0%, 0%, 0.2) transparent;
+
+    &::-webkit-scrollbar-thumb {
+      background-color: hsla(0, 0%, 0%, 0.2);
+    }
+  }
+}
+
+.navBottom {
+  background-color: inherit;
+  box-shadow: 0 1px 0 hsl(var(--hue), 10%, 80%) inset;
+  padding: 1em 1.75em;
+  transition: box-shadow var(--trans-dur);
+}
+
+.navHeading {
+  color: hsl(var(--hue), 10%, 45%);
+  display: block;
+  font-size: 0.75em;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  transition: color var(--trans-dur);
+}
+
+.navHeadingText {
+  display: inline-block;
+  transform: translateX(1em);
+  transition: transform var(--trans-dur) ease-in-out;
+}
+
+.navItems {
+  list-style: none;
+  margin: 0 0 3em 0;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.navItemBox {
+  background-color: hsla(var(--hue), 90%, 55%, 0);
+  border-radius: 0.75em;
+  color: hsl(var(--hue), 20%, 55%);
+  display: flex;
+  align-items: center;
+  padding: 0.75em;
+  text-align: left;
+  text-decoration: none;
+  transition:
+    background-color var(--trans-dur) ease-in-out,
+    color var(--trans-dur),
+    width var(--trans-dur) ease-in-out;
+  width: 12.5em;
+  min-width: 3em;
+  cursor: pointer;
+  border: none;
+  font: inherit;
+
+  &:focus,
+  &:hover {
+    background-color: hsla(var(--hue), 90%, 55%, 0.1);
+    color: var(--primary);
+  }
+
+  &:focus {
+    outline: transparent;
+  }
+}
+
+.navItem {
+  // Base styles for nav items
+}
+
+.navItemIcon {
+  display: block;
+  width: 1.5em;
+  height: 1.5em;
+  flex-shrink: 0;
+  position: relative;
+  text-align: center;
+  transition: transform var(--trans-dur) ease-in-out;
+
+  svg {
+    display: block;
+    width: 1.5em;
+    height: 1.5em;
+  }
+}
+
+.navItemText {
+  margin-left: 0.75em;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  transition:
+    opacity var(--trans-dur) ease-in-out,
+    width var(--trans-dur) ease-in-out;
+}
+
+.navLogo {
+  background-color: var(--primary);
+  border-radius: 0.75em;
+  color: hsl(0, 0%, 100%);
+  display: flex;
+  margin-bottom: 2.5em;
+  width: 3em;
+  height: 3em;
+  transform: translateX(0.75em);
+  transition:
+    background-color var(--trans-dur),
+    color var(--trans-dur),
+    transform var(--trans-dur) ease-in-out;
+
+  svg {
+    display: block;
+    margin: auto;
+    width: 2em;
+    height: 2em;
+  }
+}
+
+// 기존 스타일들 (원래대로 유지)
+.container {
+  width: 100%;
+  padding: 30px 50px 30px 50px;
 }
 
 .header {
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
   position: relative;
   margin-top: 20px;
@@ -13,21 +222,67 @@ padding: 30px 50px 30px 50px;
   font-weight: bold;
 }
 
-.buttonGroup{
+.buttonGroup {
   display: flex;
   margin-top: 50px;
   gap: 30px;
   flex-direction: column;
 }
 
-.firstLine{
+.firstLine {
   display: flex;
   gap: 15px;
   justify-content: center;
 }
 
-.secondLine{
+.secondLine {
   display: flex;
   gap: 15px;
   justify-content: center;
+}
+
+/* 다크 테마 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: hsl(var(--hue), 10%, 20%);
+    --fg: hsl(var(--hue), 10%, 90%);
+  }
+
+  .nav {
+    background-color: hsl(var(--hue), 10%, 10%);
+  }
+
+  .navMain {
+    &:hover {
+      scrollbar-color: hsla(0, 0%, 100%, 0.2) transparent;
+
+      &::-webkit-scrollbar-thumb {
+        background-color: hsla(0, 0%, 100%, 0.2);
+      }
+    }
+  }
+
+  .navBottom {
+    box-shadow: 0 1px 0 hsl(var(--hue), 10%, 30%) inset;
+  }
+
+  .navHeading {
+    color: hsl(var(--hue), 10%, 65%);
+  }
+
+  .navItemBox {
+    background-color: hsla(0, 0%, 100%, 0);
+    color: hsl(var(--hue), 20%, 75%);
+
+    &:focus,
+    &:hover {
+      background-color: hsla(0, 0%, 100%, 0.1);
+      color: hsl(0, 0%, 100%);
+    }
+  }
+
+  .navLogo {
+    background-color: hsl(0, 0%, 100%);
+    color: var(--primary);
+  }
 }
