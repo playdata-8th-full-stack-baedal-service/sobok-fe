@@ -101,7 +101,7 @@
 .IngredientsSelection {
   padding: 20px 60px;
   margin-top: 25px;
-  width: 100vw;
+  width: 100%;
 
   .newingredientselection {
     display: flex;
@@ -743,4 +743,9 @@
   display: flex;
   justify-content: space-between;
   
+}
+
+.RecipeRegistPage {
+  width: 100%;
+  height: 100%;
 }

@@ -3,7 +3,7 @@
   flex-direction: column;
   padding: 30px 60px;
   text-align: center;
-  width: 100vw;
+  width: 100%;
   margin-top: 60px;
 
   .titleandbutton {
@@ -13,16 +13,25 @@
 
 .card {
   display: grid;
-  grid-template-columns: 1fr 4fr 1.5fr 1.5fr; /* 비율 조정 가능 */
+  // grid-template-columns: 1fr 1fr 1fr 1fr 1fr; 
+  grid-template-columns: repeat(auto-fill, minmax(150px, 2fr));
   align-items: center;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 999px; /* pill 스타일 유지용 */
   margin-bottom: 8px;
+  gap: 60px;
 }
 
 .hunsection {
-  height: 40px;
+  // height: 40px;
+  // text-align: center;
+  // line-height: 40px;
+  white-space: nowrap;
+  // margin: 10px auto;
+  display: flex;
+  height: 80px;
+  align-items: center;
   text-align: center;
-  line-height: 40px;
+  justify-content: center;
 }
