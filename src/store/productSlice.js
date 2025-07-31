@@ -153,6 +153,7 @@ const productSlice = createSlice({
       .addCase(isBookmarked.fulfilled, (state, action) => {
         state.loading = false;
         state.isBookmarked = action.payload;
+        state.bookmarkError = null;
       })
       .addCase(isBookmarked.rejected, (state, action) => {
         state.loading = false;

@@ -12,6 +12,7 @@ import userInfoReducer from './userInfoSlice';
 import postReducer from './postSlice';
 import payReducer from './cartPaySlice';
 import stockReducer from './stockSlice';
+import hubReducer from './hubSlice';
 
 const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ const store = configureStore({
     post: postReducer,
     pay: payReducer,
     stock: stockReducer,
+    hub: hubReducer,
   },
 });
 

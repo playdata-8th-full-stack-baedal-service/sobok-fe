@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { PackageCheck, Store, Package, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  PackageCheck,
+  Store,
+  Package,
+  ChevronLeft,
+  ChevronRight,
+  LayoutDashboard,
+} from 'lucide-react';
 import styles from './MainPage.module.scss';
 
 function MainPage() {
@@ -9,6 +16,12 @@ function MainPage() {
   const location = useLocation();
 
   const navItems = [
+    {
+      path: '/hub/order',
+      label: '주문 확인',
+      title: '주문 확인',
+      icon: <LayoutDashboard size={20} />,
+    },
     {
       path: '/hub/history',
       label: '주문 처리 완료 내역',
@@ -88,9 +101,7 @@ function MainPage() {
                 <span className={styles.nav__item_icon}>
                   {expanded ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
                 </span>
-                <span className={styles.nav__item_text}>
-                  {expanded ? '숨기기' : '펼치기'}
-                </span>
+                <span className={styles.nav__item_text}>{expanded ? '숨기기' : '펼치기'}</span>
               </button>
             </li>
           </ul>
@@ -112,7 +123,7 @@ function MainPage() {
             flex: 1,
             overflowY: 'auto',
             padding: '20px',
-            backgroundColor: '#f5f5f5',
+            backgroundColor: '#ffffff',
           }}
         >
           <Outlet />
