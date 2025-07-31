@@ -3,13 +3,12 @@ import { CircularProgress } from '@mui/material';
 import Button from '../../../../common/components/Button';
 import { formattedDate, orderStatus } from '../../../../common/utils/orderUtils';
 import styles from '../MainPage.module.scss';
+import CapybaraLoader from '../../LoadingBar/CapybaraLoader';
 
 const OrderList = ({ loading, orders, isFullLoaded, onLoadMore, onOrderDetailClick }) => {
   if (loading) {
     return (
-      <div className={styles.loadingWrapper}>
-        <CircularProgress />
-      </div>
+      <CapybaraLoader/>
     );
   }
 

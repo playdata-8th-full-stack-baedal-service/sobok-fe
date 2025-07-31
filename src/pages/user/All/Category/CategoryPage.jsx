@@ -1,6 +1,8 @@
 /* eslint-disable react/function-component-definition */
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import Button from '../../../../common/components/Button';
 import CookGrid from '../component/CookGrid';
 import axiosInstance from '../../../../services/axios-config';
@@ -33,6 +35,24 @@ const categoryList = [
   },
 ];
 
+// Skeleton UI Components
+const CookCardSkeleton = () => (
+  <div className={styles.cookItem}>
+    <Skeleton height={200} />
+    <div className={styles.cookName}>
+      <Skeleton height={20} />
+    </div>
+  </div>
+);
+
+const CookGridSkeleton = ({ count = 12 }) => (
+  <div className={styles.cookGrid}>
+    {Array.from({ length: count }, (_, index) => (
+      <CookCardSkeleton key={`skeleton-${index}`} />
+    ))}
+  </div>
+);
+
 const CategoryPage = () => {
   const [items, setItems] = useState([]);
   const [searchParams] = useSearchParams();
@@ -40,56 +60,101 @@ const CategoryPage = () => {
   const [numOfRows] = useState(12);
   const [isFullLoaded, setIsFullLoaded] = useState(false);
   const [sortByOrder, setSortByOrder] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
 
-  // path 파라미터가 있으면 우선 사용, 없으면 쿼리스트링 사용
   useEffect(() => {
     async function fetchItems() {
       if (isFullLoaded) return;
+      
+      try {
+        // 첫 페이지가 아닐 때만 loadingMore 상태 설정
+        if (pageNo > 1) {
+          setLoadingMore(true);
+        }
 
-      const response = await axiosInstance.get(`/cook-service/cooks`, {
-        params: {
-          category: searchParams.get('category') === 'all' ? null : searchParams.get('category'),
-          pageNo,
-          numOfRows,
-          sort: sortByOrder ? 'order' : null,
-        },
-      });
+        const response = await axiosInstance.get(`/cook-service/cooks`, {
+          params: {
+            category: searchParams.get('category') === 'all' ? null : searchParams.get('category'),
+            pageNo,
+            numOfRows,
+            sort: sortByOrder ? 'order' : null,
+          },
+        });
 
-      if (pageNo === 1) {
-        setItems(response.data.data);
-      } else {
-        setItems(prev => [...prev, ...response.data.data]);
-      }
+        if (pageNo === 1) {
+          setItems(response.data.data);
+        } else {
+          setItems(prev => [...prev, ...response.data.data]);
+        }
 
-      if (response.data.data.length < numOfRows) {
-        setIsFullLoaded(true);
+        if (response.data.data.length < numOfRows) {
+          setIsFullLoaded(true);
+        }
+      } catch (error) {
+        console.error('Failed to fetch items:', error);
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
       }
     }
+
     fetchItems();
-  }, [pageNo, sortByOrder]);
+  }, [pageNo, sortByOrder, searchParams]);
+
+  // 정렬 버튼 클릭 시 로딩 상태 초기화
+  const handleSortChange = () => {
+    setLoading(true);
+    setPageNo(1);
+    setSortByOrder(prev => !prev);
+    setIsFullLoaded(false);
+    setItems([]);
+  };
+
+  // 더보기 버튼 클릭 시
+  const handleLoadMore = () => {
+    setPageNo(pageNo + 1);
+  };
 
   return (
-    <div className={styles.categoryCookPage}>
-      <div className={styles.categoryHeader}>
-        <h2>{categoryList.find(c => c.en === searchParams.get('category'))?.name || '전체'}</h2>
-        <Button
-          className={styles.sortButton}
-          onClick={() => {
-            setPageNo(1);
-            setSortByOrder(prev => !prev);
-            setIsFullLoaded(false);
-          }}
-        >
-          {sortByOrder ? '주문량순' : '최신순'}
-        </Button>
-      </div>
-      <CookGrid items={items} />
-      {!isFullLoaded && (
-        <div className={styles.loadMoreButton}>
-          <Button onClick={() => setPageNo(pageNo + 1)}>더보기 +</Button>
+    <SkeletonTheme baseColor="#f0f0f0" highlightColor="#e0e0e0">
+      <div className={styles.categoryCookPage}>
+        <div className={styles.categoryHeader}>
+          <h2>
+            {loading ? (
+              <Skeleton width={80} height={32} />
+            ) : (
+              categoryList.find(c => c.en === searchParams.get('category'))?.name || '전체'
+            )}
+          </h2>
+          {loading ? (
+            <Skeleton width={80} height={40} />
+          ) : (
+            <Button
+              className={styles.sortButton}
+              onClick={handleSortChange}
+            >
+              {sortByOrder ? '주문량순' : '최신순'}
+            </Button>
+          )}
         </div>
-      )}
-    </div>
+
+        {loading ? (
+          <CookGridSkeleton count={12} />
+        ) : (
+          <>
+            <CookGrid items={items} />
+            {loadingMore && <CookGridSkeleton count={numOfRows} />}
+          </>
+        )}
+
+        {!loading && !isFullLoaded && !loadingMore && (
+          <div className={styles.loadMoreButton}>
+            <Button onClick={handleLoadMore}>더보기 +</Button>
+          </div>
+        )}
+      </div>
+    </SkeletonTheme>
   );
 };
 
