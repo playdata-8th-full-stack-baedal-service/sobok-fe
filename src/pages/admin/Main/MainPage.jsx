@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Button from '../../../common/components/Button';
-import styles from './MainPage.module.scss';
-// React Icons 임포트 - 필요한 아이콘들로 교체하세요
-import { 
-  MdMenuBook, 
+import { Outlet, useNavigate } from 'react-router-dom';
+import {
+  MdMenuBook,
   MdChecklist,
   MdChevronLeft,
   MdDeliveryDining,
@@ -12,7 +9,10 @@ import {
   MdGrading,
   MdAddShoppingCart,
 } from 'react-icons/md';
-import { GiShop } from "react-icons/gi";
+import { GiShop } from 'react-icons/gi';
+import Button from '../../../common/components/Button';
+import styles from './MainPage.module.scss';
+// React Icons 임포트 - 필요한 아이콘들로 교체하세요
 
 function MainPage() {
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ function MainPage() {
       <nav className={`${styles.nav}`} data-expanded={sidebarExpanded}>
         <div className={styles.navMain}>
           <div className={styles.navLogo}>
-            <img src='/soboklogo.png' />
+            <img src="/soboklogo.png" />
           </div>
           <span className={styles.navHeading}>
             <span className={styles.navHeadingText}>Sobok Admin Menu</span>
@@ -99,18 +99,16 @@ function MainPage() {
         <div className={styles.navBottom}>
           <ul className={styles.navItems}>
             <li className={styles.navItem}>
-              <button 
-                className={styles.navItemBox} 
-                type="button" 
+              <button
+                className={styles.navItemBox}
+                type="button"
                 aria-expanded={sidebarExpanded}
                 onClick={toggleSidebar}
               >
                 <span className={styles.navItemIcon}>
                   <MdChevronLeft />
                 </span>
-                <span className={styles.navItemText}>
-                  {sidebarExpanded ? '접기' : '펼치기'}
-                </span>
+                <span className={styles.navItemText}>{sidebarExpanded ? '접기' : '펼치기'}</span>
               </button>
             </li>
           </ul>
@@ -118,50 +116,24 @@ function MainPage() {
       </nav>
 
       {/* 원래 메인 컨텐츠 */}
-      <div>
-        <div className={styles.container}>
-          <div className={styles.header}>관리자 페이지 입니다.</div>
-          <div className={styles.buttonGroup}>
-            <div className={styles.firstLine}>
-              <Button
-                text="모든 주문 조회"
-                type="button"
-                variant="MAINPAGE"
-                className="adminMain"
-                onClick={allOrder}
-              />
-              <Button
-                text="요리 등록"
-                type="button"
-                variant="MAINPAGE"
-                className="adminMain"
-                onClick={ingrediant}
-              />
-              <Button
-                text="가게 등록"
-                type="button"
-                variant="MAINPAGE"
-                className="adminMain"
-                onClick={hubRegister}
-              />
-            </div>
-            <div className={styles.secondLine}>
-              <Button
-                text="배달원 관리"
-                type="button"
-                variant="MAINPAGE"
-                className="adminMain"
-                onClick={riderList}
-              />
-              <Button
-                text="가게 정보 조회"
-                type="button"
-                variant="MAINPAGE"
-                className="adminMain"
-                onClick={hubList}
-              />
-            </div>
-          </div>
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          maxHeight: '100vh',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '20px',
+            backgroundColor: '#ffffff',
+          }}
+        >
+          <Outlet />
         </div>
       </div>
     </div>
