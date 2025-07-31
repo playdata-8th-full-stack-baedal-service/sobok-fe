@@ -12,7 +12,7 @@ function RiderListPage() {
     const fetchRiders = async () => {
       const response = await axiosInstance.get('/delivery-service/delivery/pending-rider');
       console.log(response.data.data);
-      setPendingRiders(response.data.data);
+      setPendingRiders(response.data.data || []);
     };
     fetchRiders();
     setClickedActiveRider(false);
