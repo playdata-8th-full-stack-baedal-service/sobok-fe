@@ -187,6 +187,7 @@ function UserInfo() {
             label="전화번호"
             value={targetPhone || userInfo.phone || ''}
             onEditClick={handlePhoneEdit}
+            onDeleteClick={msg => showNegative(msg)} // 전화번호 비어있을 때 경고
             disabled={targetPhone !== ''}
           />
           {targetPhone && (
@@ -201,6 +202,17 @@ function UserInfo() {
             label="이메일"
             value={userInfo.email || ''}
             onEditClick={handleEmailEdit}
+            onDeleteClick={() => {
+              // 이메일 삭제 API 호출
+              axiosInstance
+                .delete('/user-service/user/deleteEmail')
+                .then(() => {
+                  showSuccess('이메일이 삭제되었습니다.');
+                  setIsModified(true);
+                })
+                .catch(() => showNegative('이메일 삭제에 실패했습니다.'));
+            }}
+            disabled={false}
           />
         </div>
       </div>
