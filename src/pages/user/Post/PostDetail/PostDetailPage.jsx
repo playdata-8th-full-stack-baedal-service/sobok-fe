@@ -7,6 +7,8 @@ import Button from '@/common/components/Button';
 import { Heart } from 'lucide-react';
 import useToast from '@/common/hooks/useToast';
 import commonStyles from '@/common/forms/Post/PostContent.module.scss';
+import axios from 'axios';
+import { API_BASE_URL } from '../../../../services/host-config';
 
 const PostDetailPage = () => {
   const { id } = useParams();
@@ -81,12 +83,13 @@ const PostDetailPage = () => {
 
   const fetchCheckLike = async () => {
     try {
+      if (localStorage.getItem('ACCESS_TOKEN') === null) return;
       const res = await axiosInstance.get(`/user-service/user/check-like?postId=${id}`);
       setIsLiked(res.data.data);
     } catch (err) {
       const status = err.response?.status;
-      if (status === 404) setError('존재하지 않는 게시글입니다.');
-      else setError('게시글을 불러오는 중 오류가 발생했습니다.');
+      if (status === 404) showNegative('존재하지 않는 게시글입니다.');
+      else showNegative('게시글을 불러오는 중 오류가 발생했습니다.');
     }
   };
 
@@ -94,7 +97,7 @@ const PostDetailPage = () => {
   useEffect(() => {
     const fetchPostDetail = async () => {
       try {
-        const res = await axiosInstance.get(`/post-service/post/detail/${id}`);
+        const res = await axios.get(`${API_BASE_URL}/post-service/post/detail/${id}`);
         setPost(res.data.data);
       } catch (err) {
         const status = err.response?.status;
