@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  signUpUser,
+  kakaoSignUpUser,
   clearSignUpSuccess,
   clearEmailCheck,
   clearLoginIdCheck,
@@ -19,7 +19,6 @@ import styles from './UserSignUp.module.scss';
 import useToast from '@/common/hooks/useToast';
 
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
-import { kakaoSignUpUser } from '../../../../store/authSlice';
 
 function UserSignUp() {
   const navigate = useNavigate();
@@ -58,6 +57,8 @@ function UserSignUp() {
   const oauthId = searchParams.get('oauthId');
   const nickname = searchParams.get('nickname');
   const email = searchParams.get('email');
+
+  const debounceTimer = useRef(null);
 
   useEffect(() => {
     console.log('쿼리로 전달받은 값:', {
@@ -108,6 +109,16 @@ function UserSignUp() {
       ...prev,
       [name]: value,
     }));
+    if (name === 'nickname') {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+      debounceTimer.current = setTimeout(() => {
+        if (value.trim()) {
+          dispatch(checkNickName(value));
+        }
+      }, 500); // 0.5초 후 검사 실행
+    }
   };
 
   const handleFileSelect = file => {
@@ -325,6 +336,7 @@ function UserSignUp() {
             roadFull={formData.roadFull}
             addDetail={formData.addrDetail}
             onAddressChange={handleAddressChange}
+            showDetail={true}
           />
 
           <div className={styles['form-group']}>

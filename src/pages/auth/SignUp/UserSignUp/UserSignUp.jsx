@@ -295,6 +295,7 @@ function UserSignUp() {
             roadFull={formData.roadFull}
             addDetail={formData.addrDetail}
             onAddressChange={handleAddressChange}
+            showDetail={true}
           />
 
           <div className={styles['form-group']}>

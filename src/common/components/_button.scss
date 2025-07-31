@@ -262,4 +262,10 @@
   @extend .button_MAINPAGE;
   min-width: 250px;
   height: 45px;
+  border: 2px solid black;
+
+    &:hover {
+    background-color: black;
+    color: white;
+    }
 }

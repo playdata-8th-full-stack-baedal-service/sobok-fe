@@ -78,7 +78,8 @@ export const editPhone = createAsyncThunk(
 
       return phone;
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.response?.data?.message || '전화번호 수정에 실패했습니다.');
+      return thunkAPI.rejectWithValue(
+        e.response?.data?.message || '전화번호 수정에 실패했습니다.');
     }
   }
 );
