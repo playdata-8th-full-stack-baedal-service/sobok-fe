@@ -13,7 +13,7 @@ import IngredientRegisterModal from '../../pages/admin/RecipeRegeister/units/ing
 import DeleteConfilmModal from '../../pages/user/Info/component/Delete/DeleteConfilmModal';
 import RecipeModal from '../../pages/user/All/Product/modals/RecipeModal';
 import MyOrderDetailPage from '../../pages/user/UserOptions/MyOrderDetail/MyOrderDetailPage';
-import UserPasswordChangeModal from '../../pages/user/Info/component/UserPasswordChangeModal';
+import UserPasswordChangeModal from '../../pages/user/Info/component/PWChange/UserPasswordChangeModal';
 import AdminOrderDetailModal from '../../pages/admin/AllOrder/modals/AdminOrderDetailModal';
 import RecoveryConfirmModal from '../../pages/auth/Recovery/RecoveryConfirmModal';
 import ShopOrderDetailModal from '../../pages/hub/Main/modals/ShopOrderDetailModal';

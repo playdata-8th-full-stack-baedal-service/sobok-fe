@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { editUserPassword, setErrorMessage } from '../../../../store/userInfoSlice';
-import ModalWrapper from '../../../../common/modals/ModalWrapper';
-import Button from '../../../../common/components/Button';
-import PasswordInput from './PasswordInput';
-import { isPasswordValid } from '../../../../common/utils/authUtils';
+import { editUserPassword, setErrorMessage } from '../../../../../store/userInfoSlice';
+import ModalWrapper from '../../../../../common/modals/ModalWrapper';
+import Button from '../../../../../common/components/Button';
+import PasswordInput from '../PasswordInput';
+import { isPasswordValid } from '../../../../../common/utils/authUtils';
 import styles from './UserPasswordChangeModal.module.scss';
 import useToast from '@/common/hooks/useToast';
 
