@@ -14,7 +14,7 @@ function HubListPage() {
 
     setLoading(true);
     try {
-      const res = await axiosInstance.get('/admin-service/admin/shops');
+      const res = await axiosInstance.get('/shop-service/shop/all');
 
       if (res.data.success && res.data.data.length > 0) {
         setHubList(res.data.data);

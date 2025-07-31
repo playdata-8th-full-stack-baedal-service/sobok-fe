@@ -74,7 +74,7 @@ function MainPage() {
       >
         <div className={styles.nav__main}>
           <div className={styles.nav__logo}>
-            <img src="./soboklogo.png"/>
+            <img src="/soboklogo.png"/>
           </div>
 
           <span className={styles.nav__heading}>

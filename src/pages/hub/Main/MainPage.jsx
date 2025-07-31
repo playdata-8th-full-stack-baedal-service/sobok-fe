@@ -1,63 +1,122 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Divider } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { PackageCheck, Store, Package, ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from './MainPage.module.scss';
-import axiosInstance from '../../../services/axios-config';
-import { openModal } from '../../../store/modalSlice';
-import ShopOrderSection from './component/ShopOrderSection';
-import ShopDeliveryPendingSection from './component/ShopDeliveryPendingSection';
-
-// import ShopPreparePendingSection from './component/ShopDeliveryPendingSection';
-
-// import ShopPreparePendingSection from './component/ShopPreparePendingSection';
 
 function MainPage() {
-  const dispatch = useDispatch();
-  const [isOrderChanged, setIsOrderChanged] = useState(false);
-  const nav = useNavigate();
+  const [expanded, setExpanded] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // 주문 상세 모달 열기
-  const handleOpenOrderDetailModal = order => {
-    dispatch(
-      openModal({
-        type: 'SHOP_ORDER_DETAIL',
-        props: {
-          order,
-        },
-      })
-    );
+  const navItems = [
+    {
+      path: '/hub/history',
+      label: '주문 처리 완료 내역',
+      title: '주문 처리 완료 내역',
+      icon: <PackageCheck size={20} />,
+    },
+    {
+      path: '/hub/info',
+      label: '가게 정보',
+      title: '가게 정보',
+      icon: <Store size={20} />,
+    },
+    {
+      path: '/hub/stock',
+      label: '재고 조회',
+      title: '재고 조회',
+      icon: <Package size={20} />,
+    },
+  ];
+
+  const toggleSize = () => {
+    setExpanded(!expanded);
   };
 
-  // 주문 상태 변경
-  const handleStatusChange = async order => {
-    if (order) {
-      await axiosInstance.patch(`/payment-service/payment/change-orderState?id=${order.paymentId}`);
+  const handleNavClick = path => {
+    if (location.pathname !== path) {
+      navigate(path);
     }
-    setIsOrderChanged(prev => !prev);
+  };
+
+  const handleLogoClick = () => {
+    // 로고 클릭 시 메인 허브 페이지로 이동 (기본 허브 대시보드)
+    navigate('/hub');
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.input}>
-        <button className={styles.value}>Public profile</button>
-        <button className={styles.value}>Account</button>
-        <button className={styles.value}>Appearance</button>
-        <button className={styles.value}>Accessibility</button>
-        <button className={styles.value}>Notifications</button>
-      </div>
+    <div style={{ display: 'flex', height: '100vh' }}>
+      <nav
+        className={`${styles.nav} ${!expanded ? styles.collapsed : ''}`}
+        data-expanded={expanded}
+      >
+        <div className={styles.nav__main}>
+          <div className={styles.nav__logo} onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+            <img src="/soboklogo.png" alt="Sobok Logo" />
+          </div>
 
-      <div className={styles.hubMainPage}>
-        <ShopOrderSection
-          handleStatusChange={handleStatusChange}
-          handleOpenOrderDetailModal={handleOpenOrderDetailModal}
-        />
-        <Divider />
-        <ShopDeliveryPendingSection
-          isOrderChanged={isOrderChanged}
-          handleOpenOrderDetailModal={handleOpenOrderDetailModal}
-        />
+          <span className={styles.nav__heading}>
+            <span className={styles.nav__heading_text}>Sobok Shop Menu</span>
+          </span>
+
+          <ul className={styles.nav__items}>
+            {navItems.map((item, index) => (
+              <li key={index} className={styles.nav__item}>
+                <button
+                  className={styles.nav__item_box}
+                  onClick={() => handleNavClick(item.path)}
+                  title={item.title}
+                  aria-current={location.pathname === item.path ? 'page' : undefined}
+                >
+                  <span className={styles.nav__item_icon}>{item.icon}</span>
+                  <span className={styles.nav__item_text}>{item.label}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className={styles.nav__bottom}>
+          <ul className={styles.nav__items}>
+            <li className={styles.nav__item}>
+              <button
+                className={styles.nav__item_box}
+                type="button"
+                aria-expanded={expanded}
+                onClick={toggleSize}
+              >
+                <span className={styles.nav__item_icon}>
+                  {expanded ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+                </span>
+                <span className={styles.nav__item_text}>
+                  {expanded ? '숨기기' : '펼치기'}
+                </span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      {/* 메인 콘텐츠 영역 */}
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          maxHeight: '100vh',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '20px',
+            backgroundColor: '#f5f5f5',
+          }}
+        >
+          <Outlet />
+        </div>
       </div>
     </div>
   );

@@ -67,7 +67,7 @@ function RiderMainDashboard() {
     <div className={styles.dashboardWrapper}>
       <div className={styles.header}>
         <div className={styles.logoBox}>
-          <img src="./soboklogo.png" width="300" height="300" aria-label="SOBOK 로고" />
+          <img src="/soboklogo.png" width="300" height="300" aria-label="SOBOK 로고" />
         </div>
         <h1>SOBOK 라이더 대시보드</h1>
         <p>원하는 메뉴를 선택하여 배달 업무를 시작하세요. 모든 기능을 한눈에 확인할 수 있습니다.</p>

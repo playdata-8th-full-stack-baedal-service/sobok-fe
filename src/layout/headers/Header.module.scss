@@ -23,6 +23,7 @@
 }
 
 .Logo {
+
   // position: absolute;
   transform: translateX(55%);  
   z-index: 10; 
@@ -38,5 +39,12 @@
   }
 }
 
+    &:hover {
+      transform: scale(1.05);
+    }
 
-
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+}

@@ -50,6 +50,73 @@ function EditableField({ label, value, onEditClick, disabled }) {
     return true;
   };
 
+  // 실제 프로덕션 수준의 한국 전화번호 형식 검증 함수
+  const isValidPhone = phone => {
+    // 숫자만 있는지 확인
+    if (!/^\d+$/.test(phone)) return false;
+
+    // 전화번호 길이 및 형식 검증
+    if (phone.length < 10 || phone.length > 11) return false;
+
+    // 한국 전화번호 패턴 검증
+    // 휴대폰: 010, 011, 016, 017, 018, 019로 시작하는 11자리
+    // 일반전화: 02, 031~070으로 시작하는 9~10자리
+    // 070: 인터넷전화 11자리
+    // 080: 무료전화 11자리
+    // 1588, 1577, 1566, 1544 등: 고객센터 번호 8자리
+
+    // 휴대폰 번호 (11자리)
+    if (phone.length === 11) {
+      // 010, 011, 016, 017, 018, 019로 시작
+      if (/^01[01678910]\d{8}$/.test(phone)) return true;
+      // 070 인터넷전화
+      if (/^070\d{8}$/.test(phone)) return true;
+      // 080 무료전화
+      if (/^080\d{8}$/.test(phone)) return true;
+      return false;
+    }
+
+    // 일반전화 (9~10자리)
+    if (phone.length === 9 || phone.length === 10) {
+      // 서울 02 (9자리: 02 + 7자리 또는 8자리)
+      if (phone.startsWith('02')) {
+        if (phone.length === 9 && /^02\d{7}$/.test(phone)) return true;
+        if (phone.length === 10 && /^02\d{8}$/.test(phone)) return true;
+        return false;
+      }
+
+      // 지역번호 031~070 (10자리)
+      if (phone.length === 10) {
+        if (/^0(3[1-9]|4[1-4]|5[1-5]|6[1-4])\d{7}$/.test(phone)) return true; // 031~064
+        if (/^0(505|70)\d{7}$/.test(phone)) return true; // 0505, 070
+        return false;
+      }
+
+      return false;
+    }
+
+    // 고객센터 번호 (8자리)
+    if (phone.length === 8) {
+      if (/^1(588|577|566|544|522|661|644|600|833|855|899)\d{4}$/.test(phone)) return true;
+      return false;
+    }
+
+    return false;
+  };
+
+  // 전화번호 입력 시 숫자만 허용하는 함수
+  const handlePhoneInputChange = inputValue => {
+    if (label === '전화번호') {
+      // 숫자만 추출
+      const numbersOnly = inputValue.replace(/[^\d]/g, '');
+      // 최대 11자리까지만 허용
+      const limitedValue = numbersOnly.slice(0, 11);
+      setEditValue(limitedValue);
+    } else {
+      setEditValue(inputValue);
+    }
+  };
+
   // 변경 버튼 활성화 조건
   const isChangeButtonEnabled = () => {
     if (disabled) return false;
@@ -59,46 +126,81 @@ function EditableField({ label, value, onEditClick, disabled }) {
       return editValue.trim() !== '' && isValidEmail(editValue) && editValue !== value;
     }
 
+    // 전화번호 필드인 경우 전화번호 형식 검증
+    if (label === '전화번호') {
+      return editValue.trim() !== '' && isValidPhone(editValue) && editValue !== value;
+    }
+
     // 다른 필드는 기존 로직 유지 (값이 변경되었고 비어있지 않은 경우)
     return editValue.trim() !== '' && editValue !== value;
   };
 
+  // 에러 메시지 표시 조건
+  const showEmailError = label === '이메일' && editValue.trim() !== '' && !isValidEmail(editValue);
+  const showPhoneError =
+    label === '전화번호' && editValue.trim() !== '' && !isValidPhone(editValue);
+
   return (
-    <div className={styles.fieldRow}>
-      <label htmlFor={label}>{label}</label>
-      <input
-        type="text"
-        value={editValue}
-        disabled={disabled}
-        id={label}
-        style={{
-          backgroundColor: disabled ? 'lightgray' : 'white',
-          borderColor:
-            label === '이메일' && editValue.trim() !== '' && !isValidEmail(editValue)
-              ? 'red'
-              : 'initial',
-        }}
-        onChange={e => setEditValue(e.target.value)}
-      />
-      {!disabled && (
-        <button
-          type="button"
-          onClick={() => onEditClick(editValue)}
-          disabled={!isChangeButtonEnabled()}
+    <div >
+      <div className={styles.fieldRow}>
+        <label htmlFor={label}>{label}</label>
+        <input
+          type="text"
+          value={editValue}
+          disabled={disabled}
+          id={label}
+          placeholder={label === '전화번호' ? '01012345678' : ''}
           style={{
-            opacity: isChangeButtonEnabled() ? 1 : 0.5,
-            cursor: isChangeButtonEnabled() ? 'pointer' : 'not-allowed',
+            backgroundColor: disabled ? 'lightgray' : 'white',
+            borderColor: showEmailError || showPhoneError ? 'red' : 'initial',
           }}
-        >
-          변경
-        </button>
-      )}
+          onChange={e => handlePhoneInputChange(e.target.value)}
+        />
+        {!disabled && (
+          <button
+            type="button"
+            onClick={() => onEditClick(editValue)}
+            disabled={!isChangeButtonEnabled()}
+            style={{
+              opacity: isChangeButtonEnabled() ? 1 : 0.5,
+              cursor: isChangeButtonEnabled() ? 'pointer' : 'not-allowed',
+            }}
+          >
+            변경
+          </button>
+        )}
+      </div>
 
       {/* 이메일 형식이 잘못된 경우 에러 메시지 표시 */}
-      {label === '이메일' && editValue.trim() !== '' && !isValidEmail(editValue) && (
+      {showEmailError && (
         <div className={styles.errormess}>
-          <p style={{ color: 'red', fontSize: '12px', marginTop: '4px', fontWeight : 'bold', marginLeft : '10px' }}>
+          <p
+            style={{
+              color: 'red',
+              fontSize: '10px',
+              marginTop: '7px',
+              fontWeight: 'bold',
+              marginLeft: '80px',
+            }}
+          >
             올바른 이메일 형식을 입력해주세요.
+          </p>
+        </div>
+      )}
+
+      {/* 전화번호 형식이 잘못된 경우 에러 메시지 표시 */}
+      {showPhoneError && (
+        <div className={styles.errormess}>
+          <p
+            style={{
+              color: 'red',
+              fontSize: '10px',
+              marginTop: '7px',
+              fontWeight: 'bold',
+              marginLeft: '80px',
+            }}
+          >
+            올바른 전화번호 형식을 입력해주세요. (예: 01012345678)
           </p>
         </div>
       )}
