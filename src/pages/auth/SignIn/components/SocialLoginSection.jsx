@@ -45,6 +45,7 @@ function SocialLoginSection() {
   return (
     <div className={styles.socialLogin}>
       <h3 className={styles.socialTitle}>소셜 로그인하기</h3>
+
       <img src={kakao} onClick={handleKakaoLogin} className={styles.kakaobutton} />
       <button className={styles.gsiMaterialButton} style={{ width: '300px' }} onClick={handleGoogleLogin} >
         <div className={styles.gsiMaterialButtonState} />

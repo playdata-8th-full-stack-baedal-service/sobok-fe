@@ -73,29 +73,51 @@ export const editPhone = createAsyncThunk(
       });
 
       if (!response.data.success) {
+        if (response.data.message === 'sql 제약조건 위반 에러 발생!') {
+          return thunkAPI.rejectWithValue('이미 사용중인 전화번호입니다.');
+        }
         return thunkAPI.rejectWithValue(response.data.message);
       }
 
       return phone;
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.response?.data?.message || '전화번호 수정에 실패했습니다.');
+      const msg = e.response?.data?.message;
+
+      if (msg === 'sql 제약조건 위반 에러 발생!') {
+        return thunkAPI.rejectWithValue('이미 사용중인 전화번호입니다.');
+      }
+
+      return thunkAPI.rejectWithValue(msg || '전화번호 수정에 실패했습니다.');
     }
   }
 );
 
-// 이메일 수정
-export const editEmail = createAsyncThunk('userInfo/editEmail', async ({ email }, thunkAPI) => {
-  try {
-    const response = await axiosInstance.post('/user-service/user/editEmail', { email });
-    if (!response.data.success) {
-      return thunkAPI.rejectWithValue(response.data.message);
-    }
 
-    return email;
-  } catch (e) {
-    return thunkAPI.rejectWithValue(e.response?.data?.message || '이메일 수정에 실패했습니다.');
+// 이메일 수정
+export const editEmail = createAsyncThunk(
+  'userInfo/editEmail',
+  async ({ email }, thunkAPI) => {
+    try {
+      const response = await axiosInstance.post('/user-service/user/editEmail', { email });
+      if (!response.data.success) {
+        if (response.data.message === 'sql 제약조건 위반 에러 발생!') {
+          return thunkAPI.rejectWithValue('이미 사용중인 이메일입니다.');
+        }
+        return thunkAPI.rejectWithValue(response.data.message);
+      }
+
+      return email;
+    } catch (e) {
+      const msg = e.response?.data?.message;
+
+      if (msg === 'sql 제약조건 위반 에러 발생!') {
+        return thunkAPI.rejectWithValue('이미 사용중인 이메일입니다.');
+      }
+
+      return thunkAPI.rejectWithValue(msg || '이메일 수정에 실패했습니다.');
+    }
   }
-});
+);
 
 const userInfoSlice = createSlice({
   name: 'userInfo',
@@ -163,13 +185,16 @@ const userInfoSlice = createSlice({
 
     // 이메일 수정
     builder
-      .addCase(editEmail.fulfilled, (state, action) => {
-        state.userInfo = { ...state.userInfo, email: action.payload };
-        state.errorMessage = null;
-      })
-      .addCase(editEmail.rejected, (state, action) => {
-        state.errorMessage = action.payload;
-      });
+  .addCase(editEmail.fulfilled, (state, action) => {
+    state.userInfo = { ...state.userInfo, email: action.payload };
+    state.errorMessage = null;
+  })
+  .addCase(editEmail.rejected, (state, action) => {
+    if (action.payload === '이미 사용중인 이메일입니다.') {
+      state.userInfo.email = state.userInfo.email; 
+    }
+    state.errorMessage = action.payload;
+  });
   },
 });
 
