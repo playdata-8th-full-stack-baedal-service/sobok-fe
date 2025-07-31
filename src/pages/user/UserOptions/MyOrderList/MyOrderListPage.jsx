@@ -28,7 +28,7 @@ function MyOrderListPage() {
 
   return (
     <div className={styles.myOrderPage}>
-      <h2>주문 내역</h2>
+      <h2 className={styles.title}> 주문 내역</h2>
       {orders.length === 0 ? (
         <div className={styles.noOrders}>주문 내역이 없습니다.</div>
       ) : (
