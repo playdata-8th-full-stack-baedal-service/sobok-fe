@@ -1,11 +1,15 @@
 /* eslint-disable react/function-component-definition */
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import ModalWrapper from '../../../../common/modals/ModalWrapper';
 import styles from './ShopOrderDetailModal.module.scss';
 import axiosInstance from '../../../../services/axios-config';
 import { formattedDate, orderStatus } from '../../../../common/utils/orderUtils';
+import Button from '../../../../common/components/Button';
+import { setRefreshAll, fetchPreparingOrders } from '../../../../store/hubSlice';
 
 const ShopOrderDetailModal = ({ onClose, order }) => {
+  const dispatch = useDispatch();
   const [orderDetail, setOrderDetail] = useState(null);
 
   useEffect(() => {
@@ -17,6 +21,16 @@ const ShopOrderDetailModal = ({ onClose, order }) => {
     };
     fetchOrderDetail();
   }, [order]);
+
+  const handleChangeOrderState = async () => {
+    const response = await axiosInstance.patch(
+      `/payment-service/payment/change-orderState?id=${order.paymentId}`
+    );
+    dispatch(setRefreshAll(true));
+    dispatch(fetchPreparingOrders({ orderState: 'PREPARING_INGREDIENTS' }));
+    dispatch(fetchPreparingOrders({ orderState: 'READY_FOR_DELIVERY' }));
+    onClose();
+  };
 
   console.log('orderDetail', orderDetail);
   return (
@@ -33,11 +47,7 @@ const ShopOrderDetailModal = ({ onClose, order }) => {
 
           {orderDetail?.items?.map((item, idx) => (
             <div key={item.cookId + idx} className={styles.menuItem}>
-              <div className={styles.cookName}>
-                {`요리 ${idx + 1} 이름`}
-                <br />
-                {item.cookName}
-              </div>
+              <div className={styles.cookName}>{item.cookName}</div>
               <div className={styles.ingredients}>
                 <strong>기본 재료</strong>
                 {item.baseIngredients.map(ingre => (
@@ -71,6 +81,14 @@ const ShopOrderDetailModal = ({ onClose, order }) => {
             <div>{orderDetail?.payMethod}</div>
             <div>결제 금액</div>
             <div>{orderDetail?.totalPrice?.toLocaleString() || ''}원</div>
+          </div>
+
+          <div className={styles.buttonContainer}>
+            {orderDetail?.orderState === 'PREPARING_INGREDIENTS' && (
+              <Button className={styles.checkout} onClick={handleChangeOrderState}>
+                주문 상태 변경
+              </Button>
+            )}
           </div>
         </div>
       </div>

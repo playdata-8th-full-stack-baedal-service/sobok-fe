@@ -1,17 +1,31 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Divider } from '@mui/material';
 import { openModal } from '../../../store/modalSlice';
 import axiosInstance from '../../../services/axios-config';
-import ShopOrderSection from '../Main/component/ShopOrderSection';
+import PrepareOrderSection from '../Main/component/PrepareOrderSection';
 import ShopDeliveryPendingSection from '../Main/component/ShopDeliveryPendingSection';
-import AnimatedText from '../MainText/AnimatedText';
-
+// eslint-disable-next-line import/no-unresolved, import/extensions
+import useToast from '@/common/hooks/useToast';
+import { setError } from '../../../store/hubSlice';
 
 function HubDashboard() {
   const dispatch = useDispatch();
+
+  const { showNegative } = useToast();
+  const { error, loading } = useSelector(state => state.hub);
+
   const [isOrderChanged, setIsOrderChanged] = useState(false);
 
+  // Error Toast
+  useEffect(() => {
+    if (error) {
+      showNegative(error);
+      dispatch(setError(null));
+    }
+  }, [error, showNegative, dispatch]);
+
+  // 주문 상세 모달
   const handleOpenOrderDetailModal = order => {
     dispatch(
       openModal({
@@ -24,7 +38,9 @@ function HubDashboard() {
   const handleStatusChange = async order => {
     if (order) {
       try {
-        await axiosInstance.patch(`/payment-service/payment/change-orderState?id=${order.paymentId}`);
+        await axiosInstance.patch(
+          `/payment-service/payment/change-orderState?id=${order.paymentId}`
+        );
         setIsOrderChanged(prev => !prev);
       } catch (err) {
         console.error('주문 상태 변경 실패:', err);
@@ -34,16 +50,9 @@ function HubDashboard() {
 
   return (
     <div>
-      <AnimatedText/>
-      <ShopOrderSection
-        handleStatusChange={handleStatusChange}
-        handleOpenOrderDetailModal={handleOpenOrderDetailModal}
-      />
+      <PrepareOrderSection />
       <Divider />
-      <ShopDeliveryPendingSection
-        isOrderChanged={isOrderChanged}
-        handleOpenOrderDetailModal={handleOpenOrderDetailModal}
-      />
+      <ShopDeliveryPendingSection />
     </div>
   );
 }

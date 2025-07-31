@@ -1,3 +1,4 @@
+/* eslint-disable react/function-component-definition */
 // ✅ ShopOrderSection.jsx 수정본
 import React, { useState, useEffect } from 'react';
 import { RefreshCcw } from 'lucide-react';

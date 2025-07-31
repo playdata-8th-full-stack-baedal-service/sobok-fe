@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import style from './HubInfoPage.module.scss';
 import axiosInstance from '../../../services/axios-config';
 import PasswordModal from './PasswordModal';
@@ -9,7 +9,7 @@ function HubInfoPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handlePasswordSubmit = async shopId => {
+  const handlePasswordSubmit = async () => {
     setLoading(true);
     setError('');
     try {
@@ -26,10 +26,13 @@ function HubInfoPage() {
     }
   };
 
+  useEffect(() => {
+    handlePasswordSubmit();
+  }, []);
 
   return (
     <div className={style.HubInfoPage}>
-      {shopInfo && (
+      {shopInfo != null ? (
         <>
           <h2 className={style.HubInfoPagetitle}>가게 정보</h2>
           <div className={style.Hubinfocontainer}>
@@ -95,6 +98,8 @@ function HubInfoPage() {
             </div>
           </div>
         </>
+      ) : (
+        <>로딩중입니다.</>
       )}
     </div>
   );

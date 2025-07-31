@@ -1,66 +1,41 @@
 /* eslint-disable react/function-component-definition */
 import React, { useEffect, useState, useCallback } from 'react';
-import axiosInstance from '../../../../services/axios-config';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from '../MainPage.module.scss';
 import OrderList from './OrderList';
+import { fetchPreparingOrders, setCompleteMax } from '../../../../store/hubSlice';
+import PagingFooter from './PagingFooter';
 
-const ShopDeliveryPendingSection = ({ isOrderChanged, handleOpenOrderDetailModal }) => {
+const ShopDeliveryPendingSection = () => {
+  const dispatch = useDispatch();
   const [orders, setOrders] = useState([]);
+  const [max, setMax] = useState(Number.MAX_SAFE_INTEGER);
+
   const [pageNo, setPageNo] = useState(1);
-  const [isFullLoaded, setIsFullLoaded] = useState(false);
-  const numOfRows = 3;
-  const [loading, setLoading] = useState(false);
+  const [numOfRows, setNumOfRows] = useState(5);
 
-  // 완료된 주문 조회
-  const fetchCompletedOrders = useCallback(async () => {
-    try {
-      const response = await axiosInstance.get('/shop-service/shop/filtering-order', {
-        params: {
-          pageNo,
-          numOfRows,
-          orderState: 'READY_FOR_DELIVERY',
-        },
-      });
-
-      const data = response?.data?.data ?? []; // null이면 빈 배열로 처리
-
-      if (pageNo === 1) {
-        setOrders(data);
-      } else {
-        setOrders(prev => [...prev, ...data]);
-      }
-
-      if (data.length < numOfRows) {
-        setIsFullLoaded(true);
-      }
-    } catch (error) {
-      console.error('주문 조회 중 에러 발생:', error);
-      setOrders([]); // 에러 시도 빈 배열로 초기화
-      setIsFullLoaded(true); // 더 이상 로딩하지 않도록 처리
-    }
-  }, [pageNo, numOfRows]);
+  const { completeOrders } = useSelector(state => state.hub);
 
   useEffect(() => {
-    setLoading(true);
-    fetchCompletedOrders().finally(() => {
-      setLoading(false);
-    });
-  }, [pageNo, fetchCompletedOrders]);
+    dispatch(
+      fetchPreparingOrders({
+        orderState: 'READY_FOR_DELIVERY',
+      })
+    );
+  }, [dispatch]);
 
   useEffect(() => {
-    setIsFullLoaded(false);
-    if (pageNo !== 1) {
-      setPageNo(1);
-    } else {
-      setLoading(true);
-      fetchCompletedOrders().finally(() => {
-        setLoading(false);
-      });
-    }
-  }, [isOrderChanged, fetchCompletedOrders, pageNo]);
+    if (completeOrders === null || completeOrders.length === 0) return;
 
-  const handleLoadMore = () => {
-    setPageNo(prev => prev + 1);
+    setOrders(completeOrders.slice((pageNo - 1) * numOfRows, pageNo * numOfRows));
+    setMax(Math.ceil(completeOrders.length / numOfRows));
+  }, [completeOrders, pageNo, numOfRows]);
+
+  // 페이지 변경 핸들러
+  const changePageNo = page => {
+    if (page < 1) return;
+    if (page > max) return;
+    setPageNo(page);
   };
 
   return (
@@ -68,13 +43,8 @@ const ShopDeliveryPendingSection = ({ isOrderChanged, handleOpenOrderDetailModal
       <div className={styles.searchBar}>
         <h2>완료된 주문</h2>
       </div>
-      <OrderList
-        loading={loading}
-        orders={orders}
-        isFullLoaded={isFullLoaded}
-        onLoadMore={handleLoadMore}
-        onOrderDetailClick={handleOpenOrderDetailModal}
-      />
+      <OrderList orders={orders} />
+      <PagingFooter pageNo={pageNo} setPageNo={changePageNo} />
     </main>
   );
 };
