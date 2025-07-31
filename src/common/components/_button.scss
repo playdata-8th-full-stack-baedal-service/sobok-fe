@@ -71,6 +71,7 @@
   border: 1px solid black;
   align-items: center;
   align-content: center;
+  cursor: pointer;
 
   &:hover {
     background-color: #000;
@@ -91,6 +92,8 @@
   @extend .button_BASIC;
   padding: 0 9px;
   font-size: 15px;
+    cursor: pointer;
+
 
   &:hover {
     background-color: inherit;
@@ -119,6 +122,8 @@
   letter-spacing: 2px;
   background-color: transparent;
   box-shadow: 1px 1px 12px #000;
+    cursor: pointer;
+
 
   &::before {
     content: '';
@@ -151,6 +156,8 @@
   width: 100%;
   // margin-top: 10px;
   box-shadow: 1px 3px 1px #000;
+    cursor: pointer;
+
 }
 
 /* =======================
@@ -164,6 +171,7 @@
   height: auto;
   font-weight: 500;
   padding: 5px 10px;
+    cursor: pointer;
 }
 
 /* =======================
