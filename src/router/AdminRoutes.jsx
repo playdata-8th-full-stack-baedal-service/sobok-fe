@@ -10,18 +10,21 @@ import RiderListPage from '../pages/admin/RiderList/RiderListPage';
 
 import AdminHeader from '../layout/headers/AdminHeader';
 import RecipeRegistPage from '../pages/admin/RecipeRegeister/RecipeRegistPage';
+import AdminDashborad from '../pages/admin/AdminDashborad/AdminDashborad';
 
 function AdminRoutes() {
   return (
     <>
       <AdminHeader />
       <Routes>
-        <Route path="" element={<MainPage />} />
-        <Route path="all-order" element={<AllOrderPage />} />
-        <Route path="hub-register" element={<HubRegisterPage />} />
-        <Route path="ingredient" element={<RecipeRegistPage />} />
-        <Route path="hub-list" element={<HubListPage />} />
-        <Route path="rider-list" element={<RiderListPage />} />
+        <Route path="/" element={<MainPage />}>
+          <Route index element={<AdminDashborad />} />
+          <Route path="all-order" element={<AllOrderPage />} />
+          <Route path="hub-register" element={<HubRegisterPage />} />
+          <Route path="ingredient" element={<RecipeRegistPage />} />
+          <Route path="hub-list" element={<HubListPage />} />
+          <Route path="rider-list" element={<RiderListPage />} />
+        </Route>
       </Routes>
     </>
   );
