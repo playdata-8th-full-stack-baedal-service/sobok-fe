@@ -50,9 +50,16 @@ function EditableField({ label, value, onEditClick, onDeleteClick, disabled }) {
       onEditClick(editValue);
     }
     setIsEditing(false);
+
   };
 
+  // 에러 메시지 표시 조건
+  const showEmailError = label === '이메일' && editValue.trim() !== '' && !isValidEmail(editValue);
+  const showPhoneError =
+    label === '전화번호' && editValue.trim() !== '' && !isValidPhone(editValue);
+
   return (
+
     <div className={styles.fieldRow}>
       <label htmlFor={label}>{label}</label>
       <input
@@ -80,17 +87,37 @@ function EditableField({ label, value, onEditClick, onDeleteClick, disabled }) {
         </button>
       )}
       {label === '이메일' && isEditing && editValue.trim() !== '' && !isValidEmail(editValue) && (
+
         <div className={styles.errormess}>
           <p
             style={{
               color: 'red',
+
               fontSize: '12px',
               marginTop: '4px',
               fontWeight: 'bold',
               marginLeft: '10px',
+
             }}
           >
             올바른 이메일 형식을 입력해주세요.
+          </p>
+        </div>
+      )}
+
+      {/* 전화번호 형식이 잘못된 경우 에러 메시지 표시 */}
+      {showPhoneError && (
+        <div className={styles.errormess}>
+          <p
+            style={{
+              color: 'red',
+              fontSize: '10px',
+              marginTop: '7px',
+              fontWeight: 'bold',
+              marginLeft: '80px',
+            }}
+          >
+            올바른 전화번호 형식을 입력해주세요. (예: 01012345678)
           </p>
         </div>
       )}

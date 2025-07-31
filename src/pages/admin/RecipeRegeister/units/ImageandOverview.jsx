@@ -5,18 +5,18 @@ import { clearCategory } from '@/store/categorySlice';
 import style from '../RecipeRegistPage.module.scss';
 
 function ImageandOverview({ formData, onFileSelect, onChange, resetSignal }) {
-  const [imagePreview, setImagePreview] = useState(formData.thumbnailUrl || '/photodefault.svg');
+  const [imagePreview, setImagePreview] = useState(formData.thumbnailUrl || '/Sobokcookimg.png');
   const dispatch = useDispatch();
   const selectedCategory = useSelector(state => state.category.selected);
 
   useEffect(() => {
-    setImagePreview(formData.thumbnailUrl || '/photodefault.svg');
+    setImagePreview(formData.thumbnailUrl || '/Sobokcookimg.png');
   }, [formData.thumbnailUrl]);
 
   // resetSignal이 변경되면 이미지를 기본 이미지로 초기화
   useEffect(() => {
     if (resetSignal > 0) {
-      setImagePreview('/photodefault.svg');
+      setImagePreview('/Sobokcookimg.png');
     }
   }, [resetSignal]);
 

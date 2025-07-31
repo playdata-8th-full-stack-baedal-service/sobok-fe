@@ -14,7 +14,7 @@ function AllOrderPage() {
   // 주문 내역 조회
   useEffect(() => {
     const fetchOrders = async () => {
-      const response = await axiosInstance.get('/admin-service/admin/orders', {
+      const response = await axiosInstance.get('/payment-service/payment/all', {
         params: {
           page: pageNo,
           size: numOfRows,

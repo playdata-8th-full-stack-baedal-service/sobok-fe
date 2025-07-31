@@ -1,3 +1,4 @@
+/* eslint-disable react/function-component-definition */
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '@/services/axios-config';
@@ -19,9 +20,9 @@ const PostDetailPage = () => {
   const currentUserId = localStorage.getItem('USER_ID');
 
   // // 해당 요리 페이지로 이동
-  // const handleCookPage = () => {
-  //   navigate('/product?id=');
-  // };
+  const handleCookPage = () => {
+    navigate(`/product?id=${post.cookId}`);
+  };
 
   // 게시글 수정
   const handleEditPost = () => {
@@ -78,6 +79,17 @@ const PostDetailPage = () => {
     }
   };
 
+  const fetchCheckLike = async () => {
+    try {
+      const res = await axiosInstance.get(`/user-service/user/check-like?postId=${id}`);
+      setIsLiked(res.data.data);
+    } catch (err) {
+      const status = err.response?.status;
+      if (status === 404) setError('존재하지 않는 게시글입니다.');
+      else setError('게시글을 불러오는 중 오류가 발생했습니다.');
+    }
+  };
+
   // 게시글 상세 조회
   useEffect(() => {
     const fetchPostDetail = async () => {
@@ -92,6 +104,7 @@ const PostDetailPage = () => {
     };
 
     fetchPostDetail();
+    fetchCheckLike();
   }, [id]);
 
   if (error) return <div className={styles.error}>{error}</div>;
@@ -107,9 +120,12 @@ const PostDetailPage = () => {
       {/* 상단 영역 */}
       <div className={styles.header}>
         <div className={styles.leftTop}>
-          <p>
+          {/* <p>
             <strong>요리 이름</strong> : {post.cookName}
-          </p>
+          </p> */}
+          <Button type="button" variant="BASIC" className="flexible" onClick={handleCookPage}>
+            {post.cookName}
+          </Button>
           <p>
             <strong>제목</strong> : {post.title}
           </p>

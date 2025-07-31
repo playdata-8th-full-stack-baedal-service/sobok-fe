@@ -54,7 +54,7 @@ export const registerCart = createAsyncThunk('product/register-cart', async (car
 
 export const isBookmarked = createAsyncThunk('product/is-bookmarked', async (id, thunkAPI) => {
   try {
-    if (localStorage.getItem('ACCESS_TOKEN') === null) return false;
+    if (localStorage.getItem('ACCESS_TOKEN') === null) return thunkAPI.rejectWithValue('error');
     const response = await axiosInstance.get(`/user-service/user/getBookmark/${id}`);
     console.log(response.data.data);
     return response.data.data;
