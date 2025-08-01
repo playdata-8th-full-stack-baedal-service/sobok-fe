@@ -238,6 +238,7 @@
 
     .slideInfoSection {
       opacity: 1;
+      display: inline-block; /* 내용 크기에 맞춤 */
       transform: translateY(0);
       background-color: rgba(255, 255, 255, 0.1); /* 반투명 배경색 */
       backdrop-filter: blur(5px);
@@ -258,7 +259,7 @@
     position: absolute;
     bottom: 20px;
     left: 20px;
-    right: 20px;
+    // right: 20px;
     padding: 15px;
     border-radius: 10px;
     opacity: 0;
@@ -686,6 +687,8 @@
 
 .bestPicktitle {
   margin-bottom: 20px;
+  font-weight: 700;
+  font-size: 25px;
 }
 
 .bestimg {
