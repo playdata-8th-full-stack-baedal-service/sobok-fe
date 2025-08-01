@@ -47,7 +47,7 @@ const PrepareOrderSection = () => {
           isPolling: true,
         })
       );
-    }, 5000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [dispatch]);
@@ -96,6 +96,10 @@ const PrepareOrderSection = () => {
 
   // 페이지 변경 핸들러
   const changePageNo = page => {
+    if (orders === null || orders.length === 0) {
+      setPageNo(1);
+      return;
+    }
     if (page < 1) return;
     if (page > max) return;
     setPageNo(page);
