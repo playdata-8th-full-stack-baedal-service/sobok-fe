@@ -52,3 +52,13 @@
     }
   }
 }
+
+.mainlist {
+  display: grid;
+  grid-template-columns: 0.5fr 1.2fr 2fr 2fr 1.5fr 1.5fr auto; // 총 7열: 번호, 이름, 전화, 고유번호, 상태, 아이디, 버튼
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background-color: #fff;
+}

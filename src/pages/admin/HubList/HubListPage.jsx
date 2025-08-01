@@ -50,6 +50,13 @@ function HubListPage() {
     <div className={style.container}>
       <div className={style.titleandbutton}>
         <h2>가게 목록</h2>
+        <div className={style.storelist}>
+          <p>번호</p>
+          <p>이름</p>
+          <p>주소</p>
+          <p>점주</p>
+          <p>번호</p>
+        </div>
       </div>
       {hubList.length === 0 ? (
         <p>가게 정보를 불러오는 중 ~</p>

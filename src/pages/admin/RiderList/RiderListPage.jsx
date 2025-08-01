@@ -41,6 +41,14 @@ function RiderListPage() {
     <div>
       <div className={styles.container}>
         <h2>배달원 신청 목록</h2>
+        <div className={styles.mainlist}>
+          <p>번호</p>
+          <p>이름</p>
+          <p>전화번호</p>
+          <p>면허번호</p>
+          <p>아이디</p>
+          <p>활성상태</p>
+        </div>
         {pendingRiders.length === 0 ? (
           <p>신청한 배달원이 없습니다.</p>
         ) : (
@@ -63,6 +71,14 @@ function RiderListPage() {
         <hr />
 
         <h2>배달원 목록</h2>
+        <div className={styles.mainlist}>
+          <p>번호</p>
+          <p>이름</p>
+          <p>전화번호</p>
+          <p>면허번호</p>
+          <p>아이디</p>
+          <p>활성상태</p>
+        </div>
         {allRiders.length === 0 ? (
           <p>등록된 배달원이 없습니다.</p>
         ) : (
