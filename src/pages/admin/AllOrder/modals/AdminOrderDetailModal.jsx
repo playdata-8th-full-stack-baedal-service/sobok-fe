@@ -4,6 +4,7 @@
 /* eslint-disable react/function-component-definition */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import ModalWrapper from '@/common/modals/ModalWrapper';
 import styles from './AdminOrderDetailModal.module.scss';
 import OrderUserInfo from './OrderUserInfo';
@@ -12,23 +13,37 @@ import OrderShopInfo from './OrderShopInfo';
 import OrderRiderInfo from './OrderRiderInfo';
 import OrderCookList from './OrderCookList';
 import OrderHeaderInfo from './OrderHeaderInfo';
+import axiosInstance from '../../../../services/axios-config';
 
 const AdminOrderDetailModal = ({ onClose, order }) => {
+  const [orderDetail, setOrderDetail] = useState({});
+
+  useEffect(() => {
+    const fetchOrderDetail = async () => {
+      const response = await axiosInstance.get(`/payment-service/payment/all/${order.paymentId}`);
+      console.log(response.data.data);
+      setOrderDetail(response.data.data);
+    };
+    fetchOrderDetail();
+  }, []);
+
   return (
-    <ModalWrapper title="주문 내역" onClose={onClose} size="lg">
-      <div>
+    <ModalWrapper title="주문 내역" onClose={onClose} size="big">
+      <div className={styles.adminOrderDetailModal}>
         <OrderHeaderInfo
           orderId={order.orderId}
           createdAt={order.createdAt}
-          orderState={order.orderState}
+          orderState={orderDetail.orderState}
         />
-        <div className={styles.orderDetailBody}>
-          <OrderUserInfo {...order} />
-          <OrderPaymentInfo {...order} />
-          <OrderShopInfo {...order} />
-          <OrderRiderInfo {...order} />
-          <OrderCookList cooks={order.cooks} />
-        </div>
+        {orderDetail && (
+          <div className={styles.orderDetailBody}>
+            <OrderUserInfo {...orderDetail} />
+            <OrderPaymentInfo {...orderDetail} />
+            <OrderShopInfo {...orderDetail} />
+            <OrderRiderInfo {...orderDetail} />
+            <OrderCookList cooks={orderDetail.cooks} />
+          </div>
+        )}
       </div>
     </ModalWrapper>
   );

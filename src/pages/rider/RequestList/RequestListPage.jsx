@@ -70,6 +70,7 @@ function RequestListPage() {
       }
       await getDistance();
     };
+    setRefresh(false);
 
     fetchData();
   }, [pageNo, numOfRows, position, refresh]);
@@ -78,7 +79,6 @@ function RequestListPage() {
   const handleRefresh = () => {
     if (pageNo === 1 && isEnd) {
       setRefresh(true);
-      setPageNo(1);
     } else {
       setRefresh(true);
       setPageNo(1);

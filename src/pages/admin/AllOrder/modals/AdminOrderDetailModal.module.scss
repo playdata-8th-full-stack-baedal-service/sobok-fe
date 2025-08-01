@@ -1,11 +1,16 @@
+.adminOrderDetailModal {
+  width: 120%;
+}
 .orderDetailHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 1rem;
   border-bottom: 1px solid #ddd;
   background-color: #fafafa;
   font-size: 14px;
+  margin-top: 4rem;
+  width: 100%;
 }
 
 .orderMeta {
@@ -153,23 +158,20 @@
 
         .ingredientList {
           display: flex;
-          gap: 4px;
+          flex-direction: column;
 
           span {
             font-size: 12px;
             color: #202020;
-            line-height: 1.4;
           }
 
           .ingredientBaseItem {
-            border: 1.6px solid #888;
-            padding: 4px 8px;
+            padding: 4px;
             border-radius: 8px;
           }
 
           .ingredientAddItem {
-            border: 1.6px solid #888;
-            padding: 4px 8px;
+            padding: 4px;
             border-radius: 8px;
           }
         }

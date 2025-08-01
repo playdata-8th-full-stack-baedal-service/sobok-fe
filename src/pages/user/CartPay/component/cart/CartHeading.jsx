@@ -15,9 +15,7 @@ const CartHeading = () => {
   return (
     <div className={`${styles.cartHeading} ${styles.heading}`}>
       <h2>장바구니</h2>
-      <button type="button" onClick={handlePayPop}>
-        결제하기
-      </button>
+      
     </div>
   );
 };

@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { calculateItemTotal } from '../../../../../common/utils/cartUtils';
 import useToast from '@/common/hooks/useToast';
 import { deleteCartItem, editCartItemCount, toggleSelect } from '../../../../../store/cartPaySlice';
@@ -11,6 +12,8 @@ function CartItem({ item }) {
   const dispatch = useDispatch();
   const { showNegative, showInfo } = useToast();
   const { loading, selectedCartItemIds } = useSelector(state => state.pay);
+
+  const navigate = useNavigate();
 
   // 카트 아이템 선택
   const handleSelectItem = () => {
@@ -47,7 +50,11 @@ function CartItem({ item }) {
 
       <CheckBox checked={selectedCartItemIds.includes(item.id)} onChange={handleSelectItem} />
 
-      <img src={item.thumbnail} alt={item.cookName} />
+      <img
+        src={item.thumbnail}
+        alt={item.cookName}
+        onClick={() => navigate(`/product?id=${item.cookId}`)}
+      />
 
       <div>
         <h3>{item.cookName}</h3>

@@ -7,7 +7,7 @@ function OrderCookList({ cooks }) {
   return (
     <div className={styles.cookDetailBodyRow}>
       <span className={styles.cookDetailTitle}>주문 상품</span>
-      {cooks.map((item, idx) => (
+      {cooks?.map((item, idx) => (
         <div key={item.cookName + idx} className={styles.cookItem}>
           <div className={styles.cookTitle}>
             {idx + 1}. {item.cookName}
@@ -30,7 +30,7 @@ function OrderCookList({ cooks }) {
             <div className={styles.ingredientBox}>
               <span className={styles.ingredientTitle}>추가 식재료</span>
               <div className={styles.ingredientList}>
-                {item.additionalIngredients.length > 0 ? (
+                {item.additionalIngredients &&item.additionalIngredients.length > 0 ? (
                   item.additionalIngredients.map((ingredient, i) => (
                     <span key={`add-${ingredient}-${i}`} className={styles.ingredientAddItem}>
                       {ingredient}

@@ -20,9 +20,8 @@ function AllOrderPage() {
           size: numOfRows,
         },
       });
-      console.log(response.data.data);
-      setOrders(prev => [...prev, ...response.data.data.content]);
-      if (response.data.data.content.length < numOfRows) {
+      setOrders(prev => [...prev, ...response.data.data]);
+      if (response.data.data.length < numOfRows) {
         setIsFullLoaded(true);
       }
     };

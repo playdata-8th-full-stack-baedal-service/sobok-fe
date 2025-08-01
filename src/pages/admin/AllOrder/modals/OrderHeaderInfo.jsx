@@ -6,6 +6,7 @@ import styles from './AdminOrderDetailModal.module.scss';
 import { formattedDate, orderStatus } from '@/common/utils/orderUtils';
 
 function OrderHeaderInfo({ orderId, createdAt, orderState }) {
+  console.log(orderState);
   return (
     <div className={styles.orderDetailHeader}>
       <div className={styles.orderMeta}>
