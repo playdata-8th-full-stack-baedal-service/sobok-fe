@@ -24,10 +24,28 @@
   display: flex;
   gap: 15px;
   justify-content: center;
+
+  button {
+    
+    &:hover {
+        background-color: black;
+        color: white;
+        border-radius: 0px;
+    }
+  }
 }
 
 .secondLine {
   display: flex;
   gap: 15px;
   justify-content: center;
+
+  button {
+    
+    &:hover {
+        background-color: black;
+        color: white;
+        border-radius: 0px;
+    }
+  }
 }

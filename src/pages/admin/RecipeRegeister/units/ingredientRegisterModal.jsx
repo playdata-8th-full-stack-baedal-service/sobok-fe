@@ -128,6 +128,7 @@ function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
               onChange={handleInputChange}
               placeholder="가격을 입력하세요"
               min="0"
+              style={{height: '35px'}}
             />
           </div>
 
