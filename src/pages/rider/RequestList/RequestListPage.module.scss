@@ -62,6 +62,7 @@
   .orderItem {
     background-color: #fff;
     border-radius: 1rem;
+    border: 1px solid #ccc;
     padding: 1.2rem 1.6rem;
     box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.05);
     display: flex;
@@ -71,6 +72,23 @@
 
     &:hover {
       box-shadow: 0 0.5rem 1.2rem rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .highligthOrderItem {
+    border: 3px solid #007bff;
+    animation: blinkBorder 3s infinite;
+  }
+
+  @keyframes blinkBorder {
+    0% {
+      border-color: #007bff;
+    }
+    50% {
+      border-color: #007bff57;
+    }
+    100% {
+      border-color: #007bff;
     }
   }
 

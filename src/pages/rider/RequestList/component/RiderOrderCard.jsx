@@ -23,7 +23,9 @@ const RiderOrderCard = ({ order, fetchOrders, accepted }) => {
   };
 
   return (
-    <div className={styles.orderItem}>
+    <div
+      className={`${styles.orderItem} ${order.orderState === 'DELIVERING' ? styles.highligthOrderItem : ''}`}
+    >
       <div className={styles.orderInfo}>
         <h3>{order.shopName}</h3>
         <span>{order.orderId.toUpperCase()}</span>
