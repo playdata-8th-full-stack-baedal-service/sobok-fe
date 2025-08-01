@@ -8,6 +8,18 @@
   font-family: 'SobokFont', sans-serif;
   min-height: 1000px;
 
+  .clickMasking {
+    position: absolute;
+    z-index: 3;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background-color: rgba(255, 255, 255, 0.05); /* 너무 어두운 검정보단 살짝 흰 느낌이 낫다 */
+    backdrop-filter: blur(3px); /* 핵심! 아크릴 느낌 */
+    -webkit-backdrop-filter: blur(3px); /* 사파리용 */
+  }
+
   // CartSection 정의
   .isPresent {
     padding-right: 30px;
@@ -21,12 +33,31 @@
 
     .cartHeading {
       display: flex;
-      align-items: end;
+      align-items: center;
       gap: 10px;
 
       span {
         font-size: 1.1rem;
         opacity: 90%;
+      }
+    }
+
+    .btnPay {
+      background-color: #fff; // Emerald
+      color: black;
+      border: 1px solid black;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.2s ease;
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: bold;
+      margin : 1rem auto;
+
+      &:hover {
+        background-color: #000;
+        color: #fff;
       }
     }
 
@@ -53,7 +84,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      height: 100%;
+      height: 70vh;
       overflow: scroll;
       scrollbar-width: none; // Firefox
       -ms-overflow-style: none; // IE/Edge

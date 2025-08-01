@@ -47,13 +47,28 @@ const PrepareOrderSection = () => {
           isPolling: true,
         })
       );
-    }, 5000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [dispatch]);
 
   useEffect(() => {
-    if (!pollingOrders || !pendingOrders) return;
+    if (pollingOrders === null && pendingOrders !== null) {
+      setOrders([]);
+      return;
+    }
+
+    if (pendingOrders === null && pollingOrders !== null) {
+      setOrders(pollingOrders);
+      setPageNo(1);
+      return;
+    }
+
+    if (pollingOrders === null && pendingOrders === null) {
+      setOrders([]);
+      return;
+    }
+
     if (pollingOrders.length === 0 && pendingOrders.length === 0) {
       setOrders([]);
       return;
@@ -81,6 +96,10 @@ const PrepareOrderSection = () => {
 
   // 페이지 변경 핸들러
   const changePageNo = page => {
+    if (orders === null || orders.length === 0) {
+      setPageNo(1);
+      return;
+    }
     if (page < 1) return;
     if (page > max) return;
     setPageNo(page);
