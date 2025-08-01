@@ -7,13 +7,21 @@ import styles from '../../CartPayPage.module.scss';
 import { deleteAllCartItem, updateSelectedCartItems } from '../../../../../store/cartPaySlice';
 import CheckBox from '../common/CheckBox';
 import Button from '../../../../../common/components/Button';
+import { flipPayVisible } from '../../../../../store/cartPaySlice';
 
 const CartAllSelect = () => {
   const dispatch = useDispatch();
   const { selectedCartItemIds, cartItems } = useSelector(state => state.pay);
+  const { isPayVisible } = useSelector(state => state.pay);
 
   const handleAllDelete = () => {
     dispatch(deleteAllCartItem({ selectedIds: selectedCartItemIds }));
+  };
+
+  const handlePayPop = () => {
+    if (!isPayVisible) {
+      dispatch(flipPayVisible());
+    }
   };
 
   return (
@@ -30,6 +38,7 @@ const CartAllSelect = () => {
         <span>
           전체 선택 ({selectedCartItemIds.length} / {cartItems.length})
         </span>
+        
       </div>
       <div className={styles.deleteButton} onClick={handleAllDelete}>
         <span>선택 항목 취소 </span>

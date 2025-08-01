@@ -6,11 +6,11 @@ function OrderUserInfo({ loginId, nickname, phone, roadFull, address }) {
   return (
     <div className={styles.DetailBodyRow}>
       <span>주문자 정보</span>
-      <span>아이디 : {loginId}</span>
-      <span>닉네임 : {nickname}</span>
-      <span>전화번호 : {phone}</span>
+      <span>아이디 : {loginId ?? ''}</span>
+      <span>닉네임 : {nickname ?? ''}</span>
+      <span>전화번호 : {phone ?? ''}</span>
       <span>
-        주소 : {roadFull} {address}
+        주소 : {roadFull ?? ''} {address ?? ''}
       </span>
     </div>
   );

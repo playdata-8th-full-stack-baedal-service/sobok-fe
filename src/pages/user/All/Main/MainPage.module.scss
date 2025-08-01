@@ -317,9 +317,16 @@
 }
 
 .categorytopselection {
+  margin-top: 5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  h3 {
+    font-size: 2rem;
+    font-weight: bold;
+
+  }
 }
 
 .switch {
@@ -685,7 +692,10 @@
 }
 
 .bestPicktitle {
-  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 2rem;
+  margin-bottom: 3rem;
+  
 }
 
 .bestimg {
