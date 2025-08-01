@@ -53,7 +53,22 @@ const PrepareOrderSection = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!pollingOrders || !pendingOrders) return;
+    if (pollingOrders === null && pendingOrders !== null) {
+      setOrders([]);
+      return;
+    }
+
+    if (pendingOrders === null && pollingOrders !== null) {
+      setOrders(pollingOrders);
+      setPageNo(1);
+      return;
+    }
+
+    if (pollingOrders === null && pendingOrders === null) {
+      setOrders([]);
+      return;
+    }
+
     if (pollingOrders.length === 0 && pendingOrders.length === 0) {
       setOrders([]);
       return;
