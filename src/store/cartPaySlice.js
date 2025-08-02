@@ -137,6 +137,8 @@ const paySlice = createSlice({
     orderId: '',
     cartIngredientStockList: [],
     shopList: [],
+    shopInfo: [],
+    shopError: null,
   },
   reducers: {
     resetError: state => {
@@ -306,6 +308,11 @@ const paySlice = createSlice({
         state.loading = false;
         state.error = null;
         state.orderer = action.payload;
+        // 주문자 정보가 로드되면 첫 번째 주소를 기본 선택
+        if (action.payload?.addresses && action.payload.addresses.length > 0) {
+          state.selectedAddressId = action.payload.addresses[0].id;
+          console.log('초기 selectedAddressId 설정:', action.payload.addresses[0].id);
+        }
       })
       .addCase(fetchOrdererInfo.rejected, (state, action) => {
         state.loading = false;
@@ -323,16 +330,17 @@ const paySlice = createSlice({
     // 가게 정보 가져오기
     builder.addCase(fetchShopInfo.pending, state => {
       state.loading = true;
-      state.error = null;
+      state.shopError = null;
     });
     builder.addCase(fetchShopInfo.fulfilled, (state, action) => {
       state.loading = false;
-      state.error = null;
+      state.shopError = null;
       state.shopInfo = action.payload;
     });
-    builder.addCase(fetchShopInfo.rejected, state => {
+    builder.addCase(fetchShopInfo.rejected, (state, action) => {
       state.loading = false;
       state.shopInfo = [];
+      state.shopError = action.payload;
     });
   },
 });

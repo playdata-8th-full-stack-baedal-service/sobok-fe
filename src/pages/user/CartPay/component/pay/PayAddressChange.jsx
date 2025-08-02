@@ -21,8 +21,9 @@ const PayAddressChange = ({ onClose }) => {
                 type="button"
                 className={styles.addressModal__button}
                 onClick={() => {
-                  if (selectedAddressId !== idx) {
-                    dispatch(setSelectedAddressId(idx));
+                  console.log('선택한 주소 ID:', address.id);
+                  if (selectedAddressId !== address.id) {
+                    dispatch(setSelectedAddressId(address.id));
                     onClose();
                   }
                 }}
