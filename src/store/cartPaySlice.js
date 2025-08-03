@@ -111,7 +111,10 @@ export const fetchShopInfo = createAsyncThunk(
           cartIngredientStockList,
         }
       );
-      console.log(response.data.data);
+
+      console.log('=== 가게 정보 조회 응답 ===');
+      console.log('응답 데이터:', response.data);
+
       return response.data.data;
     } catch (err) {
       const message = err.response?.data?.message || '오류';

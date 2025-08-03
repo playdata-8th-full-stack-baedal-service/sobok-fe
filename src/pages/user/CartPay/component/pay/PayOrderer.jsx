@@ -39,7 +39,7 @@ const PayOrderer = () => {
 
           {/* 가게 정보 */}
           <h4>배달 가능한 가게 정보</h4>
-          <div style={{ display: 'flex', color: '#61a059' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {(() => {
               if (loading) {
                 return <div>가게 정보를 조회 중입니다...</div>;
@@ -52,13 +52,30 @@ const PayOrderer = () => {
                 );
               }
               if (shopInfo && shopInfo.length > 0) {
-                return shopInfo.map((shop, index) =>
-                  index === 0 ? (
-                    <div key={shop.shopId}>{shop.shopName}</div>
-                  ) : (
-                    <div key={shop.shopId}>,&nbsp;{shop.shopName}</div>
-                  )
-                );
+                return shopInfo.map(shop => (
+                  <div
+                    key={shop.shopId}
+                    style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '5px' }}
+                  >
+                    <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>{shop.shopName}</div>
+                    {shop.satisfiable ? (
+                      <div style={{ color: '#61a059' }}>주문 가능</div>
+                    ) : (
+                      <div style={{ color: 'crimson' }}>
+                        <div style={{ marginBottom: '5px' }}>재료 부족으로 주문 불가</div>
+                        <div style={{ fontSize: '14px' }}>
+                          부족한 재료:
+                          {shop.missingIngredients.map((ingredient, idx) => (
+                            <span key={ingredient.ingredientId}>
+                              {idx > 0 ? ', ' : ' '}
+                              {ingredient.ingredientName} (보유: {ingredient.quantity})
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ));
               }
               return (
                 <div style={{ color: 'crimson', fontWeight: '500' }}>
