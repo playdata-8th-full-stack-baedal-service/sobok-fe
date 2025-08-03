@@ -7,14 +7,16 @@ import styles from '../RequestListPage.module.scss';
 const RiderOrderGrid = ({ orders, fetchOrders, accepted }) => {
   return (
     <div className={styles.orderList}>
-      {orders.map(order => (
-        <RiderOrderCard
-          key={order.orderId}
-          order={order}
-          fetchOrders={fetchOrders}
-          accepted={accepted}
-        />
-      ))}
+      {orders
+        .sort((a, b) => (a.orderState === 'DELIVERING' ? -1 : 1))
+        .map(order => (
+          <RiderOrderCard
+            key={order.orderId}
+            order={order}
+            fetchOrders={fetchOrders}
+            accepted={accepted}
+          />
+        ))}
     </div>
   );
 };
