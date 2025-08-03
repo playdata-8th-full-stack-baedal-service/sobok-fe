@@ -30,7 +30,7 @@ function RiderListPage() {
   const handleApprove = async id => {
     try {
       console.log(id);
-      await axiosInstance.put(`/auth-service/auth/rider-active?authId=${id}`);
+      await axiosInstance.put(`/auth-service/auth/rider-active?riderId=${id}`);
       setClickedActiveRider(true);
     } catch (error) {
       console.error('배달원 활성화 실패:', error);
@@ -60,7 +60,7 @@ function RiderListPage() {
                 <span>{rider.phone}</span>
                 <span>{rider.permissionNumber}</span>
                 <span>{rider.loginId}</span>
-                <Button type="button" onClick={() => handleApprove(rider.authId)}>
+                <Button type="button" onClick={() => handleApprove(rider.id)}>
                   활성화
                 </Button>
               </div>
