@@ -3,7 +3,9 @@ import axiosInstance from '../../../services/axios-config';
 import style from './HubListPage.module.scss';
 
 function HubListPage() {
-  const [hubList, setHubList] = useState([]);
+  const [hubList, setHubList] = useState([
+    { shopName: '이름', roadFull: '주소', ownerName: '점주', phone: '번호' },
+  ]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
@@ -17,7 +19,7 @@ function HubListPage() {
       const res = await axiosInstance.get('/shop-service/shop/all');
 
       if (res.data.success && res.data.data.length > 0) {
-        setHubList(res.data.data);
+        setHubList(prev => [...prev, ...res.data.data]);
         setHasMore(false);
       } else {
         setHasMore(false);
@@ -50,29 +52,22 @@ function HubListPage() {
     <div className={style.container}>
       <div className={style.titleandbutton}>
         <h2>가게 목록</h2>
-        <div className={style.storelist}>
-          <p>번호</p>
-          <p>이름</p>
-          <p>주소</p>
-          <p>점주</p>
-          <p>번호</p>
-        </div>
+        {hubList.length === 0 ? (
+          <p>가게 정보를 불러오는 중 ~</p>
+        ) : (
+          <div className={style.listWrapper}>
+            {hubList.map((hub, index) => (
+              <div key={hub.id} className={style.card}>
+                <div className={style.indexSection}>{index === 0 ? '' : index}</div>
+                <div className={style.nameSection}>{hub.shopName}</div>
+                <div className={style.addrSection}>{hub.roadFull}</div>
+                <div className={style.ownerSection}>{hub.ownerName}</div>
+                <div className={style.phoneSection}>{hub.phone}</div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-      {hubList.length === 0 ? (
-        <p>가게 정보를 불러오는 중 ~</p>
-      ) : (
-        <div className={style.listWrapper}>
-          {hubList.map((hub, index) => (
-            <div key={hub.id} className={style.card}>
-              <div className={style.hunsection}>{index + 1}</div>
-              <div className={style.hunsection}>{hub.shopName}</div>
-              <div className={style.hunsection}>{hub.roadFull}</div>
-              <div className={style.hunsection}>{hub.ownerName}</div>
-              <div className={style.hunsection}>{hub.phone}</div>
-            </div>
-          ))}
-        </div>
-      )}
       {loading && <p>로딩 중...</p>}
       {hasMore && <div ref={observerRef} style={{ height: '1px' }} />}
     </div>

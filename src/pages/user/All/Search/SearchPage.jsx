@@ -59,7 +59,7 @@ const SearchPage = () => {
     }
 
     fetchItems();
-  }, [pageNo, numOfRows, searchParams, navigate, showNegative]);
+  }, [pageNo, numOfRows, searchParams]);
 
   const handleSearch = e => {
     e.preventDefault();
