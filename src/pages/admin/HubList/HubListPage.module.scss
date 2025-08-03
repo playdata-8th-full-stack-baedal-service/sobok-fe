@@ -1,0 +1,106 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 30px 60px;
+  text-align: center;
+  width: 100%;
+  margin-top: 40px;
+
+  .titleandbutton {
+    margin-bottom: 10px;
+    h2 {
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      font-weight: bold;
+
+    }
+  }
+}
+
+.card {
+  display: grid;
+  // grid-template-columns: 1fr 1fr 1fr 1fr 1fr; 
+  grid-template-columns: repeat(auto-fill, minmax(150px, 2fr));
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 999px; /* pill 스타일 유지용 */
+  margin-bottom: 8px;
+  gap: 60px;
+}
+
+.hunsection {
+  // height: 40px;
+  // text-align: center;
+  // line-height: 40px;
+  white-space: nowrap;
+  // margin: 10px auto;
+  display: flex;
+  height: 80px;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
+.storelist {
+  display: grid;
+  // grid-template-columns: 1fr 1fr 1fr 1fr 1fr; 
+  grid-template-columns: repeat(auto-fill, minmax(150px, 2fr));
+  align-items: center;
+  padding: 10px;
+  gap: 60px;
+  margin-top: 50px;
+}
+
+.listWrapper {
+
+  div:first-child {
+    border: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  div {
+    div:first-child {
+      border: none;
+      margin-bottom: 1rem;
+    }
+    display: flex;
+    gap : 0;
+    text-indent: 0;
+
+    .indexSection {
+      max-width: 10%;
+      min-width: 10%;
+    }
+
+    .nameSection {
+      max-width: 15%;
+      min-width: 15%;
+    }
+
+    .addrSection {
+      max-width: 30%;
+      min-width: 30%;
+    }
+
+    .ownerSection {
+      max-width: 15%;
+      min-width: 15%;
+    }
+
+    .phoneSection {
+      max-width: 25%;
+      min-width: 25%;
+    }
+
+    div {
+      padding-left: 2%;
+      padding-right: 2%;
+      text-align: start;
+      // margin-bottom: 1rem;
+      padding-top: 1rem;
+      padding-bottom : 1rem;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+.cartHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+}
+
+.count {
+  font-size: 14px;
+  color: #888;
+}

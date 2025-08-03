@@ -2,27 +2,30 @@ import { Routes, Route } from 'react-router-dom';
 import RoleRoute from './RoleRoute';
 
 // header
-import UserHeader from '../common/headerfooter/UserHeader';
+import UserHeader from '../layout/headers/userHeader/UserHeader';
 
 // public 페이지
-import MainPage from '../app/user/MainPage';
-// import ProductPage from '../app/user/ProductPage';
-// import SearchPage from '../app/user/SearchPage';
-// import CategoryPage from '../app/user/CategoryPage';
-// import PostListPage from '../app/user/PostListPage';
-// import PostDetailPage from '../app/user/PostDetailPage';
+import MainPage from '../pages/user/All/Main/MainPage';
+import PostListPage from '../pages/user/Post/PostList/PostListPage';
+import PostDetailPage from '../pages/user/Post/PostDetail/PostDetailPage';
+import ProductPage from '../pages/user/All/Product/ProductPage';
+import CategoryPage from '../pages/user/All/Category/CategoryPage';
+import SearchPage from '../pages/user/All/Search/SearchPage';
 
 // private 페이지 (USER 권한 필요)
-// import NewPostPage from '../app/user/private/NewPostPage';
-import CartPage from '../app/user/private/CartPage';
-// import CartModal from '../app/user/private/CartModal';
-// import PayPage from '../app/user/private/PayPage';
-import UserInfoPage from '../app/user/private/UserInfoPage';
-import MyPostListPage from '../app/user/private/MyPostListPage';
-import MyOrderListPage from '../app/user/private/MyOrderListPage';
-// import MyOrderDetailPage from '../app/user/private/MyOrderDetailPage';
-import BookmarkRecipePage from '../app/user/private/BookmarkRecipePage';
-import LikePostPage from '../app/user/private/LikePostPage';
+import NewPostPage from '../pages/user/Post/Posting/NewPostPage';
+import MyPostListPage from '../pages/user/UserOptions/MyPostList/MyPostListPage';
+import MyOrderListPage from '../pages/user/UserOptions/MyOrderList/MyOrderListPage';
+import BookmarkRecipePage from '../pages/user/UserOptions/BookmarkRecipe/BookmarkRecipePage';
+import LikePostPage from '../pages/user/UserOptions/LikePost/LikePostPage';
+import SuccessPage from '../pages/user/Pay/toss/TossSuccess';
+import FailPage from '../pages/user/Pay/toss/Fail';
+import UserCartPage from '../pages/user/Cart/CartPage/UserCartPage';
+import PayPage from '../pages/user/Pay/PayPage';
+import PayCompletePage from '../pages/user/Pay/paycomplete/PayCompletePage';
+import UserInfo from '../pages/user/Info/UserInfo';
+import EditPostPage from '../pages/user/Post/EditPost/EditPostPage';
+import CartPayPage from '../pages/user/CartPay/CartPayPage';
 
 function UserRoutes() {
   return (
@@ -30,54 +33,87 @@ function UserRoutes() {
       <UserHeader />
       <Routes>
         {/* 비회원도 접근 가능한 페이지 */}
-        <Route path="main" element={<MainPage />} />
-        {/* <Route path="product" element={<ProductPage />} /> */}
-        {/* <Route path="search" element={<SearchPage />} /> */}
-        {/* <Route path="category" element={<CategoryPage />} /> */}
-        {/* <Route path="post-list" element={<PostListPage />} /> */}
-        {/* <Route path="post/:id" element={<PostDetailPage />} /> */}
+        {/* <Route path="main" element={<MainPage />} />
+        <Route path="" element={<MainPage />} />
+        <Route path="product" element={<ProductPage />} />
+        <Route path="search" element={<SearchPage />} />
+        <Route path="category" element={<CategoryPage />} />
+        <Route path="post-list" element={<PostListPage />} />
+        <Route path="post/:id" element={<PostDetailPage />} /> */}
 
         {/* USER 권한 있어야 접근 가능한 페이지 */}
-        {/* <Route
+        <Route
           path="new-post"
           element={
             <RoleRoute role="USER">
               <NewPostPage />
             </RoleRoute>
           }
-        /> */}
+        />
+
+        <Route
+          path="edit-post"
+          element={
+            <RoleRoute role="USER">
+              <EditPostPage />
+            </RoleRoute>
+          }
+        />
+
         <Route
           path="cart"
           element={
             <RoleRoute role="USER">
-              <CartPage />
+              <CartPayPage />
             </RoleRoute>
           }
         />
-        {/* <Route
-          path="cart-modal"
-          element={
-            <RoleRoute role="USER">
-              <CartModal />
-            </RoleRoute>
-          }
-        /> */}
-        {/* <Route
+
+        <Route
           path="pay"
           element={
             <RoleRoute role="USER">
               <PayPage />
             </RoleRoute>
           }
-        /> */}
+        />
+
+        <Route
+          path="tossSuccess"
+          element={
+            <RoleRoute role="USER">
+              <SuccessPage />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="tossFail"
+          element={
+            <RoleRoute role="USER">
+              <FailPage />
+            </RoleRoute>
+          }
+        ></Route>
+
+        <Route
+          path="paycomplete"
+          element={
+            <RoleRoute role="USER">
+              <PayCompletePage />
+            </RoleRoute>
+          }
+        />
+
         <Route
           path="info"
           element={
             <RoleRoute role="USER">
-              <UserInfoPage />
+              <UserInfo />
             </RoleRoute>
           }
         />
+
         <Route
           path="my-posts"
           element={
@@ -94,14 +130,6 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
-        {/* <Route
-          path="order/:id"
-          element={
-            <RoleRoute role="USER">
-              <MyOrderDetailPage />
-            </RoleRoute>
-          }
-        /> */}
         <Route
           path="bookmarks"
           element={
@@ -118,6 +146,16 @@ function UserRoutes() {
             </RoleRoute>
           }
         />
+        <Route
+          path="userinfo"
+          element={
+            <RoleRoute role="USER">
+              <UserInfo />
+            </RoleRoute>
+          }
+        />
+
+        <Route path="tossSuccess" element={<SuccessPage />} />
       </Routes>
     </>
   );

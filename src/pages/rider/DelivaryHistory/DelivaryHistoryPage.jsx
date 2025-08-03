@@ -1,0 +1,70 @@
+import React, { useEffect, useState } from 'react';
+import { CircularProgress } from '@mui/material';
+import axiosInstance from '../../../services/axios-config';
+import RiderOrderGrid from '../RequestList/component/RiderOrderGrid';
+import Button from '../../../common/components/Button';
+import styles from '../RequestList/RequestListPage.module.scss';
+
+function DelivaryHistoryPage() {
+  const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
+  const [pageNo, setPageNo] = useState(1);
+  const [numOfRows] = useState(10);
+  const [refresh, setRefresh] = useState(true);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const response = await axiosInstance.get(
+        `/delivery-service/delivery/delivery-list?pageNo=${pageNo}&numOfRows=${numOfRows}`
+      );
+      console.log(response.data);
+      if (pageNo === 1) {
+        setOrders(response.data.data);
+      } else {
+        setOrders(prev => [...prev, ...response.data.data]);
+      }
+
+      if (response.data.data.length < numOfRows) {
+        setIsEnd(true);
+      }
+      setIsLoading(false);
+      setRefresh(false);
+    };
+    fetchOrders();
+  }, [pageNo, numOfRows, refresh]);
+
+  const handleRefresh = () => {
+    if (pageNo === 1 && isEnd) {
+      setRefresh(true);
+    } else {
+      setPageNo(1);
+      setIsEnd(false);
+      setRefresh(true);
+    }
+  };
+
+  return (
+    <div className={styles.pageWrapper}>
+      <div className={styles.titleWrapper}>
+        <h2 className={styles.title}>배달 완료 기록</h2>
+      </div>
+      <div className={styles.tabBar}>
+        {orders.length === 0 && (
+          <div className={styles.emptyWrapper}>배달 완료 기록이 없습니다.</div>
+        )}
+        {isLoading && (
+          <div className={styles.loadingWrapper}>
+            <CircularProgress />
+          </div>
+        )}
+        {orders.length > 0 && <RiderOrderGrid orders={orders} />}
+        {!isEnd && orders.length !== 0 && (
+          <Button onClick={() => setPageNo(pageNo + 1)}>더 보기 +</Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default DelivaryHistoryPage;
