@@ -54,11 +54,13 @@ function CategorySelection() {
     setSelectedCategory(korCategory);
   };
 
-  // 더보기 버튼 클릭 시 해당 카테고리 목록 페이지로 이동
+  // 더보기 버튼 클릭 시 카테고리 목록 페이지로 이동
   const handleMoreClick = () => {
     if (selectedCategory && selectedCategory !== '전체') {
       const categoryCode = CATEGORY_MAP[selectedCategory];
       navigate(`/category?category=${categoryCode}`);
+    } else {
+      navigate(`/category`);
     }
   };
 
@@ -186,7 +188,16 @@ function CategorySelection() {
       </div>
 
       {/* 더보기 버튼: 전체 카테고리에서는 숨김, 카테고리별일 때만 보임 */}
-      {selectedCategory !== '전체' && !isLoading && (
+      {!isLoading && selectedCategory !== '전체' ? (
+        <div className={styles.learnmoreBtnWrap}>
+          <button className={styles.learnmore} onClick={handleMoreClick} type="button">
+            <span className={styles.circle} aria-hidden="true">
+              <span className={`${styles.icon} ${styles.arrow}`} />
+            </span>
+            <span className={styles.buttontext}>더보기</span>
+          </button>
+        </div>
+      ) : (
         <div className={styles.learnmoreBtnWrap}>
           <button className={styles.learnmore} onClick={handleMoreClick} type="button">
             <span className={styles.circle} aria-hidden="true">
