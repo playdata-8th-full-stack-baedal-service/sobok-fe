@@ -3,7 +3,7 @@ import axios from 'axios';
 import ModalWrapper from '@/common/modals/ModalWrapper';
 import styles from '../RecipeRegistPage.module.scss';
 import { API_BASE_URL } from '@/services/host-config';
-import axiosInstance from '../../../../services/axios-config';
+import axiosInstance from '@/services/axios-config';
 import useToast from '@/common/hooks/useToast';
 
 function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
@@ -128,7 +128,7 @@ function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
               onChange={handleInputChange}
               placeholder="가격을 입력하세요"
               min="0"
-              style={{height: '35px'}}
+              style={{ height: '35px' }}
             />
           </div>
 
