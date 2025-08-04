@@ -5,8 +5,7 @@ import axios from 'axios';
 import { openModal } from '@/store/modalSlice';
 import style from '../RecipeRegistPage.module.scss';
 import { API_BASE_URL } from '@/services/host-config';
-import axiosInstance from '../../../../services/axios-config';
-// import axiosInstance from '../../../../services/axios-config';
+import axiosInstance from '@/services/axios-config';
 
 function SearchInput({
   placeholder = '검색어를 입력하세요.',
