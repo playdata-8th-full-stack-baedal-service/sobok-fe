@@ -6,6 +6,7 @@ import {
   clearEmailCheck,
   clearLoginIdCheck,
   clearNicknameCheck,
+  checkNickName,
 } from '@/store/authSlice';
 import { clearSMSAuth } from '@/store/smsAuthSlice';
 import ProfileSection from './components/signup/ProfileSection';
