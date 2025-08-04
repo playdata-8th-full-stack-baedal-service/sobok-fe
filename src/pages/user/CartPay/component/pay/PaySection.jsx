@@ -12,7 +12,6 @@ import {
   setPayClick,
 } from '../../../../../store/cartPaySlice';
 import Checkout from './Checkout';
-import axiosInstance from '../../../../../services/axios-config';
 
 const PaySection = () => {
   const dispatch = useDispatch();
@@ -78,7 +77,13 @@ const PaySection = () => {
             type="button"
             onClick={handleStartPayment}
             className={styles.btnPay}
-            disabled={totalPrice === 0 || !isReady || !shopInfo || shopInfo.length === 0}
+            disabled={
+              totalPrice === 0 ||
+              !isReady ||
+              !shopInfo ||
+              shopInfo.length === 0 ||
+              shopInfo.every(shop => !shop.satisfiable)
+            }
           >
             {totalPrice.toLocaleString()} 원 결제 하기
           </button>
