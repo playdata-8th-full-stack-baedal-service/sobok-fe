@@ -124,6 +124,23 @@ function UserSignUp() {
       return false;
     }
 
+    // 아이디 유효성 검사 추가
+    const loginIdRegex = /^[a-zA-Z0-9]+$/;
+    if (!loginIdRegex.test(formData.loginId)) {
+      showNegative('아이디는 영문자와 숫자만 사용 가능합니다.');
+      return false;
+    }
+    
+    if (formData.loginId.length < 4 || formData.loginId.length > 20) {
+      showNegative('아이디는 4자 이상 20자 이하여야 합니다.');
+      return false;
+    }
+    
+    if (/^\d+$/.test(formData.loginId)) {
+      showNegative('아이디는 숫자로만 구성될 수 없습니다.');
+      return false;
+    }
+
     if (formData.password !== passwordConfirm) {
       showNegative('비밀번호가 일치하지 않습니다.');
       return false;

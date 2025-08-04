@@ -36,8 +36,97 @@ function RiderSignUp() {
   });
 
   const [verificationCode, setVerificationCode] = useState('');
+  const [nameError, setNameError] = useState(''); // 이름 에러 상태 추가
+  const [loginIdError, setLoginIdError] = useState(''); // 아이디 에러 상태 추가
+  
   const loginIdTimer = useRef(null);
   const permissionTimer = useRef(null);
+
+  // 아이디 유효성 검사 함수
+  const validateLoginId = (loginId) => {
+    if (!loginId || !loginId.trim()) {
+      return '';
+    }
+
+    const trimmedId = loginId.trim();
+    
+    // 길이 체크 (4-20자)
+    if (trimmedId.length < 4) {
+      return '아이디는 4자 이상이어야 합니다.';
+    }
+    
+    if (trimmedId.length > 20) {
+      return '아이디는 20자 이하로 입력해주세요.';
+    }
+
+    // 영문자로 시작해야 함
+    if (!/^[a-zA-Z]/.test(trimmedId)) {
+      return '아이디는 영문자로 시작해야 합니다.';
+    }
+
+    // 영문자와 숫자만 허용
+    if (!/^[a-zA-Z0-9]+$/.test(trimmedId)) {
+      return '아이디는 영문자와 숫자만 사용 가능합니다.';
+    }
+
+    // 앞뒤 공백 체크
+    if (loginId !== trimmedId) {
+      return '아이디 앞뒤에 공백은 사용할 수 없습니다.';
+    }
+
+    return '';
+  };
+
+  // 이름 유효성 검사 함수
+  const validateName = (name) => {
+    if (!name || !name.trim()) {
+      return '';
+    }
+
+    const trimmedName = name.trim();
+    
+    // 길이 체크 (1-20자)
+    if (trimmedName.length > 20) {
+      return '이름은 20자 이하로 입력해주세요.';
+    }
+
+    // 특수문자나 숫자 포함 체크
+    if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?0-9]/.test(trimmedName)) {
+      return '이름에는 특수문자나 숫자를 사용할 수 없습니다.';
+    }
+
+    // 자음만 있는지 체크
+    if (/[ㄱ-ㅎ]/.test(trimmedName)) {
+      return '완성되지 않은 한글은 사용할 수 없습니다.';
+    }
+
+    // 모음만 있는지 체크
+    if (/[ㅏ-ㅣ]/.test(trimmedName)) {
+      return '완성되지 않은 한글은 사용할 수 없습니다.';
+    }
+
+    // 한글이나 영문이 아닌 문자 체크
+    if (!/^[가-힣a-zA-Z\s]+$/.test(trimmedName)) {
+      return '한글 또는 영문만 입력 가능합니다.';
+    }
+
+    // 연속된 공백 체크
+    if (/\s{2,}/.test(trimmedName)) {
+      return '연속된 공백은 사용할 수 없습니다.';
+    }
+
+    // 앞뒤 공백 체크
+    if (name !== trimmedName) {
+      return '이름 앞뒤에 공백은 사용할 수 없습니다.';
+    }
+
+    // 공백만으로 이루어진 경우  
+    if (trimmedName.replace(/\s/g, '').length === 0) {
+      return '올바른 이름을 입력해주세요.';
+    }
+
+    return '';
+  };
 
   // 폼 초기화
   useEffect(() => {
@@ -63,17 +152,25 @@ function RiderSignUp() {
         permissionNumber: '',
       });
       setVerificationCode('');
+      setNameError('');
+      setLoginIdError('');
       setResetPasswordValidation(prev => !prev);
     }
-  }, [signUpSuccess, dispatch, showSuccess]);
+  }, [signUpSuccess, dispatch, showSuccess, navigate]);
 
   // 아이디 자동 검사
   useEffect(() => {
     if (loginIdTimer.current) clearTimeout(loginIdTimer.current);
-    if (!form.loginId.trim()) {
+    
+    // 아이디 유효성 검사 먼저 실행
+    const idError = validateLoginId(form.loginId);
+    setLoginIdError(idError);
+    
+    if (!form.loginId.trim() || idError) {
       dispatch(clearLoginIdCheck());
       return;
     }
+    
     loginIdTimer.current = setTimeout(() => {
       dispatch(checkLoginId(form.loginId.trim()));
     }, 400);
@@ -99,12 +196,29 @@ function RiderSignUp() {
 
   const handleChange = e => {
     const { name, value } = e.target;
+    
+    // 면허번호는 숫자만 허용
     if (name === 'permissionNumber' && !/^\d*$/.test(value)) return;
+    
+    // 아이디는 영문자와 숫자만 허용 (입력 시점에서 차단)
+    if (name === 'loginId' && !/^[a-zA-Z0-9]*$/.test(value)) return;
 
     setForm(prev => ({
       ...prev,
       [name]: value,
     }));
+
+    // 아이디 유효성 검사
+    if (name === 'loginId') {
+      const error = validateLoginId(value);
+      setLoginIdError(error);
+    }
+
+    // 이름 유효성 검사
+    if (name === 'name') {
+      const error = validateName(value);
+      setNameError(error);
+    }
   };
 
   // 필수 입력값 및 인증 체크
@@ -113,6 +227,18 @@ function RiderSignUp() {
 
     if (!loginId || !password || !passwordConfirm || !name || !phone || !permissionNumber) {
       showNegative('필수 항목을 모두 입력해주세요.');
+      return false;
+    }
+
+    // 아이디 유효성 검사
+    if (loginIdError) {
+      showNegative('올바른 아이디를 입력해주세요.');
+      return false;
+    }
+
+    // 이름 유효성 검사
+    if (nameError) {
+      showNegative('올바른 이름을 입력해주세요.');
       return false;
     }
 
@@ -136,7 +262,11 @@ function RiderSignUp() {
   const getInputClassName = fieldName => {
     switch (fieldName) {
       case 'loginId':
+        if (loginIdError) return styles.invalid;
         return loginIdCheckMessage?.includes('사용 가능한') ? styles.valid : styles.invalid;
+      case 'name':
+        if (!form.name.trim()) return '';
+        return nameError ? styles.invalid : styles.valid;
       case 'phone':
         return isVerified ? styles.valid : '';
       case 'permissionNumber':
@@ -157,11 +287,11 @@ function RiderSignUp() {
           type="text"
           id="loginId"
           name="loginId"
-          placeholder="아이디를 입력하세요"
+          placeholder="아이디를 입력하세요 (영문자로 시작, 영문+숫자)"
           value={form.loginId}
           onChange={handleChange}
-          error={loginIdCheckError}
-          success={loginIdCheckMessage}
+          error={loginIdError || loginIdCheckError}
+          success={!loginIdError && loginIdCheckMessage ? loginIdCheckMessage : ''}
           className={getInputClassName('loginId')}
         />
 
@@ -175,6 +305,9 @@ function RiderSignUp() {
           placeholder="이름을 입력하세요"
           value={form.name}
           onChange={handleChange}
+          error={nameError}
+          success={form.name.trim() && !nameError ? '사용 가능한 이름입니다.' : ''}
+          className={getInputClassName('name')}
         />
 
         {/* 비밀번호 */}

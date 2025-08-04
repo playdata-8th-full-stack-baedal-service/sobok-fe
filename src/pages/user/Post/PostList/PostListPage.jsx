@@ -150,7 +150,14 @@ function PostListPage() {
                   style={{ cursor: 'pointer', outline: 'none' }}
                   aria-label={`${post.title} 상세페이지로 이동`}
                 >
-                  <img src={post.thumbnail} alt={post.title} />
+                  <img
+                    src={post.thumbnail}
+                    alt={post.title}
+                    onError={e => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = './soboklogo.png';
+                    }}
+                  />
                   <div className={styles.info}>
                     <h3>{post.title}</h3>
                     <p>{post.cookName}</p>
