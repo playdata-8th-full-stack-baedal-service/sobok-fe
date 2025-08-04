@@ -8,7 +8,7 @@ import commonStyles from './PostContent.module.scss';
 const TiptapEditor = forwardRef(({ content, setContent, uploadImageToServer }, ref) => {
   const [isEditorEmpty, setIsEditorEmpty] = useState(true);
 
-  const editor = useEditor({
+  const editorInstance = useEditor({
     extensions: [StarterKit.configure({ orderedList: false }), Image.configure({ inline: false })],
     content: content || '<p></p>',
     onUpdate({ editor }) {
@@ -23,7 +23,7 @@ const TiptapEditor = forwardRef(({ content, setContent, uploadImageToServer }, r
     editorProps: {
       handleDOMEvents: {
         keydown: (view, event) => {
-          const isInCodeBlock = editor?.isActive('codeBlock');
+          const isInCodeBlock = editorInstance?.isActive('codeBlock');
           const { $from } = view.state.selection;
 
           if (isInCodeBlock && event.key === 'Enter') {
@@ -31,7 +31,7 @@ const TiptapEditor = forwardRef(({ content, setContent, uploadImageToServer }, r
             const prevNodeEmpty = !prevLineText || prevLineText.trim() === '';
 
             if (prevNodeEmpty) {
-              editor.chain().focus().exitCode().run();
+              editorInstance.chain().focus().exitCode().run();
               return true;
             }
           }
@@ -42,24 +42,33 @@ const TiptapEditor = forwardRef(({ content, setContent, uploadImageToServer }, r
   });
 
   useImperativeHandle(ref, () => ({
-    focus: () => editor?.commands.focus(),
-    getEditor: () => editor,
+    focus: () => editorInstance?.commands.focus(),
+    getEditor: () => editorInstance,
   }));
 
   useEffect(() => {
-    if (editor && content !== editor.getHTML()) {
-      editor.commands.setContent(content || '<p></p>');
+    if (editorInstance && content !== editorInstance.getHTML()) {
+      editorInstance.commands.setContent(content || '<p></p>');
     }
-  }, [editor, content]);
+  }, [editorInstance, content]);
 
   const handleImageUpload = async e => {
     const file = e.target.files[0];
-    if (!file || !editor) return;
-    const imageUrl = await uploadImageToServer(file);
-    editor.chain().focus().setImage({ src: imageUrl }).run();
+    if (!file || !editorInstance) return;
+
+    try {
+      const imageUrl = await uploadImageToServer(file);
+      if (imageUrl) {
+        editorInstance.chain().focus().setImage({ src: imageUrl }).run();
+      }
+    } catch (err) {
+      console.error('이미지 업로드 처리 실패:', err);
+    } finally {
+      e.target.value = '';
+    }
   };
 
-  if (!editor) return null;
+  if (!editorInstance) return null;
 
   return (
     <div>
@@ -77,14 +86,14 @@ const TiptapEditor = forwardRef(({ content, setContent, uploadImageToServer }, r
             type="button"
             onMouseDown={e => e.preventDefault()}
             onClick={() => {
-              const chain = editor.chain();
+              const chain = editorInstance.chain();
               const cmdChain =
                 typeof btn.cmd === 'function'
                   ? chain[btn.cmd()[0]](btn.cmd()[1])
                   : chain[btn.cmd]();
               cmdChain.run();
             }}
-            className={editor.isActive(btn.mark, btn.cmdArgs) ? styles.active : ''}
+            className={editorInstance.isActive(btn.mark, btn.cmdArgs) ? styles.active : ''}
           >
             {btn.label}
           </button>
@@ -108,7 +117,7 @@ const TiptapEditor = forwardRef(({ content, setContent, uploadImageToServer }, r
 
       <div className={`${styles.editorBox} ${commonStyles.postContent}`}>
         <EditorContent
-          editor={editor}
+          editor={editorInstance}
           className={isEditorEmpty ? 'is-editor-empty' : ''}
           data-placeholder="내용을 입력하세요..."
         />

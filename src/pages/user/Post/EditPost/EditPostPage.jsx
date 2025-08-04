@@ -54,8 +54,10 @@ const EditPostPage = () => {
 
       return res.data?.data;
     } catch (err) {
-      console.error('이미지 업로드 실패', err);
-      showNegative('이미지 업로드에 실패했습니다.');
+      console.error('이미지 업로드 실패:', err);
+      const errorMessage = err.response?.data?.message || '이미지 업로드에 실패했습니다.';
+      showNegative(errorMessage);
+      // throw new Error(errorMessage);
       return '';
     }
   };

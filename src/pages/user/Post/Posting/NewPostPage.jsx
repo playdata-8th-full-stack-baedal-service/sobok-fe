@@ -44,14 +44,21 @@ function NewPostPage() {
     const formData = new FormData();
     formData.append('image', file);
 
-    const res = await axios.put(`${API_BASE_URL}/api-service/api/upload-image/post`, formData, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    try {
+      const res = await axios.put(`${API_BASE_URL}/api-service/api/upload-image/post`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
-    return res.data.data;
+      return res.data.data;
+    } catch (err) {
+      console.error('이미지 업로드 실패:', err);
+      const errorMessage = err.response?.data?.message || '이미지 업로드에 실패했습니다.';
+      showNegative(errorMessage);
+      throw new Error(errorMessage);
+    }
   };
 
   const handleSubmit = async () => {
