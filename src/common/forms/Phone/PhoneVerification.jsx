@@ -4,7 +4,7 @@ import { sendSMSCode, verifySMSCode } from '../../../store/smsAuthSlice';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import styles from './PhoneVerification.module.scss';
-import { useToast } from 'react-toastify';
+import useToast from '@/common/hooks/useToast';
 
 function PhoneVerification({
   phone,
