@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './MainPage.module.scss';
 import axiosInstance from '../../../../services/axios-config';
@@ -8,6 +8,7 @@ function BestPickSelection() {
   const [loading, setLoading] = useState(true);
   const [activeSlide, setActiveSlide] = useState(0);
   const navigate = useNavigate();
+  const intervalRef = useRef(null);
 
   const fetchBestPick = async () => {
     try {
@@ -33,15 +34,20 @@ function BestPickSelection() {
     fetchBestPick();
   }, []);
 
-  // 자동 슬라이드 기능
+  // 자동 슬라이드 시작 함수
+  const startAutoSlide = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setActiveSlide(prev => (prev + 1) % bestPick.length);
+    }, 3000);
+  };
+
+  // 컴포넌트 마운트 시 슬라이드 시작
   useEffect(() => {
     if (bestPick.length > 1) {
-      const interval = setInterval(() => {
-        setActiveSlide(prev => (prev + 1) % bestPick.length);
-      }, 3000);
-
-      return () => clearInterval(interval);
+      startAutoSlide();
     }
+    return () => clearInterval(intervalRef.current);
   }, [bestPick.length]);
 
   const handleClick = postId => {
@@ -55,6 +61,7 @@ function BestPickSelection() {
     } else {
       // 비활성 슬라이드를 클릭하면 활성화만 시킴
       setActiveSlide(index);
+      startAutoSlide();
     }
   };
 
@@ -110,7 +117,9 @@ function BestPickSelection() {
               <p className={styles.slideTitle}>{post.title}</p>
               <p className={styles.slideAuthor}>{post.nickName}</p>
               <div className={styles.subinfo}>
-                <p>좋아요 수 : <span className={styles.liketext}>{post.likeCount}</span></p>
+                <p>
+                  좋아요 수 : <span className={styles.liketext}>{post.likeCount}</span>
+                </p>
                 <p>작성일시: {formatDate(post.updatedAt)}</p>
               </div>
             </div>
