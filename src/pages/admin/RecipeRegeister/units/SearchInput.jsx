@@ -15,7 +15,10 @@ function SearchInput({
   const [query, setQuery] = useState('');
   const [result, setResult] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [isComposing, setIsComposing] = useState(false);
+
+  // ✅ 1. '선택 중' 상태를 기억할 깃발(ref)을 만듭니다.
+  const isSelectionInProgress = useRef(false);
+
   const dropdownRef = useRef(null);
   const searchTimeoutRef = useRef(null);
   const dispatch = useDispatch();
@@ -41,13 +44,19 @@ function SearchInput({
     };
   }, [viewDropDown]);
 
-  // 검색어 변경 시 타이머 설정
+  // 실시간 검색을 위한 useEffect
   useEffect(() => {
+    // ✅ 2. 검색을 실행하기 전, 깃발이 올라가 있는지 확인합니다.
+    if (isSelectionInProgress.current) {
+      // 깃발이 올라가 있다면, '선택'이 일어났다는 뜻입니다.
+      // 검색을 막고, 다음 검색을 위해 깃발을 다시 내립니다.
+      isSelectionInProgress.current = false;
+      return;
+    }
+
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
-
-    if (isComposing) return;
 
     if (query.length > 0) {
       searchTimeoutRef.current = setTimeout(async () => {
@@ -58,11 +67,10 @@ function SearchInput({
           );
           if (response.data.success && Array.isArray(response.data.data)) {
             setResult(response.data.data);
-            setViewDropDown(true);
           } else {
             setResult([]);
-            setViewDropDown(true);
           }
+          setViewDropDown(true);
         } catch (err) {
           console.error(err.response?.data?.message || '검색 중 오류가 발생했습니다.');
           setResult([]);
@@ -70,7 +78,7 @@ function SearchInput({
         } finally {
           setIsSearching(false);
         }
-      }, 300);
+      }, 300); // 300ms 디바운싱
     } else {
       setViewDropDown(false);
       setResult([]);
@@ -82,10 +90,10 @@ function SearchInput({
         clearTimeout(searchTimeoutRef.current);
       }
     };
-  }, [query, isComposing]);
+  }, [query]); // 이제 useEffect는 오직 query에만 의존합니다.
 
   const handleInputClick = () => {
-    if (query.length > 0) {
+    if (query.length > 0 && result.length > 0) {
       setViewDropDown(true);
     }
   };
@@ -95,8 +103,9 @@ function SearchInput({
   };
 
   const handleKeyDown = e => {
-    if (e.key === 'Enter' && !isComposing) {
-      e.preventDefault(); // form submit 방지
+    // Enter 키에 대한 특별한 처리가 필요하다면 여기에 작성합니다.
+    if (e.key === 'Enter') {
+      e.preventDefault();
     }
   };
 
@@ -104,6 +113,7 @@ function SearchInput({
     if (onIngredientSelect) {
       onIngredientSelect(item);
     }
+    // 선택 후 입력창을 비웁니다. 이로 인해 useEffect가 다시 실행됩니다.
     setQuery('');
     setResult([]);
     setViewDropDown(false);
@@ -115,16 +125,37 @@ function SearchInput({
         type: 'INGREDIENT_REGISTER',
         props: {
           initialIngreName: query,
+          onSuccess: async newName => {
+            // ✅ 등록 성공 시 실행
+            setQuery(''); // 입력창 비우기
+            setViewDropDown(false);
+
+            // 전체 목록 다시 조회
+            try {
+              const res = await axiosInstance.get(
+                `/cook-service/ingredient/keyword-search?keyword=${newName}`
+              );
+              if (res.data.success && res.data.data.length > 0) {
+                // 자동 선택
+                if (onIngredientSelect) {
+                  onIngredientSelect(res.data.data[0]);
+                }
+              }
+            } catch (err) {
+              console.error('등록 후 재조회 실패:', err);
+            }
+          },
         },
       })
     );
     setViewDropDown(false);
   };
 
-  // ✅ 클릭 시 바로 선택 실행
   const handleDropdownClick = (item, e) => {
     e.preventDefault();
-    handleSelect(item); // IME 조합 상태여도 강제 실행
+    // ✅ 3. 사용자가 드롭다운을 클릭하는 순간, 깃발을 들어 올립니다!
+    isSelectionInProgress.current = true;
+    handleSelect(item);
   };
 
   return (
@@ -138,13 +169,11 @@ function SearchInput({
         className={style.searchbar}
         type="text"
         placeholder={placeholder}
-        onCompositionStart={() => setIsComposing(true)}
-        onCompositionEnd={() => setIsComposing(false)}
       />
       <div className={style.searchIcon}>
         <Search size={15} color="#000000" />
       </div>
-      {viewDropDown && query.length > 0 && (
+      {viewDropDown && (
         <div className={style.dropdownContainer}>
           <div className={style.SearchDropDown}>
             {isSearching ? (

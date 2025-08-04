@@ -88,6 +88,7 @@ function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
       console.log(response.data);
       if (response.data.success) {
         showSuccess('식재료가 등록되었습니다.');
+        if (props.onSuccess) props.onSuccess(formData.data);
         if (onClose) onClose();
       } else {
         showNegative(response.data.message);
