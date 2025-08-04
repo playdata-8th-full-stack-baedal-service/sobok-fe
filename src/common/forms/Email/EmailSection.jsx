@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkEmail, clearEmailCheck } from '@/store/authSlice';
+import { checkEmail, clearEmailCheck, setInvalidEmailFormat } from '@/store/authSlice';
 import Input from '../../components/Input';
 import styles from './EmailSection.module.scss';
 import useToast from '@/common/hooks/useToast';
@@ -36,10 +36,14 @@ function EmailSection({
     if (emailTimer.current) clearTimeout(emailTimer.current);
 
     const fullEmail = getFullEmail();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!fullEmail || !emailRegex.test(fullEmail)) {
+    const emailRegex = /^(?!\.)(?!.*\.\.)[A-Za-z0-9._%+-]+(?<!\.)@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (!fullEmail) {
       dispatch(clearEmailCheck());
+      return;
+    }
+
+    if (!emailRegex.test(fullEmail)) {
+      dispatch(setInvalidEmailFormat('사용할 수 없는 이메일 형식입니다.'));
       return;
     }
 
@@ -56,13 +60,15 @@ function EmailSection({
   };
 
   const handleEmailLocalChange = e => {
+    const value = e.target.value.replace(/[^A-Za-z0-9._%+-]/g, '');
     dispatch(clearEmailCheck());
-    onEmailLocalChange(e);
+    onEmailLocalChange({ ...e, target: { ...e.target, value } });
   };
 
   const handleCustomDomainChange = e => {
+    const value = e.target.value.replace(/[^A-Za-z0-9.-]/g, '');
     dispatch(clearEmailCheck());
-    onCustomDomainChange(e);
+    onCustomDomainChange({ ...e, target: { ...e.target, value } });
   };
 
   return (

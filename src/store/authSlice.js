@@ -218,6 +218,11 @@ const authSlice = createSlice({
       state.isNicknameChecked = false;
       state.isEmailChecked = false;
     },
+    setInvalidEmailFormat: (state, action) => {
+      state.emailCheckMessage = null;
+      state.emailCheckError = action.payload || '사용할 수 없는 이메일 형식입니다.';
+      state.isEmailChecked = false;
+    },
   },
   extraReducers: builder => {
     builder
@@ -339,6 +344,7 @@ export const {
   clearLoginIdCheck,
   clearUserInfo,
   clearAllChecks,
+  setInvalidEmailFormat,
 } = authSlice.actions;
 
 export default authSlice.reducer;
