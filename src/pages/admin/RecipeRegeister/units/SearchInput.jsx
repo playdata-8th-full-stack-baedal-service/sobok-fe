@@ -16,18 +16,22 @@ function SearchInput({
   const [result, setResult] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  // ✅ 1. '선택 중' 상태를 기억할 깃발(ref)을 만듭니다.
-  const isSelectionInProgress = useRef(false);
+  // 페이징 상태
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
+  const isSelectionInProgress = useRef(false);
   const dropdownRef = useRef(null);
   const searchTimeoutRef = useRef(null);
   const dispatch = useDispatch();
   const inputRef = useRef(null);
 
+  // resetSignal 변경 시 검색어 초기화
   useEffect(() => {
     setQuery('');
   }, [resetSignal]);
 
+  // 외부 클릭 시 드롭다운 닫기
   useEffect(() => {
     const handleClickOutside = event => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -44,12 +48,39 @@ function SearchInput({
     };
   }, [viewDropDown]);
 
-  // 실시간 검색을 위한 useEffect
+  // 드롭다운 닫을 때 페이지 초기화
   useEffect(() => {
-    // ✅ 2. 검색을 실행하기 전, 깃발이 올라가 있는지 확인합니다.
+    if (!viewDropDown) {
+      setCurrentPage(1);
+    }
+  }, [viewDropDown]);
+
+  // 검색 요청
+  const fetchIngredients = async (keyword = '') => {
+    setIsSearching(true);
+    try {
+      const response = await axiosInstance.get(
+        `/cook-service/ingredient/keyword-search?keyword=${keyword}`
+      );
+      if (response.data.success && Array.isArray(response.data.data)) {
+        setResult(response.data.data);
+        setCurrentPage(1);
+      } else {
+        setResult([]);
+      }
+      setViewDropDown(true);
+    } catch (err) {
+      console.error(err.response?.data?.message || '검색 중 오류가 발생했습니다.');
+      setResult([]);
+      setViewDropDown(true);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // 입력 시 검색
+  useEffect(() => {
     if (isSelectionInProgress.current) {
-      // 깃발이 올라가 있다면, '선택'이 일어났다는 뜻입니다.
-      // 검색을 막고, 다음 검색을 위해 깃발을 다시 내립니다.
       isSelectionInProgress.current = false;
       return;
     }
@@ -59,30 +90,9 @@ function SearchInput({
     }
 
     if (query.length > 0) {
-      searchTimeoutRef.current = setTimeout(async () => {
-        setIsSearching(true);
-        try {
-          const response = await axiosInstance.get(
-            `/cook-service/ingredient/keyword-search?keyword=${query}`
-          );
-          if (response.data.success && Array.isArray(response.data.data)) {
-            setResult(response.data.data);
-          } else {
-            setResult([]);
-          }
-          setViewDropDown(true);
-        } catch (err) {
-          console.error(err.response?.data?.message || '검색 중 오류가 발생했습니다.');
-          setResult([]);
-          setViewDropDown(true);
-        } finally {
-          setIsSearching(false);
-        }
-      }, 300); // 300ms 디바운싱
-    } else {
-      setViewDropDown(false);
-      setResult([]);
-      setIsSearching(false);
+      searchTimeoutRef.current = setTimeout(() => {
+        fetchIngredients(query);
+      }, 300);
     }
 
     return () => {
@@ -90,12 +100,10 @@ function SearchInput({
         clearTimeout(searchTimeoutRef.current);
       }
     };
-  }, [query]); // 이제 useEffect는 오직 query에만 의존합니다.
+  }, [query]);
 
   const handleInputClick = () => {
-    if (query.length > 0 && result.length > 0) {
-      setViewDropDown(true);
-    }
+    fetchIngredients('');
   };
 
   const handleInputChange = e => {
@@ -103,7 +111,6 @@ function SearchInput({
   };
 
   const handleKeyDown = e => {
-    // Enter 키에 대한 특별한 처리가 필요하다면 여기에 작성합니다.
     if (e.key === 'Enter') {
       e.preventDefault();
     }
@@ -113,7 +120,6 @@ function SearchInput({
     if (onIngredientSelect) {
       onIngredientSelect(item);
     }
-    // 선택 후 입력창을 비웁니다. 이로 인해 useEffect가 다시 실행됩니다.
     setQuery('');
     setResult([]);
     setViewDropDown(false);
@@ -126,17 +132,13 @@ function SearchInput({
         props: {
           initialIngreName: query,
           onSuccess: async newName => {
-            // ✅ 등록 성공 시 실행
-            setQuery(''); // 입력창 비우기
+            setQuery('');
             setViewDropDown(false);
-
-            // 전체 목록 다시 조회
             try {
               const res = await axiosInstance.get(
                 `/cook-service/ingredient/keyword-search?keyword=${newName}`
               );
               if (res.data.success && res.data.data.length > 0) {
-                // 자동 선택
                 if (onIngredientSelect) {
                   onIngredientSelect(res.data.data[0]);
                 }
@@ -153,10 +155,13 @@ function SearchInput({
 
   const handleDropdownClick = (item, e) => {
     e.preventDefault();
-    // ✅ 3. 사용자가 드롭다운을 클릭하는 순간, 깃발을 들어 올립니다!
     isSelectionInProgress.current = true;
     handleSelect(item);
   };
+
+  const totalPages = Math.ceil(result.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentResults = result.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <div className={style.searchContainer} ref={dropdownRef}>
@@ -180,7 +185,18 @@ function SearchInput({
               <div className={style.dropdownmenu}>검색 중...</div>
             ) : (
               <>
-                {result.map(item => (
+                <div
+                  className={style.dropdownmenuadd}
+                  onMouseDown={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleAddIngredient();
+                  }}
+                  style={{ cursor: 'pointer' }}
+                >
+                  식재료 추가 +
+                </div>
+                {currentResults.map(item => (
                   <div
                     key={item.id}
                     onMouseDown={e => handleDropdownClick(item, e)}
@@ -190,16 +206,36 @@ function SearchInput({
                     {item.ingreName}
                   </div>
                 ))}
-                <div
-                  className={style.dropdownmenuadd}
-                  onMouseDown={e => {
-                    e.preventDefault();
-                    handleAddIngredient();
-                  }}
-                  style={{ cursor: 'pointer' }}
-                >
-                  + 식재료 추가
-                </div>
+
+                {totalPages > 1 && (
+                  <div className={style.paginationControls}>
+                    <button
+                      type="button"
+                      onMouseDown={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (currentPage > 1) setCurrentPage(prev => prev - 1);
+                      }}
+                      disabled={currentPage === 1}
+                    >
+                      이전
+                    </button>
+                    <span>
+                      {currentPage} / {totalPages}
+                    </span>
+                    <button
+                      type="button"
+                      onMouseDown={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
+                      }}
+                      disabled={currentPage === totalPages}
+                    >
+                      다음
+                    </button>
+                  </div>
+                )}
               </>
             )}
           </div>

@@ -10,6 +10,8 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
       loginId: id,
       password,
     });
+
+    console.log("로그인 응답:", res.data);
     if (res.data.success) {
       const {
         accessToken,
@@ -35,6 +37,7 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
   } catch (e) {
     console.log(e);
     // 요청 자체 실패 (네트워크, 서버 에러 등)
+    console.log("로그인 실패 응답:", e.response?.data);
     return thunkAPI.rejectWithValue(e.response?.data?.message || '로그인 요청에 실패하였습니다.');
   }
 });

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import ModalWrapper from '../../../../common/modals/ModalWrapper';
 import axiosInstance from '../../../../services/axios-config';
 import styles from './MyOrderDetailPage.module.scss';
+import { calculateItemTotal } from '../../../../common/utils/cartUtils';
 
 const orderStatus = {
   ORDER_PENDING: '결제 완료',
@@ -26,6 +27,8 @@ const MyOrderDetailPage = ({ onClose, order }) => {
           `/payment-service/payment/detail/${order.paymentId}`
         );
         setOrderDetail(response.data.data);
+        const data = response.data.data;
+        console.log('🔎 주문 상세 전체 응답', data);
       } catch (error) {
         console.error('주문 상세 조회 실패:', error);
       } finally {
@@ -134,7 +137,7 @@ const MyOrderDetailPage = ({ onClose, order }) => {
                 <div className={styles.itemInfo}>
                   <h3>{item.cookName}</h3>
                   <p>수량: {item.quantity}개</p>
-                  <p>가격: {(+item.price * item.quantity)?.toLocaleString()}원</p>
+                  <p>가격: {calculateItemTotal(item).toLocaleString()}원</p>
                 </div>
               </div>
             ))}
