@@ -141,6 +141,32 @@
       z-index: 1;
     }
 
+    .paginationControls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+
+      button {
+        padding: 8px 12px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        background-color: white;
+        cursor: pointer;
+        border-radius: 4px;
+
+        &:disabled {
+          opacity: 0.5;
+        }
+      }
+
+      span {
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
+
+
     .dropdownContainer {
       position: absolute;
       top: 100%;
