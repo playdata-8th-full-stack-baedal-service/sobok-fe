@@ -104,45 +104,29 @@ function PhoneVerification({
       <div className={styles.inputWithButton}>
         <Input label="전화번호" required error={smsError} showLabel={showLabel}>
           <div className={styles.inputButtonGroup}>
-            <input
-              type="text"
-              id="phone"
-              name="phone"
-              value={phone}
-              onChange={onPhoneChange}
-              placeholder="전화번호를 입력하세요."
-              className={smsError ? styles.inputError : ''}
-              disabled={isCodeSent}
-            />
-            {/* 인증요청 버튼, 타이머, 재전송 버튼 분리 */}
-            {!isCodeSent && (
-              <Button
-                type="button"
-                variant="BASIC"
-                onClick={handleSendSMS}
-                className={styles.verifynumberbutton}
-              >
-                인증요청
-              </Button>
-            )}
-            {isCodeSent && timer > 0 && (
-              <div
-                className={styles.timerText}
-                style={{ minWidth: 80, textAlign: 'center', fontWeight: 'bold' }}
-              >
-                {formatTime(timer)}
-              </div>
-            )}
-            {isCodeSent && timer === 0 && (
-              <Button
-                type="button"
-                variant="BASIC"
-                onClick={handleResend}
-                className={styles.verifynumberbutton}
-              >
-                재전송
-              </Button>
-            )}
+            <div style={{ position: 'relative', width: '100%' }}>
+              <input
+                type="text"
+                id="phone"
+                name="phone"
+                value={phone}
+                onChange={onPhoneChange}
+                placeholder="전화번호를 입력하세요."
+                className={smsError ? styles.inputError : ''}
+                disabled={isVerified}
+                style={{ paddingRight: 60 }}
+              />
+              {timer > 0 && <span className={styles.timerText}>{formatTime(timer)}</span>}
+            </div>
+            <Button
+              type="button"
+              variant="BASIC"
+              onClick={isCodeSent ? handleResend : handleSendSMS}
+              className={styles.verifynumberbutton}
+              style={{ marginLeft: 4 }}
+            >
+              {isCodeSent ? '재전송' : '인증요청'}
+            </Button>
           </div>
         </Input>
       </div>
