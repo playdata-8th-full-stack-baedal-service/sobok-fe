@@ -1,52 +1,35 @@
-/* eslint-disable react/function-component-definition */
-import React, { useState } from 'react';
+// pages/user/Product/components/AdditionalIngredients.jsx
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from '../ProductPage.module.scss';
 import IngredientControl from './IngredientControl';
-import {
-  fetchAdditionalIngredients,
-  setAdditionalIngredients,
-  setSearchQuery,
-} from '../../../../../store/productSlice';
+import IngredientSearchInput from '@/common/forms/IngredientsSearch/IngredientSearchInput';
+import { setAdditionalIngredients } from '@/store/productSlice';
 
+/**
+ * 사용자 상품 상세 페이지 "추가 식재료" 컴포넌트
+ * - 같은 재료 선택 시 수량 증가
+ * - Redux에서 선택된 재료 관리
+ */
 const AdditionalIngredients = () => {
   const dispatch = useDispatch();
-  const { additionalIngredients, searchQuery } = useSelector(state => state.product);
+  const { additionalIngredients } = useSelector(state => state.product);
 
-  const [keyword, setKeyword] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handleSearch = e => {
-    setKeyword(e.target.value);
-    if (e.target.value.length < 1) {
-      dispatch(setSearchQuery([]));
-      return;
-    }
-
-    dispatch(fetchAdditionalIngredients(e.target.value));
-  };
-
-  const handleFocus = () => {
-    setIsFocused(true);
-    if (keyword.length < 1) return;
-
-    dispatch(fetchAdditionalIngredients(keyword));
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
-    setSearchQuery([]);
-  };
-
-  const handleIngredientClick = item => {
-    if (!additionalIngredients.find(ingredient => ingredient.id === item.id)) {
+  // 재료 선택 시 수량 증가 or 새로 추가
+  const handleSelect = item => {
+    const existing = additionalIngredients.find(ingredient => ingredient.id === item.id);
+    if (existing) {
+      const updated = additionalIngredients.map(ingredient =>
+        ingredient.id === item.id
+          ? { ...ingredient, quantity: ingredient.quantity + 1 }
+          : ingredient
+      );
+      dispatch(setAdditionalIngredients(updated));
+    } else {
       dispatch(
         setAdditionalIngredients([...additionalIngredients, { ...item, quantity: +item.unit }])
       );
     }
-
-    setKeyword('');
-    dispatch(setSearchQuery([]));
   };
 
   return (
@@ -55,45 +38,12 @@ const AdditionalIngredients = () => {
         <strong>추가 식재료</strong>
       </h3>
       <h3>추가 식재료는 1인분 기준으로 추가해주세요.</h3>
-      <div className={styles.searchBar}>
-        <input
-          type="text"
-          placeholder="식재료를 입력하세요"
-          onChange={handleSearch}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          value={keyword}
-        />
-      </div>
-      {isFocused && (
-        <div className={styles.searchResultContainer}>
-          <ul className={styles.searchResult}>
-            {searchQuery?.length > 0 &&
-              searchQuery.map((item, idx) => (
-                <button
-                  key={item.id || idx}
-                  onMouseDown={() => handleIngredientClick(item)}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      handleIngredientClick(item);
-                    }
-                  }}
-                  type="button"
-                  className={
-                    additionalIngredients.find(ingredient => ingredient.id === item.id)
-                      ? styles.searchItemSelected
-                      : styles.searchItem
-                  }
-                >
-                  {item.ingreName}
-                </button>
-              ))}
-          </ul>
-        </div>
-      )}
+      {/* 공통 검색 인풋 */}
+      <IngredientSearchInput placeholder="식재료를 입력하세요" onSelect={handleSelect} />
+      {/* 선택된 재료 목록 */}
       <div className={styles.ingredientGrid}>
-        {additionalIngredients?.map((item, idx) => (
-          <IngredientControl key={item.id || idx} item={item} />
+        {additionalIngredients.map(item => (
+          <IngredientControl key={item.id} item={item} />
         ))}
       </div>
     </div>
