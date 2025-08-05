@@ -15,10 +15,9 @@ function SearchInput({
   const [query, setQuery] = useState('');
   const [result, setResult] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(4); // 처음 4개만 보여줌
 
-  // ✅ 1. '선택 중' 상태를 기억할 깃발(ref)을 만듭니다.
   const isSelectionInProgress = useRef(false);
-
   const dropdownRef = useRef(null);
   const searchTimeoutRef = useRef(null);
   const dispatch = useDispatch();
@@ -44,12 +43,15 @@ function SearchInput({
     };
   }, [viewDropDown]);
 
-  // 실시간 검색을 위한 useEffect
+  // 드롭다운 닫을 때 visibleCount 초기화
   useEffect(() => {
-    // ✅ 2. 검색을 실행하기 전, 깃발이 올라가 있는지 확인합니다.
+    if (!viewDropDown) {
+      setVisibleCount(4);
+    }
+  }, [viewDropDown]);
+
+  useEffect(() => {
     if (isSelectionInProgress.current) {
-      // 깃발이 올라가 있다면, '선택'이 일어났다는 뜻입니다.
-      // 검색을 막고, 다음 검색을 위해 깃발을 다시 내립니다.
       isSelectionInProgress.current = false;
       return;
     }
@@ -67,6 +69,7 @@ function SearchInput({
           );
           if (response.data.success && Array.isArray(response.data.data)) {
             setResult(response.data.data);
+            setVisibleCount(4); // 새로운 검색 시 초기화
           } else {
             setResult([]);
           }
@@ -78,7 +81,7 @@ function SearchInput({
         } finally {
           setIsSearching(false);
         }
-      }, 300); // 300ms 디바운싱
+      }, 300);
     } else {
       setViewDropDown(false);
       setResult([]);
@@ -90,7 +93,7 @@ function SearchInput({
         clearTimeout(searchTimeoutRef.current);
       }
     };
-  }, [query]); // 이제 useEffect는 오직 query에만 의존합니다.
+  }, [query]);
 
   const handleInputClick = () => {
     if (query.length > 0 && result.length > 0) {
@@ -103,7 +106,6 @@ function SearchInput({
   };
 
   const handleKeyDown = e => {
-    // Enter 키에 대한 특별한 처리가 필요하다면 여기에 작성합니다.
     if (e.key === 'Enter') {
       e.preventDefault();
     }
@@ -113,7 +115,6 @@ function SearchInput({
     if (onIngredientSelect) {
       onIngredientSelect(item);
     }
-    // 선택 후 입력창을 비웁니다. 이로 인해 useEffect가 다시 실행됩니다.
     setQuery('');
     setResult([]);
     setViewDropDown(false);
@@ -126,17 +127,13 @@ function SearchInput({
         props: {
           initialIngreName: query,
           onSuccess: async newName => {
-            // ✅ 등록 성공 시 실행
-            setQuery(''); // 입력창 비우기
+            setQuery('');
             setViewDropDown(false);
-
-            // 전체 목록 다시 조회
             try {
               const res = await axiosInstance.get(
                 `/cook-service/ingredient/keyword-search?keyword=${newName}`
               );
               if (res.data.success && res.data.data.length > 0) {
-                // 자동 선택
                 if (onIngredientSelect) {
                   onIngredientSelect(res.data.data[0]);
                 }
@@ -153,9 +150,12 @@ function SearchInput({
 
   const handleDropdownClick = (item, e) => {
     e.preventDefault();
-    // ✅ 3. 사용자가 드롭다운을 클릭하는 순간, 깃발을 들어 올립니다!
     isSelectionInProgress.current = true;
     handleSelect(item);
+  };
+
+  const handleShowMore = () => {
+    setVisibleCount(prev => prev + 4);
   };
 
   return (
@@ -180,7 +180,7 @@ function SearchInput({
               <div className={style.dropdownmenu}>검색 중...</div>
             ) : (
               <>
-                {result.map(item => (
+                {result.slice(0, visibleCount).map(item => (
                   <div
                     key={item.id}
                     onMouseDown={e => handleDropdownClick(item, e)}
@@ -190,15 +190,28 @@ function SearchInput({
                     {item.ingreName}
                   </div>
                 ))}
+                {result.length > visibleCount && (
+                  <div
+                    className={style.dropdownmenumore}
+                    onMouseDown={e => {
+                      e.preventDefault();
+                      e.stopPropagation(); // ✅ 외부 클릭으로 닫히지 않도록
+                      handleShowMore();
+                    }}
+                  >
+                    더보기 +
+                  </div>
+                )}
                 <div
                   className={style.dropdownmenuadd}
                   onMouseDown={e => {
                     e.preventDefault();
+                    e.stopPropagation(); // ✅ 닫힘 방지
                     handleAddIngredient();
                   }}
                   style={{ cursor: 'pointer' }}
                 >
-                  + 식재료 추가
+                  식재료 추가 +
                 </div>
               </>
             )}
