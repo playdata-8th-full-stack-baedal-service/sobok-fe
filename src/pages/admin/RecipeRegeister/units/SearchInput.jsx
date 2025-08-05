@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search } from 'lucide-react';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
+import { Search } from 'lucide-react';
+import axiosInstance from '@/services/axios-config';
 import { openModal } from '@/store/modalSlice';
 import style from '../RecipeRegistPage.module.scss';
-import { API_BASE_URL } from '@/services/host-config';
-import axiosInstance from '../../../../services/axios-config';
-// import axiosInstance from '../../../../services/axios-config';
 
 function SearchInput({
   placeholder = '검색어를 입력하세요.',
@@ -18,14 +15,23 @@ function SearchInput({
   const [query, setQuery] = useState('');
   const [result, setResult] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+
+  // 페이징 상태
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  const isSelectionInProgress = useRef(false);
   const dropdownRef = useRef(null);
   const searchTimeoutRef = useRef(null);
   const dispatch = useDispatch();
+  const inputRef = useRef(null);
 
+  // resetSignal 변경 시 검색어 초기화
   useEffect(() => {
     setQuery('');
   }, [resetSignal]);
 
+  // 외부 클릭 시 드롭다운 닫기
   useEffect(() => {
     const handleClickOutside = event => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -42,41 +48,51 @@ function SearchInput({
     };
   }, [viewDropDown]);
 
-  // 검색어 변경 시 타이머 설정
+  // 드롭다운 닫을 때 페이지 초기화
   useEffect(() => {
+    if (!viewDropDown) {
+      setCurrentPage(1);
+    }
+  }, [viewDropDown]);
+
+  // 검색 요청
+  const fetchIngredients = async (keyword = '') => {
+    setIsSearching(true);
+    try {
+      const response = await axiosInstance.get(
+        `/cook-service/ingredient/keyword-search?keyword=${keyword}`
+      );
+      if (response.data.success && Array.isArray(response.data.data)) {
+        setResult(response.data.data);
+        setCurrentPage(1);
+      } else {
+        setResult([]);
+      }
+      setViewDropDown(true);
+    } catch (err) {
+      console.error(err.response?.data?.message || '검색 중 오류가 발생했습니다.');
+      setResult([]);
+      setViewDropDown(true);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // 입력 시 검색
+  useEffect(() => {
+    if (isSelectionInProgress.current) {
+      isSelectionInProgress.current = false;
+      return;
+    }
+
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
 
     if (query.length > 0) {
-      setIsSearching(true);
-      searchTimeoutRef.current = setTimeout(async () => {
-        try {
-          const response = await axiosInstance.get(
-            `/cook-service/ingredient/keyword-search?keyword=${query}`
-          );
-          console.log('API 응답:', response.data); // 디버깅용
-          if (response.data.success && Array.isArray(response.data.data)) {
-            setResult(response.data.data);
-            setViewDropDown(true);
-            console.log('검색결과(배열):', response.data.data); // 디버깅용
-          } else {
-            setResult([]);
-            setViewDropDown(true);
-            console.log('검색결과 없음 또는 data null'); // 디버깅용
-          }
-        } catch (err) {
-          console.error(err.response?.data?.message || '검색 중 오류가 발생했습니다.');
-          setResult([]);
-          setViewDropDown(true);
-        } finally {
-          setIsSearching(false);
-        }
-      }, 500);
-    } else {
-      setViewDropDown(false);
-      setResult([]);
-      setIsSearching(false);
+      searchTimeoutRef.current = setTimeout(() => {
+        fetchIngredients(query);
+      }, 300);
     }
 
     return () => {
@@ -86,33 +102,27 @@ function SearchInput({
     };
   }, [query]);
 
-  // 렌더링 직전 상태 확인
-  console.log('렌더링 직전 result:', result, 'viewDropDown:', viewDropDown, 'query:', query);
-
   const handleInputClick = () => {
-    if (query.length > 0) {
-      setViewDropDown(!viewDropDown);
-    }
+    fetchIngredients('');
   };
 
   const handleInputChange = e => {
-    const { value } = e.target;
-    setQuery(value);
+    setQuery(e.target.value);
   };
 
-  // 엔터 키 이벤트 핸들러 추가
   const handleKeyDown = e => {
     if (e.key === 'Enter') {
-      e.preventDefault(); // form submit 방지
+      e.preventDefault();
     }
   };
 
   const handleSelect = item => {
-    setQuery(item.ingreName);
-    setViewDropDown(false);
     if (onIngredientSelect) {
       onIngredientSelect(item);
     }
+    setQuery('');
+    setResult([]);
+    setViewDropDown(false);
   };
 
   const handleAddIngredient = () => {
@@ -121,19 +131,45 @@ function SearchInput({
         type: 'INGREDIENT_REGISTER',
         props: {
           initialIngreName: query,
+          onSuccess: async newName => {
+            setQuery('');
+            setViewDropDown(false);
+            try {
+              const res = await axiosInstance.get(
+                `/cook-service/ingredient/keyword-search?keyword=${newName}`
+              );
+              if (res.data.success && res.data.data.length > 0) {
+                if (onIngredientSelect) {
+                  onIngredientSelect(res.data.data[0]);
+                }
+              }
+            } catch (err) {
+              console.error('등록 후 재조회 실패:', err);
+            }
+          },
         },
       })
     );
     setViewDropDown(false);
   };
 
+  const handleDropdownClick = (item, e) => {
+    e.preventDefault();
+    isSelectionInProgress.current = true;
+    handleSelect(item);
+  };
+
+  const totalPages = Math.ceil(result.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentResults = result.slice(startIndex, startIndex + itemsPerPage);
+
   return (
     <div className={style.searchContainer} ref={dropdownRef}>
       <input
-        onClick={handleInputClick}
+        ref={inputRef}
+        onFocus={handleInputClick}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        onFocus={handleInputClick}
         value={query}
         className={style.searchbar}
         type="text"
@@ -142,32 +178,64 @@ function SearchInput({
       <div className={style.searchIcon}>
         <Search size={15} color="#000000" />
       </div>
-      {viewDropDown && query.length > 0 && (
+      {viewDropDown && (
         <div className={style.dropdownContainer}>
           <div className={style.SearchDropDown}>
             {isSearching ? (
               <div className={style.dropdownmenu}>검색 중...</div>
             ) : (
               <>
-                {result &&
-                  result.length > 0 &&
-                  result.map(item => (
-                    <div
-                      key={item.id}
-                      onClick={() => handleSelect(item)}
-                      className={style.dropdownmenu}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      {item.ingreName}
-                    </div>
-                  ))}
                 <div
                   className={style.dropdownmenuadd}
-                  onClick={handleAddIngredient}
+                  onMouseDown={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleAddIngredient();
+                  }}
                   style={{ cursor: 'pointer' }}
                 >
-                  + 식재료 추가
+                  식재료 추가 +
                 </div>
+                {currentResults.map(item => (
+                  <div
+                    key={item.id}
+                    onMouseDown={e => handleDropdownClick(item, e)}
+                    className={style.dropdownmenu}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {item.ingreName}
+                  </div>
+                ))}
+
+                {totalPages > 1 && (
+                  <div className={style.paginationControls}>
+                    <button
+                      type="button"
+                      onMouseDown={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (currentPage > 1) setCurrentPage(prev => prev - 1);
+                      }}
+                      disabled={currentPage === 1}
+                    >
+                      이전
+                    </button>
+                    <span>
+                      {currentPage} / {totalPages}
+                    </span>
+                    <button
+                      type="button"
+                      onMouseDown={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
+                      }}
+                      disabled={currentPage === totalPages}
+                    >
+                      다음
+                    </button>
+                  </div>
+                )}
               </>
             )}
           </div>

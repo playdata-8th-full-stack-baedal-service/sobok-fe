@@ -4,6 +4,7 @@ import { sendSMSCode, verifySMSCode } from '../../../store/smsAuthSlice';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import styles from './PhoneVerification.module.scss';
+import useToast from '@/common/hooks/useToast';
 
 function PhoneVerification({
   phone,
@@ -16,6 +17,7 @@ function PhoneVerification({
 }) {
   const dispatch = useDispatch();
   const { isVerified, isCodeSent, error: smsError } = useSelector(state => state.smsAuth);
+  const { showNegative } = useToast();
 
   // 타이머 상태
   const [timer, setTimer] = useState(0); // 남은 초

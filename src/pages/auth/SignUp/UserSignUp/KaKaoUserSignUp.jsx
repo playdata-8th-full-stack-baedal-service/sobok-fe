@@ -6,6 +6,7 @@ import {
   clearEmailCheck,
   clearLoginIdCheck,
   clearNicknameCheck,
+  checkNickName,
 } from '@/store/authSlice';
 import { clearSMSAuth } from '@/store/smsAuthSlice';
 import ProfileSection from './components/signup/ProfileSection';
@@ -17,16 +18,15 @@ import axios from 'axios';
 import { API_BASE_URL } from '@/services/host-config';
 import styles from './UserSignUp.module.scss';
 import useToast from '@/common/hooks/useToast';
-
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 
 function UserSignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const ref = useRef();
-  const { showSuccess, showNegative, showInfo } = useToast();
+  const { showNegative } = useToast();
 
-  const { loading, error, signUpSuccess } = useSelector(state => state.auth);
+  const { loading, error, signUpSuccess, isNicknameChecked } = useSelector(state => state.auth);
   const { isVerified } = useSelector(state => state.smsAuth);
 
   const [formData, setFormData] = useState({
@@ -45,63 +45,57 @@ function UserSignUp() {
   const [customDomain, setCustomDomain] = useState('');
   const [isCustomDomain, setIsCustomDomain] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
-  const [isSocialUser, setIsSocialUser] = useState(false);
 
   const location = useLocation();
   const signupData = location.state;
-
   const [searchParams] = useSearchParams();
 
-  // 쿼리에서 값 꺼내기
   const provider = searchParams.get('provider');
   const oauthId = searchParams.get('oauthId');
   const nickname = searchParams.get('nickname');
   const email = searchParams.get('email');
 
-  const debounceTimer = useRef(null);
-
+  // 소셜 로그인 값 자동 입력
   useEffect(() => {
-    console.log('쿼리로 전달받은 값:', {
-      provider,
-      oauthId,
-      nickname,
-      email,
-    });
-    if (signupData) {
-      console.log('넘겨받은 JSON:', signupData);
-
-      if (signupData.provider === 'KAKAO' || signupData.provider === 'GOOGLE') {
-        // 1. 닉네임 자동 입력
-        if (signupData.nickname) {
-          setFormData(prev => ({
-            ...prev,
-            nickname: signupData.nickname,
-          }));
-        }
-
-        // 2. 이메일 자동 입력 (local@domain 분리)
-        if (signupData.email) {
-          const [local, domain] = signupData.email.split('@');
-          setEmailLocal(local || '');
-          setEmailDomain(domain || 'gmail.com'); // 기본값
-        }
-
-        // 소셜 로그인일 때, 필수 입력값을 임의로 채움
+    if (signupData && (signupData.provider === 'KAKAO' || signupData.provider === 'GOOGLE')) {
+      // 닉네임 자동 입력
+      if (signupData.nickname) {
         setFormData(prev => ({
           ...prev,
-          loginId: `social_${signupData.kakaoId}`, // 임의 아이디
-          password: 'Password123!!', // 임의 비밀번호
-          nickname: signupData.nickname || '',
-          phone: signupData.phone || '',
-          oauthId: signupData.oauthId || null,
+          nickname: signupData.nickname,
         }));
-        setPasswordConfirm('Password123!!');
-        setIsSocialUser(true);
       }
-    } else {
-      console.warn('state가 비어 있습니다. 새로고침 시 사라질 수 있습니다.');
+
+      // 이메일 자동 입력
+      if (signupData.email) {
+        const [local, domain] = signupData.email.split('@');
+        setEmailLocal(local || '');
+        setEmailDomain(domain || 'gmail.com');
+      }
+
+      // 로그인 ID 및 기본 데이터
+      setFormData(prev => ({
+        ...prev,
+        loginId: `social_${signupData.kakaoId || signupData.oauthId}`,
+        password: 'Password123!!',
+        nickname: signupData.nickname || '',
+        phone: signupData.phone || '',
+        oauthId: signupData.oauthId || signupData.kakaoId || null,
+      }));
+
+      setPasswordConfirm('Password123!!');
     }
   }, [signupData]);
+
+  // 닉네임 자동 입력 시 중복 검사 자동 실행
+  useEffect(() => {
+    if (formData.nickname.trim()) {
+      const timer = setTimeout(() => {
+        dispatch(checkNickName(formData.nickname));
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [formData.nickname]);
 
   const handleInputChange = e => {
     const { name, value } = e.target;
@@ -109,21 +103,9 @@ function UserSignUp() {
       ...prev,
       [name]: value,
     }));
-    if (name === 'nickname') {
-      if (debounceTimer.current) {
-        clearTimeout(debounceTimer.current);
-      }
-      debounceTimer.current = setTimeout(() => {
-        if (value.trim()) {
-          dispatch(checkNickName(value));
-        }
-      }, 500); // 0.5초 후 검사 실행
-    }
   };
 
-  const handleFileSelect = file => {
-    setSelectedFile(file);
-  };
+  const handleFileSelect = file => setSelectedFile(file);
 
   const handleDomainChange = selected => {
     if (selected === '직접입력') {
@@ -170,36 +152,41 @@ function UserSignUp() {
   };
 
   const validateForm = () => {
-    console.log('isSocialUser의 값', isSocialUser);
-
     if (!formData.loginId || !formData.password || !formData.nickname || !formData.phone) {
       showNegative('필수 항목을 모두 입력해주세요.');
       ref.current?.focus();
       return false;
     }
-
     if (formData.password !== passwordConfirm) {
       showNegative('비밀번호가 일치하지 않습니다.');
       return false;
     }
 
+    // 비밀번호 검증
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,16}$/;
     if (!passwordRegex.test(formData.password)) {
       showNegative('비밀번호는 대소문자, 숫자, 특수문자를 포함하여 8~16자로 입력해주세요.');
       return false;
     }
 
+    // 전화번호 검증
     const phoneRegex = /^\d{11}$/;
     if (!phoneRegex.test(formData.phone)) {
       showNegative('전화번호는 하이픈 없이 11자리 숫자로 입력해주세요.');
       return false;
     }
-
     if (!isVerified) {
       showNegative('휴대폰 인증을 완료해주세요.');
       return false;
     }
 
+    // 이메일 검증
+    const emailValue = getFullEmail();
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (emailValue && !emailRegex.test(emailValue)) {
+      showNegative('올바른 이메일 형식이 아닙니다.');
+      return false;
+    }
     return true;
   };
 
@@ -219,7 +206,6 @@ function UserSignUp() {
   const uploadToS3 = async (file, tempToken) => {
     const formImageData = new FormData();
     formImageData.append('image', file);
-
     try {
       const response = await axios.put(
         `${API_BASE_URL}/api-service/api/upload-image/profile`,
@@ -231,7 +217,6 @@ function UserSignUp() {
           },
         }
       );
-
       if (response.data.success && response.data.data) {
         return response.data.data;
       }
@@ -242,16 +227,12 @@ function UserSignUp() {
     }
   };
 
-  const { isNicknameChecked } = useSelector(state => state.auth);
-
   const handleSubmit = async e => {
     e.preventDefault();
-
     if (!isNicknameChecked) {
       showNegative('닉네임 중복확인을 해주세요.');
       return;
     }
-
     if (!validateForm()) return;
 
     let completeFormData = {
@@ -263,18 +244,11 @@ function UserSignUp() {
     };
 
     try {
-      // 프로필 사진이 선택된 경우 S3에 업로드
       if (selectedFile) {
         const tempToken = await getTempToken();
         const uploadedUrl = await uploadToS3(selectedFile, tempToken);
-        completeFormData = {
-          ...completeFormData,
-          photo: uploadedUrl,
-        };
+        completeFormData = { ...completeFormData, photo: uploadedUrl };
       }
-
-      console.log('[회원가입 요청 데이터]', completeFormData);
-
       await dispatch(kakaoSignUpUser(completeFormData)).unwrap();
     } catch (err) {
       console.error('회원가입 실패:', err);
@@ -293,10 +267,10 @@ function UserSignUp() {
     }
   }, [signUpSuccess, dispatch]);
 
-  // 페이지 진입 시 상태 초기화
+  // 페이지 진입 시 SMS 인증 초기화
   useEffect(() => {
     dispatch(clearSMSAuth());
-  }, [formData.loginId]);
+  }, []);
 
   return (
     <div className={styles['signup-wrap']}>
@@ -312,14 +286,12 @@ function UserSignUp() {
             disabled={true}
             showLoginIdInput={false}
           />
-
           <PhoneVerification
             phone={formData.phone}
             verificationCode={verificationCode}
             onPhoneChange={handleInputChange}
             onVerificationCodeChange={e => setVerificationCode(e.target.value)}
           />
-
           <EmailSection
             emailLocal={emailLocal}
             emailDomain={emailDomain}
@@ -331,20 +303,17 @@ function UserSignUp() {
             getFullEmail={getFullEmail}
             disabled={false}
           />
-
           <AddressSection
             roadFull={formData.roadFull}
             addDetail={formData.addrDetail}
             onAddressChange={handleAddressChange}
             showDetail={true}
           />
-
           <div className={styles['form-group']}>
             <Button type="submit" loading={loading} variant="BASIC" className="wide">
               회원가입
             </Button>
           </div>
-
           {error && <div className={styles['error-message']}>{error}</div>}
         </form>
       </div>

@@ -124,17 +124,36 @@ function UserSignUp() {
       return false;
     }
 
+    // 아이디 유효성 검사 추가
+    const loginIdRegex = /^[a-zA-Z0-9]+$/;
+    if (!loginIdRegex.test(formData.loginId)) {
+      showNegative('아이디는 영문자와 숫자만 사용 가능합니다.');
+      return false;
+    }
+    
+    if (formData.loginId.length < 4 || formData.loginId.length > 20) {
+      showNegative('아이디는 4자 이상 20자 이하여야 합니다.');
+      return false;
+    }
+    
+    if (/^\d+$/.test(formData.loginId)) {
+      showNegative('아이디는 숫자로만 구성될 수 없습니다.');
+      return false;
+    }
+
     if (formData.password !== passwordConfirm) {
       showNegative('비밀번호가 일치하지 않습니다.');
       return false;
     }
 
+    // 비밀번호 검증
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,16}$/;
     if (!passwordRegex.test(formData.password)) {
       showNegative('비밀번호는 대소문자, 숫자, 특수문자를 포함하여 8~16자로 입력해주세요.');
       return false;
     }
 
+    // 전호번호 검증
     const phoneRegex = /^\d{11}$/;
     if (!phoneRegex.test(formData.phone)) {
       showNegative('전화번호는 하이픈 없이 11자리 숫자로 입력해주세요.');
@@ -143,6 +162,14 @@ function UserSignUp() {
 
     if (!isVerified) {
       showNegative('휴대폰 인증을 완료해주세요.');
+      return false;
+    }
+
+    // 이메일 검증
+    const emailValue = getFullEmail();
+    const emailRegex = /^(?!\.)(?!.*\.\.)[A-Za-z0-9._%+-]+(?<!\.)@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (emailValue && !emailRegex.test(emailValue)) {
+      showNegative('올바른 이메일 형식이 아닙니다.');
       return false;
     }
 
@@ -289,6 +316,7 @@ function UserSignUp() {
             onDomainChange={handleDomainChange}
             onCustomDomainChange={e => setCustomDomain(e.target.value)}
             getFullEmail={getFullEmail}
+            disabled={false}
           />
 
           <AddressSection

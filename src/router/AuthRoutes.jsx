@@ -19,7 +19,7 @@ function AuthRoutes() {
         <Route path="signup/complete" element={<SignUpComplete />} />
         <Route path="signup/usersignup" element={<UserSignUp />} />
         <Route path="signup/ridersignup" element={<RiderSignUp />} />
-        <Route path="signup/kakao-usersignup" element={<KaKaoUserSignUp />} />
+        <Route path="signup/social-usersignup" element={<KaKaoUserSignUp />} />
       </Routes>
     </>
   );

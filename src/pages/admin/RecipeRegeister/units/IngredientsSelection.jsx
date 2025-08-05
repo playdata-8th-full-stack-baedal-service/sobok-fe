@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import style from '../RecipeRegistPage.module.scss';
 import SearchInput from './SearchInput';
-import { API_BASE_URL } from '../../../../services/host-config';
+import { API_BASE_URL } from '@/services/host-config';
 
 function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSignal }) {
   const [ingredients, setIngredients] = useState([]);
@@ -197,7 +197,8 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
                 <div className={style.ingredientInfo}>
                   <span className={style.ingredientName}>{ingredient.ingreName}</span>
                   <span className={style.priceInfo}>
-                    {ingredient.totalPrice.toLocaleString()}원 (1g당 {ingredient.pricePerUnit.toFixed(0)}원)
+                    {ingredient.totalPrice.toLocaleString()}원 (1g당{' '}
+                    {ingredient.pricePerUnit.toFixed(0)}원)
                   </span>
                   <span className={style.unitInfo}>
                     개수: {ingredient.unitQuantity}개 ({ingredient.unit}g)

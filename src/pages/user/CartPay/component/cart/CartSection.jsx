@@ -28,9 +28,11 @@ const CartSection = () => {
 
       {/* 장바구니 목록 */}
       <CartList />
-      <button className={styles.btnPay} type="button" onClick={handlePayPop}>
-        결제하기
-      </button>
+      {isPayVisible && (
+        <button className={styles.btnPay} type="button" onClick={handlePayPop}>
+          결제하기
+        </button>
+      )}
     </div>
   );
 };

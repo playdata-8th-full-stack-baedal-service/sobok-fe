@@ -12,7 +12,6 @@ import {
   setPayClick,
 } from '../../../../../store/cartPaySlice';
 import Checkout from './Checkout';
-import axiosInstance from '../../../../../services/axios-config';
 
 const PaySection = () => {
   const dispatch = useDispatch();
@@ -43,7 +42,7 @@ const PaySection = () => {
         orderId,
         totalPrice,
         riderRequest,
-        userAddressId: orderer.addresses[selectedAddressId].id,
+        userAddressId: selectedAddressId,
         cartCookIdList: selectedCartItemIds,
       })
     );
@@ -51,10 +50,10 @@ const PaySection = () => {
   };
 
   useEffect(() => {
-    if (orderer?.addresses == null || orderer.addresses[selectedAddressId]?.id == null) return;
+    if (orderer?.addresses == null || selectedAddressId == null) return;
     dispatch(
       fetchShopInfo({
-        addressId: orderer.addresses[selectedAddressId].id,
+        addressId: selectedAddressId,
         cartIngredientStockList,
       })
     );
@@ -78,7 +77,13 @@ const PaySection = () => {
             type="button"
             onClick={handleStartPayment}
             className={styles.btnPay}
-            disabled={totalPrice === 0 || !isReady || shopInfo.length === 0}
+            disabled={
+              totalPrice === 0 ||
+              !isReady ||
+              !shopInfo ||
+              shopInfo.length === 0 ||
+              shopInfo.every(shop => !shop.satisfiable)
+            }
           >
             {totalPrice.toLocaleString()} 원 결제 하기
           </button>

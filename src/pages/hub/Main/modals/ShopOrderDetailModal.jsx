@@ -23,16 +23,30 @@ const ShopOrderDetailModal = ({ onClose, order }) => {
   }, [order]);
 
   const handleChangeOrderState = async () => {
-    const response = await axiosInstance.patch(
-      `/payment-service/payment/change-orderState?id=${order.paymentId}`
-    );
-    dispatch(setRefreshAll(true));
-    dispatch(fetchPreparingOrders({ orderState: 'PREPARING_INGREDIENTS' }));
-    dispatch(fetchPreparingOrders({ orderState: 'READY_FOR_DELIVERY' }));
-    onClose();
+    // 확인 다이얼로그 표시
+    const isConfirmed = window.confirm('정말 주문 상태를 변경하시겠습니까?');
+    
+    // 사용자가 "아니요"를 선택한 경우 함수 종료
+    if (!isConfirmed) {
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.patch(
+        `/payment-service/payment/change-orderState?id=${order.paymentId}`
+      );
+      dispatch(setRefreshAll(true));
+      dispatch(fetchPreparingOrders({ orderState: 'PREPARING_INGREDIENTS' }));
+      dispatch(fetchPreparingOrders({ orderState: 'READY_FOR_DELIVERY' }));
+      onClose();
+    } catch (error) {
+      console.error('주문 상태 변경 실패:', error);
+      // 에러 처리 로직을 추가할 수 있습니다
+    }
   };
 
   console.log('orderDetail', orderDetail);
+
   return (
     <ModalWrapper title="주문 내역" onClose={onClose}>
       <div className={styles.orderDetailContainer}>
@@ -44,7 +58,6 @@ const ShopOrderDetailModal = ({ onClose, order }) => {
             </div>
             <div className={styles.status}>{orderStatus[orderDetail?.orderState]}</div>
           </div>
-
           {orderDetail?.items?.map((item, idx) => (
             <div key={item.cookId + idx} className={styles.menuItem}>
               <div className={styles.cookName}>{item.cookName}</div>
@@ -68,21 +81,18 @@ const ShopOrderDetailModal = ({ onClose, order }) => {
               </div>
             </div>
           ))}
-
           <div className={styles.contactInfo}>
             <div>사용자 주소</div>
             <div>{orderDetail?.roadFull}</div>
             <div>배달원 요청사항</div>
             <div>{orderDetail?.riderRequest}</div>
           </div>
-
           <div className={styles.paymentInfo}>
             <div>결제 방법</div>
             <div>{orderDetail?.payMethod}</div>
             <div>결제 금액</div>
             <div>{orderDetail?.totalPrice?.toLocaleString() || ''}원</div>
           </div>
-
           <div className={styles.buttonContainer}>
             {orderDetail?.orderState === 'PREPARING_INGREDIENTS' && (
               <Button className={styles.checkout} onClick={handleChangeOrderState}>

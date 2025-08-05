@@ -51,7 +51,7 @@ function SocialLoginListener() {
       if (data.type === 'NEW_USER_SIGNUP') {
         console.log('🆕 신규 사용자, 회원가입 유도:', data);
 
-        navigate('/auth/signup/kakao-usersignup', {
+        navigate('/auth/signup/social-usersignup', {
           state: {
             provider: data.provider,
             oauthId: data.oauthId,

@@ -3,12 +3,12 @@ import axios from 'axios';
 import ModalWrapper from '@/common/modals/ModalWrapper';
 import styles from '../RecipeRegistPage.module.scss';
 import { API_BASE_URL } from '@/services/host-config';
-import axiosInstance from '../../../../services/axios-config';
+import axiosInstance from '@/services/axios-config';
 import useToast from '@/common/hooks/useToast';
 
 function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
   const [formData, setFormData] = useState({
-    ingreName: initialIngreName,
+    ingreName: initialIngreName.trim(),
     price: '',
     origin: '',
     unit: '',
@@ -88,6 +88,7 @@ function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
       console.log(response.data);
       if (response.data.success) {
         showSuccess('식재료가 등록되었습니다.');
+        if (props.onSuccess) props.onSuccess(formData.data);
         if (onClose) onClose();
       } else {
         showNegative(response.data.message);
@@ -111,9 +112,9 @@ function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
             <input
               type="text"
               name="ingreName"
-              value={formData.ingreName}
-              onChange={handleInputChange}
+              value={formData.ingreName || ''}
               placeholder="식재료명을 입력하세요"
+              onChange={handleInputChange}
             />
           </div>
 
@@ -128,7 +129,7 @@ function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
               onChange={handleInputChange}
               placeholder="가격을 입력하세요"
               min="0"
-              style={{height: '35px'}}
+              style={{ height: '35px' }}
             />
           </div>
 

@@ -10,6 +10,8 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
       loginId: id,
       password,
     });
+
+    console.log("로그인 응답:", res.data);
     if (res.data.success) {
       const {
         accessToken,
@@ -35,6 +37,7 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ id, passwor
   } catch (e) {
     console.log(e);
     // 요청 자체 실패 (네트워크, 서버 에러 등)
+    console.log("로그인 실패 응답:", e.response?.data);
     return thunkAPI.rejectWithValue(e.response?.data?.message || '로그인 요청에 실패하였습니다.');
   }
 });
@@ -218,6 +221,11 @@ const authSlice = createSlice({
       state.isNicknameChecked = false;
       state.isEmailChecked = false;
     },
+    setInvalidEmailFormat: (state, action) => {
+      state.emailCheckMessage = null;
+      state.emailCheckError = action.payload || '사용할 수 없는 이메일 형식입니다.';
+      state.isEmailChecked = false;
+    },
   },
   extraReducers: builder => {
     builder
@@ -339,6 +347,7 @@ export const {
   clearLoginIdCheck,
   clearUserInfo,
   clearAllChecks,
+  setInvalidEmailFormat,
 } = authSlice.actions;
 
 export default authSlice.reducer;

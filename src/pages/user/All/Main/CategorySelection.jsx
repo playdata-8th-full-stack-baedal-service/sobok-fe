@@ -2,6 +2,8 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import styles from './MainPage.module.scss';
 import axiosInstance from '../../../../services/axios-config';
 
@@ -20,10 +22,12 @@ function CategorySelection() {
   const [cookList, setCookList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [sortByOrder, setSortByOrder] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   // 최신순 데이터 불러오기 (프론트에서 카테고리 필터링)
   const fetchLatest = async () => {
+    setIsLoading(true);
     try {
       const res = await axiosInstance.get('/cook-service/cooks', {
         params: {
@@ -36,6 +40,8 @@ function CategorySelection() {
       setCookList(res.data.data);
     } catch (e) {
       setCookList([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -48,11 +54,13 @@ function CategorySelection() {
     setSelectedCategory(korCategory);
   };
 
-  // 더보기 버튼 클릭 시 해당 카테고리 목록 페이지로 이동
+  // 더보기 버튼 클릭 시 카테고리 목록 페이지로 이동
   const handleMoreClick = () => {
     if (selectedCategory && selectedCategory !== '전체') {
       const categoryCode = CATEGORY_MAP[selectedCategory];
       navigate(`/category?category=${categoryCode}`);
+    } else {
+      navigate(`/category`);
     }
   };
 
@@ -63,6 +71,28 @@ function CategorySelection() {
       navigate(`/product?id=${id}`);
     }
   };
+
+  // 스켈레톤 그리드 아이템 컴포넌트
+  function SkeletonGridItem({ index }) {
+    return (
+      <div className={`${styles.gridItem} ${styles[`grid${index + 1}`]}`}>
+        <SkeletonTheme baseColor="#f0f0f0" highlightColor="#e0e0e0">
+          <Skeleton
+            height="100%"
+            width="100%"
+            className={styles.cookThumbnail}
+            style={{ borderRadius: '8px' }}
+          />
+          <div className={styles.cooknametitle}>
+            <Skeleton height={20} width="80%" className={styles.realtitle} />
+          </div>
+          <div>
+            <Skeleton height={16} width="60%" />
+          </div>
+        </SkeletonTheme>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.CategorySelection}>
@@ -117,7 +147,10 @@ function CategorySelection() {
       </div>
 
       <div className={styles.categorybottomselection}>
-        {cookList.length === 0 ? (
+        {isLoading ? (
+          // 로딩 중일 때 스켈레톤 UI 표시
+          Array.from({ length: 5 }, (_, index) => <SkeletonGridItem key={index} index={index} />)
+        ) : cookList.length === 0 ? (
           <div style={{ gridColumn: '1 / 6', textAlign: 'center' }}>검색 결과가 없습니다.</div>
         ) : (
           cookList.slice(0, 5).map((cook, idx) => {
@@ -155,7 +188,16 @@ function CategorySelection() {
       </div>
 
       {/* 더보기 버튼: 전체 카테고리에서는 숨김, 카테고리별일 때만 보임 */}
-      {selectedCategory !== '전체' && (
+      {!isLoading && selectedCategory !== '전체' ? (
+        <div className={styles.learnmoreBtnWrap}>
+          <button className={styles.learnmore} onClick={handleMoreClick} type="button">
+            <span className={styles.circle} aria-hidden="true">
+              <span className={`${styles.icon} ${styles.arrow}`} />
+            </span>
+            <span className={styles.buttontext}>더보기</span>
+          </button>
+        </div>
+      ) : (
         <div className={styles.learnmoreBtnWrap}>
           <button className={styles.learnmore} onClick={handleMoreClick} type="button">
             <span className={styles.circle} aria-hidden="true">

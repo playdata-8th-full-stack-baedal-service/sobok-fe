@@ -63,8 +63,17 @@ function MenuTest() {
     closeSiderBar(); // 페이드 아웃 애니메이션과 함께 닫기
   };
 
+  const handleCategoryallClick = category => {
+    nav(`/category`);
+    if (window.location.pathname.includes('/category')) {
+      window.location.reload();
+    }
+    closeSiderBar(); // 페이드 아웃 애니메이션과 함께 닫기
+  };
+
   const handleGoToPostList = () => {
     nav('/post-list');
+    closeSiderBar();
   };
 
   return (
@@ -93,6 +102,9 @@ function MenuTest() {
               전체 게시글
             </p>
             <p className={styles.cooktitle}>COOK</p>
+            <p className={styles.element} onClick={() => handleCategoryallClick()}>
+              전체
+            </p>
             <p className={styles.element} onClick={() => handleCategoryClick('KOREAN')}>
               한식
             </p>
