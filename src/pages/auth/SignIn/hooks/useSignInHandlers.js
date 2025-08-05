@@ -4,7 +4,6 @@ import { loginUser } from '../../../../store/authSlice';
 import { openModal } from '../../../../store/modalSlice';
 import useToast from '@/common/hooks/useToast';
 
-
 export default function useSignInHandlers({ id, password, setError, setPassword, idInputRef }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,12 +16,13 @@ export default function useSignInHandlers({ id, password, setError, setPassword,
 
       if (loginUser.fulfilled.match(result)) {
         const { accessToken, role, userId, recoveryTarget } = result.payload;
-        showSuccess('로그인 되었습니다.');
-        
 
-        // recoveryTarget이 있으면 복구 모달 띄우기
+        // recoveryTarget이 있으면 복구 모달 띄우기 (비밀번호도 props로 전달)
         if (recoveryTarget) {
-          dispatch(openModal({ type: 'USER_RESTORE', props: { id: Number(userId) } }));
+          dispatch(openModal({ 
+            type: 'USER_RESTORE', 
+            props: { id: Number(userId), password } 
+          }));
           return;
         }
 
@@ -40,6 +40,7 @@ export default function useSignInHandlers({ id, password, setError, setPassword,
           default:
             navigate('/');
         }
+        showSuccess('로그인 되었습니다.');
       } else {
         setError(result.payload || '로그인에 실패했습니다.');
         setPassword('');

@@ -5,26 +5,28 @@ import axiosInstance from '../../../services/axios-config';
 import { useNavigate } from 'react-router-dom';
 import useToast from '@/common/hooks/useToast';
 
-function RecoveryConfirmModal({ onClose, id }) {
+function RecoveryConfirmModal({ onClose, id, password }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { showSuccess, showNegative, showInfo } = useToast();
+  const { showSuccess } = useToast();
 
   const handleRecover = async () => {
     setIsLoading(true);
     setError('');
     try {
-      const response = await axiosInstance.post(`/auth-service/auth/recover/${id}`);
+      const response = await axiosInstance.post(`/auth-service/auth/recover/${id}`, {
+        password, // 로그인 시 입력했던 비밀번호 사용
+      });
       if (response.data.success) {
         showSuccess('복구 되었습니다. 다시 로그인 해주세요.');
         onClose();
         navigate('/');
       } else {
-        setError('복구 중 오류가 발생했습니다.');
+        setError(response.data.message || '복구 중 오류가 발생했습니다.');
       }
     } catch (error) {
-      setError('복구 관련 에러가 발생했습니다.');
+      setError(error.response?.data?.message || '복구 관련 에러가 발생했습니다.');
     } finally {
       setIsLoading(false);
     }
