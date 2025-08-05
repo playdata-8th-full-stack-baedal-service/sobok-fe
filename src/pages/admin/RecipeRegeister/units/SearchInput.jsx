@@ -18,7 +18,7 @@ function SearchInput({
 
   // 페이징 상태
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+  const itemsPerPage = 6;
 
   const isSelectionInProgress = useRef(false);
   const dropdownRef = useRef(null);
@@ -56,6 +56,29 @@ function SearchInput({
   }, [viewDropDown]);
 
   // 검색 요청
+  const fetchIngredients = async (keyword = '') => {
+    setIsSearching(true);
+    try {
+      const response = await axiosInstance.get(
+        `/cook-service/ingredient/keyword-search?keyword=${keyword}`
+      );
+      if (response.data.success && Array.isArray(response.data.data)) {
+        setResult(response.data.data);
+        setCurrentPage(1);
+      } else {
+        setResult([]);
+      }
+      setViewDropDown(true);
+    } catch (err) {
+      console.error(err.response?.data?.message || '검색 중 오류가 발생했습니다.');
+      setResult([]);
+      setViewDropDown(true);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // 입력 시 검색
   useEffect(() => {
     if (isSelectionInProgress.current) {
       isSelectionInProgress.current = false;
@@ -67,31 +90,9 @@ function SearchInput({
     }
 
     if (query.length > 0) {
-      searchTimeoutRef.current = setTimeout(async () => {
-        setIsSearching(true);
-        try {
-          const response = await axiosInstance.get(
-            `/cook-service/ingredient/keyword-search?keyword=${query}`
-          );
-          if (response.data.success && Array.isArray(response.data.data)) {
-            setResult(response.data.data);
-            setCurrentPage(1); // 새로운 검색 시 첫 페이지
-          } else {
-            setResult([]);
-          }
-          setViewDropDown(true);
-        } catch (err) {
-          console.error(err.response?.data?.message || '검색 중 오류가 발생했습니다.');
-          setResult([]);
-          setViewDropDown(true);
-        } finally {
-          setIsSearching(false);
-        }
+      searchTimeoutRef.current = setTimeout(() => {
+        fetchIngredients(query);
       }, 300);
-    } else {
-      setViewDropDown(false);
-      setResult([]);
-      setIsSearching(false);
     }
 
     return () => {
@@ -102,9 +103,7 @@ function SearchInput({
   }, [query]);
 
   const handleInputClick = () => {
-    if (query.length > 0 && result.length > 0) {
-      setViewDropDown(true);
-    }
+    fetchIngredients('');
   };
 
   const handleInputChange = e => {
@@ -186,6 +185,17 @@ function SearchInput({
               <div className={style.dropdownmenu}>검색 중...</div>
             ) : (
               <>
+                <div
+                  className={style.dropdownmenuadd}
+                  onMouseDown={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleAddIngredient();
+                  }}
+                  style={{ cursor: 'pointer' }}
+                >
+                  식재료 추가 +
+                </div>
                 {currentResults.map(item => (
                   <div
                     key={item.id}
@@ -226,18 +236,6 @@ function SearchInput({
                     </button>
                   </div>
                 )}
-
-                <div
-                  className={style.dropdownmenuadd}
-                  onMouseDown={e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleAddIngredient();
-                  }}
-                  style={{ cursor: 'pointer' }}
-                >
-                  식재료 추가 +
-                </div>
               </>
             )}
           </div>

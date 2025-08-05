@@ -8,7 +8,7 @@ import useToast from '@/common/hooks/useToast';
 
 function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
   const [formData, setFormData] = useState({
-    ingreName: initialIngreName,
+    ingreName: initialIngreName.trim(),
     price: '',
     origin: '',
     unit: '',
@@ -112,9 +112,9 @@ function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
             <input
               type="text"
               name="ingreName"
-              value={formData.ingreName}
-              onChange={handleInputChange}
+              value={formData.ingreName || ''}
               placeholder="식재료명을 입력하세요"
+              onChange={handleInputChange}
             />
           </div>
 
