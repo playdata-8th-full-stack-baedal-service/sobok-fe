@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from '../UserInfo.module.scss';
 
-function EditableField({ label, value, onEditClick, onDeleteClick, disabled }) {
+function EditableField({ label, value, onEditClick, onDeleteClick, disabled, showDeleteButton }) {
   const [editValue, setEditValue] = useState(value);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -14,15 +14,12 @@ function EditableField({ label, value, onEditClick, onDeleteClick, disabled }) {
     const emailRegex =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
     if (!emailRegex.test(email)) return false;
-
     const [localPart, domain] = email.split('@');
     if (!localPart || localPart.length > 64) return false;
     if (localPart.startsWith('.') || localPart.endsWith('.') || localPart.includes('..'))
       return false;
-
     if (!domain || domain.length > 253) return false;
     if (domain.startsWith('.') || domain.endsWith('.') || domain.includes('..')) return false;
-
     const domainParts = domain.split('.');
     if (domainParts.length < 2) return false;
     for (const part of domainParts) {
@@ -33,6 +30,37 @@ function EditableField({ label, value, onEditClick, onDeleteClick, disabled }) {
     return !(tld.length < 2 || !/^[a-zA-Z]+$/.test(tld));
   };
 
+  // 전화번호 입력 처리
+  const handlePhoneInputChange = e => {
+    const value = e.target.value;
+    const numericValue = value.replace(/[^0-9]/g, '');
+    const limitedValue = numericValue.slice(0, 11);
+    setEditValue(limitedValue);
+  };
+
+  const handlePhoneKeyDown = e => {
+    const allowedKeys = [
+      'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
+      'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+      'Home', 'End'
+    ];
+    if (e.ctrlKey || e.metaKey) return;
+    if (!allowedKeys.includes(e.key) && !/^[0-9]$/.test(e.key)) {
+      e.preventDefault();
+      return;
+    }
+    if (/^[0-9]$/.test(e.key) && editValue.length >= 11) {
+      e.preventDefault();
+    }
+  };
+
+  const handlePhonePaste = e => {
+    e.preventDefault();
+    const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+    const numericValue = pastedText.replace(/[^0-9]/g, '').slice(0, 11);
+    setEditValue(numericValue);
+  };
+
   const handleComplete = () => {
     if (label === '전화번호') {
       if (!editValue.trim()) {
@@ -41,13 +69,22 @@ function EditableField({ label, value, onEditClick, onDeleteClick, disabled }) {
       }
       onEditClick(editValue);
     } else if (label === '이메일') {
-      if (!editValue.trim()) {
-        onDeleteClick?.();
+      const trimmedValue = editValue.trim();
+      if (!trimmedValue) {
+        // 공백 입력 시 원래 값 복원
+        setEditValue(value);
         setIsEditing(false);
         return;
       }
-      if (!isValidEmail(editValue)) return;
-      onEditClick(editValue);
+      if (!isValidEmail(trimmedValue)) {
+        // 잘못된 형식 시 원래 값 복원
+        setEditValue(value);
+        setIsEditing(false);
+        return;
+      }
+      onEditClick(trimmedValue, () => {
+        setEditValue(value);
+      });
     }
     setIsEditing(false);
   };
@@ -67,12 +104,24 @@ function EditableField({ label, value, onEditClick, onDeleteClick, disabled }) {
               ? 'red'
               : 'initial',
         }}
-        onChange={e => setEditValue(e.target.value)}
+        onChange={label === '전화번호' ? handlePhoneInputChange : e => setEditValue(e.target.value)}
+        onKeyDown={label === '전화번호' ? handlePhoneKeyDown : undefined}
+        onPaste={label === '전화번호' ? handlePhonePaste : undefined}
+        inputMode={label === '전화번호' ? 'numeric' : undefined}
+        pattern={label === '전화번호' ? '[0-9]*' : undefined}
+        maxLength={label === '전화번호' ? 11 : undefined}
       />
       {!isEditing && !disabled && (
-        <button type="button" onClick={() => setIsEditing(true)}>
-          변경
-        </button>
+        <>
+          <button type="button" onClick={() => setIsEditing(true)}>
+            변경
+          </button>
+          {showDeleteButton && (
+            <button type="button" onClick={onDeleteClick}>
+              삭제
+            </button>
+          )}
+        </>
       )}
       {isEditing && !disabled && (
         <button type="button" onClick={handleComplete} style={{ opacity: 1, cursor: 'pointer' }}>
@@ -104,6 +153,7 @@ EditableField.propTypes = {
   onEditClick: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func,
   disabled: PropTypes.bool.isRequired,
+  showDeleteButton: PropTypes.bool,
 };
 
 export default EditableField;
