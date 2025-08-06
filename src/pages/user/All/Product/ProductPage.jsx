@@ -28,7 +28,7 @@ const ProductPage = () => {
 
   // 1. 처음 로딩 시 product 불러오기 + 기본값 세팅
   useEffect(() => {
-    const id = searchParams.get('cookId');
+    const id = searchParams.get('id');
     if (!id) return;
 
     dispatch(fetchProduct(id));

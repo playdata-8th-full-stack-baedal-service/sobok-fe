@@ -80,15 +80,15 @@ select {
 
 input[type='search'],
 select {
-    width: 70%;
-    transform: translateX(20%);
+    width: 60%;
+    transform: translateX(31.4%);
     height: 35px;
     padding: 0px 14px;
     align-items: center;
     align-content: center;
     font-size: 14px;
     border: 1px solid #ccc;
-    border-radius: 20px;
+    border-radius: 0px;
     transition: border-color 0.2s;
     margin-top: 5px;
     line-height: 35px; 
@@ -99,9 +99,7 @@ select {
   }
 
   &:focus {
-    outline: none;
-    border-color: rgb(210, 19, 19);
-    box-shadow: 0 0 4px rgb(210, 19, 19);
+    border: none;
   }
 }
 
