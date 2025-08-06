@@ -1,14 +1,15 @@
 /* eslint-disable react/function-component-definition */
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Heart } from 'lucide-react';
+import axios from 'axios';
 import axiosInstance from '@/services/axios-config';
 import styles from './PostDetailPage.module.scss';
 import Button from '@/common/components/Button';
-import { Heart } from 'lucide-react';
 import useToast from '@/common/hooks/useToast';
 import commonStyles from '@/common/forms/Post/PostContent.module.scss';
-import axios from 'axios';
 import { API_BASE_URL } from '../../../../services/host-config';
+import LikeButton from './LikeButton';
 
 const PostDetailPage = () => {
   const { id } = useParams();
@@ -123,29 +124,31 @@ const PostDetailPage = () => {
       {/* 상단 영역 */}
       <div className={styles.header}>
         <div className={styles.leftTop}>
-          {/* <p>
-            <strong>요리 이름</strong> : {post.cookName}
-          </p> */}
-          <Button type="button" variant="BASIC" className="flexible" onClick={handleCookPage}>
-            {post.cookName}
-          </Button>
-          <p>
-            <strong>제목</strong> : {post.title}
-          </p>
-          <div className={styles.likeSection} onClick={handleLikePost}>
-            <span>
-              <Heart size={16} fill={isLiked ? 'red' : 'white'} color="red" />
-              좋아요 {post.likeCount}
-            </span>
+          <div className={styles.titletext}>
+            <div>
+              <Button type="button" variant="BASIC" className="flexible" onClick={handleCookPage}>
+                {post.cookName}
+              </Button>
+            </div>
+            <div>
+              <p className={styles.postmaintitle}>{post.title}</p>
+            </div>
           </div>
-        </div>
-        <div className={styles.rightTop}>
-          <p>
-            <strong>작성자</strong> : {post.nickname}
-          </p>
-          <p>
-            <strong>작성 날짜</strong> : {formatDate(post.updatedAt)}
-          </p>
+
+          <div className={styles.rightTop}>
+            <div className={styles.bottonmenu}>
+              <div className={styles.rightmiddle}>
+                <p className={styles.writertext}>{post.nickname}</p>
+                <p className={styles.datetext}>{formatDate(post.updatedAt)}</p>
+              </div>
+
+              <div className={styles.likeSection} onClick={handleLikePost}>
+                <span>
+                  <LikeButton likeCount={post.likeCount} />
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
