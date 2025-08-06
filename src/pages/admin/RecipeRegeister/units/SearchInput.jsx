@@ -6,7 +6,7 @@ import IngredientSearchInput from '@/common/forms/IngredientsSearch/IngredientSe
 import { setAdditionalIngredients } from '@/store/productSlice';
 import styles from '../RecipeRegistPage.module.scss';
 
-const SearchInput = () => {
+const SearchInput = ({ onIngredientSelect }) => {
   const dispatch = useDispatch();
   const additionalIngredients = useSelector(state => state.product.additionalIngredients);
 
@@ -17,6 +17,9 @@ const SearchInput = () => {
 
   // 재료 선택 시 실행
   const handleSelect = item => {
+    if (onIngredientSelect) {
+      onIngredientSelect(item); // 관리자용 콜백 실행
+    }
     const existing = additionalIngredients.find(ingredient => ingredient.id === item.id);
 
     if (existing) {
@@ -84,9 +87,7 @@ const SearchInput = () => {
   return (
     <IngredientSearchInput
       placeholder="검색어를 입력하세요."
-      onSelect={item => {
-        handleSelect(item);
-      }}
+      onSelect={handleSelect}
       showAddButton
       onAddIngredient={handleAddIngredient}
     />

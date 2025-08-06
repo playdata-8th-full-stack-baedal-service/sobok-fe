@@ -10,6 +10,7 @@ import { API_BASE_URL } from '../services/host-config';
 export const fetchProduct = createAsyncThunk('product/get-product', async (id, thunkAPI) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/cook-service/cook/get-cook/${id}`);
+    console.log(res);
     if (response.data.success) return response.data.data;
     return null;
   } catch (err) {

@@ -78,6 +78,33 @@ select {
   }
 }
 
+input[type='search'],
+select {
+    width: 70%;
+    transform: translateX(20%);
+    height: 35px;
+    padding: 0px 14px;
+    align-items: center;
+    align-content: center;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    transition: border-color 0.2s;
+    margin-top: 5px;
+    line-height: 35px; 
+    box-sizing: border-box; 
+
+     &::placeholder {
+    line-height: 35px;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgb(210, 19, 19);
+    box-shadow: 0 0 4px rgb(210, 19, 19);
+  }
+}
+
 input.input-error,
 select.input-error {
   border-color: #d32f2f;

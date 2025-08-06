@@ -18,16 +18,21 @@ const AdditionalIngredients = () => {
   // 재료 선택 시 수량 증가 or 새로 추가
   const handleSelect = item => {
     const existing = additionalIngredients.find(ingredient => ingredient.id === item.id);
+    const dbUnit = parseFloat(item.unit) || 1;
+
     if (existing) {
       const updated = additionalIngredients.map(ingredient =>
         ingredient.id === item.id
-          ? { ...ingredient, quantity: ingredient.quantity + 1 }
+          ? { ...ingredient, quantity: ingredient.quantity + dbUnit }
           : ingredient
       );
       dispatch(setAdditionalIngredients(updated));
     } else {
       dispatch(
-        setAdditionalIngredients([...additionalIngredients, { ...item, quantity: +item.unit }])
+        setAdditionalIngredients([
+          ...additionalIngredients,
+          { ...item, quantity: dbUnit }, // 처음 담을 때도 DB unit 적용
+        ])
       );
     }
   };

@@ -3,7 +3,7 @@ import { Search } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { useIngredientSearch } from '../../hooks/useIngredientSearch';
 import { fetchAdditionalIngredients } from '@/store/productSlice';
-import styles from '../../../pages/admin/RecipeRegeister/RecipeRegistPage.module.scss';
+import styles from './IngredientSearchInput.module.scss';
 
 const IngredientSearchInput = ({
   placeholder = '검색어를 입력하세요.',
@@ -55,7 +55,7 @@ const IngredientSearchInput = ({
     <div className={styles.searchContainer} ref={dropdownRef}>
       <input
         ref={inputRef}
-        type="text"
+        type="search"
         value={keyword}
         placeholder={placeholder}
         onChange={e => {
@@ -71,9 +71,6 @@ const IngredientSearchInput = ({
         }}
         className={styles.searchbar}
       />
-      <div className={styles.searchIcon}>
-        <Search size={15} color="#000000" />
-      </div>
 
       {loading && isOpen && <div className={styles.dropdownmenu}>검색 중...</div>}
 
@@ -104,9 +101,13 @@ const IngredientSearchInput = ({
                 onMouseDown={e => {
                   e.preventDefault();
                   e.stopPropagation();
-                  onSelect(item);
-                  setKeyword(''); // ✅ 검색창 비우기
-                  setIsOpen(false); // ✅ 드롭다운 닫기
+                  // unit만큼 다시 담기도록 수정
+                  onSelect({
+                    ...item,
+                    quantity: item.unit,
+                  });
+                  setKeyword(''); // 검색창 비우기
+                  setIsOpen(false); // 드롭다운 닫기
                 }}
               >
                 {item.ingreName}
