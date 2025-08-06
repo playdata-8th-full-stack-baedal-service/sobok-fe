@@ -90,6 +90,7 @@ const SearchInput = ({ onIngredientSelect }) => {
       onSelect={handleSelect}
       showAddButton
       onAddIngredient={handleAddIngredient}
+      closeOnSelect={true}
     />
   );
 };

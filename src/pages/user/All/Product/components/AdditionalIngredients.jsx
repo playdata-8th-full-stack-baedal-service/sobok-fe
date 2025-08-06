@@ -1,55 +1,82 @@
-// pages/user/Product/components/AdditionalIngredients.jsx
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import styles from '../ProductPage.module.scss';
-import IngredientControl from './IngredientControl';
+import styles from './AdditionalIngredients.module.scss';
 import IngredientSearchInput from '@/common/forms/IngredientsSearch/IngredientSearchInput';
 import { setAdditionalIngredients } from '@/store/productSlice';
 
-/**
- * 사용자 상품 상세 페이지 "추가 식재료" 컴포넌트
- * - 같은 재료 선택 시 수량 증가
- * - Redux에서 선택된 재료 관리
- */
 const AdditionalIngredients = () => {
   const dispatch = useDispatch();
   const { additionalIngredients } = useSelector(state => state.product);
+  const [forceOpen] = useState(true);
+  const scrollRef = useRef(null);
 
-  // 재료 선택 시 수량 증가 or 새로 추가
   const handleSelect = item => {
-    const existing = additionalIngredients.find(ingredient => ingredient.id === item.id);
+    const existing = additionalIngredients.find(i => i.id === item.id);
     const dbUnit = parseFloat(item.unit) || 1;
 
     if (existing) {
-      const updated = additionalIngredients.map(ingredient =>
-        ingredient.id === item.id
-          ? { ...ingredient, quantity: ingredient.quantity + dbUnit }
-          : ingredient
+      const updated = additionalIngredients.map(i =>
+        i.id === item.id ? { ...i, quantity: i.quantity + dbUnit } : i
       );
       dispatch(setAdditionalIngredients(updated));
     } else {
-      dispatch(
-        setAdditionalIngredients([
-          ...additionalIngredients,
-          { ...item, quantity: dbUnit }, // 처음 담을 때도 DB unit 적용
-        ])
-      );
+      dispatch(setAdditionalIngredients([...additionalIngredients, { ...item, quantity: dbUnit }]));
     }
   };
 
+  const handleQtyChange = (id, qty) => {
+    const updated = additionalIngredients.map(i =>
+      i.id === id ? { ...i, quantity: Math.max(Number(qty), 1) } : i
+    );
+    dispatch(setAdditionalIngredients(updated));
+  };
+
+  const handleRemove = id => {
+    const updated = additionalIngredients.filter(i => i.id !== id);
+    dispatch(setAdditionalIngredients(updated));
+  };
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [additionalIngredients]);
+
   return (
-    <div className={styles.additionalIngredients}>
-      <h3>
-        <strong>추가 식재료</strong>
-      </h3>
-      <h3>추가 식재료는 1인분 기준으로 추가해주세요.</h3>
-      {/* 공통 검색 인풋 */}
-      <IngredientSearchInput placeholder="식재료를 입력하세요" onSelect={handleSelect} />
-      {/* 선택된 재료 목록 */}
-      <div className={styles.ingredientGrid}>
-        {additionalIngredients.map(item => (
-          <IngredientControl key={item.id} item={item} />
-        ))}
+    <div className={styles.additionalIngredientsWrapper}>
+      <div className={styles.leftSection}>
+        <h3>추가 식재료</h3>
+        <IngredientSearchInput
+          placeholder="식재료를 입력하세요"
+          onSelect={handleSelect}
+          forceOpen={forceOpen}
+          closeOnSelect={false}
+        />
+      </div>
+
+      <div className={styles.rightSection} ref={scrollRef}>
+        {additionalIngredients.length === 0 ? (
+          <div className={styles.emptyMessage}>추가 식재료가 없습니다.</div>
+        ) : (
+          additionalIngredients.map(item => (
+            <div className={styles.ingredientItem} key={item.id}>
+              <span className={styles.name}>{item.ingreName}</span>
+              <div className={styles.qtyControl}>
+                <input
+                  type="number"
+                  value={item.quantity}
+                  onChange={e => handleQtyChange(item.id, e.target.value)}
+                />
+                <span>g</span>
+              </div>
+              <span className={styles.priceInfo}>/{item.price}원</span>
+              <span className={styles.totalPrice}>{item.price * item.quantity}원</span>
+              <button className={styles.removeBtn} onClick={() => handleRemove(item.id)}>
+                ×
+              </button>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

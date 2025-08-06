@@ -9,9 +9,11 @@ const IngredientSearchInput = ({
   onSelect,
   showAddButton = false,
   onAddIngredient,
+  forceOpen = false,
+  closeOnSelect = false, // ✅ 관리자 페이지에서만 true로 사용
 }) => {
   const [keyword, setKeyword] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(forceOpen);
   const [hasInteractedOutside, setHasInteractedOutside] = useState(false);
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
@@ -20,28 +22,34 @@ const IngredientSearchInput = ({
   const { searchResults, loading } = useIngredientSearch(keyword);
   const safeResults = searchResults || [];
 
-  // 외부 클릭 감지
+  // ✅ 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = event => {
+      if (forceOpen) return;
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
-        setHasInteractedOutside(true); // 드롭다운 닫힐 때 페이지 리셋용
+        setHasInteractedOutside(true);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [forceOpen]);
 
-  // 외부 클릭 후 페이지 리셋
+  // 외부 클릭 후 상태 초기화
   useEffect(() => {
     if (hasInteractedOutside) {
       setTimeout(() => {
         setHasInteractedOutside(false);
-      }, 100); // 짧은 딜레이 후 상태 초기화
+      }, 100);
     }
   }, [hasInteractedOutside]);
+
+  // forceOpen이 변경될 때 항상 열림
+  useEffect(() => {
+    if (forceOpen) setIsOpen(true);
+  }, [forceOpen]);
 
   return (
     <div className={styles.searchContainer} ref={dropdownRef}>
@@ -54,6 +62,11 @@ const IngredientSearchInput = ({
           setKeyword(e.target.value);
           setIsOpen(true);
         }}
+        onKeyDown={e => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+          }
+        }}
         onFocus={() => {
           setIsOpen(true);
           if (!keyword) {
@@ -65,12 +78,12 @@ const IngredientSearchInput = ({
 
       {loading && isOpen && <div className={styles.dropdownmenu}>검색 중...</div>}
 
-      {isOpen && safeResults.length > 0 && (
+      {(isOpen || forceOpen) && (safeResults.length > 0 || showAddButton) && (
         <div className={styles.dropdownContainer}>
           <div
             className={`${styles.scrollWrapper} ${safeResults.length > 6 ? styles.scrollable : ''}`}
           >
-            {showAddButton && (
+            {showAddButton && keyword && !safeResults.some(item => item.ingreName === keyword) && (
               <div
                 className={styles.dropdownmenuadd}
                 onMouseDown={e => {
@@ -78,8 +91,11 @@ const IngredientSearchInput = ({
                   e.stopPropagation();
                   onAddIngredient && onAddIngredient(keyword);
                   setKeyword('');
-                  setIsOpen(false);
-                  setTimeout(() => setIsOpen(true), 100);
+                  if (closeOnSelect) {
+                    setIsOpen(false);
+                  } else {
+                    setTimeout(() => setIsOpen(true), 100);
+                  }
                 }}
                 style={{ cursor: 'pointer' }}
               >
@@ -99,8 +115,14 @@ const IngredientSearchInput = ({
                     ...item,
                     quantity: item.unit,
                   });
-                  setIsOpen(false);
-                  setTimeout(() => setIsOpen(true), 100);
+                  setKeyword('');
+                  if (closeOnSelect) {
+                    setIsOpen(false);
+                    inputRef.current?.blur();
+                  } else if (!forceOpen) {
+                    setIsOpen(false);
+                    setTimeout(() => setIsOpen(true), 100);
+                  }
                 }}
               >
                 {item.ingreName}

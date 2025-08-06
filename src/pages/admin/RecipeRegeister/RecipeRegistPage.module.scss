@@ -112,34 +112,6 @@
       white-space: nowrap;
     }
 
-    .searchbar {
-      width: 100%;
-      padding: 10px 40px 10px 15px;
-      border: 1px solid #ddd;
-      border-radius: 25px;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.3s ease;
-
-      &:focus {
-        border-color: #007bff;
-      }
-    }
-
-    .searchContainer {
-      position: relative;
-      width: 400px;
-    }
-
-    .searchIcon {
-      position: absolute;
-      right: 10px;
-      top: 60%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      z-index: 1;
-    }
-
     .paginationControls {
       display: flex;
       justify-content: center;
@@ -283,7 +255,7 @@
     h3 {
       margin-bottom: 15px;
       font-size: 18px;
-      font-weight: 600;
+      font-weight: 600;;
     }
 
     .selectedIngredientItem {
@@ -671,22 +643,32 @@
 }
 
 .ingretitle {
-  font-weight: bold;
+  font-weight: 800;
+  font-size: 20px;
 }
 
-.searchbar {
-  min-width: 240px;
-  border: none;
+.noIngredientMessage {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #888;
+  padding: 20px;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-top: 10px;
+}
+
+.ingredientsList {
+  max-height: 300px;
+  overflow-y: auto;  
+  border: 1px solid #ddd;
+  border-radius: 8px;
   padding: 10px;
-  border-radius: 10px;
-  outline: none;
-  color: rgb(0, 0, 0);
-  background-color: rgb(255, 255, 255);
-
-  &:focus {
-    // animation: rotateShadow 2s infinite linear;
-  }
+  background-color: #fff;
 }
+
+
 
 @keyframes rotateShadow {
   0% {

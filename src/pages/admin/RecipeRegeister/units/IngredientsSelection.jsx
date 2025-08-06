@@ -191,7 +191,7 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
           <h4>총 가격: {calculateTotalSumPrice().toLocaleString()}원</h4>
         </div>
         {selectedIngredients.length === 0 ? (
-          <p>검색을 통해 식재료를 선택해주세요.</p>
+          <p className={style.noIngredientMessage}>검색을 통해 식재료를 선택해주세요.</p>
         ) : (
           <div className={style.ingredientsList}>
             {selectedIngredients.map(ingredient => (
