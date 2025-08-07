@@ -5,7 +5,7 @@ let backEndHostName;
 if (clientHostName === 'localhost') {
   backEndHostName = 'http://localhost:8000';
 } else if (clientHostName === 'sobok.shop') {
-  backEndHostName = 'http://localhost:8000';
+  backEndHostName = 'https://api.sobok.shop';
 } else{
     backEndHostName = 'http://localhost:8000';
 }
