@@ -32,8 +32,8 @@ export const registerPost = createAsyncThunk(
         images, 
       };
       const res = await axiosInstance.post(`/post-service/post/register`, body);
-      console.log(res);
-      const postId = res.data.data.postId || null;
+
+      const postId = res.data?.data?.postId || null;
 
       if (!postId) {
         return thunkAPI.rejectWithValue('게시글 등록 응답에 postId가 없습니다.');

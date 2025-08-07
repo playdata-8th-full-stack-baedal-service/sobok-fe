@@ -13,6 +13,7 @@ function BestPickSelection() {
   const fetchBestPick = async () => {
     try {
       setLoading(true);
+      console.log('[BestPickSelection] API 호출 시작...');
       const res = await axiosInstance.get('post-service/post/post-list', {
         params: {
           page: 0,
@@ -20,11 +21,16 @@ function BestPickSelection() {
           sortBy: 'LIKE',
         },
       });
+      console.log('[BestPickSelection] API 응답 데이터:', res.data);
+
       if (res.data.success && res.data.data.content) {
         setBestPick(res.data.data.content);
+        console.log('[BestPickSelection] 상태 저장됨:', res.data.data.content);
+      } else {
+        console.warn('[BestPickSelection] 응답에 content 없음');
       }
     } catch (err) {
-      console.error('API Error:', err);
+      console.error('[BestPickSelection] API Error:', err);
     } finally {
       setLoading(false);
     }
@@ -34,7 +40,6 @@ function BestPickSelection() {
     fetchBestPick();
   }, []);
 
-  // 자동 슬라이드 시작 함수
   const startAutoSlide = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
@@ -42,30 +47,44 @@ function BestPickSelection() {
     }, 3000);
   };
 
-  // 컴포넌트 마운트 시 슬라이드 시작
   useEffect(() => {
     if (bestPick.length > 1) {
+      console.log('[BestPickSelection] 자동 슬라이드 시작');
       startAutoSlide();
     }
-    return () => clearInterval(intervalRef.current);
+    return () => {
+      console.log('[BestPickSelection] 자동 슬라이드 정리');
+      clearInterval(intervalRef.current);
+    };
   }, [bestPick.length]);
 
   const handleClick = postId => {
+    console.log('[BestPickSelection] handleClick 호출됨 - postId:', postId);
     navigate(`/post/${postId}`);
   };
 
   const handleSlideClick = (index, postId) => {
+    console.log('[BestPickSelection] 슬라이드 클릭됨:', {
+      index,
+      postId,
+      post: bestPick[index],
+    });
+
     if (activeSlide === index) {
-      // 이미 활성화된 슬라이드를 클릭하면 라우터로 이동
       handleClick(postId);
     } else {
-      // 비활성 슬라이드를 클릭하면 활성화만 시킴
       setActiveSlide(index);
       startAutoSlide();
     }
   };
 
   const handleKeyDown = (e, postId, index) => {
+    console.log('[BestPickSelection] 키보드 입력 감지:', e.key, {
+      index,
+      postId,
+      post: bestPick[index],
+    });
+
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       if (activeSlide === index) {
@@ -108,7 +127,7 @@ function BestPickSelection() {
               src={post.thumbnail}
               alt={post.title}
               onError={e => {
-                console.log('Image load error:', e.target.src);
+                console.log('[BestPickSelection] 이미지 로드 오류:', e.target.src);
                 e.target.style.display = 'none';
               }}
               className={styles.slideImage}
@@ -127,14 +146,16 @@ function BestPickSelection() {
         ))}
       </div>
 
-      {/* 네비게이션 점들 */}
       {bestPick.length > 1 && (
         <div className={styles.slideNavigation}>
           {bestPick.map((_, index) => (
             <button
               key={index}
               className={`${styles.navDot} ${activeSlide === index ? styles.activeDot : ''}`}
-              onClick={() => setActiveSlide(index)}
+              onClick={() => {
+                console.log('[BestPickSelection] 네비게이션 점 클릭:', { index, post: bestPick[index] });
+                setActiveSlide(index);
+              }}
               aria-label={`${index + 1}번째 슬라이드로 이동`}
             />
           ))}

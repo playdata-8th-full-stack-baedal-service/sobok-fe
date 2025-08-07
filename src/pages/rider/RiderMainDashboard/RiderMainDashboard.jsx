@@ -69,8 +69,8 @@ function RiderMainDashboard() {
         <div className={styles.logoBox}>
           <img src="/soboklogo.png" width="300" height="300" aria-label="SOBOK 로고" />
         </div>
-        <h1>SOBOK 라이더 대시보드</h1>
-        <p>원하는 메뉴를 선택하여 배달 업무를 시작하세요. 모든 기능을 한눈에 확인할 수 있습니다.</p>
+        <h1>SOBOK RIDER PAGE</h1>
+        <p>원하는 메뉴를 선택하여 배달 업무를 시작하세요.</p>
       </div>
 
       <div className={styles.grid}>
@@ -99,7 +99,8 @@ function RiderMainDashboard() {
                 handleMenuClick(item.route);
               }}
             >
-              시작하기
+              <div className={styles.dotsborder}></div>
+              <span className={styles.textbutton}>시작하기</span>
             </button>
           </div>
         ))}

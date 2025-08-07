@@ -46,7 +46,7 @@ function RiderListPage() {
           <p>이름</p>
           <p>전화번호</p>
           <p>면허번호</p>
-          <p>아이디</p>
+          <p></p>
           <p>활성상태</p>
         </div>
         {pendingRiders.length === 0 ? (
