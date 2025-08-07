@@ -29,9 +29,10 @@ export const registerPost = createAsyncThunk(
         cookId,
         title,
         content,
-        images, // ✅ index는 이미 계산되어 있음
+        images, 
       };
       const res = await axiosInstance.post(`/post-service/post/register`, body);
+
       const postId = res.data?.data?.postId || null;
 
       if (!postId) {
