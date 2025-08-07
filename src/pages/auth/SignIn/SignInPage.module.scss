@@ -1,0 +1,372 @@
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 30px 0;
+}
+
+.inputBox {
+  text-align: left;
+   .inputGroup input::selection {
+    background-color: #d9d9d9;
+    color: #333;
+}
+}
+
+.socialLogin {
+  margin-bottom: 20px;
+}
+
+.socialTitle {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.socialBtnone {
+  width: 100%;
+  font-size: 14px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 10px;
+  justify-content: flex-start;
+  text-align: center;
+  font-weight: bold;
+  padding: 0.7em 2em;
+  border: 1px solid #000000;
+  background-color: #fff;
+  border-radius: 999px;
+  position: relative;
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.16), 
+    0 3px 6px rgba(0, 0, 0, 0.1);
+  color: black;
+  text-decoration: none;
+  transition: 0.3s ease all;
+  z-index: 1;
+
+  &::before {
+    transition: 0.5s all ease;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 50%;
+    bottom: 0;
+    opacity: 0;
+    content: '';
+    background-color: #FAE100;
+    z-index: -1;
+    border-radius: 999px;
+  }
+
+  &:hover,
+  &:focus {
+    color: black;
+
+    &::before {
+      transition: 0.5s all ease;
+      left: 0;
+      right: 0;
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.socialBtntwo {
+  width: 100%;
+  font-size: 14px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 10px;
+  justify-content: flex-start;
+  text-align: center;
+  font-weight: bold;
+  padding: 0.7em 2em;
+  border: 1px solid #000000;
+  background-color: #fff;
+  border-radius: 999px;
+  position: relative;
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.16), 
+    0 3px 6px rgba(0, 0, 0, 0.1);
+  color: black;
+  text-decoration: none;
+  transition: 0.3s ease all;
+  z-index: 1;
+
+  &::before {
+    transition: 0.5s all ease;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 50%;
+    bottom: 0;
+    opacity: 0;
+    content: '';
+    background-color: #3086F6;
+    z-index: -1;
+    border-radius: 999px;
+  }
+
+  &:hover,
+  &:focus {
+    color: black;
+
+    &::before {
+      transition: 0.5s all ease;
+      left: 0;
+      right: 0;
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.socialBtn img {
+  width: 20px;
+  height: 20px;
+}
+
+// Password
+.label {
+  display: block;
+  margin-bottom: 10px;
+  margin-left: 17px;
+}
+
+
+.inputBox {
+  text-align: left;
+  input[type='text'],
+  input[type='password'] {
+    width: 100%;
+    padding: 10px 20px;
+    border: 1px solid #000000;
+    border-radius: 50px;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .inputGroup input::selection {
+    background-color: #d9d9d9;
+    color: #333;
+  }
+}
+
+
+.passwordInputWrapper {
+  position: relative;
+}
+
+.passwordInputWrapper button {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #d5d2d2;
+}
+
+.error {
+  height: 14px;
+  font-size: 12px;
+  color: red;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.signInButton {
+  width: 100%;
+  font-size: 14px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 10px;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+  padding: 0.7em 2em;
+  border: 1px solid #000000;
+  background-color: #fff;
+  border-radius: 999px;
+  position: relative;
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.16), 
+    0 3px 6px rgba(0, 0, 0, 0.1);
+  color: black;
+  text-decoration: none;
+  transition: 0.3s ease all;
+  z-index: 1;
+
+  &::before {
+    transition: 0.5s all ease;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 50%;
+    bottom: 0;
+    opacity: 0;
+    content: '';
+    background-color: rgb(0, 0, 0);
+    z-index: -1;
+    border-radius: 999px;
+  }
+
+  &:hover,
+  &:focus {
+    color: rgb(255, 255, 255);
+
+    &::before {
+      transition: 0.5s all ease;
+      left: 0;
+      right: 0;
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.signupLink {
+  margin-top: 1px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.signupLink button {
+  background: none;
+  border: none;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.gsiMaterialButton {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -webkit-appearance: none;
+  background-color: white;
+  background-image: none;
+  border: 1px solid #747775;
+  border-radius: 20px;
+  box-sizing: border-box;
+  color: #1f1f1f;
+  cursor: pointer;
+  font-family: 'SobokFont', arial, sans-serif;
+  font-size: 14px;
+  height: 40px;
+  letter-spacing: 0.25px;
+  outline: none;
+  overflow: hidden;
+  padding: 0 12px;
+  position: relative;
+  text-align: center;
+  transition: background-color 0.218s, border-color 0.218s, box-shadow 0.218s;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: auto;
+  max-width: 400px;
+  min-width: min-content;
+  margin-top: 10px;
+}
+
+.gsiMaterialButtonIcon {
+  height: 20px;
+  margin-right: 12px;
+  min-width: 20px;
+  width: 20px;
+}
+
+.gsiMaterialButtonContentWrapper {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: 100%;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
+.gsiMaterialButtonContents {
+  flex-grow: 0;
+  font-family: 'SobokFont', arial, sans-serif;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}
+
+.gsiMaterialButtonState {
+  transition: opacity 0.218s;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.gsiMaterialButton:disabled {
+  cursor: default;
+  background-color: #ffffff61;
+  border-color: #1f1f1f1f;
+}
+
+.gsiMaterialButton:disabled .gsiMaterialButtonContents,
+.gsiMaterialButton:disabled .gsiMaterialButtonIcon {
+  opacity: 38%;
+}
+
+.gsiMaterialButton:not(:disabled):hover {
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3),
+              0 1px 3px 1px rgba(60, 64, 67, 0.15);
+}
+
+.gsiMaterialButton:not(:disabled):hover .gsiMaterialButtonState {
+  background-color: #303030;
+  opacity: 8%;
+}
+
+.gsiMaterialButton:not(:disabled):focus .gsiMaterialButtonState,
+.gsiMaterialButton:not(:disabled):active .gsiMaterialButtonState {
+  background-color: #303030;
+  opacity: 12%;
+}
+
+.kakaobutton {
+  cursor: pointer;
+}

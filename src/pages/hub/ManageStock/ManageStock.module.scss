@@ -1,0 +1,193 @@
+// 제목
+.titleWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  .title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 2rem 0 0;
+  }
+  .radioContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+
+    span {
+      color: #444;
+      margin-left: 0.4rem;
+    }
+  }
+}
+
+// 헤더
+.manageStockHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+
+  .container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .numberInput {
+      width: 6rem;
+      height: 2rem;
+      font-size: 1rem;
+    }
+  }
+
+  .searchContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 50%;
+
+    .searchInput {
+      width: 100%;
+    }
+  }
+}
+
+// 리스트
+.ingredientInfoList {
+  margin-top: 3rem;
+  .masking {
+    background-color: rgba(224, 122, 122, 0.2);
+  }
+  .active {
+    background-color: rgba(146, 255, 172, 0.2);
+  }
+
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    font-weight: bold;
+    padding: 0 1rem;
+    .name {
+      width: 20%;
+    }
+    .quantity {
+      width: 60%;
+      text-align: center;
+    }
+    button {
+      width: 20%;
+      justify-self: end;
+      z-index: 1;
+      background-color: transparent;
+
+      &:hover {
+        color: #2563eb;
+      }
+    }
+  }
+
+  .itemHeader {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0;
+    font-weight: bold;
+    padding: 0 1rem;
+    .name {
+      width: 20%;
+    }
+    .quantity {
+      width: 60%;
+      text-align: center;
+    }
+    .register {
+      width: 20%;
+      text-align: center;
+    }
+  }
+
+  .instructionContainer {
+    align-items: end;
+  }
+
+  .registerQuantity {
+    transition: opacity 0.5s ease-in-out;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    margin: 0.5rem 0;
+    gap: 10%;
+    padding: 0 1rem;
+
+    .instruction {
+      width: 40%;
+    }
+
+    .inputContainer {
+      > input {
+        width: 50%;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        border-radius: 0px;
+        background-color: transparent;
+        font-size: 1rem;
+        font-weight: bold;
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+
+    button {
+      width: 20%;
+      background-color: transparent;
+
+      &:hover {
+        color: #2563eb;
+      }
+    }
+  }
+
+  .hidden {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    // margin: 0.5rem 0;
+    gap: 10%;
+
+    > input {
+      width: 20%;
+    }
+
+    button {
+      width: 20%;
+    }
+
+    height: 0px;
+    opacity: 0;
+  }
+}
+
+// 페이지 버튼
+.pagingFooter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    font-size: 1.2rem;
+    margin: 0 10px;
+  }
+}
+
+.hr {
+  color: #ddd;
+  margin: 0;
+}
+
+.hr2 {
+  color: #ddd;
+  margin: 0;
+  border: 1.5px solid #ddd;
+}

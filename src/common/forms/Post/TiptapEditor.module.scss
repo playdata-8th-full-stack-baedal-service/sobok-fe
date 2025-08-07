@@ -1,0 +1,59 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+
+  button {
+    padding: 6px 10px;
+    font-size: 14px;
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+
+    &:hover {
+      background-color: #eee;
+    }
+  }
+}
+
+.uploadBtn {
+  padding: 6px 10px;
+  font-size: 14px;
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+
+  &:hover {
+    background-color: #eee;
+  }
+}
+
+.editorBox {
+  width: 100%;
+  min-height: 400px;
+  padding: 14px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow-y: auto;
+  word-break: break-word;
+}
+
+.ProseMirror,
+.ProseMirror:focus,
+[role='textbox']:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}

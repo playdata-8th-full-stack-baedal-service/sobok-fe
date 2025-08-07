@@ -1,0 +1,118 @@
+.bestPostSection {
+  margin-top: 50px;
+  padding: 20px 0;
+  border-top: 1px solid #eee;
+}
+
+.sectionTitle {
+  font-size: 1.7rem;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.postListWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.postList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: flex-start;
+  max-width: 720px; 
+  width: 100%;
+  padding: 30px 0;
+}
+
+.postCard {
+  flex: 0 0 calc((100% - 60px) / 3); 
+  max-width: calc((100% - 60px) / 3);
+  aspect-ratio: 1 / 1;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-sizing: border-box;
+  cursor: pointer;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.thumbnail {
+  width: 100%;
+  height: 80%;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+.postInfo {
+  height: 20%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 12px;
+  font-size: 0.95rem;
+  background-color: #fafafa;
+}
+
+.title {
+  font-weight: 500;
+//   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.likes {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: red;
+  font-size: 0.9rem;
+}
+
+.emptyMessage,
+.loadingMessage,
+.errorMessage {
+  font-size: 0.95rem;
+  color: #666;
+  margin-top: 70px;
+  margin-bottom: 40px;
+}
+
+/* 반응형: 태블릿에서는 2개, 모바일은 1개 */
+
+@media screen and (max-width: 1024px) {
+  .postCard {
+    flex: 0 0 calc((100% - 16px) / 2);
+    max-width: calc((100% - 16px) / 2);
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .postCard {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .postList {
+    padding: 20px;
+  }
+
+  .sectionTitle {
+    margin-left: 20px;
+  }
+
+  .emptyMessage,
+  .loadingMessage,
+  .errorMessage {
+    padding-left: 20px;
+  }
+}

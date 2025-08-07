@@ -1,0 +1,151 @@
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px 20px 10px 20px;
+}
+
+/* 상단 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  
+
+  .leftTop {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    margin: 0 auto;
+    
+  }
+
+  .rightTop {
+  display: flex;
+  flex-direction: column; 
+  gap: 60px;              
+  align-items: flex-end;
+  }
+}
+
+.likeSection {
+  cursor: pointer;
+  display: inline-flex;   
+  align-items: center;
+  justify-content: center;
+  width: fit-content;           /* 내용에 맞게 width 자동 */
+  background-color: white;
+
+   &:hover {
+    color: black ;
+  }
+
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    white-space: nowrap;  /* 줄바꿈 방지 */
+  }
+}
+
+
+/* 본문 */
+.contentSection {
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+/* 하단 */
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+
+ .leftBottom {
+  display: flex;
+  align-items: center; 
+  gap: 10px;  
+
+    ul {
+      margin-top: 4px;
+      padding-left: 20px;
+
+      li {
+        list-style: disc;
+        font-size: 14px;
+        margin-bottom: 2px;
+      }
+    }
+
+    .noIngredient {
+      font-size: 14px;
+      color: #888;
+      margin-left: 8px;
+    }
+  }
+
+  .rightBottom {
+    display: flex;
+    align-items: flex-start;
+
+    .buttonWrapper {
+      display: flex;
+      gap: 10px;
+    }
+  }
+}
+
+/* 로딩, 에러 */
+.loading,
+.error {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 50px;
+}
+
+.postmaintitle {
+  font-size: 20px;
+}
+
+.bottonmenu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 35vw;
+}
+
+.datetext {
+  font-size: 14.5px;
+}
+
+.writertext {
+  font-size: 14.5px;
+  white-space: nowrap;
+}
+
+.rightmiddle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.likeandcook {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.titletext {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 70px;
+  
+}

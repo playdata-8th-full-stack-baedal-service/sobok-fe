@@ -1,0 +1,66 @@
+
+.searchContainer {
+  width: 100%;
+  position: relative;
+}
+
+.searchbar {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  z-index: 2;
+}
+
+.dropdownContainer {
+  background-color: white;
+  width: 80%;
+  transform: translateX(11.7%);
+  border: 1px solid #ccc;
+  background: #fff;
+  position: absolute;
+  z-index: 100;
+  margin-top: 0.2px;
+}
+
+.scrollWrapper {
+  overflow-y: hidden;
+  max-height: none;
+}
+
+.scrollWrapper.scrollable {
+  max-height: 230px;
+  overflow-y: auto;
+}
+
+.dropdownmenu {
+  padding: 8px;
+  border-bottom: 1px solid rgb(189, 189, 189);
+  cursor: pointer;
+    &:hover {
+    background: #f8f8f8;
+  }
+    /* 스크롤바 오른쪽 박스 밖으로 */
+  scrollbar-gutter: stable; /* 크기 변화 방지 (최신 브라우저 지원) */
+
+  /* 스크롤바 스타일 */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+}
+
+.dropdownmenuadd {
+  padding: 10px;
+  background-color: #f7f7f7;
+  border-bottom: 1px solid rgb(197, 197, 197);
+}
+

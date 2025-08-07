@@ -1,7 +1,0 @@
-@use '../base/index' as *;
-
-
-.Footer {
-    @include flexbox(center, center);
-    height: 100vw;
-}

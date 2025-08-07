@@ -10,33 +10,48 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   config => {
-    const req = config;
+    // 인증이 필요 없는 공개 엔드포인트 목록
+    const publicEndpoints = [
+      '/auth-service/auth/user-signup',
+      '/auth-service/auth/temp-token',
+      '/auth-service/auth/check-email',
+      '/auth-service/auth/check-nickname',
+      '/auth-service/auth/check-id',
+      '/auth-service/auth/kakao-user-signup',
+    ];
 
+    // 공개 엔드포인트가 아닌 경우에만 Authorization 헤더 추가
+    const isPublicEndpoint = publicEndpoints.some(endpoint => config.url.includes(endpoint));
     const accessToken = localStorage.getItem('ACCESS_TOKEN');
 
-    if (accessToken) {
-      req.headers.Authorization = `Bearer ${accessToken}`;
+    if (!isPublicEndpoint && accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
-    return req;
+
+     console.log('[axios 요청]', config.url);
+    console.log('[Authorization]', config.headers.Authorization);
+
+    return config;
   },
-  error => {
-    return Promise.reject(error);
-  }
+  error => Promise.reject(error)
 );
 
 axiosInstance.interceptors.response.use(
   response => response,
   async error => {
-    const errorStatus = error?.response?.status;
+    const errorStatus = error?.response?.data?.status;
     const originalRequest = error.config;
     const refreshToken = localStorage.getItem('REFRESH_TOKEN');
+    const userId = localStorage.getItem('USER_ID'); // 사실은 authId  
 
     if (errorStatus === 666) {
       try {
-        const res = await axios.post('', {
+        console.log('토큰 재발급 시작');
+        const res = await axios.post(`${API_BASE_URL}/auth-service/auth/reissue`, {
+          id: userId,
           refreshToken,
         });
-        const newAccessToken = res.data.accessToken;
+        const newAccessToken = res.data.data;
         localStorage.setItem('ACCESS_TOKEN', newAccessToken);
         originalRequest.headers = {
           ...originalRequest.headers,
@@ -45,7 +60,7 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } catch (err) {
         localStorage.clear();
-        window.location.href = '/login';
+        window.location.href = '/auth/signin';
         return Promise.reject(err);
       }
     }

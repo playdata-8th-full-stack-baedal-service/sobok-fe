@@ -1,0 +1,20 @@
+.cookItem {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  //   align-items: center;
+  //   text-align: center;
+
+  img {
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  .cookName {
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: bold;
+  }
+}
