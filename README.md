@@ -17,7 +17,7 @@
 
 <br>
 
-**로컬 주소 : [http://localhost:8000](http://localhost:8000)** <br>
+**로컬 주소 : [http://localhost:8000](http://localhost:5173)** <br>
 
 **배포 주소 : [https://sobok.shop](https://sobok.shop)** <br>
 
@@ -255,7 +255,7 @@ GitHub Actions를 통해 CI/CD가 구성되어 있습니다.
 ```
 📦sobok-fe
  ┣ 📂.github 
- ┃ ┣ 📂ISSUE_TEMPLATE
+ ┃ ┣ 📂ISSUE_TEMPLATE : Issue 관리 템플릿
  ┃ ┃ ┣ 📜feature.yml
  ┃ ┃ ┣ 📜fix.yml
  ┃ ┃ ┗ 📜refactor.yml
