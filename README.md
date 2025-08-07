@@ -37,7 +37,7 @@
 
 **플레이데이터 8기 3조 Final Project : Sobok(소복) 배달 시스템** <br>
 
-**개발 기간** : **2025. 6. 16  ~ 2025. 8. 13**
+**개발 기간** : **2025. 6. 21  ~ 2025. 8. 13**
 
 <br>
 
@@ -123,7 +123,7 @@ $ npm run dev
 
 <br>
 
-<img src="https://img.shields.io/badge/VISUAL STUDIO CODE-blue?style=for-the-badge&logo=기술스택아이콘&logoColor=white">
+<img src="https://img.shields.io/badge/VISUAL STUDIO CODE-blue?style=for-the-badge&logoColor=white">
 <img src="https://img.shields.io/badge/GIT-F05032?style=for-the-badge&logo=git&logoColor=white">
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
 
@@ -144,8 +144,8 @@ $ npm run dev
 <img src="https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white">
 <img src="https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white">
 <img src="https://img.shields.io/badge/reactrouter-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white"> <br>
-<img src="https://img.shields.io/badge/Toastify-black?style=for-the-badge&logo=기술스택아이콘&logoColor=white">
-<img src="https://img.shields.io/badge/Tiptap-black?style=for-the-badge&logo=기술스택아이콘&logoColor=white">
+<img src="https://img.shields.io/badge/Toastify-black?style=for-the-badge&logoColor=white">
+<img src="https://img.shields.io/badge/Tiptap-black?style=for-the-badge&logoColor=white">
 <img src="https://img.shields.io/badge/lucide-F56565?style=for-the-badge&logo=lucide&logoColor=white">
 
 </div>
@@ -195,30 +195,21 @@ GitHub Actions를 통해 CI/CD가 구성되어 있습니다.
 
 **GitHub 레포지토리의 코드를 가져옵니다.**
 
-<br>
-
 #### 2. Node.js 환경 설정
 
 **Node.js 22버전을 사용합니다.**
-
-<br>
 
 #### 3. 의존성 설치
 
 **`npm install` 명령어로 필요한 라이브러리 설치**
 
-<br>
-
 #### 4. 빌드
 
 **`npm run build`로 React 프로젝트를 빌드합니다. `CI=false`를 지정하여 경고를 오류로 처리하지 않도록 설정**
 
-
 #### 5. S3 업로드
 
 **빌드된 정적 파일(`dist` 폴더)을 S3에 업로드합니다. `--delete`플래그를 통해 S3에서 제거된 파일도 반영**
-
-<br>
 
 #### 6. CloudFront 캐시 무효화
 
@@ -238,6 +229,8 @@ GitHub Actions를 통해 CI/CD가 구성되어 있습니다.
 
 5. **CF_DISTRIBUTION_ID : CloudFront 배포 ID**
 
+<br>
+
 ### 🍥 참고 사항
 
 **CloudFront를 사용하는 경우, S3에 새 파일이 업로드되어도 CloudFront의 캐시 때문에 변경 사항이 바로 반영되지 않을 수 있습니다.**
@@ -253,7 +246,7 @@ GitHub Actions를 통해 CI/CD가 구성되어 있습니다.
 **캐시 무효화 경로는 `"/*"`로 지정되어 있어, 전체 파일 변경 사항이 반영됩니다.
 필요 시 성능 향상을 위해 무효화 범위를 특정 경로로 제한할 수 있습니다.**
 
-
+<br>
 
 ## 🍙 아키텍쳐
 
