@@ -72,6 +72,14 @@ function PhoneVerification({
     }
   }, [isCodeSent]);
 
+  // 인증 완료 시 타이머 정리
+  useEffect(() => {
+    if (isVerified) {
+      setTimer(0);
+      if (timerRef.current) clearInterval(timerRef.current);
+    }
+  }, [isVerified]);
+
   // 언마운트 시 타이머 정리
   useEffect(() => {
     return () => {
@@ -124,6 +132,7 @@ function PhoneVerification({
               onClick={isCodeSent ? handleResend : handleSendSMS}
               className={styles.verifynumberbutton}
               style={{ marginLeft: 4 }}
+              disabled={isVerified}
             >
               {isCodeSent ? '재전송' : '인증요청'}
             </Button>
