@@ -7,6 +7,7 @@
   border-bottom: 1px solid rgb(205, 195, 195);
   height: 8vh; // 헤더 높이를 고정해주면 중앙 정렬이 안정적
   width: 100vw;
+  z-index: 30;
 }
 
 .Left {

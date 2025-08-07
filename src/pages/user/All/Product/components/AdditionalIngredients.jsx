@@ -49,7 +49,7 @@ const AdditionalIngredients = () => {
         <IngredientSearchInput
           placeholder="식재료를 입력하세요"
           onSelect={handleSelect}
-          forceOpen={forceOpen}
+          forceOpen={false}
           closeOnSelect={false}
         />
       </div>
@@ -66,6 +66,7 @@ const AdditionalIngredients = () => {
                   type="number"
                   value={item.quantity}
                   onChange={e => handleQtyChange(item.id, e.target.value)}
+                  step={item.unit || 1}
                 />
                 <span>g</span>
               </div>

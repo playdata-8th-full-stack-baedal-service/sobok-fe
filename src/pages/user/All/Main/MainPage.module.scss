@@ -28,9 +28,9 @@
 .searchResults {
   position: absolute;
   top: 50px; /* SearchSelection 바로 아래 위치 (대략적인 높이) */
-  left: 47%;
+  left: 47.5%;
   transform: translateX(-50%);
-  width: 570px;
+  width: 585px;
   background: white;
   border: 1px solid rgb(0, 0, 0);
   border-radius: 8px;
@@ -791,7 +791,7 @@
   // 검색 결과 반응형 수정
   .searchResults {
     width: 330px; /* 모바일에서 검색창과 같은 너비 */
-    left: 43%;
+    left: 44%;
   }
 
   .CategorySelection {
@@ -870,7 +870,9 @@
 
   // 검색 결과 반응형 수정
   .searchResults {
-    width: 250px; /* 작은 화면에서 검색창과 같은 너비 */
+    width: 265px; /* 작은 화면에서 검색창과 같은 너비 */
+    left: 42%;
+    top : 47px;
   }
 
   .CategorySelection {
@@ -902,4 +904,240 @@
 
 .liketext {
   color: rgb(235, 10, 10);
+}
+
+/* 태블릿 전용 스타일 (769px ~ 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .MainPage {
+    width: 100vw;
+    margin: 60px auto;
+  }
+
+  .searchbarcontatiner {
+    position: relative;
+
+    .searchbarinput {
+      width: 420px;
+      padding: 12px 0px 12px 40px;
+      border-radius: 9999px;
+      border: solid 1px rgb(0, 0, 0);
+      transition: all 0.2s ease-in-out;
+      outline: none;
+      opacity: 0.8;
+      height: 45px;
+      font-size: 16px;
+
+      &:focus {
+        opacity: 1;
+        width: 500px;
+      }
+    }
+  }
+
+  .searchResults {
+    position: absolute;
+    top: 55px;
+    left: 46%;
+    transform: translateX(-50%);
+    width: 485px;
+    background: white;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    max-height: 350px;
+    overflow-y: auto;
+    padding: 12px;
+  }
+
+  .searchResultItem,
+  .moreResultsItem {
+    padding: 14px 18px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+    border-radius: 8px;
+    margin-bottom: 4px;
+
+    &:hover {
+      background-color: #f8f9fa;
+      transform: translateY(-1px);
+    }
+
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    p {
+      margin: 0;
+      text-align: left;
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+
+  .moreResultsItem {
+    font-weight: bold;
+    color: #007bff;
+    border-top: 2px solid #e9ecef;
+    margin-top: 8px;
+    background-color: #ffffff;
+
+    &:hover {
+      background-color: #ffffff;
+    }
+
+    p {
+      text-align: center;
+      color: #0056b3;
+    }
+  }
+
+  .searchbarcontainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    position: relative;
+  }
+
+  .searchbarbutton {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    background-color: #000;
+    color: #fff;
+    font-size: 14px;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 8px;
+    height: 58px;
+    padding: 14px 16px;
+    border-radius: 16px 16px 14px 14px;
+    cursor: pointer;
+    position: relative;
+    will-change: transform;
+    transition: all 0.1s ease-in-out;
+    user-select: none;
+    background-image:
+      linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0)),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+    background-position:
+      bottom right,
+      bottom right;
+    background-size:
+      100% 100%,
+      100% 100%;
+    background-repeat: no-repeat;
+    white-space: nowrap;
+
+    box-shadow:
+      inset -4px -10px 0 rgba(255, 255, 255, 0.4),
+      inset -4px -8px 0 rgba(0, 0, 0, 0.3),
+      0 3px 2px rgba(0, 0, 0, 0.3),
+      0 2px 1px rgba(255, 255, 255, 0.1);
+    transform: perspective(70px) rotateX(5deg) rotateY(0deg);
+
+    &:disabled {
+      opacity: 1;
+      cursor: not-allowed;
+      transform: perspective(70px) rotateX(5deg) rotateY(0deg) scale(0.98);
+    }
+
+    &:not(:disabled):hover {
+      transform: perspective(70px) rotateX(3deg) rotateY(-1deg) scale(1.02);
+      box-shadow:
+        inset -4px -10px 0 rgba(255, 255, 255, 0.5),
+        inset -4px -8px 0 rgba(0, 0, 0, 0.2),
+        0 4px 3px rgba(0, 0, 0, 0.4),
+        0 3px 2px rgba(255, 255, 255, 0.15);
+    }
+
+    &:active {
+      will-change: transform;
+      transform: perspective(80px) rotateX(5deg) rotateY(1deg) translateY(3px) scale(0.96);
+      height: 64px;
+      border: 0.25px solid rgba(0, 0, 0, 0.2);
+      box-shadow:
+        inset -4px -8px 0 rgba(255, 255, 255, 0.2),
+        inset -4px -6px 0 rgba(0, 0, 0, 0.8),
+        0 1px 0 rgba(0, 0, 0, 0.9),
+        0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  /* 다른 컴포넌트들도 태블릿에 맞게 조정 */
+  .bestPickSelection {
+    width: 85vw;
+    margin: 40px auto;
+    padding: 30px 45px;
+    border-radius: 20px;
+  }
+
+  .customSliderContainer {
+    height: 350px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .CategorySelection {
+    width: 85vw;
+    margin: 0 auto;
+  }
+
+  .categorytopselection {
+    margin-top: 4rem;
+    
+    h3 {
+      font-size: 1.8rem;
+    }
+  }
+
+  .selectbuttonzone {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 40px auto;
+
+    .btn23 {
+      padding: 0.7rem 2.5rem;
+      font-size: 15px;
+    }
+  }
+
+  .categorybottomselection {
+    grid-template-areas:
+      'main main serveone servetwo'
+      'main main servethree servefour';
+    gap: 12px;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  /* 스크롤바 스타일링 (웹킷 기반 브라우저) */
+  .searchResults::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .searchResults::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  .searchResults::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+
+  .searchResults::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
 }

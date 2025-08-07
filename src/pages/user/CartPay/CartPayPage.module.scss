@@ -118,7 +118,7 @@
           right: 0;
           bottom: 0;
           background-color: rgba(255, 255, 255, 0.3); // 밝은 반투명 흰색
-          z-index: 10;
+          z-index: 5;
           pointer-events: none; // 클릭 막기
           display: flex;
           align-items: center;
@@ -249,7 +249,7 @@
     width: 75%;
     height: 90%; // 원하는 영역만큼 조절 가능
     background: rgba(255, 255, 255, 1); // 반투명 효과 예시
-    z-index: 50;
+    z-index: 10;
 
     .payContent {
       transition: opacity 0.8s ease;

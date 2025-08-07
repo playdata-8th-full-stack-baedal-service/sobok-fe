@@ -10,7 +10,7 @@ const IngredientSearchInput = ({
   showAddButton = false,
   onAddIngredient,
   forceOpen = false,
-  closeOnSelect = false, // ✅ 관리자 페이지에서만 true로 사용
+  closeOnSelect = false, // 관리자 페이지에서만 true로 사용
 }) => {
   const [keyword, setKeyword] = useState('');
   const [isOpen, setIsOpen] = useState(forceOpen);
@@ -22,7 +22,7 @@ const IngredientSearchInput = ({
   const { searchResults, loading } = useIngredientSearch(keyword);
   const safeResults = searchResults || [];
 
-  // ✅ 외부 클릭 감지
+  // 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = event => {
       if (forceOpen) return;
