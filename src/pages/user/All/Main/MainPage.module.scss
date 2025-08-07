@@ -1,6 +1,6 @@
 .MainPage {
   width: 100vw;
-  margin: 80px auto;
+  margin: 40px auto;
   text-align: center;
   position: relative; /* 검색 결과 위치 기준점 */
 }
@@ -200,7 +200,7 @@
 
 .bestPickSelection {
   width: 65vw;
-  margin: 50px auto 50px;
+  margin: 20px auto 50px;
   padding: 25px 50px;
   border-radius: 20px;
 }
@@ -289,7 +289,7 @@
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 25px;
 
   .navDot {
     width: 12px;
@@ -695,7 +695,7 @@
 .bestPicktitle {
   font-weight: bold;
   font-size: 2rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
   
 }
 
