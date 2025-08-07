@@ -17,7 +17,7 @@
 
 <br>
 
-**로컬 주소 : [http://localhost:8000](http://localhost:5173)** <br>
+**로컬 주소 : [http://localhost:5173](http://localhost:5173)** <br>
 
 **배포 주소 : [https://sobok.shop](https://sobok.shop)** <br>
 
