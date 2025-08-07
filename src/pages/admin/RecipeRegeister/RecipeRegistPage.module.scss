@@ -1,3 +1,83 @@
+// 업로드/취소 버튼 그룹
+.buttonGroup {
+  display: flex;
+  gap: 15px;
+  flex-direction: row-reverse;
+
+  // 취소 버튼
+  .cleatbutton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    display: none;
+    content: "취소";
+    color: white;
+    transition-duration: 0.3s;
+    font-size: 2px;
+  }
+
+  &:hover {
+    width: 90px;
+    border-radius: 50px;
+    background-color: rgb(255, 69, 69);
+    align-items: center;
+
+    &::before {
+      display: block;
+      padding-right: 10px;
+      font-size: 13px;
+      opacity: 1;
+      transform: translateY(0px);
+      transition-duration: 0.3s;
+    }
+
+    .delete-svgIcon {
+      width: 20px;
+      transition-duration: 0.3s;
+      transform: rotate(360deg) translateY(60%);
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+    }
+  }
+
+  // 취소 버튼
+  .cancelicon {
+    width: 15px;
+    transition-duration: 0.3s;
+
+    path {
+      fill: white;
+    }
+  }
+}
+  // 업로드 버튼
+  .uploadbutton {
+    background-color: rgb(12, 200, 9);
+    width: 140px;
+    height: 30px;
+    border-radius: 20px;
+    color: rgb(255, 255, 255);
+    border: none;
+    cursor: pointer;
+  }
+}
+
+// 상단 부분 전체
 .ImageandOverview {
   display: flex;
   justify-content: space-around;
@@ -5,6 +85,7 @@
   padding: 20px 60px;
   border-bottom: 1px solid black;
 
+  // 이미지 선택 
   .imageselection {
     width: 20vw;
     display: flex;
@@ -14,12 +95,14 @@
     align-items: center;
   }
 
+  // 상단 우측 (이름, 카테고리, 알러지)
   .overviewselection {
     width: 60vw;
     display: flex;
     flex-direction: column;
     gap: 10px 0;
 
+    // 음식 이름
     .nameselection {
       width: 250px;
       height: 30px;
@@ -37,6 +120,7 @@
       }
     }
 
+    // 카테고리
     .categorySection {
       display: flex;
       align-items: center;
@@ -501,83 +585,6 @@
 }
 
 
-.buttonGroup {
-  display: flex;
-  gap: 15px;
-  flex-direction: row-reverse;
-
-  .cleatbutton {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: rgb(20, 20, 20);
-  border: none;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
-  cursor: pointer;
-  transition-duration: 0.3s;
-  overflow: hidden;
-  position: relative;
-
-  &::before {
-    display: none;
-    content: "취소";
-    color: white;
-    transition-duration: 0.3s;
-    font-size: 2px;
-  }
-
-  &:hover {
-    width: 90px;
-    border-radius: 50px;
-    background-color: rgb(255, 69, 69);
-    align-items: center;
-
-    &::before {
-      display: block;
-      padding-right: 10px;
-      font-size: 13px;
-      opacity: 1;
-      transform: translateY(0px);
-      transition-duration: 0.3s;
-    }
-
-    .delete-svgIcon {
-      width: 20px;
-      transition-duration: 0.3s;
-      transform: rotate(360deg) translateY(60%);
-      -webkit-transform: rotate(360deg);
-      -moz-transform: rotate(360deg);
-      -o-transform: rotate(360deg);
-      -ms-transform: rotate(360deg);
-    }
-  }
-
-  .cancelicon {
-    width: 15px;
-    transition-duration: 0.3s;
-
-    path {
-      fill: white;
-    }
-  }
-}
-
-
-  .uploadbutton {
-    background-color: rgb(12, 200, 9);
-    width: 140px;
-    height: 30px;
-    border-radius: 20px;
-    color: rgb(255, 255, 255);
-    border: none;
-    cursor: pointer;
-  }
-}
-
 .dropdownmenu {
   padding: 10px 20px;
   font-weight: bold;
@@ -652,21 +659,20 @@
   font-size: 16px;
   font-weight: 500;
   color: #888;
-  padding: 20px;
-  border: 1px dashed #ccc;
+  padding: 50px;
   border-radius: 8px;
-  background-color: #f9f9f9;
   margin-top: 10px;
 }
 
 .ingredientsList {
-  max-height: 300px;
-  overflow-y: auto;  
+  max-height: 300px; 
+  overflow-y: auto;  /* 넘치면 스크롤 */
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 10px;
   background-color: #fff;
 }
+
 
 
 

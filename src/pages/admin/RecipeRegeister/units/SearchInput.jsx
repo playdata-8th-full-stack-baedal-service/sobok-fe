@@ -4,7 +4,6 @@ import axiosInstance from '@/services/axios-config';
 import { openModal } from '@/store/modalSlice';
 import IngredientSearchInput from '@/common/forms/IngredientsSearch/IngredientSearchInput';
 import { setAdditionalIngredients } from '@/store/productSlice';
-import styles from '../RecipeRegistPage.module.scss';
 
 const SearchInput = ({ onIngredientSelect }) => {
   const dispatch = useDispatch();
