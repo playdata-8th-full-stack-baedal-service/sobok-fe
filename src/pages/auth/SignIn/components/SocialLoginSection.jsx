@@ -25,7 +25,7 @@ function SocialLoginSection() {
       console.log('구글 로그인 버튼 클릭!');
 
       // 1. 백엔드에 로그인 URL 요청
-      const response = await fetch('http://localhost:8000/api-service/api/google-login-view');
+      const response = await fetch('https://api.sobok.shop/api-service/api/google-login-view');
       const result = await response.json();
       console.log('result:', result);
 
