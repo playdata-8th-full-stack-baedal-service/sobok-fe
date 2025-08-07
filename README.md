@@ -19,7 +19,7 @@
 
 **로컬 주소 : [http://localhost:8000](http://localhost:8000)** <br>
 
-**배포 주소 : [https://api.sobok.shop](https://api.sobok.shop)** <br>
+**배포 주소 : [https://sobok.shop](https://sobok.shop)** <br>
 
 <br>
 
@@ -164,20 +164,6 @@ $ npm run dev
 </div>
 
 <br>
-<br>
-
-## 🍲 개발 환경 설정
-
-<br>
-
-```bash
-# 의존성 설치
-npm install
-
-# 개발 서버 실행
-npm start
-```
-
 <br>
 
 ## 🍤 배포
