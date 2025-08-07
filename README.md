@@ -19,7 +19,7 @@
 
 **로컬 주소 : [http://localhost:8000](http://localhost:8000)** <br>
 
-**배포 주소 : [https://api.sobok.shop](https://api.sobok.shop)** <br>
+**배포 주소 : [https://sobok.shop](https://sobok.shop)** <br>
 
 <br>
 
