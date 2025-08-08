@@ -83,12 +83,12 @@ function MenuTest() {
           <div
             className={`${styles.iconContainer} ${styles.menuIcon} ${isOpen ? styles.rotateOut : ''}`}
           >
-            <Menu size={24} />
+            <Menu size={20} />
           </div>
           <div
             className={`${styles.iconContainer} ${styles.closeIcon} ${isOpen ? styles.rotateIn : ''}`}
           >
-            <X size={24} style={{ stroke: 'black' }} />
+            <X size={20} style={{ stroke: 'black' }} />
           </div>
         </div>
       </button>
