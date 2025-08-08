@@ -22,6 +22,14 @@ const OrderGrid = ({ orders }) => {
     );
   };
 
+  if (orders.length === 0) {
+    return (
+      <div className={styles.orderListWrapper}>
+        <p className={styles.emptyMessage}>주문 내역이 없습니다.</p>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.orderListWrapper}>
       {orders.map((order, index) => (
