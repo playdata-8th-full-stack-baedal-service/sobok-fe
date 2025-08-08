@@ -61,18 +61,18 @@ function EmailSection({
 
   const handleEmailLocalChange = e => {
     const value = e.target.value.replace(/[^A-Za-z0-9._%+-]/g, '');
+
+    // Show error toast if invalid characters were removed
+    if (value !== e.target.value) {
+      showNegative('도메인에는 영문, 숫자, 점(.), 하이픈(-)만 사용할 수 있습니다.');
+    }
+
     dispatch(clearEmailCheck());
     onEmailLocalChange({ ...e, target: { ...e.target, value } });
   };
 
   const handleCustomDomainChange = e => {
     const value = e.target.value.replace(/[^A-Za-z0-9.-]/g, '');
-    
-    // Show error toast if invalid characters were removed
-    if (value !== e.target.value) {
-      showNegative('도메인에는 영문, 숫자, 점(.), 하이픈(-)만 사용할 수 있습니다.');
-    }
-    
     dispatch(clearEmailCheck());
     onCustomDomainChange({ ...e, target: { ...e.target, value } });
   };
