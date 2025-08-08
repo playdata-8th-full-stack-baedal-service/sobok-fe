@@ -17,6 +17,19 @@
   justify-content: space-around;
   gap: 35px;
   position: relative;
+
+   // 화면 너비가 작아질수록 gap 줄이기
+  @media (max-width: 1024px) {
+    gap: 25px;
+  }
+
+  @media (max-width: 768px) {
+    gap: 15px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 8px;
+  }
 }
 
 .iconBtn {
@@ -56,60 +69,8 @@
   position: relative;
 }
 
-.logoutbutton {
-    --bg: #000;
-  --hover-bg: #ffffff;
-  --hover-text: #000;
-
-  color: #fff;
-  cursor: pointer;
-  border: 1px solid var(--bg);
-  border-radius: 4px;
-  padding: 0.8em 2em;
-  background: var(--bg);
-  transition: 0.2s;
-
-  &:hover {
-    color: var(--hover-text);
-    transform: translate(-0.25rem, -0.25rem);
-    background: var(--hover-bg);
-    box-shadow: 0.25rem 0.25rem var(--bg);
-  }
-
-  &:active {
-    transform: translate(0);
-    box-shadow: none;
-  }
-}
-
-.loginbutton {
-  --bg: #000;
-  --hover-bg: #ffffff;
-  --hover-text: #000;
-
-  color: #fff;
-  cursor: pointer;
-  border: 1px solid var(--bg);
-  border-radius: 4px;
-  padding: 0.8em 2em;
-  background: var(--bg);
-  transition: 0.2s;
-
-  &:hover {
-    color: var(--hover-text);
-    transform: translate(-0.25rem, -0.25rem);
-    background: var(--hover-bg);
-    box-shadow: 0.25rem 0.25rem var(--bg);
-  }
-
-  &:active {
-    transform: translate(0);
-    box-shadow: none;
-  }
-}
-
-
-
+.logoutbutton,
+.loginbutton,
 .signupbutton {
   --bg: #000;
   --hover-bg: #ffffff;
@@ -119,7 +80,14 @@
   cursor: pointer;
   border: 1px solid var(--bg);
   border-radius: 4px;
-  padding: 0.8em 2em;
+
+  padding: 0.8em 1.2em; // 🔽 padding 축소
+  font-size: 14px; // 🔽 글자 크기도 조정 가능
+  max-width: 120px; // 🔒 최대 너비 제한
+  white-space: nowrap; // 🔒 줄바꿈 방지
+  overflow: hidden;
+  text-overflow: ellipsis;
+
   background: var(--bg);
   transition: 0.2s;
 
@@ -135,5 +103,3 @@
     box-shadow: none;
   }
 }
-
-

@@ -32,7 +32,7 @@ function ProfileImage() {
 
   return (
     <>
-      <img src={userInfo?.photo} alt="프로필 사진" />
+      <img src="/photodefault.svg" alt="프로필사진" />
       <input
         type="file"
         style={{ display: 'none' }}
