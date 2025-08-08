@@ -37,7 +37,7 @@ function AllOrderPage() {
     <div className={styles.allOrderPage}>
       <h1 className={styles.allOrderPageTitle}>주문 내역</h1>
       <OrderGrid orders={orders} />
-      {!isFullLoaded && (
+      {!isFullLoaded && orders.length > 0 && (
         <div className={styles.allOrderPageButton}>
           <Button onClick={() => setPageNo(pageNo + 1)}>더보기 +</Button>
         </div>
