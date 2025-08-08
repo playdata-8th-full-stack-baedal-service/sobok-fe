@@ -22,7 +22,7 @@ function AllOrderPage() {
           },
         });
         setOrders(prev => [...prev, ...response.data.data]);
-        if (response.data.data.length < numOfRows) {
+        if (response.data.data !== null && response.data.data.length < numOfRows) {
           setIsFullLoaded(true);
         }
       } catch (error) {
