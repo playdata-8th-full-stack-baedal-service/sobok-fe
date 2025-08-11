@@ -10,7 +10,7 @@ function SocialLoginListener() {
 
   useEffect(() => {
     const handleMessage = event => {
-      if (event.origin !== 'http://localhost:8000') {
+      if (event.origin !== 'http://localhost:8000' && event.origin !== 'https://api.sobok.shop') {
         console.warn('출처 불일치: ', window.location.origin);
         return;
       }

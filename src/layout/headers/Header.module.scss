@@ -1,44 +1,36 @@
 .Header {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 7px 190px 7px 190px;
+  padding: 0 40px;
+  height: 8vh;
+  min-height: 50px;
   border-bottom: 1px solid rgb(205, 195, 195);
-  height: 8vh; // 헤더 높이를 고정해주면 중앙 정렬이 안정적
-  width: 100vw;
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
   z-index: 30;
 }
 
-.Left {
-  display: flex;
-  align-items: center;
-  z-index: 1; // 로고보다 뒤에 오지 않도록
-}
-
+.Left,
 .Right {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 10px;
-  z-index: 1;
+  z-index: 2;
 }
 
 .Logo {
-
-  // position: absolute;
-  transform: translateX(55%);
-  z-index: 10; 
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   cursor: pointer;
-  height: 50px;
-  overflow: hidden;
+  z-index: 3;
 
   img {
-    height: 140px; 
-    object-fit: cover;
-    // margin: 10px auto;
-    margin-top: -45px;
-
+    height: 40px; // 기본 크기
+    object-fit: contain;
+    transition: transform 0.2s;
 
     &:hover {
       transform: scale(1.05);
@@ -47,5 +39,25 @@
     &:active {
       transform: scale(0.95);
     }
+  }
+}
+
+// 반응형
+@media screen and (max-width: 768px) {
+  .Logo img {
+    height: 40px; // 창 작아질 때 로고 크기 줄이기
+  }
+
+  .Header {
+    padding: 0 20px; // 좌우 여백 줄이기
+  }
+
+  .Right {
+    gap: 5px; // 아이콘들 간격 축소
+  }
+
+  .Right button {
+    font-size: 12px; // 버튼 텍스트 작게
+    padding: 8px;
   }
 }

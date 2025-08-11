@@ -1,29 +1,4 @@
-.riderlogoutbutton {
-        --bg: #000;
-  --hover-bg: #ffffff;
-  --hover-text: #000;
-
-  color: #fff;
-  cursor: pointer;
-  border: 1px solid var(--bg);
-  border-radius: 4px;
-  padding: 0.8em 2em;
-  background: var(--bg);
-  transition: 0.2s;
-
-  &:hover {
-    color: var(--hover-text);
-    transform: translate(-0.25rem, -0.25rem);
-    background: var(--hover-bg);
-    box-shadow: 0.25rem 0.25rem var(--bg);
-  }
-
-  &:active {
-    transform: translate(0);
-    box-shadow: none;
-  }
-}
-
+.riderlogoutbutton,
 .loginbutton {
   --bg: #000;
   --hover-bg: #ffffff;
@@ -33,7 +8,14 @@
   cursor: pointer;
   border: 1px solid var(--bg);
   border-radius: 4px;
-  padding: 0.8em 2em;
+
+  padding: 0.8em 1.2em;        // 🔽 버튼 크기 줄이기
+  font-size: 14px;             // 🔽 글자 크기 조정
+  max-width: 120px;            // 🔒 최대 너비 제한
+  white-space: nowrap;         // 🔒 줄바꿈 방지
+  overflow: hidden;            // 🔒 넘치는 텍스트 숨김
+  text-overflow: ellipsis;     // 🔒 말줄임 처리
+
   background: var(--bg);
   transition: 0.2s;
 

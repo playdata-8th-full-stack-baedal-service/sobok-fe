@@ -1,5 +1,5 @@
 .adminlogoutbutton {
-    --bg: #000;
+  --bg: #000;
   --hover-bg: #ffffff;
   --hover-text: #000;
 
@@ -7,7 +7,14 @@
   cursor: pointer;
   border: 1px solid var(--bg);
   border-radius: 4px;
-  padding: 0.8em 2em;
+
+  padding: 0.8em 1.2em;       // 🔽 padding 줄임
+  font-size: 14px;            // 🔽 글자 크기 조정 가능
+  max-width: 120px;           // 🔒 최대 너비 제한
+  white-space: nowrap;        // 🔒 줄바꿈 방지
+  overflow: hidden;           // 🔒 넘치는 글 숨김
+  text-overflow: ellipsis;    // 🔒 말줄임 처리
+
   background: var(--bg);
   transition: 0.2s;
 

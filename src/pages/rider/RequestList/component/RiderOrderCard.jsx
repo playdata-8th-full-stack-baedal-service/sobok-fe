@@ -7,11 +7,25 @@ import { formattedDate, orderStatus } from '../../../../common/utils/orderUtils'
 import styles from '../RequestListPage.module.scss';
 import axiosInstance from '../../../../services/axios-config';
 
-const RiderOrderCard = ({ order, fetchOrders, accepted }) => {
+function RiderOrderCard({ order, fetchOrders, accepted }) {
   const handleStatusChange = async () => {
+    // 상황에 따른 confirm 메시지 설정
+    let confirmMessage;
+
+    if (!accepted) {
+      // 배달 가능 주문 목록에서 상태변경 버튼을 눌렀을 때
+      confirmMessage = '배송 승인 하시겠습니까?';
+    } else if (order.orderState === 'DELIVERING') {
+      // 배송 중 상태에서 상태변경 버튼을 눌렀을 때
+      confirmMessage = '배송을 완료하시겠습니까?';
+    } else {
+      // 수락한 요청에서 상태변경 버튼을 눌렀을 때 (배송 시작)
+      confirmMessage = '배송시작하시겠습니까?';
+    }
+
     // 확인 창 표시
-    const isConfirmed = window.confirm('정말 상태를 변경하시겠습니까?');
-    
+    const isConfirmed = window.confirm(confirmMessage);
+
     // 사용자가 취소를 선택한 경우 함수 종료
     if (!isConfirmed) {
       return;
@@ -23,11 +37,11 @@ const RiderOrderCard = ({ order, fetchOrders, accepted }) => {
         ? 'complete-delivery'
         : 'change-orderState'
       : 'accept-delivery';
-    
+
     const response = await axiosInstance.patch(
       `/payment-service/payment/${url}?id=${order.paymentId}`
     );
-    
+
     console.log(response.data);
     fetchOrders();
   };
@@ -63,6 +77,6 @@ const RiderOrderCard = ({ order, fetchOrders, accepted }) => {
       )}
     </div>
   );
-};
+}
 
 export default RiderOrderCard;

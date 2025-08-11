@@ -14,15 +14,20 @@ function AllOrderPage() {
   // 주문 내역 조회
   useEffect(() => {
     const fetchOrders = async () => {
-      const response = await axiosInstance.get('/payment-service/payment/all', {
-        params: {
-          page: pageNo,
-          size: numOfRows,
-        },
-      });
-      setOrders(prev => [...prev, ...response.data.data]);
-      if (response.data.data.length < numOfRows) {
-        setIsFullLoaded(true);
+      try {
+        const response = await axiosInstance.get('/payment-service/payment/all', {
+          params: {
+            page: pageNo,
+            size: numOfRows,
+          },
+        });
+        setOrders(prev => [...prev, ...response.data.data]);
+        if (response.data.data.length < numOfRows) {
+          setIsFullLoaded(true);
+        }
+      } catch (error) {
+        console.error('주문 내역 조회 중 오류 발생:', error);
+        setOrders([]);
       }
     };
     fetchOrders();

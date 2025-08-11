@@ -28,7 +28,7 @@
 .searchResults {
   position: absolute;
   top: 50px; /* SearchSelection 바로 아래 위치 (대략적인 높이) */
-  left: 47.5%;
+  left: 48.3%;
   transform: translateX(-50%);
   width: 585px;
   background: white;
@@ -791,7 +791,7 @@
   // 검색 결과 반응형 수정
   .searchResults {
     width: 330px; /* 모바일에서 검색창과 같은 너비 */
-    left: 44%;
+    left: 46%;
   }
 
   .CategorySelection {
@@ -1139,5 +1139,78 @@
 
   .searchResults::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
+  }
+}
+
+@media screen and (min-width: 1440px) { 
+   .searchResults {
+    width: 580px; 
+    left: 47.7%;
+  }
+}
+
+@media screen and (min-width: 2560px) { 
+   .searchResults {
+    width: 580px; 
+    left: 48.7%;
+  }
+}
+
+@media screen and (width: 820px) { 
+   .searchResults {
+    width: 480px; 
+    left: 45%;
+    top : 3.9%
+  }
+}
+
+@media screen and (width: 540px) { 
+   .searchResults {
+    width: 330px; 
+    left: 44%;
+  }
+}
+
+@media screen and (width: 344px) { 
+   .searchResults {
+    width: 270px; 
+    left: 40%;
+  }
+}
+
+@media screen and (width: 320px) { 
+   .searchResults {
+    width: 240px; 
+    left: 40%;
+  }
+}
+
+@media screen and (width: 1920px) { 
+   .searchResults {
+    width: 580px; 
+    left: 48.4%;
+  }
+}
+
+@media screen and (width: 1024px) { 
+   .searchResults {
+    width: 480px; 
+    left: 46%;
+    top:3.6%
+  }
+}
+
+@media screen and (width: 1280px) { 
+   .searchResults {
+    width: 580px; 
+    left: 47.5%;
+    top:3.3%
+  }
+}
+
+@media screen and (width: 375px) { 
+   .searchResults {
+    width: 270px; 
+    left: 41%;
   }
 }
