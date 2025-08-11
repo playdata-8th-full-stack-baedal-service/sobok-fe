@@ -6,6 +6,7 @@ import { logout } from '../../store/authSlice';
 import axios from '../../services/axios-config';
 import styles from './AdminHeader.module.scss';
 import useToast from '@/common/hooks/useToast';
+import { logoutCleanup } from '@/store/productSlice';
 
 function AdminHeader() {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ function AdminHeader() {
       console.error('서버 로그아웃 실패:', err);
     } finally {
       dispatch(logout());
+      dispatch(logoutCleanup()); // 추가재료, 검색 초기화 redux 초기화
       navigate('/');
       showSuccess('로그아웃 되었습니다.');
     }
@@ -32,7 +34,7 @@ function AdminHeader() {
 
   return (
     <Header
-    lefttitle={<p>관리자용 페이지</p>}
+      lefttitle={<p>관리자용 페이지</p>}
       rightthree={
         <button type="button" onClick={handleLogout} className={styles.adminlogoutbutton}>
           로그아웃

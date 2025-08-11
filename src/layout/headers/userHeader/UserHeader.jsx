@@ -8,6 +8,7 @@ import Header from '../Header';
 import styles from './UserHeader.module.scss';
 import MenuTest from './HamburgerMenu';
 import useToast from '@/common/hooks/useToast';
+import { logoutCleanup } from '@/store/productSlice';
 
 function UserHeader() {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ function UserHeader() {
     } finally {
       showSuccess('로그아웃 되었습니다.');
       dispatch(logout());
+      dispatch(logoutCleanup());
       navigate('/');
     }
   };
