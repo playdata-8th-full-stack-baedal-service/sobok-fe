@@ -407,6 +407,7 @@
     background: rgba(255, 255, 255, 1); // 반투명 효과 예시
     z-index: 50;
 
+
     .foldButton {
       position: absolute;
       top: 50%;
@@ -430,6 +431,8 @@
     .payContent {
       // display: none;
       opacity: 0%;
+      height: 100%;
+      overflow: hidden;
     }
   }
 }
