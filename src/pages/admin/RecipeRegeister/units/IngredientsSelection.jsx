@@ -1,13 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axiosInstance from '@/services/axios-config';
 import style from '../RecipeRegistPage.module.scss';
 import SearchInput from './SearchInput';
 import { API_BASE_URL } from '@/services/host-config';
 
+const HOLD_START_DELAY = 300; // 길게 누르기 시작 지연(ms)
+const HOLD_INTERVAL = 70; // 반복 간격(ms)
+
 function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSignal }) {
   const [ingredients, setIngredients] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
+
+  // hold 타이머
+  const holdTimeoutRef = useRef(null);
+  const holdIntervalRef = useRef(null);
+
+  const clearTimers = () => {
+    if (holdTimeoutRef.current) {
+      clearTimeout(holdTimeoutRef.current);
+      holdTimeoutRef.current = null;
+    }
+    if (holdIntervalRef.current) {
+      clearInterval(holdIntervalRef.current);
+      holdIntervalRef.current = null;
+    }
+  };
 
   // 전체 식재료 불러오기
   const allIngredients = async () => {
@@ -73,19 +91,44 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
     return Math.round(pricePerUnit * unitValue);
   };
 
-  // (신규) 단위(step) 증감 전용 핸들러: +1/-1 step만 허용
+  // 단위(step) 증감 전용 핸들러: +1/-1 step
   const stepChange = (ingredientId, delta /* +1 또는 -1 */) => {
-    setSelectedIngredients(prev =>
-      prev.map(item => {
-        if (item.id !== ingredientId) return item;
+    setSelectedIngredients(prev => {
+      const next = prev.flatMap(item => {
+        if (item.id !== ingredientId) return [item];
         const dbUnit = parseFloat(item.dbUnit) || 1;
         let newUnit = (parseFloat(item.unit) || 0) + delta * dbUnit;
-        if (newUnit < 0) newUnit = 0;
+        if (newUnit <= 0) {
+          // 0 이하면 삭제 + 홀드 종료
+          clearTimers();
+          return [];
+        }
         const unitQuantity = Math.round(newUnit / dbUnit);
         const totalPrice = calculateTotalPrice(item.pricePerUnit, newUnit);
-        return { ...item, unit: newUnit.toString(), unitQuantity, totalPrice };
-      })
-    );
+        return [{ ...item, unit: newUnit.toString(), unitQuantity, totalPrice }];
+      });
+      return next;
+    });
+  };
+
+  // Pointer 이벤트(마우스/터치 통일) + 포인터 캡처
+  const onPressStart = (e, id, delta) => {
+    e.preventDefault();
+    try {
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+    } catch {}
+    stepChange(id, delta); // 즉시 1회
+    clearTimers();
+    holdTimeoutRef.current = setTimeout(() => {
+      holdIntervalRef.current = setInterval(() => stepChange(id, delta), HOLD_INTERVAL);
+    }, HOLD_START_DELAY);
+  };
+
+  const onPressEnd = e => {
+    clearTimers();
+    try {
+      e?.currentTarget?.releasePointerCapture?.(e.pointerId);
+    } catch {}
   };
 
   // 식재료 선택 핸들러
@@ -136,7 +179,11 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
   // 식재료 삭제 핸들러
   const handleRemoveIngredient = ingredientId => {
     setSelectedIngredients(prev => prev.filter(item => item.id !== ingredientId));
+    clearTimers(); // 혹시 홀드 중이면 정지
   };
+
+  // 언마운트 시 타이머 정리
+  useEffect(() => () => clearTimers(), []);
 
   return (
     <div className={style.IngredientsSelection}>
@@ -181,11 +228,13 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
                 {/* 수량 조절 및 삭제 버튼 */}
                 <div className={style.quantityControl}>
                   <div className={style.quantityWrapper}>
-                    {/* ▼ 인풋 제거, 버튼만 남김 */}
                     <button
                       type="button"
                       className={style.stepBtn}
-                      onClick={() => stepChange(ingredient.id, -1)}
+                      onPointerDown={e => onPressStart(e, ingredient.id, -1)}
+                      onPointerUp={onPressEnd}
+                      onPointerCancel={onPressEnd}
+                      onPointerLeave={onPressEnd}
                       aria-label="decrease"
                     >
                       ▾
@@ -196,7 +245,10 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
                     <button
                       type="button"
                       className={style.stepBtn}
-                      onClick={() => stepChange(ingredient.id, +1)}
+                      onPointerDown={e => onPressStart(e, ingredient.id, +1)}
+                      onPointerUp={onPressEnd}
+                      onPointerCancel={onPressEnd}
+                      onPointerLeave={onPressEnd}
                       aria-label="increase"
                     >
                       ▴
