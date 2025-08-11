@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '@/services/axios-config';
 import styles from './LikePostPage.module.scss';
-import { useNavigate } from 'react-router-dom';
 import useToast from '@/common/hooks/useToast';
 
 function LikePostPage() {
@@ -34,11 +34,20 @@ function LikePostPage() {
 
   const handleUnlike = async (e, id) => {
     e.stopPropagation(); // 카드 클릭 막기
+
+    // confirm 창으로 사용자 확인
+    const isConfirmed = window.confirm('정말 삭제하시겠습니까?');
+
+    if (!isConfirmed) {
+      return; // 취소하면 함수 종료
+    }
+
     try {
       await axiosInstance.delete('/user-service/user/user-unlike', {
         data: { postId: Number(id) }, // ← 여기가 핵심
       });
       setLikePosts(prev => prev.filter(post => post.postId !== id)); // ← post.postId로 비교
+      showSuccess('좋아요가 취소되었습니다.');
     } catch (err) {
       showNegative('좋아요 취소에 실패했습니다.');
     }
