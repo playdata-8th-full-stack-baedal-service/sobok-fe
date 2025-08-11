@@ -73,29 +73,18 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
     return Math.round(pricePerUnit * unitValue);
   };
 
-  // 수량 변경 핸들러
-  const handleQuantityChange = (ingredientId, quantity) => {
+  // (신규) 단위(step) 증감 전용 핸들러: +1/-1 step만 허용
+  const stepChange = (ingredientId, delta /* +1 또는 -1 */) => {
     setSelectedIngredients(prev =>
-      prev
-        .map(item => {
-          if (item.id === ingredientId) {
-            const dbUnit = parseFloat(item.dbUnit) || 1;
-            let newUnit = parseFloat(quantity) || 0;
-            newUnit = Math.round(newUnit / dbUnit) * dbUnit;
-            if (newUnit < 0) newUnit = 0;
-
-            const unitQuantity = Math.round(newUnit / dbUnit);
-            const totalPrice = calculateTotalPrice(item.pricePerUnit, newUnit);
-            return {
-              ...item,
-              unit: newUnit.toString(),
-              unitQuantity,
-              totalPrice,
-            };
-          }
-          return item;
-        })
-        .filter(item => parseFloat(item.unit) > 0)
+      prev.map(item => {
+        if (item.id !== ingredientId) return item;
+        const dbUnit = parseFloat(item.dbUnit) || 1;
+        let newUnit = (parseFloat(item.unit) || 0) + delta * dbUnit;
+        if (newUnit < 0) newUnit = 0;
+        const unitQuantity = Math.round(newUnit / dbUnit);
+        const totalPrice = calculateTotalPrice(item.pricePerUnit, newUnit);
+        return { ...item, unit: newUnit.toString(), unitQuantity, totalPrice };
+      })
     );
   };
 
@@ -192,16 +181,28 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
                 {/* 수량 조절 및 삭제 버튼 */}
                 <div className={style.quantityControl}>
                   <div className={style.quantityWrapper}>
-                    <input
-                      type="number"
-                      min="0"
-                      value={ingredient.unit}
-                      onChange={e => handleQuantityChange(ingredient.id, e.target.value)}
-                      className={style.quantityInput}
-                      step={parseFloat(ingredient.dbUnit)}
-                    />
-                    <span className={style.unitLabel}>g</span>
+                    {/* ▼ 인풋 제거, 버튼만 남김 */}
+                    <button
+                      type="button"
+                      className={style.stepBtn}
+                      onClick={() => stepChange(ingredient.id, -1)}
+                      aria-label="decrease"
+                    >
+                      ▾
+                    </button>
+
+                    <div className={style.unitReadout}>{ingredient.unit}g</div>
+
+                    <button
+                      type="button"
+                      className={style.stepBtn}
+                      onClick={() => stepChange(ingredient.id, +1)}
+                      aria-label="increase"
+                    >
+                      ▴
+                    </button>
                   </div>
+
                   <button
                     type="button"
                     onClick={() => handleRemoveIngredient(ingredient.id)}
