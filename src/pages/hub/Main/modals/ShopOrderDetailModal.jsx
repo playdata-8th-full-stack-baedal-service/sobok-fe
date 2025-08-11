@@ -24,8 +24,8 @@ const ShopOrderDetailModal = ({ onClose, order }) => {
 
   const handleChangeOrderState = async () => {
     // 확인 다이얼로그 표시
-    const isConfirmed = window.confirm('주문 승인을 하시겠습니까?');
-    
+    const isConfirmed = window.confirm('재료 준비 완료 상태로 변경하시겠습니까');
+
     // 사용자가 "아니요"를 선택한 경우 함수 종료
     if (!isConfirmed) {
       return;
