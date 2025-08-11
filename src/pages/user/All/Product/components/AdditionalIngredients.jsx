@@ -13,6 +13,13 @@ const AdditionalIngredients = () => {
   const [forceOpen] = useState(true);
   const scrollRef = useRef(null);
 
+  // 최신 리스트 보관(ref) — 인터벌에서 stale 상태 방지
+  const latestListRef = useRef(additionalIngredients);
+  useEffect(() => {
+    latestListRef.current = additionalIngredients;
+  }, [additionalIngredients]);
+
+  // hold 타이머
   const holdTimeoutRef = useRef(null);
   const holdIntervalRef = useRef(null);
 
@@ -28,14 +35,16 @@ const AdditionalIngredients = () => {
   };
 
   const updateList = updater => {
-    const next = updater(additionalIngredients);
+
+    const base = latestListRef.current; // 항상 최신
+    const next = updater(base);
     dispatch(setAdditionalIngredients(next));
   };
 
   // 선택 시: 기존 있으면 dbUnit만큼 +, 없으면 추가(초기값=dbUnit)
   const handleSelect = item => {
-    const exists = additionalIngredients.find(i => i.id === item.id);
     const dbUnit = Number(item.unit) || 1;
+    const exists = latestListRef.current.find(i => i.id === item.id);
     if (exists) {
       updateList(list =>
         list.map(i =>
@@ -47,20 +56,24 @@ const AdditionalIngredients = () => {
     }
   };
 
-  // 단일 스텝 변경 (+/- 1 step). 0 이하 → 자동 삭제
+  // 단일 스텝 변경 (+/- 1 step). 0 이하 → 자동 삭제(+타이머 정지)
   const stepChange = (id, delta) => {
-    updateList(list =>
-      list.flatMap(i => {
+    updateList(list => {
+      const nextList = list.flatMap(i => {
         if (i.id !== id) return [i];
         const dbUnit = Number(i.unit) || 1;
         const next = (Number(i.quantity) || 0) + delta * dbUnit;
         if (next <= 0) return []; // 0이면 제거
         return [{ ...i, quantity: next }];
-      })
-    );
+      });
+      const existed = list.some(i => i.id === id);
+      const stillExists = nextList.some(i => i.id === id);
+      if (existed && !stillExists) clearTimers(); // 삭제 시 홀드 즉시 종료
+      return nextList;
+    });
   };
 
-  // ▼ Pointer 이벤트로 통일(마우스/터치 모두), 포인터 캡처로 이탈 방지
+  // Pointer 이벤트(마우스/터치 통일) + 포인터 캡처
   const onPressStart = (e, id, delta) => {
     e.preventDefault();
     try {
@@ -84,6 +97,7 @@ const AdditionalIngredients = () => {
     updateList(list => list.filter(i => i.id !== id));
   };
 
+  // 선택 목록이 늘어날 때, 스크롤 맨 아래로 유지
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [additionalIngredients]);

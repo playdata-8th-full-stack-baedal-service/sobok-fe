@@ -17,8 +17,9 @@ const IngredientSearchInput = ({
   const [hasInteractedOutside, setHasInteractedOutside] = useState(false);
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
-  const dispatch = useDispatch();
+  const scrollRef = useRef(null);
 
+  const dispatch = useDispatch();
   const { searchResults, loading } = useIngredientSearch(keyword);
   const safeResults = searchResults || [];
 
@@ -32,17 +33,14 @@ const IngredientSearchInput = ({
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [forceOpen]);
 
   // 외부 클릭 후 상태 초기화
   useEffect(() => {
     if (hasInteractedOutside) {
-      setTimeout(() => {
-        setHasInteractedOutside(false);
-      }, 100);
+      const t = setTimeout(() => setHasInteractedOutside(false), 100);
+      return () => clearTimeout(t);
     }
   }, [hasInteractedOutside]);
 
@@ -50,6 +48,42 @@ const IngredientSearchInput = ({
   useEffect(() => {
     if (forceOpen) setIsOpen(true);
   }, [forceOpen]);
+
+  // ◀ 신규: 등록 모달에서 발행한 이벤트 수신
+  useEffect(() => {
+    const onRegistered = e => {
+      const ing = e.detail;
+      if (!ing) return;
+
+      // 1) 검색창 리셋 + 열어둠
+      setKeyword('');
+      setIsOpen(true);
+
+      // 2) 자동 선택(추가) — onSelect로 전달
+      onSelect?.({
+        ...ing,
+        quantity: ing.unit, // 기존 onSelect 시그니처와 동일
+      });
+
+      // 3) 검색 결과도 새로고침(선택 사항)
+      dispatch(fetchAdditionalIngredients(''));
+
+      // 4) 스크롤 위치 유지(필요 시)
+      requestAnimationFrame(() => {
+        if (scrollRef.current) {
+          // 유지하고 싶으면 현재 값을 그대로 다시 설정
+          const top = scrollRef.current.scrollTop || 0;
+          scrollRef.current.scrollTop = top;
+        }
+      });
+
+      // 입력 포커스 유지(원하면)
+      inputRef.current?.focus();
+    };
+
+    window.addEventListener('INGREDIENT_REGISTERED', onRegistered);
+    return () => window.removeEventListener('INGREDIENT_REGISTERED', onRegistered);
+  }, [dispatch, onSelect]);
 
   return (
     <div className={styles.searchContainer} ref={dropdownRef}>
@@ -63,15 +97,11 @@ const IngredientSearchInput = ({
           setIsOpen(true);
         }}
         onKeyDown={e => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-          }
+          if (e.key === 'Enter') e.preventDefault();
         }}
         onFocus={() => {
           setIsOpen(true);
-          if (!keyword) {
-            dispatch(fetchAdditionalIngredients(''));
-          }
+          if (!keyword) dispatch(fetchAdditionalIngredients(''));
         }}
         className={styles.searchbar}
       />
@@ -82,6 +112,7 @@ const IngredientSearchInput = ({
         <div className={styles.dropdownContainer}>
           <div
             className={`${styles.scrollWrapper} ${safeResults.length > 6 ? styles.scrollable : ''}`}
+            ref={scrollRef}
           >
             {showAddButton && keyword && !safeResults.some(item => item.ingreName === keyword) && (
               <div
@@ -89,12 +120,15 @@ const IngredientSearchInput = ({
                 onMouseDown={e => {
                   e.preventDefault();
                   e.stopPropagation();
+                  const prevTop = scrollRef.current?.scrollTop ?? 0;
                   onAddIngredient && onAddIngredient(keyword);
-                  setKeyword('');
                   if (closeOnSelect) {
                     setIsOpen(false);
+                    inputRef.current?.blur();
                   } else {
-                    setTimeout(() => setIsOpen(true), 100);
+                    requestAnimationFrame(() => {
+                      if (scrollRef.current) scrollRef.current.scrollTop = prevTop;
+                    });
                   }
                 }}
                 style={{ cursor: 'pointer' }}
@@ -111,17 +145,20 @@ const IngredientSearchInput = ({
                 onMouseDown={e => {
                   e.preventDefault();
                   e.stopPropagation();
+                  const prevTop = scrollRef.current?.scrollTop ?? 0;
+
                   onSelect({
                     ...item,
                     quantity: item.unit,
                   });
-                  setKeyword('');
+
                   if (closeOnSelect) {
                     setIsOpen(false);
                     inputRef.current?.blur();
                   } else if (!forceOpen) {
-                    setIsOpen(false);
-                    setTimeout(() => setIsOpen(true), 100);
+                    requestAnimationFrame(() => {
+                      if (scrollRef.current) scrollRef.current.scrollTop = prevTop;
+                    });
                   }
                 }}
               >
