@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import ModalWrapper from '@/common/modals/ModalWrapper';
 import styles from '../RecipeRegistPage.module.scss';
-import { API_BASE_URL } from '@/services/host-config';
 import axiosInstance from '@/services/axios-config';
 import useToast from '@/common/hooks/useToast';
 
 function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
   const [formData, setFormData] = useState({
     ingreName: initialIngreName.trim(),
-    price: '',
+    price: '', // 빈 값 허용
     origin: '',
-    unit: '',
+    unit: '', // 빈 값 허용
   });
 
   const { showSuccess } = useToast();
@@ -21,82 +19,63 @@ function IngredientRegisterModal({ onClose, initialIngreName = '', ...props }) {
   const handleInputChange = e => {
     const { name, value } = e.target;
 
-    // 가격 필드 특별 처리
     if (name === 'price') {
-      // 숫자가 아닌 문자 제거
-      const numericValue = value.replace(/[^0-9]/g, '');
-
-      // 빈 문자열이거나 0인 경우 입력 막기
-      if (numericValue === '' || numericValue === '0') {
-        return;
-      }
-
-      // 1 이상의 숫자인 경우만 업데이트
-      if (parseInt(numericValue) > 0) {
-        setFormData(prev => ({
-          ...prev,
-          [name]: numericValue,
-        }));
-      }
-    } else if (name === 'unit') {
-      // 숫자만 입력 가능
-      const numericValue = value.replace(/[^0-9]/g, '');
-      setFormData(prev => ({
-        ...prev,
-        [name]: numericValue,
-      }));
-    } else {
-      // 다른 필드들은 기존 로직 유지
-      setFormData(prev => ({
-        ...prev,
-        [name]: value,
-      }));
+      const numeric = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({ ...prev, price: numeric }));
+      return;
     }
+    if (name === 'unit') {
+      const numeric = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({ ...prev, unit: numeric }));
+      return;
+    }
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
 
-    // 필수 필드 검증
-    if (
-      !formData.ingreName.trim() ||
-      !formData.price.trim() ||
-      !formData.origin.trim() ||
-      !formData.unit.trim()
-    ) {
+    const ingreName = (formData.ingreName || '').trim();
+    const origin = (formData.origin || '').trim();
+    const priceInt = parseInt(formData.price, 10);
+    const unitInt = parseInt(formData.unit, 10);
+
+    if (!ingreName || !formData.price || !origin || !formData.unit) {
       showNegative('모든 필드를 입력해주세요.');
       return;
     }
-
-    // 가격 유효성 검증
-    const price = parseInt(formData.price);
-    if (price <= 0) {
-      showNegative('가격은 0보다 큰 숫자를 입력해주세요.');
+    if (!Number.isInteger(priceInt) || priceInt <= 0) {
+      showNegative('가격은 1 이상의 숫자를 입력해주세요.');
+      return;
+    }
+    if (!Number.isInteger(unitInt) || unitInt <= 0) {
+      showNegative('단위는 1 이상의 숫자를 입력해주세요.');
       return;
     }
 
     try {
-      // 숫자 필드를 적절한 타입으로 변환
-      const requestData = {
-        ...formData,
-        price: parseInt(formData.price, 10),
-      };
-
-      console.log(requestData);
-
+      const requestData = { ingreName, origin, price: priceInt, unit: unitInt };
       const response = await axiosInstance.post(`/cook-service/ingredient/register`, requestData);
-      console.log(response.data);
-      if (response.data.success) {
+
+      if (response.data?.success) {
+        const newIngredient = response.data.data; // 서버가 반환한 신규 식재료
         showSuccess('식재료가 등록되었습니다.');
-        if (props.onSuccess) props.onSuccess(formData.data);
+
+        // 1) 부모 콜백으로도 전달(있으면)
+        if (props.onSuccess) props.onSuccess(newIngredient);
+
+        // 2) 전역 이벤트로 검색창에 알림(리셋 + 자동 추가)
+        try {
+          window.dispatchEvent(new CustomEvent('INGREDIENT_REGISTERED', { detail: newIngredient }));
+        } catch (_) {}
+
+        // 3) 모달 닫기
         if (onClose) onClose();
       } else {
-        showNegative(response.data.message);
+        showNegative(response.data?.message || '식재료 등록에 실패했습니다.');
       }
     } catch (error) {
       console.error(error);
-      console.log(error.response.message);
-
       showNegative('식재료 등록에 실패했습니다.');
     }
   };
