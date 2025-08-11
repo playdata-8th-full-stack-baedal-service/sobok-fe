@@ -1,6 +1,52 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from './BestPostView.module.scss';
 import { Heart } from 'lucide-react';
+
+const PostCard = ({ post, onClick }) => {
+  const titleRef = useRef(null);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const titleElement = titleRef.current;
+    const containerElement = containerRef.current;
+    
+    if (titleElement && containerElement) {
+      const textWidth = titleElement.scrollWidth;
+      const containerWidth = containerElement.clientWidth;
+      
+      // 제목이 컨테이너보다 길면 overflow 클래스 추가
+      if (textWidth > containerWidth) {
+        titleElement.classList.add(styles.overflow);
+      } else {
+        titleElement.classList.remove(styles.overflow);
+      }
+    }
+  }, [post.title]);
+
+  return (
+    <div
+      className={styles.postCard}
+      onClick={() => onClick(post.postId)}
+    >
+      <img
+        src={post.thumbnail}
+        alt={post.title}
+        className={styles.thumbnail}
+      />
+      <div className={styles.postInfo}>
+        <div className={styles.titleContainer} ref={containerRef}>
+          <span className={styles.title} ref={titleRef}>
+            {post.title}
+          </span>
+        </div>
+        <div className={styles.likes}>
+          <Heart size={16} fill="red" color="red" />
+          <span>{post.likeCount}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const BestPostView = ({ posts, onClick }) => {
   return (
@@ -14,20 +60,11 @@ const BestPostView = ({ posts, onClick }) => {
         ) : (
           <div className={styles.postList}>
             {posts.map(post => (
-              <div
+              <PostCard
                 key={post.postId}
-                className={styles.postCard}
-                onClick={() => onClick(post.postId)}
-              >
-                <img src={post.thumbnail} alt={post.title} className={styles.thumbnail} />
-                <div className={styles.postInfo}>
-                  <span className={styles.title}>{post.title}</span>
-                  <div className={styles.likes}>
-                    <Heart size={16} fill="red" color="red" />
-                    <span>{post.likeCount}</span>
-                  </div>
-                </div>
-              </div>
+                post={post}
+                onClick={onClick}
+              />
             ))}
           </div>
         )}
