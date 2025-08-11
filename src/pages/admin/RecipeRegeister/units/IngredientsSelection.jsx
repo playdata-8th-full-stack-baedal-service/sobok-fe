@@ -73,19 +73,24 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
     return Math.round(pricePerUnit * unitValue);
   };
 
-  // (신규) 단위(step) 증감 전용 핸들러: +1/-1 step만 허용
+  // 단위(step) 증감 전용 핸들러: +1/-1 step
+  // ▼ newUnit이 0 이하가 되면 해당 항목을 배열에서 제거
   const stepChange = (ingredientId, delta /* +1 또는 -1 */) => {
-    setSelectedIngredients(prev =>
-      prev.map(item => {
-        if (item.id !== ingredientId) return item;
+    setSelectedIngredients(prev => {
+      const next = prev.flatMap(item => {
+        if (item.id !== ingredientId) return [item];
         const dbUnit = parseFloat(item.dbUnit) || 1;
         let newUnit = (parseFloat(item.unit) || 0) + delta * dbUnit;
-        if (newUnit < 0) newUnit = 0;
+        if (newUnit <= 0) {
+          // 0 이하면 삭제
+          return [];
+        }
         const unitQuantity = Math.round(newUnit / dbUnit);
         const totalPrice = calculateTotalPrice(item.pricePerUnit, newUnit);
-        return { ...item, unit: newUnit.toString(), unitQuantity, totalPrice };
-      })
-    );
+        return [{ ...item, unit: newUnit.toString(), unitQuantity, totalPrice }];
+      });
+      return next;
+    });
   };
 
   // 식재료 선택 핸들러
@@ -181,7 +186,7 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
                 {/* 수량 조절 및 삭제 버튼 */}
                 <div className={style.quantityControl}>
                   <div className={style.quantityWrapper}>
-                    {/* ▼ 인풋 제거, 버튼만 남김 */}
+                    {/* 버튼만 증감 */}
                     <button
                       type="button"
                       className={style.stepBtn}
