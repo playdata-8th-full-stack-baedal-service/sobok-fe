@@ -35,6 +35,7 @@ const AdditionalIngredients = () => {
   };
 
   const updateList = updater => {
+
     const base = latestListRef.current; // 항상 최신
     const next = updater(base);
     dispatch(setAdditionalIngredients(next));
@@ -98,9 +99,7 @@ const AdditionalIngredients = () => {
 
   // 선택 목록이 늘어날 때, 스크롤 맨 아래로 유지
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [additionalIngredients]);
 
   useEffect(() => () => clearTimers(), []);

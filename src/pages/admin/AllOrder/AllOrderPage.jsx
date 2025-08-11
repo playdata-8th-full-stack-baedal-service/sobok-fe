@@ -22,7 +22,7 @@ function AllOrderPage() {
           },
         });
         setOrders(prev => [...prev, ...response.data.data]);
-        if (response.data.data.length < numOfRows) {
+        if (response.data.data !== null && response.data.data.length < numOfRows) {
           setIsFullLoaded(true);
         }
       } catch (error) {
@@ -37,7 +37,7 @@ function AllOrderPage() {
     <div className={styles.allOrderPage}>
       <h1 className={styles.allOrderPageTitle}>주문 내역</h1>
       <OrderGrid orders={orders} />
-      {!isFullLoaded && (
+      {!isFullLoaded && orders.length > 0 && (
         <div className={styles.allOrderPageButton}>
           <Button onClick={() => setPageNo(pageNo + 1)}>더보기 +</Button>
         </div>
