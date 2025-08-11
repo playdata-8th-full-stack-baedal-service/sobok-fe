@@ -181,7 +181,17 @@ function PostListPage() {
                   <div className={styles.info}>
                     <h3>{post.title}</h3>
                     <p>{post.cookName}</p>
-                    <p>{post.nickName}</p>
+                    <div className={styles.nameandimagezone}>
+                      <img
+                        src={post.photo}
+                        className={styles.nameimagezone}
+                        onError={e => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = '/photodefault.svg';
+                        }}
+                      />
+                      <p className={styles.nickNamezone}>{post.nickName}</p>
+                    </div>
                     <p className={styles.date}>
                       <strong>작성일</strong>:{' '}
                       {new Date(post.updatedAt).toLocaleDateString('ko-KR')}

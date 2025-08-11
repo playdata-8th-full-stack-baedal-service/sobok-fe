@@ -138,6 +138,14 @@ const PostDetailPage = () => {
           <div className={styles.rightTop}>
             <div className={styles.bottonmenu}>
               <div className={styles.rightmiddle}>
+                <img
+                  src={post.photo}
+                  className={styles.userimagezone}
+                  onError={e => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/photodefault.svg';
+                  }}
+                />
                 <p className={styles.writertext}>{post.nickname}</p>
                 <p className={styles.datetext}>{formatDate(post.updatedAt)}</p>
               </div>
