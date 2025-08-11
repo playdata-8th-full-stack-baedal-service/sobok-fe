@@ -144,7 +144,7 @@ const PostDetailPage = () => {
 
               <div className={styles.likeSection} onClick={handleLikePost}>
                 <span>
-                  <LikeButton likeCount={post.likeCount} />
+                  <LikeButton likeCount={post.likeCount} isLiked={isLiked} />
                 </span>
               </div>
             </div>

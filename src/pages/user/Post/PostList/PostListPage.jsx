@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Masonry from 'react-masonry-css';
 import { useNavigate } from 'react-router-dom';
 import { Heart } from 'lucide-react';
-import styles from './PostListPage.module.scss';
-import axiosInstance from '../../../../services/axios-config';
 import 'react-loading-skeleton/dist/skeleton.css';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import axiosInstance from '../../../../services/axios-config';
+import styles from './PostListPage.module.scss';
 
 function PostListPage() {
   const [postList, setPostList] = useState([]);
@@ -14,6 +14,7 @@ function PostListPage() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [sortBy, setSortBy] = useState(''); // 최신순이 기본값
+  const [likedPosts, setLikedPosts] = useState(new Set()); // 좋아요한 게시물 ID들을 저장
   const SIZE = 16;
   const navigate = useNavigate();
 
@@ -26,11 +27,18 @@ function PostListPage() {
     0: 1,
   };
 
-  useEffect(() => {
-    setPage(0);
-    fetchPostList(0, sortBy);
-    // eslint-disable-next-line
-  }, [sortBy]);
+  // 좋아요 상태 확인
+  const fetchLikedPosts = async () => {
+    try {
+      if (localStorage.getItem('ACCESS_TOKEN') === null) return;
+
+      const response = await axiosInstance.get('/user-service/user/liked-posts');
+      const likedPostIds = response.data.data.map(post => post.postId);
+      setLikedPosts(new Set(likedPostIds));
+    } catch (error) {
+      console.error('좋아요 상태 확인 중 오류:', error);
+    }
+  };
 
   const fetchPostList = async (pageNum, forceSortBy = sortBy) => {
     if (pageNum === 0) {
@@ -51,11 +59,11 @@ function PostListPage() {
 
       // 좋아요순일 때, 0개인 게시글은 최신순으로 뒤에 정렬
       if (forceSortBy === 'LIKE' && content.length > 0) {
-        const likedPosts = content.filter(post => post.likeCount > 0);
+        const postsWithLikes = content.filter(post => post.likeCount > 0);
         const zeroLikePosts = content
           .filter(post => post.likeCount === 0)
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // 최신순
-        content = [...likedPosts, ...zeroLikePosts];
+        content = [...postsWithLikes, ...zeroLikePosts];
       }
 
       // 기존의 "모두 0이거나 모두 동일하면 최신순" 로직은 유지
@@ -81,6 +89,13 @@ function PostListPage() {
       setLoadingMore(false);
     }
   };
+
+  useEffect(() => {
+    setPage(0);
+    fetchPostList(0, sortBy);
+    fetchLikedPosts(); // 좋아요 상태 확인
+    // eslint-disable-next-line
+  }, [sortBy]);
 
   const handleLoadMore = () => {
     if (!lastPage) {
@@ -125,7 +140,12 @@ function PostListPage() {
     <div className={styles.wrap}>
       <div className={styles.sortBar}>
         <label htmlFor="sortSelect">정렬: </label>
-        <select id="sortSelect" onChange={handleSortChange} value={sortBy || ''}>
+        <select
+          id="sortSelect"
+          onChange={handleSortChange}
+          value={sortBy || ''}
+          aria-label="게시물 정렬 선택"
+        >
           <option value="">최신순</option>
           <option value="LIKE">좋아요순</option>
         </select>
@@ -167,7 +187,14 @@ function PostListPage() {
                       {new Date(post.updatedAt).toLocaleDateString('ko-KR')}
                     </p>
                     <span>
-                      <Heart size={16} fill="red" color="red" /> {post.likeCount}
+                      <Heart
+                        size={16}
+                        fill={likedPosts.has(post.postId) ? 'red' : 'none'}
+                        color={likedPosts.has(post.postId) ? 'red' : 'white'}
+                        stroke={likedPosts.has(post.postId) ? 'white' : 'none'}
+                        strokeWidth={likedPosts.has(post.postId) ? 1 : 0}
+                      />{' '}
+                      {post.likeCount}
                     </span>
                   </div>
                 </div>
