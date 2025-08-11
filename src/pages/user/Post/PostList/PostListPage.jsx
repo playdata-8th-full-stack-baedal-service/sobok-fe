@@ -72,8 +72,8 @@ function PostListPage() {
       }
 
       setPostList(prev => (pageNum === 0 ? content : [...prev, ...content]));
-      setPage(response.data.page);
-      setLastPage(response.data.last);
+      setPage(response.data.data.page);
+      setLastPage(response.data.data.last);
     } catch (error) {
       console.error(error);
     } finally {
