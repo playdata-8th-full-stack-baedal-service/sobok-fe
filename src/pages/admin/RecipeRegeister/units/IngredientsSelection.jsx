@@ -92,7 +92,6 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
   };
 
   // 단위(step) 증감 전용 핸들러: +1/-1 step
-  // ▼ newUnit이 0 이하가 되면 해당 항목 삭제
   const stepChange = (ingredientId, delta /* +1 또는 -1 */) => {
     setSelectedIngredients(prev => {
       const next = prev.flatMap(item => {
@@ -229,7 +228,6 @@ function IngredientsSelection({ formData, onChange, onIngredientsChange, resetSi
                 {/* 수량 조절 및 삭제 버튼 */}
                 <div className={style.quantityControl}>
                   <div className={style.quantityWrapper}>
-                    {/* 버튼만 증감 (길게 누르면 연속) */}
                     <button
                       type="button"
                       className={style.stepBtn}
