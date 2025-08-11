@@ -22,13 +22,13 @@
   flex-wrap: wrap;
   gap: 30px;
   justify-content: flex-start;
-  max-width: 720px; 
+  max-width: 720px;
   width: 100%;
   padding: 30px 0;
 }
 
 .postCard {
-  flex: 0 0 calc((100% - 60px) / 3); 
+  flex: 0 0 calc((100% - 60px) / 3);
   max-width: calc((100% - 60px) / 3);
   aspect-ratio: 1 / 1;
   border: 1px solid #ddd;
@@ -40,7 +40,7 @@
   display: flex;
   flex-direction: column;
   transition: box-shadow 0.2s;
-
+  
   &:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
@@ -63,11 +63,29 @@
   background-color: #fafafa;
 }
 
+.titleContainer {
+  flex: 1;
+  overflow: hidden;
+  margin-right: 8px;
+}
+
 .title {
   font-weight: 500;
-//   overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis;
+  display: inline-block;
+  transition: transform 5s linear;
+  
+  .postCard:not(:hover) & {
+    transform: translateX(0);
+    transition: transform 1.5s ease-out;
+  }
+}
+
+/* 제목이 오버플로우될 때만 적용되는 클래스 */
+.title.overflow {
+  .postCard:hover & {
+    transform: translateX(calc(140px - 100%));
+  }
 }
 
 .likes {
@@ -76,6 +94,7 @@
   gap: 4px;
   color: red;
   font-size: 0.9rem;
+  flex-shrink: 0;
 }
 
 .emptyMessage,
@@ -88,11 +107,16 @@
 }
 
 /* 반응형: 태블릿에서는 2개, 모바일은 1개 */
-
 @media screen and (max-width: 1024px) {
   .postCard {
-    flex: 0 0 calc((100% - 16px) / 2);
-    max-width: calc((100% - 16px) / 2);
+    flex: 0 0 calc((100% - 30px) / 2);
+    max-width: calc((100% - 30px) / 2);
+  }
+  
+  .title.overflow {
+    .postCard:hover & {
+      transform: translateX(calc(180px - 100%));
+    }
   }
 }
 
@@ -101,18 +125,25 @@
     flex: 0 0 100%;
     max-width: 100%;
   }
-
+  
   .postList {
     padding: 20px;
+    gap: 20px;
   }
-
+  
   .sectionTitle {
     margin-left: 20px;
   }
-
+  
   .emptyMessage,
   .loadingMessage,
   .errorMessage {
     padding-left: 20px;
+  }
+  
+  .title.overflow {
+    .postCard:hover & {
+      transform: translateX(calc(280px - 100%));
+    }
   }
 }
