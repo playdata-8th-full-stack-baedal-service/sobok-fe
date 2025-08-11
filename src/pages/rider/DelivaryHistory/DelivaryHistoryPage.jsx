@@ -47,7 +47,7 @@ function DelivaryHistoryPage() {
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.titleWrapper}>
-        <h2 className={styles.title}>배달 완료 기록</h2>
+        <h2 className={styles.title}>배달 기록</h2>
       </div>
       <div className={styles.tabBar}>
         {orders.length === 0 && (
