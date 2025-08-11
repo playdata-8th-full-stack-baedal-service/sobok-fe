@@ -183,6 +183,38 @@
 }
 
 .IngredientsSelection {
+  .quantityWrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .stepBtn {
+    all: unset;
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #ccc;
+    border-radius: 9999px;
+    background: #f7f7f7;
+    cursor: pointer;
+
+    &:hover { background: #e5e5e5; border-color: #999; }
+  }
+
+  .unitReadout {
+    min-width: 44px;
+    text-align: center;
+    font-weight: 600;
+  }
+}
+
+
+.IngredientsSelection {
   padding: 20px 60px;
   margin-top: 25px;
   width: 100%;
