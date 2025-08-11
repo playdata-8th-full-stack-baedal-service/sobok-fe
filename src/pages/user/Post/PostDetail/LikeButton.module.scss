@@ -10,19 +10,16 @@
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.089);
   cursor: pointer;
   background-color: transparent;
-
-  &:hover .leftContainer {
-    background-color: rgb(219, 0, 0);
-  }
-
-  &:active .leftContainer {
-    background-color: rgb(201, 0, 0);
-  }
+  padding: 0;
 
   &:active .leftContainer svg {
     transform: scale(1.15);
     transform-origin: top;
   }
+}
+
+.notLiked:hover .leftContainer {
+  background-color: rgb(219, 0, 0);
 }
 
 .leftContainer {
@@ -38,6 +35,23 @@
 .like {
   color: white;
   font-weight: 600;
+}
+
+.liked .leftContainer {
+  background-color: white;
+}
+
+.liked .leftContainer:hover {
+  background-color: #f0f0f0;
+}
+
+.liked .like {
+  color: rgb(238, 0, 0);
+}
+
+.liked .likeCount {
+  background-color: rgb(238, 0, 0);
+  color: white;
 }
 
 .likeCount {
