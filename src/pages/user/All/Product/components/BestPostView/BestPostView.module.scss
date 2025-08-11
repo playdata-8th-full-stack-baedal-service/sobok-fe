@@ -75,7 +75,6 @@
   display: inline-block;
   transition: transform 5s linear;
   font-size: 18px;
-  
   .postCard:not(:hover) & {
     transform: translateX(0);
     transition: transform 1.5s ease-out;
