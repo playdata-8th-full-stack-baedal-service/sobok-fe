@@ -65,7 +65,7 @@ const ShopOrderDetailModal = ({ onClose, order }) => {
                 <strong>기본 재료</strong>
                 {item.baseIngredients.map(ingre => (
                   <div key={ingre.ingredientId}>
-                    - {ingre.ingreName} ({ingre.unitQuantity * ingre.unit}g)
+                    - {ingre.ingreName} ({ingre.unitQuantity * ingre.unit * item.quantity}g)
                   </div>
                 ))}
                 {item.additionalIngredients.length > 0 && (
@@ -73,7 +73,7 @@ const ShopOrderDetailModal = ({ onClose, order }) => {
                     <strong>추가 식재료</strong>
                     {item.additionalIngredients.map(add => (
                       <div key={add.ingredientId}>
-                        - {add.ingreName} ({add.unitQuantity * add.unit}g)
+                        - {add.ingreName} ({add.unitQuantity * add.unit * item.quantity}g)
                       </div>
                     ))}
                   </>

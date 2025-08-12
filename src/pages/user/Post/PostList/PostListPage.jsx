@@ -139,12 +139,13 @@ function PostListPage() {
   return (
     <div className={styles.wrap}>
       <div className={styles.sortBar}>
-        <label htmlFor="sortSelect">정렬: </label>
+        <label htmlFor="sortSelect">정렬 </label>
         <select
           id="sortSelect"
           onChange={handleSortChange}
           value={sortBy || ''}
           aria-label="게시물 정렬 선택"
+          className={styles.selection}
         >
           <option value="">최신순</option>
           <option value="LIKE">좋아요순</option>
