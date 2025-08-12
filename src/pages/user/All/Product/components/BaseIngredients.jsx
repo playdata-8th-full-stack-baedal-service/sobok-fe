@@ -1,15 +1,14 @@
-/* eslint-disable react/function-component-definition */
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// eslint-disable-next-line import/no-unresolved, import/extensions
 import Button from '@/common/components/Button';
 import styles from '../ProductPage.module.scss';
 import { setPortion } from '../../../../../store/productSlice';
 
-
 const BaseIngredients = () => {
   const { product, portion } = useSelector(state => state.product);
   const dispatch = useDispatch();
+
+  const fmt = n => (Number(n) || 0).toLocaleString('ko-KR');
 
   return (
     <section className={styles.baseIngredients}>
@@ -22,11 +21,15 @@ const BaseIngredients = () => {
         </div>
       </div>
       <div className={styles.ingredientGrid}>
-        {product?.ingredientList.map((item, i) => (
-          <div key={item.id || i} className={styles.ingredientItem}>
-            {item.ingredientName} {item.unitQuantity * item.unit * portion} g
-          </div>
-        ))}
+        {product?.ingredientList.map((item, i) => {
+          const totalGram =
+            (Number(item.unitQuantity) || 0) * (Number(item.unit) || 0) * (Number(portion) || 0);
+          return (
+            <div key={item.id || i} className={styles.ingredientItem}>
+              {item.ingredientName} {fmt(totalGram)} g
+            </div>
+          );
+        })}
       </div>
     </section>
   );

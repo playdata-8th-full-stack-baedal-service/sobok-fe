@@ -1,158 +1,127 @@
 .additionalIngredientsWrapper {
-  /* 추가 재료 전체 컨테이너 */
   display: flex;
-  gap: 1rem; /* 좌우 간격 */
   padding: 1rem;
   border: 1px solid #ddd;
   width: 100%;
-  height: 300px; // 고정 높이
+  height: 300px;
   border-radius: 20px;
 }
 
+/* 왼쪽: 제목+검색창을 상단에 고정 (가운데로 내려오는 문제 해결) */
 .leftSection {
-  /* 왼쪽 영역: 검색창과 제목 */
-  flex: 1; /* 전체의 절반 차지 */
+  flex: 1;
   display: flex;
-  align-items: center;
   flex-direction: row;
-  height: fit-content;
+  align-items: flex-start;   /* ← 위에 붙임 */
+  justify-content: flex-start;
+  gap: .75rem;
 
   h3 {
-    /* 제목 스타일 */
-    margin: 0;
+    margin: 14px -15px 0px 10px;
     white-space: nowrap;
     font-size: 20px;
     font-weight: 800;
   }
-
-  .searchContainer {
-    /* 검색창 감싸는 영역 */
-    flex: 1;
-  }
+  .searchContainer { flex: 1; min-width: 0; }  /* 한 줄 유지 */
 }
 
 .rightSection {
-  /* 오른쪽 영역: 재료 목록 */
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: .5rem;
   border: 1px solid #eee;
-  padding: 0.5rem;
+  padding: .5rem;
   background-color: #fff;
   max-height: 100%;
-  overflow-y: auto; /* 세로 스크롤 */
+  overflow-y: auto;
   border-radius: 10px;
 
-  scrollbar-gutter: stable; /* 스크롤바 공간 고정 */
-
-  &::-webkit-scrollbar {
-    /* 스크롤바 너비 */
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    /* 스크롤바 배경 */
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    /* 스크롤바 핸들 */
-    background: #ccc;
-    border-radius: 4px;
-  }
+  scrollbar-gutter: stable;
+  &::-webkit-scrollbar { width: 8px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 }
 
 .emptyMessage {
-  /* 재료가 없을 때 표시하는 메시지 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  font-size: 1rem;
-  color: #777;
+  display: flex; align-items: center; justify-content: center;
+  height: 100%; font-size: 1rem; color: #777;
 }
 
+/* ============ 행 레이아웃: 이름 | 수량 | 가격 | 총g | 삭제 ============ */
+/* 칼럼 폭 고정으로 줄 맞춤 + 불필요한 공백 축소 */
 .ingredientItem {
-  /* 재료 하나의 전체 박스 */
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) 120px 150px 90px auto;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;                      /* 전체 간격 축소 */
   background: #f8f8f8;
   border-radius: 25px;
-  padding: 0.5rem 2rem;
+  padding: 8px 16px;
+  min-height: 48px;
 }
 
+/* 이름: 최대한 넓게, 필요할 때만 … */
 .name {
-  /* 재료 이름 */
-  font-weight: bold;
-  flex: 1;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: rgb(63, 63, 63);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  padding-left: 10px;
 }
 
-.qtyControl {
-  /* 수량 입력 영역 */
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
+/* 수량조절기: 고정폭 + 내부 간격 축소 → 와리가리 방지 */
 .quantityWrapper {
-  /* 수량 조절 버튼 + 표시 영역 */
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  justify-content: space-between;
+  width: 110px;                  /* 칼럼과 동일 */
+  gap: 6px;
+  margin-left: 10px;
 }
-
 .stepBtn {
-  /* 수량 조절 버튼 스타일(+, -) */
   all: unset;
-  appearance: none;
-  -webkit-appearance: none;
-  width: 20px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 27px; 
+  height: 20px;
+  display: flex; align-items: center; justify-content: center;
   border-radius: 9999px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #aaaaaa;
   background: #f3f4f6;
-  cursor: pointer;
-  user-select: none;
-  font-weight: 700;
-
+  cursor: pointer; user-select: none; 
+  font-weight: 900;
   &:hover { background: #e5e5e5; border-color: #cbd5e1; }
 }
-
 .unitReadout {
-  /* 단위 표시 영역 (예: g, ml) */
-  min-width: 56px;
+  width: 80px;                   /* 숫자 폭 고정 */
   text-align: center;
   font-weight: 600;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: #5f5f5f;
+  font-size: 0.95rem;
 }
 
-
+/* 오른쪽 정보: 내용만큼만, 오른쪽 정렬 */
 .priceInfo {
-  /* 개당 가격 */
-  font-size: 0.9rem;
-  margin-left: 10px;
-  color: #666;
-  flex: 0.5;
-  // text-align: right; // 주석처리됨
+  white-space: nowrap;
+  color: #9b9b9b;
+  font-size: .80rem;
+  font-variant-numeric: tabular-nums;
+  margin-left: 5px;
 }
 
-.totalPrice {
-  /* 총 가격 */
-  font-weight: bold;
-  flex: 0.5;
-  text-align: center;
+.totalGram {
+  color: black;
+  // justify-self: end;
+    font-size: 0.95rem;
 }
 
 .removeBtn {
-  /* 재료 삭제 버튼(X) */
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  color: red;
-  cursor: pointer;
-  margin-left: 10px;
+  background: none; border: none; font-size: 1.5rem; color: red;
+  cursor: pointer; justify-self: end;
 }
+
