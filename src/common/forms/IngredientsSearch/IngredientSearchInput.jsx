@@ -10,11 +10,13 @@ const IngredientSearchInput = ({
   showAddButton = false,
   onAddIngredient,
   forceOpen = false,
-  closeOnSelect = false, // 관리자 페이지에서만 true로 사용
+  closeOnSelect = false,
 }) => {
   const [keyword, setKeyword] = useState('');
   const [isOpen, setIsOpen] = useState(forceOpen);
+  const [highlightIndex, setHighlightIndex] = useState(-1); // 화살표 이동 인덱스
   const [hasInteractedOutside, setHasInteractedOutside] = useState(false);
+
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
@@ -36,7 +38,6 @@ const IngredientSearchInput = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [forceOpen]);
 
-  // 외부 클릭 후 상태 초기화
   useEffect(() => {
     if (hasInteractedOutside) {
       const t = setTimeout(() => setHasInteractedOutside(false), 100);
@@ -44,46 +45,103 @@ const IngredientSearchInput = ({
     }
   }, [hasInteractedOutside]);
 
-  // forceOpen이 변경될 때 항상 열림
   useEffect(() => {
     if (forceOpen) setIsOpen(true);
   }, [forceOpen]);
 
-  // ◀ 신규: 등록 모달에서 발행한 이벤트 수신
+  // 신규: 등록 이벤트 수신
   useEffect(() => {
     const onRegistered = e => {
       const ing = e.detail;
       if (!ing) return;
 
-      // 1) 검색창 리셋 + 열어둠
       setKeyword('');
       setIsOpen(true);
+      setHighlightIndex(-1);
 
-      // 2) 자동 선택(추가) — onSelect로 전달
       onSelect?.({
         ...ing,
-        quantity: ing.unit, // 기존 onSelect 시그니처와 동일
+        quantity: ing.unit,
       });
 
-      // 3) 검색 결과도 새로고침(선택 사항)
       dispatch(fetchAdditionalIngredients(''));
 
-      // 4) 스크롤 위치 유지(필요 시)
       requestAnimationFrame(() => {
         if (scrollRef.current) {
-          // 유지하고 싶으면 현재 값을 그대로 다시 설정
           const top = scrollRef.current.scrollTop || 0;
           scrollRef.current.scrollTop = top;
         }
       });
 
-      // 입력 포커스 유지(원하면)
       inputRef.current?.focus();
     };
 
     window.addEventListener('INGREDIENT_REGISTERED', onRegistered);
     return () => window.removeEventListener('INGREDIENT_REGISTERED', onRegistered);
   }, [dispatch, onSelect]);
+
+  const handleSelect = item => {
+    onSelect({
+      ...item,
+      quantity: item.unit,
+    });
+
+    if (closeOnSelect) {
+      setIsOpen(false);
+      inputRef.current?.blur();
+    }
+  };
+
+  const handleKeyDown = e => {
+    if (!isOpen || (!safeResults.length && !showAddButton)) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightIndex(prev => {
+        const total = safeResults.length + (showAddButton && keyword ? 1 : 0);
+        return (prev + 1) % total;
+      });
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightIndex(prev => {
+        const total = safeResults.length + (showAddButton && keyword ? 1 : 0);
+        return (prev - 1 + total) % total;
+      });
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (highlightIndex === -1) return;
+
+      if (showAddButton && keyword && highlightIndex === 0) {
+        onAddIngredient && onAddIngredient(keyword);
+      } else {
+        const indexOffset = showAddButton && keyword ? 1 : 0;
+        const selectedItem = safeResults[highlightIndex - indexOffset];
+        if (selectedItem) handleSelect(selectedItem);
+      }
+    }
+  };
+
+  // 추가: 하이라이트 항목 가시 영역으로 자동 스크롤
+  useEffect(() => {
+    if (!isOpen || highlightIndex < 0) return;
+    const container = scrollRef.current;
+    if (!container) return;
+    const el = container.querySelector(`[data-index="${highlightIndex}"]`);
+    if (!el) return;
+
+    const elTop = el.offsetTop;
+    const elBottom = elTop + el.offsetHeight;
+    const viewTop = container.scrollTop;
+    const viewBottom = viewTop + container.clientHeight;
+
+    if (elTop < viewTop) {
+      container.scrollTop = elTop;
+    } else if (elBottom > viewBottom) {
+      container.scrollTop = elBottom - container.clientHeight;
+    }
+  }, [highlightIndex, isOpen]);
 
   return (
     <div className={styles.searchContainer} ref={dropdownRef}>
@@ -95,10 +153,9 @@ const IngredientSearchInput = ({
         onChange={e => {
           setKeyword(e.target.value);
           setIsOpen(true);
+          setHighlightIndex(-1);
         }}
-        onKeyDown={e => {
-          if (e.key === 'Enter') e.preventDefault();
-        }}
+        onKeyDown={handleKeyDown}
         onFocus={() => {
           setIsOpen(true);
           if (!keyword) dispatch(fetchAdditionalIngredients(''));
@@ -116,55 +173,39 @@ const IngredientSearchInput = ({
           >
             {showAddButton && keyword && !safeResults.some(item => item.ingreName === keyword) && (
               <div
-                className={styles.dropdownmenuadd}
+                className={`${styles.dropdownmenuadd} ${
+                  highlightIndex === 0 ? styles.highlighted : ''
+                }`}
+                data-index={0}
                 onMouseDown={e => {
                   e.preventDefault();
                   e.stopPropagation();
-                  const prevTop = scrollRef.current?.scrollTop ?? 0;
                   onAddIngredient && onAddIngredient(keyword);
-                  if (closeOnSelect) {
-                    setIsOpen(false);
-                    inputRef.current?.blur();
-                  } else {
-                    requestAnimationFrame(() => {
-                      if (scrollRef.current) scrollRef.current.scrollTop = prevTop;
-                    });
-                  }
                 }}
-                style={{ cursor: 'pointer' }}
               >
                 식재료 추가 +
               </div>
             )}
 
-            {safeResults.map(item => (
-              <div
-                key={item.id}
-                className={styles.dropdownmenu}
-                style={{ cursor: 'pointer' }}
-                onMouseDown={e => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const prevTop = scrollRef.current?.scrollTop ?? 0;
-
-                  onSelect({
-                    ...item,
-                    quantity: item.unit,
-                  });
-
-                  if (closeOnSelect) {
-                    setIsOpen(false);
-                    inputRef.current?.blur();
-                  } else if (!forceOpen) {
-                    requestAnimationFrame(() => {
-                      if (scrollRef.current) scrollRef.current.scrollTop = prevTop;
-                    });
-                  }
-                }}
-              >
-                {item.ingreName}
-              </div>
-            ))}
+            {safeResults.map((item, idx) => {
+              const indexOffset = showAddButton && keyword ? 1 : 0;
+              const mappedIndex = idx + indexOffset;
+              const isHighlighted = highlightIndex === mappedIndex;
+              return (
+                <div
+                  key={item.id}
+                  className={`${styles.dropdownmenu} ${isHighlighted ? styles.highlighted : ''}`}
+                  data-index={mappedIndex}
+                  onMouseDown={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleSelect(item);
+                  }}
+                >
+                  {item.ingreName}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

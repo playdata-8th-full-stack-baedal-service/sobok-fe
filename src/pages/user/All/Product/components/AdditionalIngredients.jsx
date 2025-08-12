@@ -4,25 +4,38 @@ import styles from './AdditionalIngredients.module.scss';
 import IngredientSearchInput from '@/common/forms/IngredientsSearch/IngredientSearchInput';
 import { setAdditionalIngredients } from '@/store/productSlice';
 
-const HOLD_START_DELAY = 300; // 길게 누르기 시작 지연(ms)
-const HOLD_INTERVAL = 70; // 반복 간격(ms)
+const HOLD_START_DELAY = 300;
+const HOLD_INTERVAL = 70;
+
+// 숫자 포맷: 3자리 콤마
+const fmt = n => (Number(n) || 0).toLocaleString('ko-KR');
 
 const AdditionalIngredients = () => {
   const dispatch = useDispatch();
-  const { additionalIngredients } = useSelector(state => state.product);
+  const { additionalIngredients, portion } = useSelector(state => state.product);
   const [forceOpen] = useState(true);
   const scrollRef = useRef(null);
 
-  // 최신 리스트 보관(ref) — 인터벌에서 stale 상태 방지
+  // 최신 리스트 ref
   const latestListRef = useRef(additionalIngredients);
   useEffect(() => {
     latestListRef.current = additionalIngredients;
   }, [additionalIngredients]);
 
-  // hold 타이머
+  // 이전 길이 저장 → 길이가 늘어날 때만 스크롤 하단
+  const prevLenRef = useRef(additionalIngredients.length);
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    if (additionalIngredients.length > prevLenRef.current) {
+      el.scrollTop = el.scrollHeight; // 새 항목 추가될 때만
+    }
+    prevLenRef.current = additionalIngredients.length;
+  }, [additionalIngredients]);
+
+  // 길게 누르기 타이머
   const holdTimeoutRef = useRef(null);
   const holdIntervalRef = useRef(null);
-
   const clearTimers = () => {
     if (holdTimeoutRef.current) {
       clearTimeout(holdTimeoutRef.current);
@@ -35,57 +48,49 @@ const AdditionalIngredients = () => {
   };
 
   const updateList = updater => {
-
-    const base = latestListRef.current; // 항상 최신
-    const next = updater(base);
+    const next = updater(latestListRef.current);
     dispatch(setAdditionalIngredients(next));
   };
 
-  // 선택 시: 기존 있으면 dbUnit만큼 +, 없으면 추가(초기값=dbUnit)
+  // 선택시 추가 또는 수량 +unit
   const handleSelect = item => {
-    const dbUnit = Number(item.unit) || 1;
+    const step = Number(item.unit) || 1;
     const exists = latestListRef.current.find(i => i.id === item.id);
     if (exists) {
       updateList(list =>
-        list.map(i =>
-          i.id === item.id ? { ...i, quantity: (Number(i.quantity) || 0) + dbUnit } : i
-        )
+        list.map(i => (i.id === item.id ? { ...i, quantity: (Number(i.quantity) || 0) + step } : i))
       );
     } else {
-      updateList(list => [...list, { ...item, quantity: dbUnit }]);
+      updateList(list => [...list, { ...item, quantity: step }]);
     }
   };
 
-  // 단일 스텝 변경 (+/- 1 step). 0 이하 → 자동 삭제(+타이머 정지)
+  // 수량 증감
   const stepChange = (id, delta) => {
     updateList(list => {
-      const nextList = list.flatMap(i => {
+      const next = list.flatMap(i => {
         if (i.id !== id) return [i];
-        const dbUnit = Number(i.unit) || 1;
-        const next = (Number(i.quantity) || 0) + delta * dbUnit;
-        if (next <= 0) return []; // 0이면 제거
-        return [{ ...i, quantity: next }];
+        const step = Number(i.unit) || 1;
+        const q = (Number(i.quantity) || 0) + delta * step;
+        return q <= 0 ? [] : [{ ...i, quantity: q }];
       });
-      const existed = list.some(i => i.id === id);
-      const stillExists = nextList.some(i => i.id === id);
-      if (existed && !stillExists) clearTimers(); // 삭제 시 홀드 즉시 종료
-      return nextList;
+      if (list.some(i => i.id === id) && !next.some(i => i.id === id)) clearTimers();
+      return next;
     });
   };
 
-  // Pointer 이벤트(마우스/터치 통일) + 포인터 캡처
+  // 포인터 이벤트
   const onPressStart = (e, id, delta) => {
     e.preventDefault();
     try {
       e.currentTarget.setPointerCapture?.(e.pointerId);
     } catch {}
-    stepChange(id, delta); // 즉시 1회
+    stepChange(id, delta);
     clearTimers();
     holdTimeoutRef.current = setTimeout(() => {
       holdIntervalRef.current = setInterval(() => stepChange(id, delta), HOLD_INTERVAL);
     }, HOLD_START_DELAY);
   };
-
   const onPressEnd = e => {
     clearTimers();
     try {
@@ -93,14 +98,7 @@ const AdditionalIngredients = () => {
     } catch {}
   };
 
-  const handleRemove = id => {
-    updateList(list => list.filter(i => i.id !== id));
-  };
-
-  // 선택 목록이 늘어날 때, 스크롤 맨 아래로 유지
-  useEffect(() => {
-    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  }, [additionalIngredients]);
+  const handleRemove = id => updateList(list => list.filter(i => i.id !== id));
 
   useEffect(() => () => clearTimers(), []);
 
@@ -120,11 +118,18 @@ const AdditionalIngredients = () => {
         {additionalIngredients.length === 0 ? (
           <div className={styles.emptyMessage}>추가 식재료가 없습니다.</div>
         ) : (
-          additionalIngredients.map(item => (
-            <div className={styles.ingredientItem} key={item.id}>
-              <span className={styles.name}>{item.ingreName}</span>
+          additionalIngredients.map(item => {
+            const qty = Number(item.quantity) || 0; // 1인분 g
+            const unitPrice = Number(item.price) || 0; // 원(단가)
+            const totalGram = qty * portion; // 총 g
+            const totalPrice = unitPrice * qty * portion; // 총 원 (표시는 안하지만 필요시 사용)
 
-              <div className={styles.qtyControl}>
+            return (
+              <div className={styles.ingredientItem} key={item.id}>
+                {/* 1. 이름 */}
+                <span className={styles.name}>{item.ingreName}</span>
+
+                {/* 2. 수량조절기 */}
                 <div className={styles.quantityWrapper}>
                   <button
                     type="button"
@@ -138,7 +143,7 @@ const AdditionalIngredients = () => {
                     –
                   </button>
 
-                  <div className={styles.unitReadout}>{Number(item.quantity) || 0}g</div>
+                  <div className={styles.unitReadout}>{fmt(qty)}g</div>
 
                   <button
                     type="button"
@@ -152,18 +157,22 @@ const AdditionalIngredients = () => {
                     +
                   </button>
                 </div>
+
+                {/* 3. 가격/인분 */}
+                <span className={styles.priceInfo}>
+                  /{fmt(unitPrice)}원 × {portion}인분
+                </span>
+
+                {/* 4. 총그램 */}
+                <span className={styles.totalGram}>총 {fmt(totalGram)}g</span>
+
+                {/* 5. 삭제 */}
+                <button className={styles.removeBtn} onClick={() => handleRemove(item.id)}>
+                  ×
+                </button>
               </div>
-
-              <span className={styles.priceInfo}>/{item.price}원</span>
-              <span className={styles.totalPrice}>
-                {(Number(item.price) || 0) * (Number(item.quantity) || 0)}원
-              </span>
-
-              <button className={styles.removeBtn} onClick={() => handleRemove(item.id)}>
-                ×
-              </button>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>
