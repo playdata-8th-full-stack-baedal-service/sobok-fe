@@ -74,7 +74,6 @@ function UserSignUp() {
   const handleDomainChange = selected => {
     if (selected === '직접입력') {
       setSelectedFile(null);
-
       setIsCustomDomain(true);
       setEmailDomain('');
     } else {
@@ -118,29 +117,48 @@ function UserSignUp() {
     dispatch(clearEmailCheck());
   };
 
+  // ✅ 수정된 validateForm
   const validateForm = () => {
     if (!formData.loginId || !formData.password || !formData.nickname || !formData.phone) {
       showNegative('필수 항목을 모두 입력해주세요.');
       return false;
     }
 
-    // 아이디 유효성 검사 추가
+    // 아이디 유효성 검사
     const loginIdRegex = /^[a-zA-Z0-9]+$/;
     if (!loginIdRegex.test(formData.loginId)) {
       showNegative('아이디는 영문자와 숫자만 사용 가능합니다.');
       return false;
     }
-    
     if (formData.loginId.length < 4 || formData.loginId.length > 20) {
       showNegative('아이디는 4자 이상 20자 이하여야 합니다.');
       return false;
     }
-    
     if (/^\d+$/.test(formData.loginId)) {
       showNegative('아이디는 숫자로만 구성될 수 없습니다.');
       return false;
     }
 
+    // 닉네임 유효성 검사
+    const nicknameRegex = /^(?![*-])(?!.*[*-]$)(?!.*[*-]{2})[가-힣a-zA-Z0-9*-]{2,12}$/;
+    if (!nicknameRegex.test(formData.nickname)) {
+      if (formData.nickname.length < 2) {
+        showNegative('닉네임은 2자 이상이어야 합니다.');
+      } else if (formData.nickname.length > 12) {
+        showNegative('닉네임은 12자 이하여야 합니다.');
+      } else if (/^[*-]/.test(formData.nickname)) {
+        showNegative('닉네임은 *, - 문자로 시작할 수 없습니다.');
+      } else if (/[*-]$/.test(formData.nickname)) {
+        showNegative('닉네임은 *, - 문자로 끝날 수 없습니다.');
+      } else if (/[*-]{2}/.test(formData.nickname)) {
+        showNegative('닉네임에서 *, - 문자는 연속으로 사용할 수 없습니다.');
+      } else {
+        showNegative('닉네임은 한글, 영문자, 숫자, *, - 문자만 사용 가능합니다.');
+      }
+      return false;
+    }
+
+    // 비밀번호 확인
     if (formData.password !== passwordConfirm) {
       showNegative('비밀번호가 일치하지 않습니다.');
       return false;
@@ -153,7 +171,7 @@ function UserSignUp() {
       return false;
     }
 
-    // 전호번호 검증
+    // 전화번호 검증
     const phoneRegex = /^\d{11}$/;
     if (!phoneRegex.test(formData.phone)) {
       showNegative('전화번호는 하이픈 없이 11자리 숫자로 입력해주세요.');
@@ -179,18 +197,12 @@ function UserSignUp() {
   const getTempToken = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/auth-service/auth/temp-token`);
-
-      console.log(response.data.data);
-
       if (response.data.success && response.data.status === 200) {
         return response.data.data;
       }
       throw new Error(response.data.message || '임시 토큰 발급 실패');
     } catch (error) {
-      console.log(error);
-
       console.error('임시 토큰 발급 실패:', error);
-
       throw error;
     }
   };
@@ -198,7 +210,6 @@ function UserSignUp() {
   const uploadToS3 = async (file, tempToken) => {
     const formImageData = new FormData();
     formImageData.append('image', file);
-
     try {
       const response = await axios.put(
         `${API_BASE_URL}/api-service/api/upload-image/profile`,
@@ -210,7 +221,6 @@ function UserSignUp() {
           },
         }
       );
-
       if (response.data.success && response.data.data) {
         return response.data.data;
       }
@@ -258,7 +268,6 @@ function UserSignUp() {
           photo: uploadedUrl,
         };
       }
-      console.log(completeFormData);
       await dispatch(signUpUser(completeFormData)).unwrap();
     } catch (err) {
       console.error('회원가입 실패:', err);
