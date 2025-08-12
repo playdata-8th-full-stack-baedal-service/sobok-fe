@@ -41,7 +41,8 @@
 
 .editorBox {
   width: 100%;
-  min-height: 400px;
+  max-width: 100% !important;
+  min-height: 700px;
   padding: 14px;
   background-color: white;
   border: 1px solid #ddd;

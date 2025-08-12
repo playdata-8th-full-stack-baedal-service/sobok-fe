@@ -8,7 +8,6 @@ import TiptapEditor from '@/common/forms/Post/TiptapEditor';
 import { useDispatch } from 'react-redux';
 import { registerPost } from '@/store/postSlice';
 import useToast from '@/common/hooks/useToast';
-import commonStyles from '@/common/forms/Post/PostContent.module.scss';
 
 function NewPostPage() {
   const navigate = useNavigate();
@@ -82,7 +81,6 @@ function NewPostPage() {
     try {
       setIsUploading(true);
 
-      // 최종적으로 index 부여
       const indexedImages = images.map((img, i) => ({
         ...img,
         index: i + 1,
@@ -115,11 +113,13 @@ function NewPostPage() {
   return (
     <div className={styles['post-wrap']}>
       <h2 className={styles['cook-name']}>요리 이름: {cookName}</h2>
+
       <div className={styles['title-group']}>
         <label htmlFor="post-title" className={styles['title-label']}>
           제목:
         </label>
         <input
+          id="post-title"
           type="text"
           placeholder="제목을 입력하세요"
           value={title}
@@ -128,23 +128,14 @@ function NewPostPage() {
         />
       </div>
 
-      <div className={styles['editor-preview-container']}>
-        <div className={styles['editor-container']} onClick={() => editorRef.current?.focus()}>
-          <TiptapEditor
-            ref={editorRef}
-            content={content}
-            setContent={setContent}
-            uploadImageToServer={uploadToS3}
-          />
-        </div>
-
-        <div className={styles['preview-section']}>
-          <h3>미리보기</h3>
-          <div
-            className={`${styles['preview-content']} ${commonStyles.postContent}`}
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
-        </div>
+      {/* 미리보기 제거: 에디터만 표시 */}
+      <div className={styles['editor-container']} onClick={() => editorRef.current?.focus()}>
+        <TiptapEditor
+          ref={editorRef}
+          content={content}
+          setContent={setContent}
+          uploadImageToServer={uploadToS3}
+        />
       </div>
 
       <Button onClick={handleSubmit} variant="BASIC" disabled={isUploading}>
