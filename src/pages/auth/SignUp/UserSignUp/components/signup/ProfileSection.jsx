@@ -25,6 +25,7 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
 
   const [imagePreview, setImagePreview] = useState(formData.photo || '/photodefault.svg');
   const [loginIdError, setLoginIdError] = useState('');
+  const [nicknameError, setNicknameError] = useState('');
 
   // 디바운스용 타이머 ref
   const loginIdTimer = useRef(null);
@@ -63,6 +64,46 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
     return '';
   };
 
+  // 닉네임 유효성 검사 함수 (백엔드와 동일한 패턴)
+  const validateNickname = (value) => {
+    if (!value) {
+      return '';
+    }
+
+    // 백엔드 패턴과 동일: ^(?![*-])(?!.*[*-]$)(?!.*[*-]{2})[가-힣a-zA-Z0-9*-]{2,12}$
+    const nicknameRegex = /^(?![*-])(?!.*[*-]$)(?!.*[*-]{2})[가-힣a-zA-Z0-9*-]{2,12}$/;
+    
+    if (value.length < 2) {
+      return '닉네임은 2자 이상이어야 합니다.';
+    }
+    
+    if (value.length > 12) {
+      return '닉네임은 12자 이하여야 합니다.';
+    }
+    
+    // *나 -로 시작하는지 확인
+    if (/^[*-]/.test(value)) {
+      return '닉네임은 *, - 문자로 시작할 수 없습니다.';
+    }
+    
+    // *나 -로 끝나는지 확인
+    if (/[*-]$/.test(value)) {
+      return '닉네임은 *, - 문자로 끝날 수 없습니다.';
+    }
+    
+    // *나 -가 연속으로 나오는지 확인
+    if (/[*-]{2}/.test(value)) {
+      return '닉네임에서 *, - 문자는 연속으로 사용할 수 없습니다.';
+    }
+    
+    // 허용된 문자만 사용하는지 확인
+    if (!/^[가-힣a-zA-Z0-9*-]+$/.test(value)) {
+      return '닉네임은 한글, 영문자, 숫자, *, - 문자만 사용 가능합니다.';
+    }
+    
+    return '';
+  };
+
   const handleLoginIdChange = e => {
     const { value } = e.target;
     
@@ -95,16 +136,34 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
   };
 
   const handleNicknameChange = e => {
+    const { value } = e.target;
+    
+    // 허용된 문자만 입력되도록 필터링 (한글, 영문, 숫자, *, -)
+    const filteredValue = value.replace(/[^가-힣a-zA-Z0-9*-]/g, '');
+    
     dispatch(clearNicknameCheck());
-    onChange(e);
+    setNicknameError('');
+    
+    // 필터링된 값으로 onChange 호출
+    onChange({
+      target: {
+        name: 'nickname',
+        value: filteredValue
+      }
+    });
+
+    // 실시간 유효성 검사
+    const validationError = validateNickname(filteredValue);
+    setNicknameError(validationError);
 
     if (nicknameTimer.current) clearTimeout(nicknameTimer.current);
 
-    nicknameTimer.current = setTimeout(() => {
-      if (e.target.value.trim()) {
-        dispatch(checkNickName(e.target.value.trim()));
-      }
-    }, 800);
+    // 유효성 검사를 통과한 경우에만 중복 체크 수행
+    if (filteredValue.trim() && !validationError) {
+      nicknameTimer.current = setTimeout(() => {
+        dispatch(checkNickName(filteredValue.trim()));
+      }, 800);
+    }
   };
 
   const handleFileSelect = e => {
@@ -141,6 +200,9 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
 
   // 아이디 에러 메시지 우선순위: 로컬 유효성 검사 > 서버 응답
   const displayLoginIdError = loginIdError || loginIdCheckError;
+  
+  // 닉네임 에러 메시지 우선순위: 로컬 유효성 검사 > 서버 응답
+  const displayNicknameError = nicknameError || nicknameCheckError;
 
   return (
     <div className={styles.containerTop}>
@@ -195,12 +257,13 @@ function ProfileSection({ formData, onChange, onFileSelect, showLoginIdInput = t
           type="text"
           id="nickname"
           name="nickname"
-          placeholder="닉네임을 입력해주세요."
+          placeholder="한글/영문/숫자, *, - 사용가능 (2-12자)"
           value={formData.nickname}
           onChange={handleNicknameChange}
           className={styles.inputWithButton}
-          success={nicknameCheckMessage}
-          error={nicknameCheckError}
+          success={!displayNicknameError && nicknameCheckMessage ? nicknameCheckMessage : ''}
+          error={displayNicknameError}
+          maxLength={12}
         />
       </div>
     </div>
