@@ -38,10 +38,9 @@ const CartAllSelect = () => {
         <span>
           전체 선택 ({selectedCartItemIds.length} / {cartItems.length})
         </span>
-        
       </div>
       <div className={styles.deleteButton} onClick={handleAllDelete}>
-        <span>선택 항목 취소 </span>
+        <span>선택 항목 삭제 </span>
         <span>✕</span>
       </div>
     </div>
