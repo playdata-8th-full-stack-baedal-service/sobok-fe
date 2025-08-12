@@ -19,6 +19,9 @@ function HubListPage() {
       const res = await axiosInstance.get('/shop-service/shop/all');
 
       if (res.data.success && res.data.data.length > 0) {
+        if (res.data.data.length === hubList.length - 1) {
+          return;
+        }
         setHubList(prev => [...prev, ...res.data.data]);
         setHasMore(false);
       } else {
