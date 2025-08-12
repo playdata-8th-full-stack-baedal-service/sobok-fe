@@ -171,12 +171,12 @@ const PostDetailPage = () => {
       {/* 하단 영역 */}
       <div className={styles.bottom}>
         <div className={styles.leftBottom}>
-          <strong>주문된 추가 식재료 :</strong>
+          <strong>주문된 추가 식재료 (1인분 기준) :</strong>
           {post.additionalIngredients?.length > 0 ? (
             <ul>
               {post.additionalIngredients.map(item => (
                 <li key={item.ingredientId}>
-                  {item.ingredientName}({item.origin}) {item.quantity}g
+                  {item.ingredientName}({item.origin}) {item.quantity * item.unit}g
                 </li>
               ))}
             </ul>
