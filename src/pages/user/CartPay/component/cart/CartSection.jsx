@@ -28,7 +28,9 @@ const CartSection = () => {
 
       {/* 장바구니 목록 */}
       <CartList />
-      {!isPayVisible && (
+
+      {/* 장바구니에 상품이 있을 때만 결제하기 버튼 표시 */}
+      {cartItems.length > 0 && !isPayVisible && (
         <button className={styles.btnPay} type="button" onClick={handlePayPop}>
           결제하기
         </button>
