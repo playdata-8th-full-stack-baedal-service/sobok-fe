@@ -59,7 +59,7 @@ export const isBookmarked = createAsyncThunk('product/is-bookmarked', async (id,
 export const addBookmark = createAsyncThunk('product/add-bookmark', async (id, thunkAPI) => {
   try {
     const response = await axiosInstance.post(`/user-service/user/addBookmark`, { cookId: id });
-  return response.data.data;
+    return response.data.data;
   } catch (err) {
     const message = err.response?.message || '즐겨찾기 추가에 실패하였습니다.';
     return thunkAPI.rejectWithValue(message);
@@ -80,10 +80,10 @@ export const deleteBookmark = createAsyncThunk('product/delete-bookmark', async 
 const initialState = {
   product: null,
   portion: 1,
-  additionalIngredients: [],   // 선택된 추가 재료(사용자 선택 목록)
+  additionalIngredients: [], // 선택된 추가 재료(사용자 선택 목록)
   originalPrice: 0,
   totalPrice: 0,
-  searchQuery: [],             // 검색 결과 목록
+  searchQuery: [], // 검색 결과 목록
   loading: false,
   error: null,
   isBookmarked: false,
@@ -95,22 +95,44 @@ const productSlice = createSlice({
   name: 'product',
   initialState,
   reducers: {
-    setProduct: (state, action) => { state.product = action.payload; },
-    setPortion: (state, action) => { state.portion = action.payload < 1 ? 1 : action.payload; },
-    setAdditionalIngredients: (state, action) => { state.additionalIngredients = action.payload; },
-    setOriginalPrice: (state, action) => { state.originalPrice = action.payload; },
-    setTotalPrice: (state, action) => { state.totalPrice = action.payload; },
-    setSearchQuery: (state, action) => { state.searchQuery = action.payload; },
-    setLoading: (state, action) => { state.loading = action.payload; },
-    setError: (state, action) => { state.error = action.payload; },
-    setIsBookmarked: (state, action) => { state.isBookmarked = action.payload; },
+    setProduct: (state, action) => {
+      state.product = action.payload;
+    },
+    setPortion: (state, action) => {
+      state.portion = action.payload < 1 ? 1 : action.payload;
+    },
+    setAdditionalIngredients: (state, action) => {
+      state.additionalIngredients = action.payload;
+    },
+    setOriginalPrice: (state, action) => {
+      state.originalPrice = action.payload;
+    },
+    setTotalPrice: (state, action) => {
+      state.totalPrice = action.payload;
+    },
+    setSearchQuery: (state, action) => {
+      state.searchQuery = action.payload;
+    },
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
+    setIsBookmarked: (state, action) => {
+      state.isBookmarked = action.payload;
+    },
 
     /** ▼ 추가: 세션/계정 전환 시 잔류 방지용 초기화들 */
-    clearAdditionalIngredients: (state) => { state.additionalIngredients = []; },
-    resetAdditionalSearch: (state) => { state.searchQuery = []; },
+    clearAdditionalIngredients: state => {
+      state.additionalIngredients = [];
+    },
+    resetAdditionalSearch: state => {
+      state.searchQuery = [];
+    },
 
     /** (옵션) 여러 개 한 번에 정리하고 싶을 때 */
-    logoutCleanup: (state) => {
+    logoutCleanup: state => {
       state.additionalIngredients = [];
       state.searchQuery = [];
       state.originalPrice = 0;
@@ -118,8 +140,14 @@ const productSlice = createSlice({
       state.cartCookId = null;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
+      .addCase(fetchProduct.pending, state => {
+        state.loading = true;
+        state.error = null;
+        state.additionalIngredients = [];
+        state.searchQuery = [];
+      })
       .addCase(fetchProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.product = action.payload;
@@ -145,11 +173,11 @@ const productSlice = createSlice({
         state.loading = false;
         state.bookmarkError = action.payload;
       })
-      .addCase(addBookmark.fulfilled, (state) => {
+      .addCase(addBookmark.fulfilled, state => {
         state.loading = false;
         state.isBookmarked = true;
       })
-      .addCase(deleteBookmark.fulfilled, (state) => {
+      .addCase(deleteBookmark.fulfilled, state => {
         state.loading = false;
         state.isBookmarked = false;
       })
@@ -170,9 +198,9 @@ export const {
   setAdditionalIngredients,
   setSearchQuery,
   setIsBookmarked,
-  clearAdditionalIngredients,   
-  resetAdditionalSearch,       
-  logoutCleanup,                
+  clearAdditionalIngredients,
+  resetAdditionalSearch,
+  logoutCleanup,
 } = productSlice.actions;
 
 export default productSlice.reducer;
