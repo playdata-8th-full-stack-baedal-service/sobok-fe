@@ -6,6 +6,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import axiosInstance from '../../../../services/axios-config';
 import styles from './PostListPage.module.scss';
+import { FaHeart } from "react-icons/fa";
 
 function PostListPage() {
   const [postList, setPostList] = useState([]);
@@ -197,14 +198,8 @@ function PostListPage() {
                       <strong>작성일</strong>:{' '}
                       {new Date(post.updatedAt).toLocaleDateString('ko-KR')}
                     </p>
-                    <span>
-                      <Heart
-                        size={16}
-                        fill={likedPosts.has(post.postId) ? 'red' : 'none'}
-                        color={likedPosts.has(post.postId) ? 'red' : 'white'}
-                        stroke={likedPosts.has(post.postId) ? 'white' : 'none'}
-                        strokeWidth={likedPosts.has(post.postId) ? 1 : 0}
-                      />{' '}
+                    <span className={styles.likezone}>
+                      <FaHeart />
                       {post.likeCount}
                     </span>
                   </div>
