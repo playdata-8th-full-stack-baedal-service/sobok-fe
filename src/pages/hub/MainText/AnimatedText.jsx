@@ -39,10 +39,6 @@ function AnimatedText() {
           </p>
         </header>
       </section>
-
-      <button className={styles.btn} onClick={refreshAnimation}>
-        <i className="ion-refresh" />
-      </button>
     </div>
   );
 }
